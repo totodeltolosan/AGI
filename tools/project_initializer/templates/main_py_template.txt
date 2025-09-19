@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""
+Main - Orchestrateur Principal du Projet AGI
+===========================================
+
+Rôle Fondamental (Conforme AGI.md - main.py) :
+- Point d'entrée unique et chef d'orchestre principal
+- Initialisation du programme et coordination des services essentiels
+- Lancement de l'audit de conformité initial
+- Chargement des plugins conformes
+- Démarrage de l'interface utilisateur
+- Gestion globale des erreurs et arrêt propre
+
+Conformité Architecturale :
+- Limite stricte < 200 lignes via délégation modulaire
+- Aucune logique métier directe
+- État interne minimal (stateless)
+- Délégation complète aux modules spécialisés
+
+Version : 1.0
+Date : {date}
+Référence : Rapport de Directives AGI.md - Section main.py
+"""
+
+import sys
+import traceback
+from pathlib import Path
+from typing import Optional, Dict, Any
+
+# Imports essentiels selon délégations AGI.md
+try:
+    from supervisor.logger import Logger
+    from config.config_loader import ConfigLoader
+    from config.config_validator import ConfigValidator
+    from config.config_manager import ConfigManager
+    from compliance.static_auditor import StaticAuditor
+    from compliance.compliance_reporter import ComplianceReporter
+    from plugins.plugin_loader import PluginLoader
+    from ui.ui_cli import UICLI
+    from ui.ui_web import UIWeb
+except ImportError as e:
+    print(f"❌ Erreur critique import modules: {{e}}")
+    sys.exit(1)
+
+class AGIOrchestrator:
+    """
+    Orchestrateur principal du projet AGI.
+
+    Coordonne l'initialisation et l'exécution selon la séquence
+    définie dans AGI.md sans contenir de logique métier.
+    """
+
+    def __init__(self):
+        self.logger: Optional[Logger] = None
+        self.config_manager: Optional[ConfigManager] = None
+        self.plugins: Dict[str, Any] = {{}}
+
+    def initialize_and_run(self) -> int:
+        """
+        Séquence principale d'initialisation et d'exécution.
+
+        Returns:
+            int: Code de sortie (0 = succès, 1 = erreur)
+        """
+        try:
+            # Étape 1: Initialisation du logging (première priorité)
+            self.logger = Logger()
+            self.logger.info("🚀 Démarrage Projet AGI")
+
+            # Étape 2: Chargement et validation configuration
+            if not self._initialize_configuration():
+                return 1
+
+            # Étape 3: Audit de conformité initial
+            if not self._run_initial_compliance_audit():
+                return 1
+
+            # Étape 4: Chargement des plugins conformes
+            if not self._load_and_validate_plugins():
+                return 1
+
+            # Étape 5: Démarrage de l'interface utilisateur
+            if not self._start_user_interface():
+                return 1
+
+            self.logger.info("✅ Projet AGI initialisé avec succès")
+            return 0
+
+        except Exception as e:
+            if self.logger:
+                self.logger.error(f"❌ Erreur critique orchestrateur: {{str(e)}}")
+                self.logger.debug(f"Traceback: {{traceback.format_exc()}}")
+            else:
+                print(f"❌ Erreur critique avant initialisation logger: {{e}}")
+            return 1
+
+    def _initialize_configuration(self) -> bool:
+        """Délègue l'initialisation de la configuration."""
+        try:
+            loader = ConfigLoader()
+            raw_config = loader.load_configuration()
+
+            validator = ConfigValidator()
+            validated_config = validator.validate(raw_config)
+
+            self.config_manager = ConfigManager(validated_config)
+            self.logger.info("✅ Configuration initialisée")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"❌ Erreur initialisation configuration: {{e}}")
+            return False
+
+    def _run_initial_compliance_audit(self) -> bool:
+        """Délègue l'audit de conformité initial."""
+        try:
+            auditor = StaticAuditor(self.logger)
+            reporter = ComplianceReporter(self.logger)
+
+            # Audit du noyau et des modules critiques
+            audit_results = auditor.audit_core_modules()
+
+            # Rapport et décision de blocage si nécessaire
+            if not reporter.process_audit_results(audit_results):
+                self.logger.error("❌ Audit de conformité échoué - Arrêt")
+                return False
+
+            self.logger.info("✅ Audit de conformité initial réussi")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"❌ Erreur audit conformité: {{e}}")
+            return False
+
+    def _load_and_validate_plugins(self) -> bool:
+        """Délègue le chargement et la validation des plugins."""
+        try:
+            plugin_loader = PluginLoader(self.logger, self.config_manager)
+            self.plugins = plugin_loader.discover_and_load_plugins()
+
+            self.logger.info(f"✅ {{len(self.plugins)}} plugins chargés avec succès")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"❌ Erreur chargement plugins: {{e}}")
+            return False
+
+    def _start_user_interface(self) -> bool:
+        """Délègue le démarrage de l'interface utilisateur."""
+        try:
+            # Sélection interface selon configuration
+            interface_type = self.config_manager.get('ui.interface_type', 'cli')
+
+            if interface_type == 'web':
+                ui = UIWeb(self.logger, self.config_manager, self.plugins)
+            else:
+                ui = UICLI(self.logger, self.config_manager, self.plugins)
+
+            ui.start()
+            self.logger.info(f"✅ Interface {{interface_type}} démarrée")
+            return True
+
+        except Exception as e:
+            self.logger.error(f"❌ Erreur démarrage interface: {{e}}")
+            return False
+
+def main() -> None:
+    """Point d'entrée principal - Délégation complète à l'orchestrateur."""
+    orchestrator = AGIOrchestrator()
+    exit_code = orchestrator.initialize_and_run()
+    sys.exit(exit_code)
+
+# === CONFORMITÉ AGI.md ===
+# Fichier: main.py
+# Limite: < 200 lignes de code exécutable ✅
+# Audit: compliance/static_auditor.py
+# Tests: tests/test_main.py
+
+if __name__ == "__main__":
+    main()

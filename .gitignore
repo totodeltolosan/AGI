@@ -1,0 +1,83 @@
+# --- FONDATIONS PYTHON & SYSTÈME ---
+# Environnements virtuels (non négociable)
+.venv/
+venv/
+ENV/
+env/
+
+# Cache Python et fichiers compilés
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Fichiers de configuration IDE et éditeur
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Fichiers système (macOS, Windows)
+.DS_Store
+Thumbs.db
+
+# --- ARTEFACTS DE DÉVELOPPEMENT & BUILD ---
+# Fichiers de distribution et de build Python
+.eggs/
+*.egg-info/
+*.egg
+dist/
+build/
+wheels/
+*.tar.gz
+
+# Cache des outils de test
+.pytest_cache/
+.coverage
+
+# --- ARTEFACTS GÉNÉRÉS PAR L'AGI (ANTICIPATION) ---
+# Modèles de Machine Learning et datasets
+*.model
+*.pkl
+*.h5
+*.onnx
+datasets/
+
+# Bases de données locales et caches
+*.db
+*.sqlite3
+*.cache
+.jna_cache/
+
+# Rapports, logs et exports générés
+logs/
+*.log
+reports/
+exports/
+*.html
+*.pdf
+*.xml
+
+# Fichiers de backup auto-générés
+*.backup
+*.bak
+
+# Dépendances de plugins ou de modules isolés
+**/node_modules/
+**/vendor/
+
+# --- GESTION DES EXCEPTIONS (CE QUI DOIT ÊTRE SUIVI) ---
+# Fichiers de données et de configuration (sauf la constitution)
+*.csv
+*.json
+# La ligne suivante est cruciale : elle annule l'ignorance pour le fichier de constitution
+!iaGOD.json
+
+# Fichiers de documentation (sauf les documents constitutionnels)
+*.md
+# Annuler l'ignorance pour les documents clés
+!README.md
+!AGI.md
+!AGIFUTUR.md
+!AGIHELP.md
