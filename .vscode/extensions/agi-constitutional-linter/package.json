@@ -1,0 +1,43 @@
+{
+  "name": "agi-constitutional-linter",
+  "displayName": "AGI Constitutional Linter",
+  "description": "Linter temps réel basé sur iaGOD.json pour développement AGI conforme",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": ["Linters"],
+  "activationEvents": [
+    "onLanguage:python"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "AGI Constitutional Linter",
+      "properties": {
+        "agiLinter.constitutionPath": {
+          "type": "string",
+          "default": "iaGOD.json",
+          "description": "Chemin vers le fichier iaGOD.json"
+        },
+        "agiLinter.maxLines": {
+          "type": "number",
+          "default": 200,
+          "description": "Limite maximum de lignes par fichier"
+        },
+        "agiLinter.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Activer le linter constitutionnel AGI"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "agiLinter.auditProject",
+        "title": "AGI: Audit Constitutionnel Complet"
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Test EVE Cognitive",
+      "type": "shell", 
+      "command": "python",
+      "args": ["-m", "pytest", "eve/cognitive/"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Test EVE Simulation",
+      "type": "shell",
+      "command": "python", 
+      "args": ["-m", "pytest", "eve/simulation/"],
+      "group": "test"
+    },
+    {
+      "label": "Lint All EVE",
+      "type": "shell",
+      "command": "pylint",
+      "args": ["eve/"],
+      "group": "build"
+    },
+    {
+      "label": "Format All Code",
+      "type": "shell",
+      "command": "black",
+      "args": ["."],
+      "group": "build"
+    },
+    {
+      "label": "Run AGI Audit",
+      "type": "shell",
+      "command": "python",
+      "args": ["run_agi_audit.py"],
+      "group": "test"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+name: Bug Report
+description: Signaler un bug dans AGI-EVE
+title: "[BUG] "
+labels: ["bug", "triage"]
+body:
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module EVE concerné
+      options:
+        - cognitive (ALMA)
+        - simulation (Monde/EVE GENESIS)
+        - development (gaia/Test Eve)
+        - interfaces (Projet simulateur)
+        - integration (Bridges)
+        - core (AGI)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description du bug
+      placeholder: Décrivez le problème rencontré
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes pour reproduire
+      placeholder: |
+        1. Aller à...
+        2. Cliquer sur...
+        3. Voir l'erreur
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+      placeholder: Que devrait-il se passer ?
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environnement
+      placeholder: |
+        - OS: Ubuntu 22.04
+        - Python: 3.11
+        - Module version: 

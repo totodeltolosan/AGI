@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylint",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "ms-vscode-remote.remote-ssh",
+        "redhat.vscode-yaml",
+        "ms-python.black-formatter",
+        "ms-vscode.vscode-json",
+        "bradlc.vscode-tailwindcss"
+    ],
+    "unwantedRecommendations": []
+}
