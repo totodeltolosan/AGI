@@ -1,0 +1,9 @@
+matplotlib
+black
+flake8
+pre-commit
+psutil
+customtkinter
+pyinstaller
+pyyaml
+jsonschema

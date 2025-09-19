@@ -1,0 +1,15 @@
+# Fichiers d'échange d'éditeurs
+*.swp
+*.swo
+*~
+*.kate-swp
+
+# Cache Python
+__pycache__/
+*.pyc
+
+# Environnements virtuels (même si peu probable dans un Space)
+.venv/
+venv/
+env/
+ENV/

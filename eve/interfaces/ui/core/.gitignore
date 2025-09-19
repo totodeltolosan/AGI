@@ -1,0 +1,18 @@
+# Ignorer tout par défaut
+*
+
+# Excepter les fichiers de l'environnement virtuel
+!env/
+
+# Excepter les fichiers de configuration et de structure
+!README.md
+!requirements.txt
+!.gitignore
+!.pre-commit-config.yaml
+!lanceur.py
+!config/
+!enfant_eve/
+!tests/
+
+# Excepter spécifiquement les fichiers Python
+!*.py
