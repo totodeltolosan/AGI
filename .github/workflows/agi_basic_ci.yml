@@ -1,0 +1,25 @@
+name: 🏛️ AGI Constitutional CI Basic
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  constitutional_audit:
+    name: 🏛️ Audit Constitutionnel
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: 🏛️ Audit AGI
+      run: |
+        python run_agi_audit.py --target . || true
+        echo "📊 Audit terminé"

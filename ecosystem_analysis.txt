@@ -1,0 +1,2371 @@
+🔍 ANALYSE ÉCOSYSTÈME EVE - DÉCOUVERTE COMPLÈTE
+===============================================
+📊 ANALYSE STRUCTURELLE GLOBALE
+--------------------------------
+
+📁 PROJET: /home/toni/Documents/gaia
+   Taille: 11M
+   Fichiers: 179
+   Python: 56
+   JSON: 6
+   MD: 27
+   Répertoires: 24
+
+📁 PROJET: /home/toni/Documents/Projet simulateur
+   Taille: 238M
+   Fichiers: 8981
+   Python: 3739
+   JSON: 21
+   MD: 4
+   Répertoires: 883
+
+📁 PROJET: /home/toni/Documents/Test Eve
+   Taille: 1,3G
+   Fichiers: 46375
+   Python: 17040
+   JSON: 28
+   MD: 128
+   Répertoires: 6357
+
+📁 PROJET: /home/toni/Documents/ALMA
+   Taille: 1,3G
+   Fichiers: 1635
+   Python: 172
+   JSON: 46
+   MD: 7
+   Répertoires: 119
+
+📁 PROJET: /home/toni/Documents/Monde
+   Taille: 927M
+   Fichiers: 21691
+   Python: 7392
+   JSON: 5
+   MD: 19
+   Répertoires: 1936
+
+📁 PROJET: /home/toni/Documents/EVE GENESIS
+   Taille: 345M
+   Fichiers: 6580
+   Python: 1314
+   JSON: 2
+   MD: 1
+   Répertoires: 518
+
+📁 PROJET: /home/toni/Documents/EVE
+   Taille: 69M
+   Fichiers: 12
+   Python: 6
+   JSON: 1
+   MD: 0
+   Répertoires: 3
+
+📁 PROJET: /home/toni/Documents/ALMA_Space_Cerveau_Demo
+   Taille: 409M
+   Fichiers: 52
+   Python: 4
+   JSON: 0
+   MD: 1
+   Répertoires: 37
+
+🏗️ ANALYSE ARCHITECTURALE DÉTAILLÉE
+-----------------------------------
+
+🔍 ARCHITECTURE: gaia
+   Structure principale:
+/home/toni/Documents/gaia
+├── Analyst.py
+├── BiblePython
+│   ├── about.md
+│   ├── about_python.md
+│   ├── basics.md
+│   ├── book.json
+│   ├── control_flow.md
+│   ├── data_structures.md
+│   ├── dedication.md
+│   ├── exceptions.md
+│   ├── feedback.md
+│   ├── first_steps.md
+│   ├── floss.md
+│   ├── functions.md
+│   ├── img
+│   │   ├── pycharm_command_line_arguments.png
+│   │   ├── pycharm_create_new_project.png
+│   │   ├── pycharm_create_new_project_pure_python.png
+│   │   ├── pycharm_hello_open.png
+│   │   ├── pycharm_new_file_input.png
+│   │   ├── pycharm_new_python_file.png
+│   │   ├── pycharm_open.png
+│   │   ├── pycharm_output.png
+│   │   ├── pycharm_run.png
+│   │   └── terminal_screenshot.png
+│   ├── installation.md
+│   ├── INSTALL.md
+│   ├── io.md
+│   ├── Makefile
+│   ├── modules.md
+│   ├── more.md
+│   ├── oop.md
+│   ├── op_exp.md
+│   ├── poem.txt
+│   ├── preface.md
+│   ├── problem_solving.md
+│   ├── programs
+│   │   ├── abc.txt
+│   │   ├── backup_ver1.py
+│   │   ├── backup_ver1.txt
+│   │   ├── backup_ver2.py
+│   │   ├── backup_ver2.txt
+│   │   ├── backup_ver3.py
+│   │   ├── backup_ver3.txt
+│   │   ├── backup_ver4.py
+│   │   ├── backup_ver4.txt
+│   │   ├── break.py
+│   │   ├── break.txt
+│   │   ├── continue.py
+│   │   ├── continue.txt
+│   │   ├── ds_reference.py
+│   │   ├── ds_reference.txt
+│   │   ├── ds_seq.py
+│   │   ├── ds_seq.txt
+│   │   ├── ds_str_methods.py
+│   │   ├── ds_str_methods.txt
+│   │   ├── ds_using_dict.py
+│   │   ├── ds_using_dict.txt
+│   │   ├── ds_using_list.py
+│   │   ├── ds_using_list.txt
+│   │   ├── ds_using_tuple.py
+│   │   ├── ds_using_tuple.txt
+│   │   ├── exceptions_finally.py
+│   │   ├── exceptions_finally.txt
+│   │   ├── exceptions_handle.py
+│   │   ├── exceptions_handle.txt
+│   │   ├── exceptions_raise.py
+│   │   ├── exceptions_raise.txt
+│   │   ├── exceptions_using_with.py
+│   │   ├── for.py
+│   │   ├── for.txt
+│   │   ├── function1.py
+│   │   ├── function1.txt
+│   │   ├── function_default.py
+│   │   ├── function_default.txt
+│   │   ├── function_docstring.py
+│   │   ├── function_docstring.txt
+│   │   ├── function_global.py
+│   │   ├── function_global.txt
+│   │   ├── function_keyword.py
+│   │   ├── function_keyword.txt
+│   │   ├── function_local.py
+│   │   ├── function_local.txt
+│   │   ├── function_param.py
+│   │   ├── function_param.txt
+│   │   ├── function_return.py
+│   │   ├── function_return.txt
+│   │   ├── function_varargs.py
+│   │   ├── function_varargs.txt
+│   │   ├── if.py
+│   │   ├── if.txt
+│   │   ├── io_input.py
+│   │   ├── io_input.txt
+│   │   ├── io_pickle.py
+│   │   ├── io_pickle.txt
+│   │   ├── io_unicode.py
+│   │   ├── io_using_file.py
+│   │   ├── io_using_file.txt
+│   │   ├── module_using_name.py
+│   │   ├── module_using_name.txt
+│   │   ├── module_using_sys.py
+│   │   ├── module_using_sys.txt
+│   │   ├── more_decorator.py
+│   │   ├── more_decorator.txt
+│   │   ├── more_lambda.py
+│   │   ├── more_lambda.txt
+│   │   ├── more_list_comprehension.py
+│   │   ├── more_list_comprehension.txt
+│   │   ├── mymodule_demo2.py
+│   │   ├── mymodule_demo.py
+│   │   ├── mymodule_demo.txt
+│   │   ├── mymodule.py
+│   │   ├── oop_init.py
+│   │   ├── oop_init.txt
+│   │   ├── oop_method.py
+│   │   ├── oop_method.txt
+│   │   ├── oop_objvar.py
+│   │   ├── oop_objvar.txt
+│   │   ├── oop_simplestclass.py
+│   │   ├── oop_simplestclass.txt
+│   │   ├── oop_subclass.py
+│   │   ├── oop_subclass.txt
+│   │   ├── poem.txt
+│   │   ├── shoplist.data
+│   │   ├── stdlib_logging.py
+│   │   ├── stdlib_logging.txt
+│   │   ├── while.py
+│   │   └── while.txt
+│   ├── README.md
+│   ├── revision_history.md
+│   ├── stdlib.md
+│   ├── SUMMARY.md
+│   ├── translation_howto.md
+│   ├── translations.md
+│   └── what_next.md
+├── code_concepts_map.json
+├── CodeHunter.py
+├── CodeValidator.py
+├── concepts_mapping.json
+├── ContentExtractor.py
+├── knowledge_base.json
+├── LocalReader.py
+├── master_plan.json
+├── prometheus_core.py
+├── prometheus_status.html
+├── prometheus_status.html.template
+├── __pycache__
+│   └── CodeHunter.cpython-313.pyc
+├── SemanticAnalyzer.py
+├── SystemInterface.py
+├── trusted_sources.json
+├── ValidationPresenter.py
+└── WebExplorer.py
+
+5 directories, 149 files
+   Scripts principaux:
+   Fichiers configuration:
+/home/toni/Documents/gaia/master_plan.json
+/home/toni/Documents/gaia/BiblePython/book.json
+/home/toni/Documents/gaia/knowledge_base.json
+/home/toni/Documents/gaia/code_concepts_map.json
+/home/toni/Documents/gaia/trusted_sources.json
+/home/toni/Documents/gaia/concepts_mapping.json
+
+🔍 ARCHITECTURE: Projet simulateur
+   Structure principale:
+/home/toni/Documents/Projet simulateur
+├── analyse_systeme_god_ultimate.py
+├── analyse_systemepart6.sh
+├── audit_code_statique.py
+├── build_release.py
+├── config
+│   └── config.json
+├── data
+│   ├── archives
+│   └── rapports_crash
+├── Directives pour claude AI.txt
+├── enfant_eve
+│   ├── export
+│   │   ├── export_cerveau.py
+│   │   └── export_guide.py
+│   ├── ia
+│   │   ├── abstraction.py
+│   │   ├── arbitrage.py
+│   │   ├── cerveau_actions.py
+│   │   ├── cerveau_apprentissage_core.py
+│   │   ├── cerveau_apprentissage_cycles.py
+│   │   ├── cerveau_apprentissage_echecs.py
+│   │   ├── cerveau_autonomie.py
+│   │   ├── cerveau_cycle.py
+│   │   ├── cerveau_decision.py
+│   │   ├── cerveau_perception.py
+│   │   ├── cerveau.py
+│   │   ├── cerveau.txt
+│   │   ├── cerveau_utils.py
+│   │   ├── comportement.py
+│   │   ├── creativite_evaluateur.py
+│   │   ├── creativite_generateurs.py
+│   │   ├── creativite.py
+│   │   ├── creativite_styles.py
+│   │   ├── creativite_utils.py
+│   │   ├── deplacement.py
+│   │   ├── ethique_correcteur.py
+│   │   ├── ethique.py
+│   │   ├── ethique_regles.py
+│   │   ├── ethique_validateur.py
+│   │   ├── gestion_inventaire.py
+│   │   ├── __init__.py
+│   │   ├── modele_monde.py
+│   │   ├── planificateur_actions.py
+│   │   ├── planificateur_besoins.py
+│   │   ├── planificateur_construction.py
+│   │   ├── planificateur_exploration.py
+│   │   ├── planificateur_plans.py
+│   │   ├── planificateur.py
+│   │   ├── __pycache__
+│   │   ├── raisonnement_hypotheses.py
+│   │   ├── raisonnement_patterns.py
+│   │   ├── raisonnement.py
+│   │   ├── raisonnement_solutions.py
+│   │   ├── raisonnement_solveur.py
+│   │   ├── raisonnement_utils.py
+│   │   └── test_autonomie.py
+│   ├── __init__.py
+│   ├── interface
+│   │   ├── fenetre_visualisation.py
+│   │   ├── __pycache__
+│   │   └── tableau_bord.py
+│   ├── jeu
+│   │   ├── __init__.py
+│   │   ├── jeu.py
+│   │   ├── minetest_real.py
+│   │   └── __pycache__
+│   ├── pont_jeu
+│   │   ├── commandes.py
+│   │   ├── connexion.py
+│   │   ├── etat_monde.py
+│   │   ├── init.py
+│   │   └── __pycache__
+│   ├── __pycache__
+│   │   └── __init__.cpython-313.pyc
+│   ├── test_rapide.py
+│   └── test_refactorisation_complete.py
+├── env
+│   ├── bin
+│   │   ├── activate
+│   │   ├── activate.csh
+│   │   ├── activate.fish
+│   │   ├── Activate.ps1
+│   │   ├── black
+│   │   ├── blackd
+│   │   ├── f2py
+│   │   ├── flake8
+│   │   ├── fonttools
+│   │   ├── identify-cli
+│   │   ├── jsonschema
+│   │   ├── nodeenv
+│   │   ├── numpy-config
+│   │   ├── pip
+│   │   ├── pip3
+│   │   ├── pip3.13
+│   │   ├── pre-commit
+│   │   ├── pycodestyle
+│   │   ├── pyflakes
+│   │   ├── pyftmerge
+│   │   ├── pyftsubset
+│   │   ├── pyi-archive_viewer
+│   │   ├── pyi-bindepend
+│   │   ├── pyi-grab_version
+│   │   ├── pyi-makespec
+│   │   ├── pyinstaller
+│   │   ├── pyi-set_version
+│   │   ├── python -> python3
+│   │   ├── python3 -> /home/toni/miniconda3/bin/python3
+│   │   ├── python3.13 -> python3
+│   │   ├── ttx
+│   │   └── virtualenv
+│   ├── include
+│   │   └── python3.13
+│   ├── lib
+│   │   └── python3.13
+│   ├── lib64 -> lib
+│   ├── pyvenv.cfg
+│   └── share
+│       └── man
+├── evalueur_comportement_ia.py
+├── exports
+│   ├── export_cerveau.py
+│   └── export_guide.py
+├── generateur_rapport_html.py
+├── gestion_logs.py
+├── gestionnaire_gui.py
+├── gestion_sauvegarde.py
+├── gestion_sauvegarde_utils.py
+├── lanceur_constantes.py
+├── lanceur.py
+├── lanceur_utils.py
+├── logs
+│   ├── archives
+│   └── syntheses
+├── orchestrateur_tests_dynamiques.py
+├── pre-commit-config.yaml
+├── preparer_test_01.sh
+├── processus_ia.py
+├── proc_gui.py
+├── proc_ia.py
+├── proc_jeu.py
+├── __pycache__
+│   ├── gestion_logs.cpython-313.pyc
+│   ├── gestion_sauvegarde.cpython-313.pyc
+│   └── gestion_sauvegarde_utils.cpython-313.pyc
+├── rapport_architecture.json
+├── rapport_audit_simulateur.html
+├── rapport_ia.json
+├── rapport_statique.json
+├── rapport_tests.json
+├── README.md
+├── releases
+├── requirements.txt
+├── retour.txt
+├── sauvegardes
+│   └── checkpoints
+├── saves
+│   └── partie_courante.json
+├── test_ethique_refactored.py
+├── tests
+│   ├── analyser_test_01.py
+│   └── scenario_01
+│       ├── config_test.json
+│       ├── data
+│       ├── logs
+│       └── monde
+└── validateur_architecture_systeme.py
+
+39 directories, 128 files
+   Scripts principaux:
+/home/toni/Documents/Projet simulateur/orchestrateur_tests_dynamiques.py
+/home/toni/Documents/Projet simulateur/enfant_eve/test_rapide.py
+/home/toni/Documents/Projet simulateur/enfant_eve/test_refactorisation_complete.py
+/home/toni/Documents/Projet simulateur/generateur_rapport_html.py
+/home/toni/Documents/Projet simulateur/validateur_architecture_systeme.py
+/home/toni/Documents/Projet simulateur/audit_code_statique.py
+/home/toni/Documents/Projet simulateur/analyse_systeme_god_ultimate.py
+/home/toni/Documents/Projet simulateur/evalueur_comportement_ia.py
+   Fichiers configuration:
+/home/toni/Documents/Projet simulateur/rapport_architecture.json
+/home/toni/Documents/Projet simulateur/saves/partie_courante.json
+/home/toni/Documents/Projet simulateur/rapport_ia.json
+/home/toni/Documents/Projet simulateur/rapport_statique.json
+/home/toni/Documents/Projet simulateur/pre-commit-config.yaml
+/home/toni/Documents/Projet simulateur/rapport_tests.json
+/home/toni/Documents/Projet simulateur/config/config.json
+
+🔍 ARCHITECTURE: Test Eve
+   Structure principale:
+/home/toni/Documents/Test Eve
+├── api_orchestrator.py
+├── crew_a
+│   ├── knowledge
+│   │   └── user_preference.txt
+│   ├── logs
+│   ├── pyproject.toml
+│   ├── README.md
+│   ├── src
+│   │   └── eve_genesis___crew_a_construction_eveil
+│   ├── test_eve_folder
+│   │   └── test.txt
+│   ├── test_monitoring
+│   └── tests
+├── crew_b
+│   ├── knowledge
+│   │   └── user_preference.txt
+│   ├── pyproject.toml
+│   ├── README.md
+│   ├── src
+│   │   └── eve_genesis___crew_b
+│   └── tests
+├── data
+│   ├── backups
+│   └── reports
+├── eve_agent_tester.py
+├── launch_crew_a.sh
+├── logs
+│   ├── crew_a_execution_20250909_093709.log
+│   └── crew_a_execution_report_20250909_094604.json
+├── Memoireeve.txt
+├── monitor_eve.py
+├── monitoring
+├── output
+├── python console_agent_tester.py
+├── temp
+├── test_crew_a_complete.py
+├── tests
+└── venv
+    ├── bin
+    │   ├── activate
+    │   ├── activate.csh
+    │   ├── activate.fish
+    │   ├── Activate.ps1
+    │   ├── alembic
+    │   ├── chroma
+    │   ├── coloredlogs
+    │   ├── crewai
+    │   ├── distro
+    │   ├── dotenv
+    │   ├── dumppdf.py
+    │   ├── ec
+    │   ├── eve_genesis___crew_a_l_ingenieur_adaptatif_supervisable_41_agents
+    │   ├── f2py
+    │   ├── fastapi
+    │   ├── fastavro
+    │   ├── gptcache_server
+    │   ├── hf
+    │   ├── httpx
+    │   ├── huggingface-cli
+    │   ├── humanfriendly
+    │   ├── instructor
+    │   ├── ipython
+    │   ├── ipython3
+    │   ├── isympy
+    │   ├── jsondiff
+    │   ├── jsonpatch
+    │   ├── jsonpointer
+    │   ├── jsonschema
+    │   ├── litellm
+    │   ├── litellm-proxy
+    │   ├── mako-render
+    │   ├── markdown-it
+    │   ├── nodeenv
+    │   ├── normalizer
+    │   ├── numpy-config
+    │   ├── onnxruntime_test
+    │   ├── openai
+    │   ├── opentelemetry-bootstrap
+    │   ├── opentelemetry-instrument
+    │   ├── pdf2txt.py
+    │   ├── pdfplumber
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.12
+    │   ├── playwright
+    │   ├── __pycache__
+    │   ├── pygmentize
+    │   ├── pyjson5
+    │   ├── pypdfium2
+    │   ├── pyproject-build
+    │   ├── pyright
+    │   ├── pyright-langserver
+    │   ├── pyright-python
+    │   ├── pyright-python-langserver
+    │   ├── pyrsa-decrypt
+    │   ├── pyrsa-encrypt
+    │   ├── pyrsa-keygen
+    │   ├── pyrsa-priv2pub
+    │   ├── pyrsa-sign
+    │   ├── pyrsa-verify
+    │   ├── python -> python3
+    │   ├── python3 -> /usr/bin/python3
+    │   ├── python3.12 -> python3
+    │   ├── pytube
+    │   ├── tabulate
+    │   ├── tiny-agents
+    │   ├── tqdm
+    │   ├── typer
+    │   ├── uv
+    │   ├── uvicorn
+    │   ├── uvx
+    │   ├── watchfiles
+    │   ├── websockets
+    │   ├── wheel
+    │   └── wsdump
+    ├── include
+    │   ├── python3.12
+    │   └── site
+    ├── lib
+    │   └── python3.12
+    ├── lib64 -> lib
+    ├── pyvenv.cfg
+    ├── README.md
+    └── share
+        └── man
+
+33 directories, 93 files
+   Scripts principaux:
+/home/toni/Documents/Test Eve/monitor_eve.py
+/home/toni/Documents/Test Eve/test_crew_a_complete.py
+   Fichiers configuration:
+/home/toni/Documents/Test Eve/crew_b/pyproject.toml
+/home/toni/Documents/Test Eve/logs/crew_a_execution_report_20250909_094604.json
+/home/toni/Documents/Test Eve/crew_a/pyproject.toml
+
+🔍 ARCHITECTURE: ALMA
+   Structure principale:
+/home/toni/Documents/ALMA
+├── Actuateurs
+│   ├── actuateurs_alma.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── actuateurs_alma.cpython-312.pyc
+│       └── __init__.cpython-312.pyc
+├── AGENT
+│   ├── agent_application_identifier_reporter
+│   │   ├── __init__.py
+│   │   └── Reporter.py
+│   ├── agent_collector
+│   │   ├── Collecteur.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   ├── agent_config.ini
+│   ├── agent_performance_security_analyzer
+│   │   ├── __init__.py
+│   │   └── Performance.py
+│   ├── AGENT.py
+│   ├── agent_statistical_analyzer
+│   │   ├── Analyse.py
+│   │   └── __init__.py
+│   ├── common
+│   │   └── __init__.py
+│   ├── database
+│   ├── __init__.py
+│   └── logs
+│       └── AGENT_orchestrator.log
+├── alma_birth_certificate.txt
+├── ALMA.code-workspace
+├── alma_launcher.py
+├── alma_launchersauv2905202519h55.py
+├── alma_launchersauvdu31052025.py
+├── Cerveau
+│   ├── alma_roadmap_status.json
+│   ├── ameliorations_proposees
+│   ├── cerveau_config.yaml
+│   ├── cerveau_kb_schema.sql
+│   ├── cerveau_knowledge_test.sqlite
+│   ├── cerveau.py
+│   ├── cerveausauv26050202519h28.py
+│   ├── Core
+│   │   ├── core.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   ├── Explorateurs
+│   │   ├── explorateur_kb.py
+│   │   └── __init__.py
+│   ├── __init__.py
+│   └── __pycache__
+│       ├── cerveau.cpython-312.pyc
+│       └── __init__.cpython-312.pyc
+├── Connaissance
+│   ├── Amelioree
+│   ├── Charte collaboration IA.txt
+│   ├── Cold Case ALMA.txt
+│   ├── Environnement
+│   │   └── Meteo
+│   ├── Extention alma .txt
+│   ├── interfaceALMA.txt
+│   ├── ProjetInterfaceALMA.txt
+│   ├── Rapport1MaitreALMA.txt
+│   ├── Rapport2maitreALMA.txt
+│   ├── Rapports
+│   ├── Ressources
+│   │   ├── Audio
+│   │   ├── Conversations
+│   │   └── Images
+│   ├── StrategieALMA.txt
+│   ├── Travail ALMA
+│   └── wiki_auto_imports
+│       ├── Amauri_de_Tours_WIKI.txt
+│       ├── Bilal_Smida_WIKI.txt
+│       ├── Championnat_de_France_déchecs_des_clubs_2003_WIKI.txt
+│       ├── Dominik_Moll_WIKI.txt
+│       └── Hurstbourne_(Kentucky)_WIKI.txt
+├── connaissance à injecter
+│   ├── Amelioree
+│   ├── arxiv_auto_imports
+│   │   ├── 0003012v1_Defeasible_Reasoning_in_OSCAR_ARXIV.txt
+│   │   ├── 0202024v1_A_note_on_Darwiche_and_Pearl_ARXIV.txt
+│   │   ├── 0311004v1_Utility-Probability_Duality_ARXIV.txt
+│   │   ├── 0508100v1_A_primer_on_Answer_Set_Programming_ARXIV.txt
+│   │   ├── 0511015v2_Towards_a_Hierarchical_Model_of_Consciousness,_Intelligence,_Mind_and_Body_ARXIV.txt
+│   │   ├── 0608028v1_Using_Sets_of_Probability_Measures_to_Represent_Uncertainty_ARXIV.txt
+│   │   ├── 0803.1207v3_Serious_Flaws_in_Korf_et_al.s_Analysis_on_Time_Complexity_of_A_ARXIV.txt
+│   │   ├── 0809.0458v1_Agent_Models_of_Political_Interactions_ARXIV.txt
+│   │   ├── 0905.4570v2_Weak_Evolvability_Equals_Strong_Evolvability_ARXIV.txt
+│   │   ├── 0906.2824v1_What_Does_Artificial_Life_Tell_Us_About_Death_ARXIV.txt
+│   │   ├── 0907.4561v1_Fact_Sheet_on_Semantic_Web_ARXIV.txt
+│   │   ├── 1008.1710v1_Introduction_to_the_26th_International_Conference_on_Logic_Programming_Special_Issue_ARXIV.txt
+│   │   ├── 1110.3002v1_Are_Minds_Computable_ARXIV.txt
+│   │   ├── 1304.1527v1_Decision_under_Uncertainty_ARXIV.txt
+│   │   ├── 1511.04326v1_ICON_Challenge_on_Algorithm_Selection_ARXIV.txt
+│   │   ├── 2505.16955v1_Boundedness_criteria_for_real_quivers_of_rank_3_ARXIV.txt
+│   │   ├── 2505_17017v1_Delving_into_RL_for_Image_Generation_with_CoT_A_Study_on_DPO_vs._GRPO_ARXIV.txt
+│   │   ├── 2505_17019v1_Let_Androids_Dream_of_Electric_Sheep_A_Human-like_Image_Implication_Understanding_and_R_ARXIV.txt
+│   │   └── 2505_17022v1_GoT-R1_Unleashing_Reasoning_Capability_of_MLLM_for_Visual_Generation_with_Reinforcement_ARXIV.txt
+│   ├── FichierJson
+│   │   ├── alma_code_progress.json
+│   │   ├── amelioration_log.json
+│   │   ├── autoanalyse_travailalmacore.json
+│   │   ├── changelog_travailalmacore.json
+│   │   ├── memoire_20250504161342.json
+│   │   ├── memoire_long_terme.json
+│   │   ├── profil_sante_toni.json
+│   │   ├── rapport_24h_auto.json
+│   │   ├── rapport_final.json
+│   │   └── semantic_memory.json
+│   ├── gutenberg_auto_imports
+│   ├── Livre Toni
+│   │   ├── A travers les ages.txt
+│   │   ├── Bracksville l'ombre de Dogos.txt
+│   │   ├── Indépendance Financière pour Tous _ Les Secrets de la Liberté Financière.txt
+│   │   ├── Interview Bracksville .txt
+│   │   ├── L’art de la Persuasion Pour les Nuls.txt
+│   │   ├── Les Chroniques de Lumina _ Le Secret de l_Étoile Oubliée.txt
+│   │   ├── retranscription interview tome 1 bracksville l_ombre de dogos.txt
+│   │   ├── Survivre à l'Inconnu Le Guide Ultime du Survivalisme en Terres Françaises.txt
+│   │   └── Un voyage extraodinaire broché test.txt
+│   ├── Panneau de contrôle ALMAhtml.txt
+│   ├── Rapports
+│   │   ├── arborescence_finale_sdcard.txt
+│   │   ├── mémoire ia.txt
+│   │   ├── rapportalmadu0405202516h44.txt
+│   │   ├── rapportalmadu0405202516h56.txt
+│   │   ├── rapportalmadu0405202517h05.txt
+│   │   ├── rapport alma du 29042025.md
+│   │   ├── rapport alma.txt
+│   │   ├── rapport complet ALMA de session de plusieurs jours.txt
+│   │   ├── rapport complet alma.txt
+│   │   ├── Rapport complet de session – ALMA – 6 mai 2025.txt
+│   │   ├── Rapport du 28 Avril 2025 23h28.md 
+│   │   ├── RAPPORT_EVOLUTION_LISA_ULTRA_20250415.txt
+│   │   ├── RAPPORT_FINAL_SESSION_LISA_20250415.txt
+│   │   ├── RAPPORT_GLOBAL_PROGRAMM_LISA_EVE_NEXUS.txt
+│   │   ├── 🧠 Rapport Intégral du Projet ALMA.md
+│   │   ├── rapport_LISA_EVE_SESSION_FINAL.txt
+│   │   ├── rapport_session_ALMA_complet.md
+│   │   ├── RAPPORT_SESSION_PROGRAMM_LISA_EVE.txt
+│   │   ├── RAPPORT_STARTUP_LISA_PROGRAMM.txt
+│   │   ├── rapport_test_complet.txt
+│   │   ├── rapport_test_global.txt
+│   │   ├── rapport_test_interface_COMPLET.txt
+│   │   └── rapport_total_session_ALMA.md
+│   ├── retours
+│   │   ├── AnalysedesResultatsEnqueteDimanche18 Mai07h59.txt
+│   │   ├── arbo_eve.txt
+│   │   ├── arborescence carte sd.txt
+│   │   ├── a voir.txt
+│   │   ├── cerveausauv2305202523h38.txt
+│   │   ├── check_algo_perception.txt
+│   │   ├── connectivity_check.txt
+│   │   ├── enquete_post_nuit_24052025.txt
+│   │   ├── eve_learning_log.txt
+│   │   ├── eve_runtime_log.txt
+│   │   ├── eve_structure.txt
+│   │   ├── guardian_log.txt
+│   │   ├── htopdu0305202516h44.txt
+│   │   ├── htopprogramme.txt
+│   │   ├── inspection_kb_full_power_32Go.txt
+│   │   ├── inspection_kb_post_nuit_sm_2405_matin.txt
+│   │   ├── log_recherche_quests.json.txt
+│   │   ├── log_recherche_quests.txt
+│   │   ├── logs de session du 15052025 de 8h15a8h30.txt
+│   │   ├── loop_code_creator.txt
+│   │   ├── orchestration.txt
+│   │   ├── retour2.1.txt
+│   │   ├── retour2.2.txt
+│   │   ├── retour2.txt
+│   │   ├── retour3.txt
+│   │   ├── retour4.txt
+│   │   ├── retour5.txt
+│   │   ├── retour6.txt
+│   │   ├── retour7.txt
+│   │   ├── retour8.txt
+│   │   ├── retour9.txt
+│   │   ├── retour alma 0105202513h56.txt
+│   │   ├── retour alma 010520259h43.txt
+│   │   ├── retour alma 0205202507h31.txt
+│   │   ├── retour alma 0205202508h18.txt
+│   │   ├── retour alma 0205202508h19.txt
+│   │   ├── retour alma 0205202513h06.txt
+│   │   ├── retour alma 0205202513h10.txt
+│   │   ├── retour alma 030520257h32.txt
+│   │   ├── retour alma 030520258h46.txt
+│   │   ├── retour ALMA 0405202517h57.txt
+│   │   ├── retour alma 27042025.txt
+│   │   ├── retour alma 2904202523h27.txt
+│   │   ├── retour ALMA 2904202523h43.txt
+│   │   ├── retouralmaanalyseprofilsantetoni.txt
+│   │   ├── retour alma pendant test 30min du 29042025 20h29.txt
+│   │   ├── retour alma test 1h du 29042025.txt
+│   │   ├── retour alma test 4 h.txt
+│   │   ├── retour alma test 7min du 29042025.txt
+│   │   ├── retour alma.txt
+│   │   ├── retour ALMA.txt
+│   │   ├── retour autressuite.txt
+│   │   ├── retour autres.txt
+│   │   ├── retourdelancementultime.txt
+│   │   ├── retourdeouf2.txt
+│   │   ├── retourdeouf3.txt
+│   │   ├── retour de ouf 4.txt
+│   │   ├── retourdeouf4.txt
+│   │   ├── retourdeouf5.txt
+│   │   ├── retourdeouf.txt
+│   │   ├── retourfast.txt
+│   │   ├── retour git.txt
+│   │   ├── retour test.txt
+│   │   ├── retourtest.txt
+│   │   ├── retour.txt
+│   │   ├── session_parlealma_test_NLU_corrigé.txt
+│   │   ├── session_parlealma_test_V0.2.2.txt
+│   │   ├── sortie_test_parlealma_sm_interactif_tee.txt
+│   │   ├── sortie_test_parlealma_sm_interactif.txt
+│   │   ├── sortie_test_parlealma_sm_V0.2.0.txt
+│   │   ├── sortie_test_parlealma_sm_V0.2.1.txt
+│   │   ├── start_travailalmacore.txt
+│   │   ├── testdu07052025.txt
+│   │   ├── test_immediat_1747507937.txt
+│   │   └── tree_eve.txt
+│   ├── ScriptsAapprendre
+│   │   ├── alma_code_progress_manager.py
+│   │   ├── analyse_samsung_data.py
+│   │   ├── apply_suggestions.py
+│   │   ├── arbrealmaglobale.py
+│   │   ├── atomique_utils.py
+│   │   ├── changelog_updater.py
+│   │   ├── code_evaluator.py
+│   │   ├── diff_saver.py
+│   │   ├── diff_writer.py
+│   │   ├── ecriture_atomique_patch.py
+│   │   ├── evaluate_script_v65.py
+│   │   ├── eve_monitor.py
+│   │   ├── generate_module_from_gap.py
+│   │   ├── improvement_memory_manager.py
+│   │   ├── improve_travailalmacore.py
+│   │   ├── injecteur_autoanalyse.py
+│   │   ├── injecteur_changelog.py
+│   │   ├── injecteur_code_quality.py
+│   │   ├── injecteur_codex_poetique.py
+│   │   ├── injecteur_docstring_auto.py
+│   │   ├── injecteur_donnees_sante.py
+│   │   ├── injecteur_ecriture_atomique.py
+│   │   ├── injecteur_ecriture_atomique_V11_backup.py
+│   │   ├── injecteur_éthique.py
+│   │   ├── injecteur_logging.py
+│   │   ├── injecteur_logique.py
+│   │   ├── injecteur_memoire.py
+│   │   ├── injecteur_noms_explicites.py
+│   │   ├── injecteur_profil_utilisateur.py
+│   │   ├── injecteur_sociologie.py
+│   │   ├── injecteur_test_et_rollback.py
+│   │   ├── injecteur_test_rollback_v2.py
+│   │   ├── injecteur_versioning.py
+│   │   ├── introspecteur_raisonneur.py
+│   │   ├── logging_config.py
+│   │   ├── loop_code_creator.py
+│   │   ├── memoire_enregistreur.py
+│   │   ├── motivation_apprentissage.py
+│   │   ├── orchestrateur_global.py
+│   │   ├── rapport_final_writer.py
+│   │   ├── scan_eve_boot.py
+│   │   ├── start_travailalmacore.py
+│   │   ├── strategy_learner.py
+│   │   ├── test_logique_cognitive.py
+│   │   ├── test_travailalmacore.py
+│   │   ├── travailalmacore.py
+│   │   ├── travailalmacore_rollback_20250505232234.py
+│   │   ├── travailalmacore_temp.py
+│   │   ├── update_alma_code_progress.py
+│   │   ├── validate_global_connectivity.py
+│   │   ├── version_temporaire.py
+│   │   └── wiki_fetcher_loop.py
+│   ├── semantic_memory.md
+│   ├── test interfaceHTMLALMA.txt
+│   ├── Travail ALMA
+│   │   ├── enquete_avant_nettoyage_20250525_203041.txt
+│   │   ├── enquete_avant_nettoyage_20250525_204015.txt
+│   │   └── enquete_v4_avant_nettoyage_20250525_205651.txt
+│   ├── wiki_auto_imports
+│   │   ├── 10_novembre_1927.txt
+│   │   ├── (12268)_1990_OY1.txt
+│   │   ├── 123_North_Wacker_WIKI.txt
+│   │   ├── 1273_dans_les_croisades_WIKI.txt
+│   │   ├── 15_Penn_Plaza.txt
+│   │   ├── (16555)_Nagaomasami_WIKI.txt
+│   │   ├── 1855_dans_les_chemins_de_fer.txt
+│   │   ├── 1868_en_santé_et_médecine.txt
+│   │   ├── 1943_au_Nouveau-Brunswick.txt
+│   │   ├── 1951_en_rugby_à_XV_WIKI.txt
+│   │   ├── 1976_en_jeu_vidéo_WIKI.txt
+│   │   ├── 1992_au_Maroc_WIKI.txt
+│   │   ├── (2595)_Gudiachvili.txt
+│   │   ├── (2964)_Jaschek_WIKI.txt
+│   │   ├── (30300)_2000_HF86_WIKI.txt
+│   │   ├── (31078)_1996_XJ5_WIKI.txt
+│   │   ├── (38452)_1999_TE1.txt
+│   │   ├── (38510)_1999_TF221.txt
+│   │   ├── (39591)_1993_LR1.txt
+│   │   ├── 4_Heures_de_Sepang_2023.txt
+│   │   ├── 500_miles_dIndianapolis_1993.txt
+│   │   ├── (5632)_Ingelehmann.txt
+│   │   ├── 5th_Royal_Irish_Lancers.txt
+│   │   ├── 7,65_×_21_mm_Parabellum.txt
+│   │   ├── (8529)_Sinzi.txt
+│   │   ├── 8e_étape_du_Tour_dItalie_2025_WIKI.txt
+│   │   ├── (9398)_Bidelman.txt
+│   │   ├── Abbaye_de_Roseland_WIKI.txt
+│   │   ├── Abd_Allah_ibn_Hudhafah_as-Sahmi.txt
+│   │   ├── Abikro_WIKI.txt
+│   │   ├── Abylidae.txt
+│   │   ├── Académie_française_WIKI.txt
+│   │   ├── Académie_royale_de_langue_et_de_littérature_françaises_de_Belgique_WIKI.txt
+│   │   ├── Acide_hydroxycitrique_WIKI.txt
+│   │   ├── Adaptations_des_œuvres_de_Victor_Hugo.txt
+│   │   ├── Ad_extirpanda.txt
+│   │   ├── Adrien_Domec.txt
+│   │   ├── Adultère.txt
+│   │   ├── Aérodrome_de_Pézenas_-_Nizas_WIKI.txt
+│   │   ├── Aéroport_de_Brevig_Mission_WIKI.txt
+│   │   ├── Aéroport_de_Franceville_WIKI.txt
+│   │   ├── Aéroport_de_Tlemcen_-_Zenata_-_Messali_El_Hadj_WIKI.txt
+│   │   ├── Æschne_mixte_WIKI.txt
+│   │   ├── Affaire_de_lorphelinat_de_Jersey.txt
+│   │   ├── After_Darkness.txt
+│   │   ├── A_Garland_of_Red.txt
+│   │   ├── Agronômica_(Santa_Catarina)_WIKI.txt
+│   │   ├── A_Heap_of_Broken_Images_WIKI.txt
+│   │   ├── Ais_(tribu)_WIKI.txt
+│   │   ├── Album_RTL_de_lannée.txt
+│   │   ├── Alejandro_Sanz_WIKI.txt
+│   │   ├── Alexander_Slafkovský.txt
+│   │   ├── Algèbre_dAzumaya.txt
+│   │   ├── Alice_&_Bob.txt
+│   │   ├── Alice_et_les_Contrebandiers.txt
+│   │   ├── Allan_Moyle.txt
+│   │   ├── Allée_France-Gall.txt
+│   │   ├── Alliance_franco-indienne_(Amérique).txt
+│   │   ├── Alocasia_reginula_WIKI.txt
+│   │   ├── Alphabet_du_français_WIKI.txt
+│   │   ├── Alpha-bungarotoxine.txt
+│   │   ├── Analyse_et_traitement_informatique_de_la_langue_française_WIKI.txt
+│   │   ├── Anapistula_jerai.txt
+│   │   ├── Andrène_à_palpes_courts_WIKI.txt
+│   │   ├── Andrzej_Badeński.txt
+│   │   ├── Anggun_WIKI.txt
+│   │   ├── Anguilla_obscura_WIKI.txt
+│   │   ├── Anjelika_Terliouga.txt
+│   │   ├── Anmer.txt
+│   │   ├── Anna_de_La_Grange.txt
+│   │   ├── Anna_Langfus_WIKI.txt
+│   │   ├── Anthony_Durante_WIKI.txt
+│   │   ├── Antoine_Chevalier_WIKI.txt
+│   │   ├── Arc_à_lambrequins.txt
+│   │   ├── Arcane_Astral_Aeons_WIKI.txt
+│   │   ├── Aris_Salonique.txt
+│   │   ├── Aristide_Quillet.txt
+│   │   ├── Arnold_Houbraken_WIKI.txt
+│   │   ├── Article_23.txt
+│   │   ├── Ashover.txt
+│   │   ├── Asplenium_ruta-muraria_WIKI.txt
+│   │   ├── Association_des_écrivains_de_langue_française_WIKI.txt
+│   │   ├── Astronome_WIKI.txt
+│   │   ├── Astronomie_WIKI.txt
+│   │   ├── Atelier_historique_de_la_langue_française_WIKI.txt
+│   │   ├── Ätran_(Falkenberg)_WIKI.txt
+│   │   ├── Auburn_(Michigan)_WIKI.txt
+│   │   ├── Augis.txt
+│   │   ├── Augustin_Cochin_(écrivain).txt
+│   │   ├── Au_temps_pour_moi_WIKI.txt
+│   │   ├── Avenir_de_la_langue_française_WIKI.txt
+│   │   ├── Babin_(Pyrzyce).txt
+│   │   ├── Baborówko_WIKI.txt
+│   │   ├── Banat_hongrois.txt
+│   │   ├── Barcelona_(Venezuela).txt
+│   │   ├── Barrage_de_Masjed_Soleyman.txt
+│   │   ├── Bartłomiej_Rychter.txt
+│   │   ├── Bataille_de_lAd_Decimum_WIKI.txt
+│   │   ├── Bataille_de_Scalas_Veteres_WIKI.txt
+│   │   ├── Batterie_Großer_Kurfürst.txt
+│   │   ├── BB_67300.txt
+│   │   ├── Ben_Aaronovitch.txt
+│   │   ├── Bengué-Bougou_WIKI.txt
+│   │   ├── Bernard_Blossac_WIKI.txt
+│   │   ├── Bethany_(Oklahoma).txt
+│   │   ├── Bilé_I_WIKI.txt
+│   │   ├── Billiken_WIKI.txt
+│   │   ├── Bob_Clampett.txt
+│   │   ├── Bogue_(Kansas).txt
+│   │   ├── Bolaji_Badejo.txt
+│   │   ├── Bordeaux_Étudiants_Club_(omnisports).txt
+│   │   ├── Bowyczyny.txt
+│   │   ├── Brachyorrhos_albus.txt
+│   │   ├── Braisnes-sur-Aronde.txt
+│   │   ├── Bras_Noir.txt
+│   │   ├── Brassens_me_disait.txt
+│   │   ├── Bridge_Hewick.txt
+│   │   ├── Bright_Arrey-Mbi_WIKI.txt
+│   │   ├── Brooklyn_Museum.txt
+│   │   ├── Bruyères_(Debussy).txt
+│   │   ├── Burunge.txt
+│   │   ├── Butternut_Valley.txt
+│   │   ├── Câble_sous-marin_SPM.txt
+│   │   ├── Cactoideae.txt
+│   │   ├── Cala_Morell.txt
+│   │   ├── Calicosama_WIKI.txt
+│   │   ├── Calocheiridius_indicus.txt
+│   │   ├── Camille_Dhello.txt
+│   │   ├── Campagne_des_quatre_nuisibles.txt
+│   │   ├── Canale_(Italie).txt
+│   │   ├── Candi_Sewu_WIKI.txt
+│   │   ├── Cantillation_hébraïque.txt
+│   │   ├── Capitan_(Nouveau-Mexique)_WIKI.txt
+│   │   ├── Caracol_(Piauí).txt
+│   │   ├── Cardiofréquencemètre.txt
+│   │   ├── Carence_en_fer_sans_anémie.txt
+│   │   ├── Carl_Kahler.txt
+│   │   ├── Carlo_Ceresa.txt
+│   │   ├── Casque_F1_XF.txt
+│   │   ├── Catalogue_global_WIKI.txt
+│   │   ├── Catherine_Courage.txt
+│   │   ├── Catherine_Llorens-Cortes.txt
+│   │   ├── Ce_que_femme_veut_(film,_1909)_WIKI.txt
+│   │   ├── Chaetodon_nigropunctatus.txt
+│   │   ├── Championnat_dAlgérie_de_football_de_deuxième_division_1988-1989_WIKI.txt
+│   │   ├── Championnat_de_France_de_tennis_1904.txt
+│   │   ├── Championnat_de_France_féminin_de_football_de_deuxième_division_1994-1995_WIKI.txt
+│   │   ├── Championnat_des_Amériques_masculin_de_basket-ball_des_moins_de_18_ans_2024.txt
+│   │   ├── Championnat_dEurope_de_course_à_laméricaine_féminin_(moins_de_23_ans).txt
+│   │   ├── Championnats_de_Lituanie_de_cyclisme_sur_route.txt
+│   │   ├── Championnats_de_Tunisie_dathlétisme_2010_WIKI.txt
+│   │   ├── Championnats_dEurope_de_breakdance_WIKI.txt
+│   │   ├── Championnats_dEurope_dhaltérophilie_1953.txt
+│   │   ├── Chanson_française_WIKI.txt
+│   │   ├── Chanson_traditionnelle_française_WIKI.txt
+│   │   ├── Chantier_naval_de_Zelenodolsk_WIKI.txt
+│   │   ├── Chapelle_Saint-Jean-Baptiste_dEichhoffen_WIKI.txt
+│   │   ├── Chapelle_Saint-Méen_du_Saint.txt
+│   │   ├── Chapelle_Saint-Michel_de_Lestre.txt
+│   │   ├── Charles_III_-_Centre-Ville.txt
+│   │   ├── Charles_Tolliver.txt
+│   │   ├── Charte_de_la_langue_française_WIKI.txt
+│   │   ├── Charte_de_lASEAN_WIKI.txt
+│   │   ├── Château_deau_de_Worms.txt
+│   │   ├── Château_de_Lignères.txt
+│   │   ├── Château_dOheka_WIKI.txt
+│   │   ├── Cheerful_Givers_WIKI.txt
+│   │   ├── Chet_Baker_Sings_and_Plays_from_the_Film_«_Lets_Get_Lost_».txt
+│   │   ├── Cheust.txt
+│   │   ├── Chi_dice_donna,_dice_donna.txt
+│   │   ├── Chippewa_Township_(Pennsylvanie).txt
+│   │   ├── Choi_Jae-hoon.txt
+│   │   ├── Christian_Mattiello_WIKI.txt
+│   │   ├── Christophe_Nuttall.txt
+│   │   ├── Chris_Walas_WIKI.txt
+│   │   ├── Círio_de_Nazaré.txt
+│   │   ├── Cité_internationale_de_la_langue_française_WIKI.txt
+│   │   ├── Clan_Nuvoletta.txt
+│   │   ├── Claude_Naime_WIKI.txt
+│   │   ├── Claymore_(manga)_WIKI.txt
+│   │   ├── Clive_Barkers_Undying_WIKI.txt
+│   │   ├── Commissaire_à_la_langue_française_WIKI.txt
+│   │   ├── Commission_de_la_protection_de_la_langue_française_WIKI.txt
+│   │   ├── Commission_denrichissement_de_la_langue_française_WIKI.txt
+│   │   ├── Company_of_Heroes_2_WIKI.txt
+│   │   ├── Conchyoline.txt
+│   │   ├── Congrès_du_Lesotho_pour_la_démocratie.txt
+│   │   ├── Congrès_socialiste_(France).txt
+│   │   ├── Conseil_des_bons_hommes_de_la_plaine_de_Murcie.txt
+│   │   ├── Conseil_international_de_la_langue_française_WIKI.txt
+│   │   ├── Conseil_supérieur_de_la_langue_française_WIKI.txt
+│   │   ├── Constant_Moyaux_WIKI.txt
+│   │   ├── Constitution_des_Comores_WIKI.txt
+│   │   ├── Copa_de_Campeones_de_América_1960_WIKI.txt
+│   │   ├── Copains_pour_toujours_WIKI.txt
+│   │   ├── Coralliophaga_elegans.txt
+│   │   ├── Corydoras_aeneus_WIKI.txt
+│   │   ├── Coupe_de_Belgique_de_football_1996-1997.txt
+│   │   ├── Cour_de_magistrats_de_lAustralie-Occidentale.txt
+│   │   ├── Croix_pattées_du_Vexin.txt
+│   │   ├── Culture_française_WIKI.txt
+│   │   ├── Cursed_(film,_2005).txt
+│   │   ├── Danger_Doom_WIKI.txt
+│   │   ├── Daniel_Chocron_WIKI.txt
+│   │   ├── Daniel_Steyn.txt
+│   │   ├── David_Monro.txt
+│   │   ├── Dawie_Theron.txt
+│   │   ├── Décès_en_958_WIKI.txt
+│   │   ├── Décès_en_mai_2012_WIKI.txt
+│   │   ├── Déclinaison_(astronomie)_WIKI.txt
+│   │   ├── Défense_de_la_langue_française_WIKI.txt
+│   │   ├── Délégation_générale_à_la_langue_française_et_aux_langues_de_France_WIKI.txt
+│   │   ├── De_lege_ferenda.txt
+│   │   ├── DELF_et_DALF_WIKI.txt
+│   │   ├── De_luniversalité_de_la_langue_française_WIKI.txt
+│   │   ├── Demba_WIKI.txt
+│   │   ├── Démographie_de_la_Lettonie.txt
+│   │   ├── Département_de_Minas_(Neuquén).txt
+│   │   ├── Départ_groupé_masculin_de_patinage_de_vitesse_aux_Jeux_olympiques_de_2022.txt
+│   │   ├── Derek_Mio.txt
+│   │   ├── Désipramine_WIKI.txt
+│   │   ├── Dessaisissement_(droit_français).txt
+│   │   ├── Destruction_Bay.txt
+│   │   ├── Devise_(phrase).txt
+│   │   ├── Devprayag.txt
+│   │   ├── Dial_Records_(1964).txt
+│   │   ├── Diana_Pizzavini_WIKI.txt
+│   │   ├── Dictionnaire_de_la_langue_française_WIKI.txt
+│   │   ├── Dictionnaire_historique_de_la_langue_française_WIKI.txt
+│   │   ├── Dictionnaires_de_langue_française_WIKI.txt
+│   │   ├── Dictionnaires_Le_Robert_WIKI.txt
+│   │   ├── Dina_Averina.txt
+│   │   ├── Diplôme_européen_des_espaces_protégés.txt
+│   │   ├── Direction_de_la_langue_française_WIKI.txt
+│   │   ├── Disiliciure_de_dirhodium_et_dytterbium_WIKI.txt
+│   │   ├── Disparition_de_la_langue_française_WIKI.txt
+│   │   ├── Divide_By_Zero.txt
+│   │   ├── Djaïli_Amadou_Amal_WIKI.txt
+│   │   ├── Djoandila.txt
+│   │   ├── Dominique_Bailly.txt
+│   │   ├── Domus_du_Lion.txt
+│   │   ├── Donje_Lipovo.txt
+│   │   ├── Don_Sharp.txt
+│   │   ├── Dont_Kill_It.txt
+│   │   ├── DrSmile.txt
+│   │   ├── Échauguette.txt
+│   │   ├── Eda_Nemoede_Casterton.txt
+│   │   ├── Edgar_Pangborn.txt
+│   │   ├── Église_Notre-Dame_de_Beaulieu-sur-Dordogne.txt
+│   │   ├── Église_Notre-Dame_de_La_Baule-Escoublac.txt
+│   │   ├── Église_Notre-Dame-de-la-Nativité_de_Lassy_WIKI.txt
+│   │   ├── Église_Notre-Dame-de-lAssomption_du_Theil.txt
+│   │   ├── Église_Saint-Antoine_abbé_(Udine).txt
+│   │   ├── Église_Saint-Jean-Baptiste_de_Vimarcé.txt
+│   │   ├── Église_Saint-Symphorien_de_Saint-Symphorien_WIKI.txt
+│   │   ├── Église_Santa_Maria_di_Caravaggio_WIKI.txt
+│   │   ├── Egone_atrisquamata.txt
+│   │   ├── Élections_cantonales_de_2004_dans_la_Loire_WIKI.txt
+│   │   ├── Élections_législatives_de_2017_dans_la_Drôme.txt
+│   │   ├── Élégie_en_rouge.txt
+│   │   ├── Elena_Chalamova.txt
+│   │   ├── Élisabeth_dAutriche_(1554-1592)_WIKI.txt
+│   │   ├── Élisabeth_le_Despenser_(1325-1389).txt
+│   │   ├── El_Santo_contre_les_tueurs_de_la_Mafia.txt
+│   │   ├── Émile-Henri_Laporte_WIKI.txt
+│   │   ├── Emmanuel_Bilodeau.txt
+│   │   ├── Emploi_de_gré_à_gré_WIKI.txt
+│   │   ├── Enrique_Dussel.txt
+│   │   ├── EPIC_2014_WIKI.txt
+│   │   ├── Époque_(astronomie)_WIKI.txt
+│   │   ├── Épreuve_féminine_par_équipes_de_tir_à_larc_aux_Jeux_olympiques_dété_de_2024.txt
+│   │   ├── Équation_de_von_Kármán.txt
+│   │   ├── Équipe_dAllemagne_olympique_de_football.txt
+│   │   ├── Équipe_de_lannée_de_lUEFA.txt
+│   │   ├── Érembert_de_Toulouse.txt
+│   │   ├── Eric_Lichaj.txt
+│   │   ├── Erman_Eltemur.txt
+│   │   ├── Érythrose-4-phosphate_WIKI.txt
+│   │   ├── Essex_Township_(comté_de_Kankakee,_Illinois).txt
+│   │   ├── Étoile_nord-africaine.txt
+│   │   ├── Euro_Hockey_League_2008-2009_WIKI.txt
+│   │   ├── Evanss_Supper_Room_WIKI.txt
+│   │   ├── Face_à_l’eau.txt
+│   │   ├── Fait_générateur_de_responsabilité_en_droit_civil_français_WIKI.txt
+│   │   ├── Famille_von_Thümen.txt
+│   │   ├── Faustus_Cornelius_Sulla.txt
+│   │   ├── Fédération_de_Paraíba_de_football.txt
+│   │   ├── Feliks_Sobanski_WIKI.txt
+│   │   ├── Fer_doux.txt
+│   │   ├── Fernand_Crouzel_WIKI.txt
+│   │   ├── Festival_de_la_bière_de_Belgrade.txt
+│   │   ├── Festival_théâtral_de_Coye-la-Forêt.txt
+│   │   ├── Fiatach_Finn_WIKI.txt
+│   │   ├── Film_8_mm_WIKI.txt
+│   │   ├── Finale_de_la_Coupe_des_clubs_champions_européens_1986-1987.txt
+│   │   ├── Fisichella_Motor_Sport.txt
+│   │   ├── Fondation_Bill-et-Melinda-Gates.txt
+│   │   ├── Forteresse_de_Hohensalzburg_WIKI.txt
+│   │   ├── FPB-57.txt
+│   │   ├── Fracture_du_sternum.txt
+│   │   ├── Français_(peuple)_WIKI.txt
+│   │   ├── Français_WIKI.txt
+│   │   ├── France_24_WIKI.txt
+│   │   ├── François_Civil.txt
+│   │   ├── François_II_de_Beauharnais.txt
+│   │   ├── François_Rollin_WIKI.txt
+│   │   ├── Franusin_WIKI.txt
+│   │   ├── Franz_Göring.txt
+│   │   ├── Frédéric_II,_roi_de_Prusse_WIKI.txt
+│   │   ├── Fred_Hersch.txt
+│   │   ├── French_conneXion.txt
+│   │   ├── Frères_Montgolfier.txt
+│   │   ├── Friedrich_Solmsen.txt
+│   │   ├── Friedrich_Vogt_WIKI.txt
+│   │   ├── Fünf_Seen_Filmfestival.txt
+│   │   ├── Gaetano_Pirrello.txt
+│   │   ├── Gare_de_Boechout.txt
+│   │   ├── Gare_de_Paulhan.txt
+│   │   ├── Gary_L._Miller_WIKI.txt
+│   │   ├── Gauche_indépendante_(Italie)_WIKI.txt
+│   │   ├── Gauchissement_de_la_Voie_lactée_WIKI.txt
+│   │   ├── Gave_dOloron.txt
+│   │   ├── Georgiana_Dorward.txt
+│   │   ├── Geórgios_Stréit_WIKI.txt
+│   │   ├── Georg_Peter_Weimar_WIKI.txt
+│   │   ├── Gestion_des_inondations.txt
+│   │   ├── Ghenwa_Jalloul_WIKI.txt
+│   │   ├── Gilbert_Dagnon.txt
+│   │   ├── Giuseppe_Fiorelli.txt
+│   │   ├── Gleißenberg.txt
+│   │   ├── Gnomulus_imadatei.txt
+│   │   ├── Gonocephalus.txt
+│   │   ├── Goussev_(ville).txt
+│   │   ├── Governors_House.txt
+│   │   ├── Grafenau_(Bade-Wurtemberg).txt
+│   │   ├── Grahovčići.txt
+│   │   ├── Grammaire_française_WIKI.txt
+│   │   ├── Grand_Grèbe.txt
+│   │   ├── Grand_Prix_automobile_de_Monaco_2009_WIKI.txt
+│   │   ├── Grand_Prix_automobile_du_Brésil_1982_WIKI.txt
+│   │   ├── Grand_sénéchal_de_Suède.txt
+│   │   ├── Gran_Vaupés_WIKI.txt
+│   │   ├── Gratin_de_chouchou.txt
+│   │   ├── Grégory_Maklès_WIKI.txt
+│   │   ├── Grigor_II_Mamikonian.txt
+│   │   ├── Grimace_(compositeur).txt
+│   │   ├── Grotte_de_la_Serra.txt
+│   │   ├── Gue_du_Shetland.txt
+│   │   ├── Guilhem_Magret.txt
+│   │   ├── Guillaume_Tardif_WIKI.txt
+│   │   ├── Gunnar_Olsson_(football,_1908).txt
+│   │   ├── Guy_Ier_de_Lévis_WIKI.txt
+│   │   ├── Haïku_WIKI.txt
+│   │   ├── Hans_Eysenck_WIKI.txt
+│   │   ├── Harold_Buchanan_McGiverin_WIKI.txt
+│   │   ├── Haut-shérif_du_Gwynedd.txt
+│   │   ├── Hearresleat.txt
+│   │   ├── Hélène_Le_Jeune_WIKI.txt
+│   │   ├── Henri_Maynier_WIKI.txt
+│   │   ├── Hermenegildo_Santos.txt
+│   │   ├── Hideo_Ōba_WIKI.txt
+│   │   ├── Hime_Kyun_Fruit_Kan_WIKI.txt
+│   │   ├── Histoire_de_la_langue_française_WIKI.txt
+│   │   ├── HMS_Amazon_(1799)_WIKI.txt
+│   │   ├── HMS_Black_Swan_(L57)_WIKI.txt
+│   │   ├── Honi_soit_qui_mal_y_pense_WIKI.txt
+│   │   ├── Honoré_Icard.txt
+│   │   ├── Horus_au_serekh_WIKI.txt
+│   │   ├── HS_(tremplin).txt
+│   │   ├── Hyalinobatrachium_taylori_WIKI.txt
+│   │   ├── Hypodéveloppement_WIKI.txt
+│   │   ├── Ici_Champagne-Ardenne_WIKI.txt
+│   │   ├── Icograda.txt
+│   │   ├── Igor_Vinichenko_WIKI.txt
+│   │   ├── Igrišta.txt
+│   │   ├── IIe_législature_de_la_République_italienne.txt
+│   │   ├── Ilyas_El_Maliki.txt
+│   │   ├── Indila_WIKI.txt
+│   │   ├── Infohaptie.txt
+│   │   ├── Inge_Müller.txt
+│   │   ├── Institut_catholique_de_Bafoussam.txt
+│   │   ├── Institut_Curie_WIKI.txt
+│   │   ├── Institut_Ramón_Muntaner.txt
+│   │   ├── Intermission_Extraneous_Music_from_the_Residents_Mole_Show.txt
+│   │   ├── International_Journal_of_Foundations_of_Computer_Science_WIKI.txt
+│   │   ├── Interprétation_de_la_mécanique_quantique.txt
+│   │   ├── Ioujnaïa_(métro_de_Moscou)_WIKI.txt
+│   │   ├── Irina_De_Knop_WIKI.txt
+│   │   ├── Ischke_Senekal.txt
+│   │   ├── Ityopya,_Ityopya,_Ityopya_qidemi.txt
+│   │   ├── Ivan_Bohdan.txt
+│   │   ├── Jacques_Riparelli.txt
+│   │   ├── James_Milne.txt
+│   │   ├── James_Peachey_(1er_baron_Selsey).txt
+│   │   ├── Jamie_Nicholls.txt
+│   │   ├── Jan_Matuszyński.txt
+│   │   ├── Jauréguiberry_(D637).txt
+│   │   ├── Jawa_(entreprise).txt
+│   │   ├── Jaych_al-Jihad.txt
+│   │   ├── Jean-Luc_Porquet_WIKI.txt
+│   │   ├── Jedlicze_WIKI.txt
+│   │   ├── Jeff_Stans_WIKI.txt
+│   │   ├── Jehangir_Ratanji_Dadabhai_Tata.txt
+│   │   ├── Je_suis_là_(album_de_Lara_Fabian)_WIKI.txt
+│   │   ├── Joachim_du_Bellay_WIKI.txt
+│   │   ├── Joanna_Grudzińska_WIKI.txt
+│   │   ├── João_Rodriguez.txt
+│   │   ├── Josef_Abrhám.txt
+│   │   ├── Joseph_Sarko.txt
+│   │   ├── Juggernaut.txt
+│   │   ├── Jules_Richard_(photographe).txt
+│   │   ├── Jure_Natek_WIKI.txt
+│   │   ├── Kaikohe_WIKI.txt
+│   │   ├── Kaltura.txt
+│   │   ├── Karine_Herry.txt
+│   │   ├── Karolína_Kurková_WIKI.txt
+│   │   ├── Katmandou,_un_miroir_dans_le_ciel_WIKI.txt
+│   │   ├── Kentucky_Oaks_WIKI.txt
+│   │   ├── Khurchid_Aghayeva.txt
+│   │   ├── Kırıkkale_(circonscription_électorale)_WIKI.txt
+│   │   ├── Koppin.txt
+│   │   ├── Kountsevo_WIKI.txt
+│   │   ├── Kourbi_WIKI.txt
+│   │   ├── Kpèdia.txt
+│   │   ├── Kremlin_(Oklahoma).txt
+│   │   ├── La_Défense_et_illustration_de_la_langue_française_WIKI.txt
+│   │   ├── La_Disparition_de_la_langue_française_WIKI.txt
+│   │   ├── La_Fiancée_de_Lammermoor_WIKI.txt
+│   │   ├── La_Guerre_(Rousseau)_WIKI.txt
+│   │   ├── La_Langue_française_WIKI.txt
+│   │   ├── Lamelles_de_bambou_de_Zoumalou.txt
+│   │   ├── Lancer_du_disque_féminin_aux_championnats_du_monde_dathlétisme_2005.txt
+│   │   ├── Langage_inclusif_en_français_WIKI.txt
+│   │   ├── Langue_des_signes_française_WIKI.txt
+│   │   ├── Langue_doïl_WIKI.txt
+│   │   ├── Langue_française_au_Canada_WIKI.txt
+│   │   ├── Langue_française_au_Liban_WIKI.txt
+│   │   ├── Langue_française_au_Maroc_WIKI.txt
+│   │   ├── Langue_française_au_Viêt_Nam_WIKI.txt
+│   │   ├── Langue_française_aux_États-Unis_WIKI.txt
+│   │   ├── Langue_française_en_Louisiane_WIKI.txt
+│   │   ├── Langue_française_en_Vallée_dAoste_WIKI.txt
+│   │   ├── Langue_française_(revue)_WIKI.txt
+│   │   ├── Langue_officielle_WIKI.txt
+│   │   ├── Langues_au_Bénin_WIKI.txt
+│   │   ├── Langues_au_Burkina_Faso_WIKI.txt
+│   │   ├── Langues_au_Cameroun_WIKI.txt
+│   │   ├── Langues_au_Canada_WIKI.txt
+│   │   ├── Langues_au_Gabon_WIKI.txt
+│   │   ├── Langues_au_Luxembourg_WIKI.txt
+│   │   ├── Langues_au_Mali_WIKI.txt
+│   │   ├── Langues_au_Maroc_WIKI.txt
+│   │   ├── Langues_au_Niger_WIKI.txt
+│   │   ├── Langues_aux_États-Unis_WIKI.txt
+│   │   ├── Langues_en_Algérie_WIKI.txt
+│   │   ├── Langues_en_Angola_WIKI.txt
+│   │   ├── Langues_en_Belgique_WIKI.txt
+│   │   ├── Langues_en_Côte_dIvoire_WIKI.txt
+│   │   ├── Langues_en_Guinée_WIKI.txt
+│   │   ├── Langues_en_Polynésie_française_WIKI.txt
+│   │   ├── Langues_en_république_démocratique_du_Congo_WIKI.txt
+│   │   ├── Langues_en_république_du_Congo_WIKI.txt
+│   │   ├── Langues_en_Suisse_WIKI.txt
+│   │   ├── Langues_régionales_ou_minoritaires_en_France_WIKI.txt
+│   │   ├── Langues_romanes_WIKI.txt
+│   │   ├── Langue_vernaculaire_WIKI.txt
+│   │   ├── Langue_WIKI.txt
+│   │   ├── Lanivo.txt
+│   │   ├── Laura_Prepon.txt
+│   │   ├── La_Vicomtesse_dHaussonville.txt
+│   │   ├── La_Voiture_hantée.txt
+│   │   ├── Leandro_N._Alem_(partido)_WIKI.txt
+│   │   ├── Lechytia_cavicola.txt
+│   │   ├── Le_Favori_des_dieux_WIKI.txt
+│   │   ├── Le_Fruit_du_désir_WIKI.txt
+│   │   ├── Le_Loup_du_désert_WIKI.txt
+│   │   ├── Le_Mendiant.txt
+│   │   ├── Leo_F._Forbstein.txt
+│   │   ├── Leonie_Marzouk.txt
+│   │   ├── Les_Bleus_de_lamour.txt
+│   │   ├── Les_Coquelicots_rouges_du_mont_Cassin.txt
+│   │   ├── Les_Derniers_Jours_de_Pompéi_(film,_1950).txt
+│   │   ├── Leżachów-Osada.txt
+│   │   ├── Ligue_féminine_de_basket_2019-2020.txt
+│   │   ├── Limbe_(Malawi)_WIKI.txt
+│   │   ├── Lina_Lazaar.txt
+│   │   ├── Liste_alphabétique_décrivains_de_langue_française_WIKI.txt
+│   │   ├── Liste_décrivains_de_langue_française_par_année_de_naissance_WIKI.txt
+│   │   ├── Liste_de_poètes_de_langue_française_WIKI.txt
+│   │   ├── Liste_des_albums_musicaux_numéro_un_au_Billboard_200_en_1980_WIKI.txt
+│   │   ├── Liste_des_clochers-murs_de_lAveyron_WIKI.txt
+│   │   ├── Liste_des_comtes_de_Clermont-en-Beauvaisis_WIKI.txt
+│   │   ├── Liste_des_épisodes_de_Phil_du_futur_WIKI.txt
+│   │   ├── Liste_des_épisodes_des_Frères_Scott_WIKI.txt
+│   │   ├── Liste_des_langues_par_nombre_de_locuteurs_natifs_WIKI.txt
+│   │   ├── Liste_des_mots_les_plus_longs_en_français_WIKI.txt
+│   │   ├── Liste_des_pays_ayant_le_français_pour_langue_officielle_WIKI.txt
+│   │   ├── Liste_du_patrimoine_culturel_immatériel_de_lhumanité_en_Tchéquie_WIKI.txt
+│   │   ├── Littérature_de_langue_française_WIKI.txt
+│   │   ├── Littérature_française_WIKI.txt
+│   │   ├── Littérature_italienne.txt
+│   │   ├── Loi_Toubon_WIKI.txt
+│   │   ├── Loretta_Hidalgo_Whitesides_WIKI.txt
+│   │   ├── Lough_Neagh.txt
+│   │   ├── Louis_de_Lacger_WIKI.txt
+│   │   ├── Louis_de_Montmorency-Fosseux.txt
+│   │   ├── Louis_Vieille.txt
+│   │   ├── Lucien_Couqueberg.txt
+│   │   ├── Luis_Téllez_WIKI.txt
+│   │   ├── Maison_de_la_Chancellerie_(Blois)_WIKI.txt
+│   │   ├── Maków_(Mazovie).txt
+│   │   ├── Makrochórion_(Imathie).txt
+│   │   ├── Maksim_Medvedev_WIKI.txt
+│   │   ├── Malice_Mizer.txt
+│   │   ├── Mami_Umeki.txt
+│   │   ├── Mankovice.txt
+│   │   ├── Maréchal_de_Normandie.txt
+│   │   ├── Margaritifera.txt
+│   │   ├── Margaropus.txt
+│   │   ├── Margaux_de_Frouville.txt
+│   │   ├── Maria_Ercolano.txt
+│   │   ├── María_Zavala_Valladares.txt
+│   │   ├── Marie_Silin.txt
+│   │   ├── Mariners_Harbor_(Staten_Island).txt
+│   │   ├── Marius_Oprea_WIKI.txt
+│   │   ├── Markham—Unionville_(circonscription_provinciale).txt
+│   │   ├── Markovci.txt
+│   │   ├── Más_allá_del_jardín.txt
+│   │   ├── Mastocytose.txt
+│   │   ├── Matakitaki_(rivière).txt
+│   │   ├── Max_Werner.txt
+│   │   ├── Médaille_Tiradentes_WIKI.txt
+│   │   ├── Mer_des_Salomon.txt
+│   │   ├── Michałowo_(Malbork).txt
+│   │   ├── Mikmaki_WIKI.txt
+│   │   ├── Millington_(Maryland)_WIKI.txt
+│   │   ├── Minamiminowa_WIKI.txt
+│   │   ├── Mine_de_Boroo_WIKI.txt
+│   │   ├── Ministère_de_la_Langue_française_WIKI.txt
+│   │   ├── Minneapolis_Skyway_System.txt
+│   │   ├── Mire_du_Nord_WIKI.txt
+│   │   ├── Mirini_WIKI.txt
+│   │   ├── Miro_(catch).txt
+│   │   ├── Mississippi_Freedom_Democratic_Party.txt
+│   │   ├── MMah_Soumah.txt
+│   │   ├── Mohamed_Lagraâ.txt
+│   │   ├── Mohamed_Najem_WIKI.txt
+│   │   ├── Molione_WIKI.txt
+│   │   ├── Montpensier_WIKI.txt
+│   │   ├── Morris_(circonscription_électorale).txt
+│   │   ├── Moston_(Cheshire_East).txt
+│   │   ├── Moteurs_radiaux_Piaggio.txt
+│   │   ├── Mount_Vernon_(Iowa).txt
+│   │   ├── Mouvement_de_la_réforme_pour_le_développement_social_WIKI.txt
+│   │   ├── Multidictionnaire_de_la_langue_française_WIKI.txt
+│   │   ├── Munduruku_bicoloratum.txt
+│   │   ├── Muriel_Robin_WIKI.txt
+│   │   ├── Musée_dAnsembourg.txt
+│   │   ├── Nadine_Cerf-Bensussan_WIKI.txt
+│   │   ├── Nadir_(astronomie)_WIKI.txt
+│   │   ├── Nagoya_Railroad_WIKI.txt
+│   │   ├── Namdroling.txt
+│   │   ├── Na-mi_WIKI.txt
+│   │   ├── Nathaniel_North.txt
+│   │   ├── Nationalité_française_WIKI.txt
+│   │   ├── National_Weather_Center.txt
+│   │   ├── Natovenator.txt
+│   │   ├── Nazoanga_WIKI.txt
+│   │   ├── Nephtheaplana_tropica.txt
+│   │   ├── Nersé_dIbérie_WIKI.txt
+│   │   ├── Nestelbach_bei_Graz.txt
+│   │   ├── NewTel_Communications.txt
+│   │   ├── Newton_21.txt
+│   │   ├── NGC_2103.txt
+│   │   ├── NGC_241.txt
+│   │   ├── NGC_7535_WIKI.txt
+│   │   ├── NGC_7675.txt
+│   │   ├── Nicola_Khuri_WIKI.txt
+│   │   ├── Nicolas_Blanchard.txt
+│   │   ├── Nicolas_Frey.txt
+│   │   ├── Nicole_Couderc.txt
+│   │   ├── Nomparadougou_WIKI.txt
+│   │   ├── Normani_WIKI.txt
+│   │   ├── North_American_Soccer_League_1982.txt
+│   │   ├── Northeast_Asia_Trade_Tower.txt
+│   │   ├── Nouchi_(langue)_WIKI.txt
+│   │   ├── Nova_Alvorada_do_Sul.txt
+│   │   ├── Noyaux_du_raphé.txt
+│   │   ├── Nshan_Erzrumian_WIKI.txt
+│   │   ├── Nthomeng_Majara.txt
+│   │   ├── Oberdolling_WIKI.txt
+│   │   ├── Observatoire_de_la_langue_française_WIKI.txt
+│   │   ├── Occitan_WIKI.txt
+│   │   ├── Octobre_1870_WIKI.txt
+│   │   ├── Oćune.txt
+│   │   ├── Office_québécois_de_la_langue_française_WIKI.txt
+│   │   ├── OFK_Titograd.txt
+│   │   ├── Oldbury-on-Severn.txt
+│   │   ├── Oliszki_(Choroszcz).txt
+│   │   ├── Opération_de_la_caillette_WIKI.txt
+│   │   ├── Opisthotropis_rugosa.txt
+│   │   ├── Ordinateur_personnel.txt
+│   │   ├── Orolik.txt
+│   │   ├── Ortega_(cépage).txt
+│   │   ├── Otari.txt
+│   │   ├── Otto_Clemens_Fikentscher.txt
+│   │   ├── Ottonville.txt
+│   │   ├── Papilio_aegeus.txt
+│   │   ├── Parabole_du_vignoble_gaspillé.txt
+│   │   ├── Parc_national_Canunda.txt
+│   │   ├── Parécoxib.txt
+│   │   ├── Park_Nam-ok_WIKI.txt
+│   │   ├── Partie_iliaque_du_fascia_ilio-psoïque.txt
+│   │   ├── Pascualcobo.txt
+│   │   ├── Pastel_des_teinturiers_WIKI.txt
+│   │   ├── Patrick_Daley.txt
+│   │   ├── Pattes_de_velours_(bande_dessinée)_WIKI.txt
+│   │   ├── Paul-Émile_Duboy.txt
+│   │   ├── Paulo_de_Oliveira_(football)_WIKI.txt
+│   │   ├── Paul_Pelletier_WIKI.txt
+│   │   ├── Paysage_pastoral_avec_le_pont_Milvius.txt
+│   │   ├── Pédé_WIKI.txt
+│   │   ├── Période_solaire_WIKI.txt
+│   │   ├── Peter-Klaus_Budig_WIKI.txt
+│   │   ├── Peugeot_Moovie_WIKI.txt
+│   │   ├── Phare_de_Ragged_Point.txt
+│   │   ├── Phosphosphingolipide.txt
+│   │   ├── Phyllomedusa_iheringii.txt
+│   │   ├── Pierre_Coran.txt
+│   │   ├── Pierre_Perret_WIKI.txt
+│   │   ├── Pierre_Weiss_(sportif).txt
+│   │   ├── Pietro_Maffi.txt
+│   │   ├── Place_du_Royaume_WIKI.txt
+│   │   ├── Plage_de_Gunga.txt
+│   │   ├── Pléiade_(XVIe_siècle)_WIKI.txt
+│   │   ├── Poésie_algérienne_de_langue_française_WIKI.txt
+│   │   ├── Polanka_(Mazovie).txt
+│   │   ├── Pôle_dun_corps_céleste.txt
+│   │   ├── Polynôme_symétrique_WIKI.txt
+│   │   ├── Ponza_(île).txt
+│   │   ├── Porto_Amboim_WIKI.txt
+│   │   ├── Post_Office_Protocol.txt
+│   │   ├── Prieuré_de_Félines.txt
+│   │   ├── Pritha_vestita.txt
+│   │   ├── Prix_Charles-Louis_de_Saulses_de_Freycinet.txt
+│   │   ├── Prix_de_la_Communauté_flamande_pour_une_œuvre_en_prose.txt
+│   │   ├── Pro_Bowl_Games_2024.txt
+│   │   ├── Proszowa_WIKI.txt
+│   │   ├── Prunus_pumila_var._besseyi.txt
+│   │   ├── Pseudhapalopus_aculeatus.txt
+│   │   ├── Pyramide_(traitement_dimage)_WIKI.txt
+│   │   ├── Pyrogallol_WIKI.txt
+│   │   ├── Qasr_Banat_WIKI.txt
+│   │   ├── Quintette_avec_piano_de_Turina_WIKI.txt
+│   │   ├── Rafael_Reyes_Prieto.txt
+│   │   ├── Rake_(série_télévisée,_2010)_WIKI.txt
+│   │   ├── Raszowa_(Opole)_WIKI.txt
+│   │   ├── Razdan.txt
+│   │   ├── Recherche_de_trésor.txt
+│   │   ├── Refuge_dE_Capannelle.txt
+│   │   ├── Région_de_langue_française_de_Belgique_WIKI.txt
+│   │   ├── Registres_de_langue_en_français_WIKI.txt
+│   │   ├── Renaissance_du_Bénin.txt
+│   │   ├── Renaud_Van_Ruymbeke.txt
+│   │   ├── Résolution_805_du_Conseil_de_sécurité_des_Nations_unies.txt
+│   │   ├── Retiro_(métro_de_Madrid)_WIKI.txt
+│   │   ├── Reveille_with_Beverly.txt
+│   │   ├── Rhamphosuchus.txt
+│   │   ├── Ribozyviria.txt
+│   │   ├── Ricardo_Lozano_Picón.txt
+│   │   ├── Riccardo_Petrella_WIKI.txt
+│   │   ├── Riche,_jeune_et_jolie.txt
+│   │   ├── Rieucros_dAbaïsse_WIKI.txt
+│   │   ├── Rite_copte.txt
+│   │   ├── Robert_Graf_(acteur).txt
+│   │   ├── Robert_Paturel.txt
+│   │   ├── Rolan_Bykov.txt
+│   │   ├── Rolling_with_The_Stones.txt
+│   │   ├── Romeo_(groupe).txt
+│   │   ├── Rubén_Pardo.txt
+│   │   ├── Rue_du_Four_(Nancy)_WIKI.txt
+│   │   ├── Rue_Michel-Sicre_WIKI.txt
+│   │   ├── Rue_Peyrolières.txt
+│   │   ├── Rugby_à_XV_en_Argentine.txt
+│   │   ├── Saint-Martin-Vésubie_WIKI.txt
+│   │   ├── Saison_1999-2000_du_Football_Club_de_Grenoble_rugby_WIKI.txt
+│   │   ├── Saison_2015_de_léquipe_cycliste_Marseille_13_KTM.txt
+│   │   ├── Santiago_Vergini_WIKI.txt
+│   │   ├── Sardaigne_en_liberté.txt
+│   │   ├── Sayaun_Thunga_Phool_Ka_WIKI.txt
+│   │   ├── Scandale_sur_la_Riviera_WIKI.txt
+│   │   ├── Scelotes_poensis.txt
+│   │   ├── Schelcher_Prince_WIKI.txt
+│   │   ├── Scomberomorus_concolor_WIKI.txt
+│   │   ├── Scorpiops_vonwicki_WIKI.txt
+│   │   ├── Scott_Jackson_WIKI.txt
+│   │   ├── SensCritique_WIKI.txt
+│   │   ├── Serbie_au_Concours_Eurovision_de_la_chanson_2010_WIKI.txt
+│   │   ├── Sergueï_Outchenko.txt
+│   │   ├── Serrone.txt
+│   │   ├── Service_hydrographique.txt
+│   │   ├── She_Has_Funny_Cars_WIKI.txt
+│   │   ├── Shushoku_-_Gohan_no_Uta_WIKI.txt
+│   │   ├── Sifaka.txt
+│   │   ├── Signalisation_de_santé_et_de_sécurité_au_travail_WIKI.txt
+│   │   ├── Simple_dames_du_Championnat_dAustralie_1931_WIKI.txt
+│   │   ├── Si_ten_reveux,_yen_re_na_!.txt
+│   │   ├── Skatepark_de_la_Villette_WIKI.txt
+│   │   ├── Slut-shaming.txt
+│   │   ├── Smoothie_WIKI.txt
+│   │   ├── Société_de_neurochirurgie_de_langue_française_WIKI.txt
+│   │   ├── Société_dergonomie_de_langue_française_WIKI.txt
+│   │   ├── Sourcieux-les-Mines.txt
+│   │   ├── SPARCstation_5.txt
+│   │   ├── Sport_au_Groenland_WIKI.txt
+│   │   ├── Stramenopiles_(classification_phylogénétique).txt
+│   │   ├── Strife_(groupe_britannique)_WIKI.txt
+│   │   ├── Strix_Television_WIKI.txt
+│   │   ├── STS-111_WIKI.txt
+│   │   ├── Suffixe_(linguistique).txt
+│   │   ├── Suisse_WIKI.txt
+│   │   ├── Summula.txt
+│   │   ├── Supernova_de_type_Ib_et_Ic.txt
+│   │   ├── Surfs_Up.txt
+│   │   ├── Surge_(comics)_WIKI.txt
+│   │   ├── Sylvanès.txt
+│   │   ├── Syndicat_des_écrivains_de_langue_française_WIKI.txt
+│   │   ├── Syndrome_de_Wolff-Parkinson-White.txt
+│   │   ├── Szczepan_Biliński.txt
+│   │   ├── Table_des_caractères_UnicodeU1E900.txt
+│   │   ├── Tablette_ancestrale.txt
+│   │   ├── Tahar_Sfar_WIKI.txt
+│   │   ├── Tall_Ships_Races.txt
+│   │   ├── Tavoybia_quadrispina_WIKI.txt
+│   │   ├── Tecution_planum.txt
+│   │   ├── Thau_(rivière)_WIKI.txt
+│   │   ├── Théâtre_Telus_WIKI.txt
+│   │   ├── Théorie_de_la_classe_de_loisir_WIKI.txt
+│   │   ├── Théorie_de_Sturm-Liouville_WIKI.txt
+│   │   ├── Thierry_Lodé_WIKI.txt
+│   │   ├── Thomas_Barlow_(1er_baronnet).txt
+│   │   ├── Thomas_Rüfenacht.txt
+│   │   ├── Titanosaurus_(kaiju).txt
+│   │   ├── Tito_and_Tarantula_WIKI.txt
+│   │   ├── Titre_de_conseiller_agricole_(Finlande).txt
+│   │   ├── Tityus_elizabethebravoi.txt
+│   │   ├── Tityus_tocantim.txt
+│   │   ├── Tomás_el_Nitri.txt
+│   │   ├── Tour_Asinelli_WIKI.txt
+│   │   ├── Tournée_de_léquipe_de_France_de_rugby_à_XV_en_1998.txt
+│   │   ├── Tournoi_de_tennis_de_Miami_(ATP_2007)_WIKI.txt
+│   │   ├── Trafic_sexuel_au_Japon.txt
+│   │   ├── Treacle_tart.txt
+│   │   ├── Trésor_de_la_langue_française_informatisé_WIKI.txt
+│   │   ├── Trésor_de_la_langue_française_WIKI.txt
+│   │   ├── Tshiolola_Tshinyama_WIKI.txt
+│   │   ├── Twist_and_Shout_(film).txt
+│   │   ├── Two_Men_and_a_Woman.txt
+│   │   ├── Tyrvää_WIKI.txt
+│   │   ├── UMF_Skallagrímur_WIKI.txt
+│   │   ├── Union_des_progressistes_juifs_de_Belgique_WIKI.txt
+│   │   ├── Untere_Gottesackerwände.txt
+│   │   ├── Unterseeboot_UC-27.txt
+│   │   ├── Valged_Ööd.txt
+│   │   ├── Velam_(entreprise)_WIKI.txt
+│   │   ├── Versification_française_WIKI.txt
+│   │   ├── Vicar.txt
+│   │   ├── Ville_(langue_française)_WIKI.txt
+│   │   ├── Villers-Cotterêts_WIKI.txt
+│   │   ├── Villette-lès-Dole_WIKI.txt
+│   │   ├── Viroïde_du_rabougrissement_du_houblon_WIKI.txt
+│   │   ├── Viviers-lès-Offroicourt_WIKI.txt
+│   │   ├── Vleteren.txt
+│   │   ├── V_on_Shenton_Residential_Tower.txt
+│   │   ├── Wahlström_&_Widstrand.txt
+│   │   ├── Wall_Township_(comté_de_Ford,_Illinois).txt
+│   │   ├── Wanderers_Football_Club_WIKI.txt
+│   │   ├── Warlock_The_Armageddon.txt
+│   │   ├── Whispering_Pines_(Arizona).txt
+│   │   ├── Widukind.txt
+│   │   ├── Wikipédia_en_français_WIKI.txt
+│   │   ├── Wilhelm_Schmidt_(ethnologue)_WIKI.txt
+│   │   ├── WorldForge.txt
+│   │   ├── Xian_de_Huaiji.txt
+│   │   ├── Xian_de_Nanhua_WIKI.txt
+│   │   ├── Yelizaveta_Demirova.txt
+│   │   ├── Zagórze_(Mińsk).txt
+│   │   ├── Zduny_(gmina,_Łódź).txt
+│   │   ├── Zhao_Chang_WIKI.txt
+│   │   ├── ZyCoV-D.txt
+│   │   └── Żydy_(Mazovie).txt
+│   └── wiki_data
+│       ├── 2025-05-04_23-55-05_Dendrodorididae.txt
+│       ├── 2025-05-04_23-56-48_Demon Slayer.txt
+│       ├── 2025-05-04_23-57-06_Kodama.txt
+│       ├── 2025-05-04_23-58-49_Indalecio Ojanguren.txt
+│       ├── 2025-05-04_23-59-07_Cyril Jean Zohrabian.txt
+│       ├── 2025-05-05_00-00-50_Championnats du monde de gymnastique rythmique 2011.txt
+│       ├── 2025-05-05_00-02-50_Teigne du bananier.txt
+│       ├── 2025-05-05_00-04-51_Fais-moi peur (film).txt
+│       ├── 2025-05-05_00-06-52_L'Objet du couchant.txt
+│       ├── 2025-05-05_00-08-53_Chessy (Rhône).txt
+│       ├── 2025-05-05_00-10-54_L'Ascension.txt
+│       ├── 2025-05-05_00-12-28_Zuzana Dolinková.txt
+│       ├── 2025-05-05_00-12-55_Camille Doucet.txt
+│       ├── 2025-05-05_00-14-29_Hillary Sao Kanu.txt
+│       ├── 2025-05-05_00-14-58_Geophis dunni.txt
+│       ├── 2025-05-05_00-19-20_Mega Bomberman.txt
+│       ├── 2025-05-05_00-21-21_Hanriot HD.3.txt
+│       ├── 2025-05-05_00-29-13_La Naissance de Vénus (Cabanel).txt
+│       ├── 2025-05-05_00-31-14_Anabate bridé.txt
+│       ├── 2025-05-05_00-33-15_Marie-Anne-Amélie de Hesse-Hombourg.txt
+│       ├── 2025-05-05_00-35-16_Richard Butler (2e comte de Glengall).txt
+│       ├── 2025-05-05_00-37-17_Saab 92.txt
+│       ├── 2025-05-05_00-39-18_Ballade pour piano et orchestre (Fauré).txt
+│       ├── 2025-05-05_00-41-19_La Bénédiction des fils de Joseph par Jacob.txt
+│       ├── 2025-05-05_00-43-20_Journal européen de combinatoire.txt
+│       ├── 2025-05-05_00-45-21_Neverwinter Nights.txt
+│       ├── 2025-05-05_00-47-22_Lilly-Élisabeth Carter.txt
+│       ├── 2025-05-05_00-49-23_John F. Kennedy Stadium.txt
+│       ├── 2025-05-05_00-51-24_Église Saint-André-et-Sainte-Jeanne-d'Arc de Fétilly.txt
+│       ├── 2025-05-05_00-53-25_Jánkmajtis.txt
+│       ├── 2025-05-05_00-55-26_Saguinus geoffroyi.txt
+│       ├── 2025-05-05_00-57-27_Humboldt (Illinois).txt
+│       ├── 2025-05-05_00-59-27_Saint-Didier-sous-Aubenas.txt
+│       ├── 2025-05-05_01-01-28_Parlement du Kurdistan.txt
+│       ├── 2025-05-05_01-03-29_Václav Antoš.txt
+│       ├── 2025-05-05_01-05-30_Enfida Sports.txt
+│       ├── 2025-05-05_01-07-31_Castellbisbal.txt
+│       ├── 2025-05-05_01-09-32_ZEILT Productions.txt
+│       ├── 2025-05-05_01-11-33_Meagan Marie.txt
+│       ├── 2025-05-05_01-13-35_Pudukkottai.txt
+│       ├── 2025-05-05_01-15-37_Pavlovsk (Saint-Pétersbourg).txt
+│       ├── 2025-05-05_01-17-38_Louis Nicod de Ronchaud.txt
+│       ├── 2025-05-05_01-19-39_Nolan Luhn.txt
+│       ├── 2025-05-05_01-21-40_Daimyo.txt
+│       ├── 2025-05-05_01-23-42_Parc national d'Okomu.txt
+│       ├── 2025-05-05_01-25-44_Ramón Alberto Villaverde.txt
+│       ├── 2025-05-05_01-27-45_Gare de Royan.txt
+│       ├── 2025-05-05_01-29-46_Bugae (métro de Séoul).txt
+│       ├── 2025-05-05_01-31-48_Grive d'Enggano.txt
+│       ├── 2025-05-05_01-33-49_Maisach.txt
+│       ├── 2025-05-05_01-35-50_Saint-Pierre-le-Vieux (Vendée).txt
+│       ├── 2025-05-05_01-37-51_Jean-Baptiste Gellée de Prémion.txt
+│       ├── 2025-05-05_01-39-52_Armorial des familles de Provence.txt
+│       ├── 2025-05-05_01-41-54_Place Charles-Dullin.txt
+│       ├── 2025-05-05_01-43-55_Isaac Holden.txt
+│       ├── 2025-05-05_01-46-01_Arrondissements de Lyon.txt
+│       ├── 2025-05-05_01-48-14_Nové Město na Moravě.txt
+│       ├── 2025-05-05_01-50-15_Front de gauche (Inde).txt
+│       ├── 2025-05-05_01-52-16_Luboszyce (Lubusz).txt
+│       ├── 2025-05-05_01-54-18_Epsilon Lupi.txt
+│       ├── 2025-05-05_01-56-19_Willem de Vos.txt
+│       ├── 2025-05-05_01-58-19_Écublens (Vaud).txt
+│       ├── 2025-05-05_02-00-20_Place de la République (Vannes).txt
+│       ├── 2025-05-05_02-02-21_Latchine.txt
+│       ├── 2025-05-05_02-04-22_François Dupeyron.txt
+│       ├── 2025-05-05_02-06-23_Place Viarme.txt
+│       ├── 2025-05-05_02-08-24_Boltons.txt
+│       ├── 2025-05-05_02-10-25_Moustache.txt
+│       ├── 2025-05-05_02-12-26_Piero Messina.txt
+│       ├── 2025-05-05_02-14-27_Rue Marceau.txt
+│       ├── 2025-05-05_02-16-28_Plate-forme de la pièce d'artillerie 380.txt
+│       ├── 2025-05-05_02-18-29_Timor oriental aux Jeux olympiques d'été de 2012.txt
+│       ├── 2025-05-05_02-20-30_Scooby-Doo : Le Chant du vampire.txt
+│       ├── 2025-05-05_02-22-31_Vracovice (district de Benešov).txt
+│       ├── 2025-05-05_02-24-32_Hoszów.txt
+│       ├── 2025-05-05_02-26-33_District de Nêdong.txt
+│       ├── 2025-05-05_02-28-34_Smiley.txt
+│       ├── 2025-05-05_02-30-34_WISE 1639−6847.txt
+│       ├── 2025-05-05_02-32-36_E. Lockhart.txt
+│       ├── 2025-05-05_02-34-37_Événement de Kellwasser.txt
+│       ├── 2025-05-05_02-36-39_The Wallop.txt
+│       ├── 2025-05-05_02-38-40_Katie Vincent.txt
+│       ├── 2025-05-05_02-40-42_Salvatore Trinchese.txt
+│       ├── 2025-05-05_02-42-43_Liste des séries télévisées de Korean Broadcasting System.txt
+│       ├── 2025-05-05_02-44-44_Saint-Gorgon (Vosges).txt
+│       ├── 2025-05-05_02-46-45_Hôpital Great Western.txt
+│       ├── 2025-05-05_02-48-46_Toni Martínez.txt
+│       ├── 2025-05-05_02-50-47_Quero (Italie).txt
+│       ├── 2025-05-05_02-52-48_K-456 Vilioutchinsk.txt
+│       ├── 2025-05-05_02-54-49_Route magistrale 13 (Serbie).txt
+│       ├── 2025-05-05_02-56-50_Jenny Macklin.txt
+│       ├── 2025-05-05_02-58-51_Eunpyeong-gu.txt
+│       ├── 2025-05-05_03-00-52_Théâtre de la Huchette.txt
+│       ├── 2025-05-05_03-02-53_Je sais pas (série télévisée).txt
+│       ├── 2025-05-05_03-04-55_Dan Duquette.txt
+│       ├── 2025-05-05_03-06-56_La Champenoise.txt
+│       ├── 2025-05-05_03-08-58_Theodus Crane.txt
+│       ├── 2025-05-05_03-10-59_Piparkūkas.txt
+│       ├── 2025-05-05_03-13-00_Julian Huxley (rugby à XV).txt
+│       ├── 2025-05-05_03-15-01_Ubeidiya (Cisjordanie).txt
+│       ├── 2025-05-05_03-17-02_Monolithe de Tlaltecuhtli.txt
+│       ├── 2025-05-05_03-19-04_Rodrigo Duterte.txt
+│       ├── 2025-05-05_03-21-04_Lullington (Derbyshire).txt
+│       ├── 2025-05-05_03-23-06_El Herrumblar.txt
+│       ├── 2025-05-05_03-25-07_Fabio Ongaro.txt
+│       ├── 2025-05-05_03-27-08_Fabienne Jagou.txt
+│       ├── 2025-05-05_03-29-09_Jack Delano.txt
+│       ├── 2025-05-05_03-31-10_Preciziei (métro de Bucarest).txt
+│       ├── 2025-05-05_03-33-15_Dualité onde-corpuscule.txt
+│       ├── 2025-05-05_03-35-16_Lawrence Power.txt
+│       ├── 2025-05-05_03-37-17_Patrick Chila.txt
+│       ├── 2025-05-05_03-39-18_Ángel Guzmán.txt
+│       ├── 2025-05-05_03-41-19_François Morin (économiste).txt
+│       ├── 2025-05-05_03-43-20_NGC 1385.txt
+│       ├── 2025-05-05_03-45-21_Vicomté de Couserans.txt
+│       ├── 2025-05-05_03-47-22_Comté de Marshall (Minnesota).txt
+│       ├── 2025-05-05_03-49-23_Clémence Beikes.txt
+│       ├── 2025-05-05_03-51-25_Alix (bande dessinée).txt
+│       ├── 2025-05-05_03-53-25_Les Amants du Spoutnik.txt
+│       ├── 2025-05-05_03-55-27_Catacaos.txt
+│       ├── 2025-05-05_03-57-28_Autour de Henst.txt
+│       ├── 2025-05-05_03-59-29_Mirinda Carfrae.txt
+│       ├── 2025-05-05_04-01-30_Yukon.txt
+│       ├── 2025-05-05_04-03-31_Sūtra du Diamant.txt
+│       ├── 2025-05-05_04-05-32_Mary Agnes Chase.txt
+│       ├── 2025-05-05_04-07-33_Lycée franco-finlandais d'Helsinki.txt
+│       ├── 2025-05-05_04-09-34_Allemagne de l'Ouest aux Jeux olympiques d'été de 1988.txt
+│       ├── 2025-05-05_04-11-35_Gotarzès II de Parthie.txt
+│       ├── 2025-05-05_04-13-36_Broniszów (Lubusz).txt
+│       ├── 2025-05-05_04-15-38_Géographie du Rwanda.txt
+│       ├── 2025-05-05_04-17-39_Viaduc de Cize-Bolozon.txt
+│       ├── 2025-05-05_04-19-39_Anna Alminova.txt
+│       ├── 2025-05-05_04-21-41_Ignacy Paderewski.txt
+│       ├── 2025-05-05_04-23-42_Lo chiameremo Andrea.txt
+│       ├── 2025-05-05_04-25-43_Peter Gradin.txt
+│       ├── 2025-05-05_04-27-44_Saint-Maurice-de-Cazevieille.txt
+│       ├── 2025-05-05_04-29-45_Phidippus audax.txt
+│       ├── 2025-05-05_04-31-46_Dunes (casino).txt
+│       ├── 2025-05-05_04-33-48_Little Skellig.txt
+│       ├── 2025-05-05_04-35-48_Bruniaceae.txt
+│       ├── 2025-05-05_04-37-49_Alata.txt
+│       ├── 2025-05-05_04-39-50_Carex breviculmis.txt
+│       ├── 2025-05-05_04-41-52_Astérisme (typographie).txt
+│       ├── 2025-05-05_04-43-53_Demolition Hammer.txt
+│       ├── 2025-05-05_04-45-54_Albert Clarac.txt
+│       ├── 2025-05-05_04-47-55_Bentley Systems.txt
+│       ├── 2025-05-05_04-49-56_Château de Sédières.txt
+│       ├── 2025-05-05_04-51-57_Cherokee Strip.txt
+│       ├── 2025-05-05_04-53-58_Vélin.txt
+│       ├── 2025-05-05_04-55-59_Pinstripe Bowl 2019.txt
+│       ├── 2025-05-05_04-58-00_Solférino (Landes).txt
+│       ├── 2025-05-05_05-00-01_Yara International.txt
+│       ├── 2025-05-05_05-02-02_Osez le féminisme !.txt
+│       ├── 2025-05-05_05-04-03_Forte dei Marmi.txt
+│       ├── 2025-05-05_05-06-04_Uken.txt
+│       ├── 2025-05-05_05-08-05_Akibani.txt
+│       ├── 2025-05-05_05-10-06_Onorato Caetani (érudit).txt
+│       ├── 2025-05-05_05-12-08_Fedor Dmitriev.txt
+│       ├── 2025-05-05_05-14-08_Église catholique éthiopienne.txt
+│       ├── 2025-05-05_05-16-10_Westervelde.txt
+│       ├── 2025-05-05_05-18-11_Musée militaire national (Tunisie).txt
+│       ├── 2025-05-05_05-20-12_Pontiques (Ovide).txt
+│       ├── 2025-05-05_05-22-13_Cincovillas.txt
+│       ├── 2025-05-05_05-24-14_Chamseddine Dhaouadi.txt
+│       ├── 2025-05-05_05-26-19_Pedro Téllez-Girón y Velasco.txt
+│       ├── 2025-05-05_05-28-20_Charles Leale.txt
+│       ├── 2025-05-05_05-30-21_Coquette à queue fine.txt
+│       ├── 2025-05-05_05-32-22_Hellula hydralis.txt
+│       ├── 2025-05-05_05-34-23_Évrard des Barres.txt
+│       ├── 2025-05-05_05-36-24_Gene Mayer.txt
+│       ├── 2025-05-05_05-38-25_Georges Sabo.txt
+│       ├── 2025-05-05_05-40-26_Kent (New York).txt
+│       ├── 2025-05-05_05-42-28_Philip Sherard (2e comte de Harborough).txt
+│       ├── 2025-05-05_05-44-29_Aleksander Rycerski.txt
+│       ├── 2025-05-05_05-46-30_Boulevardier.txt
+│       ├── 2025-05-05_05-48-32_Chalgrave.txt
+│       ├── 2025-05-05_05-50-33_Jasus frontalis.txt
+│       ├── 2025-05-05_05-52-33_Jean-François Heurtier.txt
+│       ├── 2025-05-05_05-54-35_Tuilerie de Vaire.txt
+│       ├── 2025-05-05_05-56-36_Samjeon (métro de Séoul).txt
+│       ├── 2025-05-05_05-58-37_Émile-Auguste Doumet.txt
+│       ├── 2025-05-05_06-00-38_Oxypleura quadraticollis.txt
+│       ├── 2025-05-05_06-02-40_The Langham.txt
+│       ├── 2025-05-05_06-04-41_Gare centrale de Duisbourg.txt
+│       ├── 2025-05-05_06-06-43_Louise Gaillard.txt
+│       ├── 2025-05-05_06-08-44_Andiperla willinki.txt
+│       ├── 2025-05-05_06-10-46_Marielle Amant.txt
+│       ├── 2025-05-05_06-12-47_Parti général des travailleurs.txt
+│       ├── 2025-05-05_06-14-48_Nagoya-Center Tower.txt
+│       ├── 2025-05-05_06-16-49_Dunnet Head.txt
+│       ├── 2025-05-05_06-18-51_Bernard Helffer.txt
+│       ├── 2025-05-05_06-22-54_Wirfus.txt
+│       ├── 2025-05-05_06-24-55_Autobus.txt
+│       ├── 2025-05-05_06-26-56_Arena rock.txt
+│       ├── 2025-05-05_06-28-57_Ligne 9 du métro de Madrid.txt
+│       ├── 2025-05-05_06-30-58_Rue de la Boule-Rouge.txt
+│       ├── 2025-05-05_06-33-00_Michel Mourre.txt
+│       ├── 2025-05-05_06-35-01_Christine Horne.txt
+│       ├── 2025-05-05_06-37-02_KS Elbasan.txt
+│       ├── 2025-05-05_06-39-03_Marquerie.txt
+│       ├── 2025-05-05_06-41-04_The Oprah Winfrey Show.txt
+│       ├── 2025-05-05_06-43-05_Wojciech Kossak.txt
+│       ├── 2025-05-05_06-45-07_NGC 5063.txt
+│       ├── 2025-05-05_06-47-08_Projecteur (mathématiques).txt
+│       ├── 2025-05-05_06-49-10_Plesiastrea versipora.txt
+│       ├── 2025-05-05_06-51-11_Djebel Chambi.txt
+│       ├── 2025-05-05_06-53-12_Campagne de 1871 à l'intérieur.txt
+│       ├── 2025-05-05_06-55-13_Monastère d'El Paular.txt
+│       ├── 2025-05-05_06-57-14_Fabrice Amedeo.txt
+│       ├── 2025-05-05_06-59-15_Olynthe.txt
+│       ├── 2025-05-05_07-01-17_ARA Presidente Sarmiento.txt
+│       ├── 2025-05-05_07-03-18_Fontaine aux Moines.txt
+│       ├── 2025-05-05_07-05-20_Assemblée législative de Sébastopol.txt
+│       ├── 2025-05-05_07-07-21_María Bruguera Pérez.txt
+│       ├── 2025-05-05_07-09-22_Nykirken.txt
+│       ├── 2025-05-05_07-11-39_Pavel Bareisha.txt
+│       ├── 2025-05-05_07-13-40_Rallye Monte-Carlo 1999.txt
+│       ├── 2025-05-05_07-15-41_Belén (Nariño).txt
+│       ├── 2025-05-05_07-17-42_Musée Dar Si Saïd.txt
+│       ├── 2025-05-05_07-19-43_Regi Blinker.txt
+│       ├── 2025-05-05_07-21-44_Collet (costume).txt
+│       ├── 2025-05-05_07-23-45_Carlos Arthur Nuzman.txt
+│       ├── 2025-05-05_07-25-46_Chandler Stephenson.txt
+│       ├── 2025-05-05_07-27-47_Porte Beulé.txt
+│       ├── 2025-05-05_07-29-48_Hamry (district de Chrudim).txt
+│       ├── 2025-05-05_07-31-50_Hanøyni.txt
+│       ├── 2025-05-05_07-33-51_Église Saint-Pierre-ès-Liens de Nègrepelisse.txt
+│       ├── 2025-05-05_07-35-52_Gare de Chef-du-Pont - Sainte-Mère.txt
+│       ├── 2025-05-05_07-37-57_Maria Lisa Cinciari Rodano.txt
+│       ├── 2025-05-05_07-39-58_Netichyn.txt
+│       ├── 2025-05-05_07-41-59_Lauren Campbell.txt
+│       ├── 2025-05-05_07-44-00_Éric II de Mecklembourg.txt
+│       ├── 2025-05-05_07-46-01_Angelsberg.txt
+│       ├── 2025-05-05_07-48-02_Smędowa.txt
+│       ├── 2025-05-05_07-50-04_Wai.txt
+│       ├── 2025-05-05_07-52-05_Sheng Lihao.txt
+│       ├── 2025-05-05_07-54-06_Fort McMurray.txt
+│       ├── 2025-05-05_07-56-07_Corbetta (Italie).txt
+│       ├── 2025-05-05_07-58-08_Malouinière de la Ville Azé.txt
+│       ├── 2025-05-05_08-00-10_L'Aventure du cercle rouge.txt
+│       ├── 2025-05-05_08-02-11_PowerBook 5300.txt
+│       ├── 2025-05-05_08-04-12_Usko Nyström.txt
+│       ├── 2025-05-05_08-06-12_Sous les jupons de l'Histoire.txt
+│       ├── 2025-05-05_08-08-13_Yi Wan-yong.txt
+│       ├── 2025-05-05_08-10-15_The Outfield.txt
+│       ├── 2025-05-05_08-12-16_Gabriela Borges.txt
+│       ├── 2025-05-05_08-14-17_Parti de l'avance nationale.txt
+│       ├── 2025-05-05_08-16-18_Saint-Eugène-de-Guigues.txt
+│       ├── 2025-05-05_08-18-19_Tournoi d'Australie de rugby à sept 2020.txt
+│       ├── 2025-05-05_08-20-20_Filippo De Col.txt
+│       ├── 2025-05-05_08-22-21_William Kamkwamba.txt
+│       ├── 2025-05-05_08-24-22_Spooner Oldham.txt
+│       ├── 2025-05-05_08-26-23_Mercedes-Benz 300 SEL 6.3.txt
+│       ├── 2025-05-05_08-28-24_Ittiri.txt
+│       ├── 2025-05-05_08-30-25_Aphidinae.txt
+│       ├── 2025-05-05_08-32-27_Grappling.txt
+│       ├── 2025-05-05_08-34-28_Bernard Fonlon.txt
+│       ├── 2025-05-05_08-36-29_Klein Pampau.txt
+│       ├── 2025-05-05_08-38-29_Sick of It All.txt
+│       ├── Astronomie
+│       ├── Mathématique
+│       └── sciences
+├── creer_kb_test_vide.py
+├── enquete_alma_complete_v6.sh
+├── Interfaces
+│   ├── __init__.py
+│   ├── meteoalma1.py
+│   ├── meteoalma.py
+│   ├── meteo_icons
+│   └── parlealma.py
+├── launcher_ui_components
+│   ├── center_panel_widgets.py
+│   ├── common_widgets.py
+│   ├── header_toolbar_widgets.py
+│   ├── __init__.py
+│   ├── left_panel_widgets.py
+│   ├── menu_bar_handler.py
+│   ├── module_grid_widgets.py
+│   ├── __pycache__
+│   │   ├── center_panel_widgets.cpython-312.pyc
+│   │   ├── header_toolbar_widgets.cpython-312.pyc
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── left_panel_widgets.cpython-312.pyc
+│   │   ├── menu_bar_handler.cpython-312.pyc
+│   │   ├── module_grid_widgets.cpython-312.pyc
+│   │   └── right_panel_widgets.cpython-312.pyc
+│   └── right_panel_widgets.py
+├── logs
+│   ├── actuateurs_alma.log
+│   ├── alma_launcher.log
+│   ├── alma_launcher.log.1
+│   ├── ALMA_main.log
+│   ├── alma_pids_status.json
+│   ├── cerveau.log
+│   ├── cerveau_status.json
+│   ├── launcher_services_logs
+│   │   ├── actuateurs_alma.log
+│   │   ├── agent_synchro_santé.log
+│   │   ├── cerveau.log
+│   │   ├── injecteur_de_connaissances.log
+│   │   ├── performance_alma.log
+│   │   ├── raisonneur_alma.log
+│   │   └── roadmap_alma.log
+│   ├── module_registry.json
+│   ├── module_registry.lock
+│   └── orchestrator_supervision.log
+├── nohup.out
+├── odre de lancement
+├── Orchestrateur
+│   ├── agents
+│   │   ├── agent_cognitif.py
+│   │   ├── chartes.py
+│   │   ├── __init__.py
+│   │   ├── maitres_domaine.py
+│   │   └── __pycache__
+│   ├── config.py
+│   ├── core
+│   │   ├── google_ai_wrapper.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   ├── __init__.py
+│   ├── orchestrateur_cognitif.py
+│   └── __pycache__
+│       ├── config.cpython-312.pyc
+│       ├── __init__.cpython-312.pyc
+│       └── orchestrateur_cognitif.cpython-312.pyc
+├── Outils
+│   ├── alma_performance_monitor.py
+│   ├── alma_roadmap_manager.py
+│   ├── alma_roadmap_managersauv.py
+│   ├── cedille_interface.py
+│   ├── icons_launcher
+│   │   ├── aspirateur_maintenance.png
+│   │   ├── cedille.png
+│   │   ├── enqueteur_agent.png
+│   │   ├── icons8-apprentissage-isometric-color
+│   │   ├── meteo_cloud_sun.png
+│   │   ├── save_diskette.png
+│   │   ├── sniffing_dog.png
+│   │   ├── wifi_off.png
+│   │   └── wifi_on.png
+│   ├── __init__.py
+│   ├── wiki_injector_gui.py
+│   └── wiki_injector_guisauv.py
+├── projet_alma
+│   ├── activite.py
+│   ├── alma_model.joblib
+│   ├── backup_test.tar.gz
+│   ├── baseline_alma.json
+│   ├── brain.py
+│   ├── capteurs
+│   │   ├── cpu_charge_globale.py
+│   │   ├── cpu_charge_par_coeur.py
+│   │   ├── cpu_temperature.py
+│   │   ├── cpu_temps_systeme.py
+│   │   ├── disque_activite_globale.py
+│   │   ├── disque_activite_par_partition.py
+│   │   ├── disque_usage.py
+│   │   ├── disque_vitesse.py
+│   │   ├── hardware_batterie.py
+│   │   ├── hardware_ventilateurs.py
+│   │   ├── __init__.py
+│   │   ├── memoire_ram.py
+│   │   ├── memoire_swap.py
+│   │   ├── processus_top.py
+│   │   ├── __pycache__
+│   │   ├── reseau_activite_globale.py
+│   │   ├── reseau_activite_par_interface.py
+│   │   ├── reseau_connexions.py
+│   │   ├── reseau_vitesse.py
+│   │   ├── systeme_compteurs.py
+│   │   ├── systeme_uptime.py
+│   │   └── systeme_utilisateurs.py
+│   ├── causes_feedback.json
+│   ├── core
+│   │   ├── moteur.py
+│   │   ├── orchestrateur.py
+│   │   └── __pycache__
+│   ├── db_sons_alma.json
+│   ├── entrainement.py
+│   ├── historique_alma.csv
+│   ├── historique.py
+│   ├── __init__.py
+│   ├── inspecteur_cerveau.py
+│   ├── interface.py
+│   ├── introspection
+│   │   ├── analyseur_code.py
+│   │   ├── cinematique_intro.py
+│   │   ├── generateur_html.py
+│   │   ├── __init__.py
+│   │   ├── labo_test_ui.py
+│   │   ├── modele_langage.py
+│   │   ├── __pycache__
+│   │   ├── rapport_alma.html
+│   │   └── style_rapport.css
+│   ├── logiciels.py
+│   ├── materiel.py
+│   ├── __pycache__
+│   │   ├── activite.cpython-312.pyc
+│   │   ├── analyseson.cpython-312.pyc
+│   │   ├── brain.cpython-312.pyc
+│   │   ├── historique.cpython-312.pyc
+│   │   ├── logiciels.cpython-312.pyc
+│   │   ├── materiel.cpython-312.pyc
+│   │   └── moteur.cpython-312.pyc
+│   ├── rapport_performance_cerveau.png
+│   └── sonore
+│       ├── capture.py
+│       ├── causes_sonores.json
+│       ├── classifieur.py
+│       ├── db_sonore.py
+│       ├── db_sons_alma.json
+│       ├── entraineur_sonore.py
+│       ├── extracteur.py
+│       ├── __init__.py
+│       ├── parametres.py
+│       ├── __pycache__
+│       ├── traduction_yamnet.json
+│       └── visualisation.py
+├── pyproject.toml
+├── Raisonnement
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   └── raisonneur.cpython-312.pyc
+│   └── raisonneur.py
+├── requirements.txt
+├── ressources
+│   └── icones
+│       └── alma_launcher_icon.png
+├── scenario_test_parlealma.txt
+├── Sentiments
+│   ├── __init__.py
+│   └── sentiments_alma.py
+├── Site ALMA
+│   ├── alma_websocket_server.py
+│   ├── connector.js
+│   ├── dashboard_modules_interactif_tree.html
+│   ├── interface_launcher_server.py
+│   ├── interface_principale_alma.html
+│   ├── launcher.log
+│   ├── logs_flask.txt
+│   ├── logs_http.txt
+│   ├── logs_websocket.txt
+│   ├── settings.html
+│   ├── start_interface_servers.sh
+│   ├── test_interface_buttons.sh
+│   └── websocket.log
+├── structure_alma_arborescence.txt
+├── structure_alma_niveau_4_plus.txt
+├── test_entites_per.csv
+├── test_explorateur_post_nuit.sh
+├── Tests_Clé_Alfa
+│   ├── erreurs_tests_cle_alfa.log
+│   ├── infos_clé_alfa.txt
+│   ├── interfaces.txt
+│   ├── iw_capabilities.txt
+│   ├── json_report.log
+│   ├── permissions_tests_cle_alfa.log
+│   ├── pylint_report.log
+│   ├── rapport_alfa_extreme.json
+│   ├── rapport_alfa_extreme.log
+│   ├── rapport_alfa_extreme.txt
+│   ├── rapport_test_alfa.txt
+│   ├── scan_alfa.log
+│   ├── scan_alfa.txt
+│   ├── scan_raw.txt
+│   ├── scan_wifi.txt
+│   ├── shellcheck_report.log
+│   ├── wifi_tracking_alfa.sh
+│   ├── wifi_tracking.json
+│   ├── wifi_tracking.log
+│   └── wifi_tracking.txt
+├── versioning
+│   └── alma_versions.json
+└── Youtube
+    ├── agents
+    │   ├── __init__.py
+    │   └── youtube_agent.py
+    ├── aide.md
+    ├── client_secret.json
+    ├── config.yaml
+    ├── data
+    │   ├── empreinte_neuronale_toni.pt
+    │   ├── processing
+    │   └── profil_vocal_toni_PRO.json
+    ├── echantillon_voix_toni_PRO.wav
+    ├── main.py
+    ├── Projet Youtube ALMA.txt
+    ├── rapport stratégique et technique ALMA youtube.txt
+    ├── requirements.txt
+    ├── requirements_youtube.txt
+    ├── sonore
+    │   ├── analyseur_emotionnel.py
+    │   ├── analyseur_environnemental.py
+    │   ├── analyseur_neuronal.py
+    │   ├── analyseur_semantique.py
+    │   ├── analyseur_stylistique.py
+    │   ├── __init__.py
+    │   ├── mastering.py
+    │   ├── __pycache__
+    │   ├── restaurateur_ia.py
+    │   └── separateur.py
+    ├── video
+    │   ├── analyseur_visuel.py
+    │   ├── __init__.py
+    │   ├── monteur.py
+    │   ├── processeur.py
+    │   └── __pycache__
+    └── youtube-cookies.txt
+
+85 directories, 1499 files
+   Scripts principaux:
+   Fichiers configuration:
+/home/toni/Documents/ALMA/projet_alma/baseline_alma.json
+/home/toni/Documents/ALMA/projet_alma/db_sons_alma.json
+/home/toni/Documents/ALMA/projet_alma/causes_feedback.json
+/home/toni/Documents/ALMA/.vscode/settings.json
+/home/toni/Documents/ALMA/Tests_Clé_Alfa/rapport_alfa_extreme.json
+/home/toni/Documents/ALMA/Tests_Clé_Alfa/wifi_tracking.json
+/home/toni/Documents/ALMA/logs/cerveau_status.json
+/home/toni/Documents/ALMA/logs/module_registry.json
+/home/toni/Documents/ALMA/logs/alma_pids_status.json
+/home/toni/Documents/ALMA/Cerveau/alma_roadmap_status.json
+/home/toni/Documents/ALMA/Cerveau/cerveau_config.yaml
+/home/toni/Documents/ALMA/Youtube/config.yaml
+/home/toni/Documents/ALMA/Youtube/client_secret.json
+/home/toni/Documents/ALMA/.actuators_processed_proposals.json
+/home/toni/Documents/ALMA/versioning/alma_versions.json
+/home/toni/Documents/ALMA/pyproject.toml
+
+🔍 ARCHITECTURE: Monde
+   Structure principale:
+/home/toni/Documents/Monde
+├── agents_complexes.py
+├── agents_emergents.py
+├── agents_physiques.py
+├── agents.py
+├── backups
+├── config.json
+├── config_optimisee.json
+├── etatmonde.py
+├── generateurmonde.py
+├── interface.py
+├── interface_widgets.py
+├── lancement.py
+├── monde.log
+├── __pycache__
+│   ├── agents2.cpython-313.pyc
+│   ├── agents_complexes.cpython-313.pyc
+│   ├── agents.cpython-313.pyc
+│   ├── agents_emergents.cpython-313.pyc
+│   ├── agents_physiques.cpython-313.pyc
+│   ├── etatmonde.cpython-313.pyc
+│   ├── generateurmonde.cpython-313.pyc
+│   ├── interface.cpython-313.pyc
+│   ├── interface_widgets.cpython-313.pyc
+│   └── simulateur.cpython-313.pyc
+├── requirements.txt
+├── sauvegardes
+├── simulateur.py
+└── test_configuration.py
+
+4 directories, 25 files
+   Scripts principaux:
+   Fichiers configuration:
+/home/toni/Documents/Monde/config.json
+/home/toni/Documents/Monde/config_optimisee.json
+
+🔍 ARCHITECTURE: EVE GENESIS
+   Structure principale:
+/home/toni/Documents/EVE GENESIS
+├── config.json
+├── eve_history.log
+├── eve_src
+│   ├── archetypes
+│   │   ├── archetype_animal.py
+│   │   ├── archetype_humanoide.py
+│   │   ├── archetype_insecte.py
+│   │   ├── archetype_vegetal.py
+│   │   ├── entite.py
+│   │   ├── __init__.py
+│   │   └── __pycache__
+│   ├── config.py
+│   ├── core
+│   │   ├── cerveau.py
+│   │   ├── environnement.py
+│   │   ├── genetique.py
+│   │   ├── __init__.py
+│   │   ├── physique.py
+│   │   ├── __pycache__
+│   │   ├── social.py
+│   │   └── structures.py
+│   ├── evolution.py
+│   ├── __init__.py
+│   ├── interface.py
+│   ├── __pycache__
+│   │   ├── config.cpython-312.pyc
+│   │   ├── evolution.cpython-312.pyc
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── interface.cpython-312.pyc
+│   │   └── simulation.cpython-312.pyc
+│   └── simulation.py
+├── generateur_config.py
+└── main.py
+
+7 directories, 27 files
+   Scripts principaux:
+   Fichiers configuration:
+/home/toni/Documents/EVE GENESIS/config.json
+
+🔍 ARCHITECTURE: EVE
+   Structure principale:
+/home/toni/Documents/EVE
+├── composants.py
+├── config.json
+├── config.py
+├── eve_sandbox.img
+├── generateur_config.py
+├── interface.py
+├── main.py
+├── __pycache__
+│   ├── composants.cpython-312.pyc
+│   ├── config.cpython-312.pyc
+│   ├── interface.cpython-312.pyc
+│   └── simulation.cpython-312.pyc
+├── sandbox
+└── simulation.py
+
+3 directories, 12 files
+   Scripts principaux:
+   Fichiers configuration:
+/home/toni/Documents/EVE/config.json
+
+🔍 ARCHITECTURE: ALMA_Space_Cerveau_Demo
+   Structure principale:
+/home/toni/Documents/ALMA_Space_Cerveau_Demo
+└── ALMA-Cerveau-Demo
+    ├── app.py
+    ├── Cerveau
+    │   └── cerveau_config.yaml
+    ├── cerveau_knowledge_test.sqlite
+    ├── cerveau.py
+    ├── Core
+    │   ├── core.py
+    │   └── __init__.py
+    ├── README.md
+    └── requirements.txt
+
+4 directories, 8 files
+   Scripts principaux:
+   Fichiers configuration:
+
+📋 ANALYSE CONTENU CRITIQUE
+---------------------------
+
+📄 CONTENU: gaia
+   Documentation:
+/home/toni/Documents/gaia/BiblePython/about.md
+/home/toni/Documents/gaia/BiblePython/INSTALL.md
+/home/toni/Documents/gaia/BiblePython/more.md
+/home/toni/Documents/gaia/BiblePython/oop.md
+/home/toni/Documents/gaia/BiblePython/README.md
+   Points d'entrée:
+   Configuration:
+
+📄 CONTENU: Projet simulateur
+   Documentation:
+/home/toni/Documents/Projet simulateur/README.md
+   Points d'entrée:
+   Configuration:
+/home/toni/Documents/Projet simulateur/.git/config
+/home/toni/Documents/Projet simulateur/config
+/home/toni/Documents/Projet simulateur/config/config.json
+
+📄 CONTENU: Test Eve
+   Documentation:
+/home/toni/Documents/Test Eve/crew_b/README.md
+/home/toni/Documents/Test Eve/venv/README.md
+/home/toni/Documents/Test Eve/crew_a/README.md
+   Points d'entrée:
+   Configuration:
+/home/toni/Documents/Test Eve/.git/config
+
+📄 CONTENU: ALMA
+   Documentation:
+/home/toni/Documents/ALMA/connaissance à injecter/semantic_memory.md
+/home/toni/Documents/ALMA/Youtube/aide.md
+   Points d'entrée:
+/home/toni/Documents/ALMA/Youtube/main.py
+/home/toni/Documents/ALMA/Site ALMA/alma_websocket_server.py
+/home/toni/Documents/ALMA/Site ALMA/interface_launcher_server.py
+   Configuration:
+/home/toni/Documents/ALMA/.vscode/settings.json
+/home/toni/Documents/ALMA/Youtube/config.yaml
+/home/toni/Documents/ALMA/.git/config
+/home/toni/Documents/ALMA/Site ALMA/settings.html
+/home/toni/Documents/ALMA/Orchestrateur/config.py
+
+📄 CONTENU: Monde
+   Documentation:
+   Points d'entrée:
+   Configuration:
+/home/toni/Documents/Monde/config.json
+/home/toni/Documents/Monde/config_optimisee.json
+
+📄 CONTENU: EVE GENESIS
+   Documentation:
+   Points d'entrée:
+/home/toni/Documents/EVE GENESIS/main.py
+   Configuration:
+/home/toni/Documents/EVE GENESIS/config.json
+/home/toni/Documents/EVE GENESIS/eve_src/config.py
+
+📄 CONTENU: EVE
+   Documentation:
+   Points d'entrée:
+/home/toni/Documents/EVE/main.py
+   Configuration:
+/home/toni/Documents/EVE/config.json
+/home/toni/Documents/EVE/__pycache__/config.cpython-312.pyc
+/home/toni/Documents/EVE/config.py
+
+📄 CONTENU: ALMA_Space_Cerveau_Demo
+   Documentation:
+/home/toni/Documents/ALMA_Space_Cerveau_Demo/ALMA-Cerveau-Demo/README.md
+   Points d'entrée:
+/home/toni/Documents/ALMA_Space_Cerveau_Demo/ALMA-Cerveau-Demo/app.py
+   Configuration:

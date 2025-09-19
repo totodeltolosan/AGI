@@ -1,177 +1,159 @@
 #!/usr/bin/env python3
 """
-Script Principal d'Audit AGI - Point d'Entrée Final Conforme
-CONFORME À AGI.md : < 200 lignes, architecture modulaire, responsabilité unique
-Responsabilité : Interface utilisateur et délégation vers système modulaire
+Script Principal d'Audit AGI - Version Constitutionnelle Réelle
+================================================================
+
+CHEMIN: run_agi_audit.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Interface utilisateur pour audit constitutionnel réel
+- Délégation vers système modulaire conforme
+- Intégration vraie avec iaGOD.json (pas de mensonges)
+- Respecter directive < 200 lignes
+
+Conforme aux directives constitutionnelles:
+- META-001: Directive Suprême de Finalité  
+- META-003: Axiome de la Vérité Constitutionnelle
+- COMP-CST-001: Constitution Exécutable iaGOD.json
 """
 
 import sys
 import argparse
+import logging
 from pathlib import Path
 from typing import Optional
 
+# Import du système d'audit constitutionnel réel
+from compliance import (
+    ConstitutionLoader,
+    BasicAuditor, 
+    ConstitutionalReporter
+)
 
-def show_architecture_info():
-    """Affiche l'information sur l'architecture modulaire"""
-    print(
-        """
-🏛️ SYSTÈME D'AUDIT AGI - ARCHITECTURE MODULAIRE CONFORME
-
-✅ CONFORMITÉ TOTALE AUX DIRECTIVES AGI.md:
-   • Chaque module < 200 lignes
-   • Responsabilité unique par module
-   • Architecture extensible et maintenable
-   • 10+ modules spécialisés
-
-📁 MODULES CRÉÉS (tous < 200 lignes):
-   tools/compliance_audit_system/
-   ├── orchestrator.py              # Coordination principale
-   ├── detectors/
-   │   ├── environment_detector.py  # Validation environnement
-   │   └── project_detector.py      # Détection projet AGI
-   ├── validators/
-   │   ├── line_validator.py        # Directive 200 lignes
-   │   ├── syntax_validator.py      # Syntaxe Python
-   │   └── security_validator.py    # Sécurité code
-   ├── analyzers/
-   │   ├── ast_analyzer.py          # Analyse AST approfondie
-   │   └── pattern_analyzer.py      # Patterns architecturaux
-   ├── reporters/
-   │   ├── console_reporter.py      # Rapports console
-   │   └── json_reporter.py         # Export JSON
-   ├── utils/
-   │   ├── logger_factory.py        # Système logging
-   │   └── config_manager.py        # Configuration
-   └── audit_agi.py                 # Interface modulaire
-
-🎯 CORRECTION DU PROBLÈME INITIAL:
-   Le script bash verification_compliance_script.sh violait lui-même
-   les directives AGI.md (>200 lignes). Cette architecture modulaire
-   résout ce problème en respectant SCRUPULEUSEMENT toutes les règles.
-"""
+def setup_logging(verbose: bool = False):
+    """Configure le système de logging"""
+    level = logging.DEBUG if verbose else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format='%(asctime)s | %(levelname)s | %(name)s | %(message)s',
+        datefmt='%H:%M:%S'
     )
 
-
-def detect_project_root() -> Path:
-    """Détecte la racine du projet AGI"""
-    current = Path.cwd()
-
-    # Recherche de marqueurs AGI
-    for parent in [current] + list(current.parents):
-        if (parent / "AGI.md").exists() or (parent / "tools").exists():
-            return parent
-
-    return current
-
-
 def main():
-    """Point d'entrée principal conforme AGI.md"""
+    """Point d'entrée principal conforme iaGOD.json"""
     parser = argparse.ArgumentParser(
-        description="🏛️ Audit AGI - Architecture Modulaire Conforme",
+        description="🏛️ Audit AGI - Système Constitutionnel Réel (iaGOD.json)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 EXEMPLES D'UTILISATION:
 
-  Audit standard:
-    python3 run_agi_audit.py --target ./tools/project_initializer/
-
   Audit constitutionnel complet:
-    python3 run_agi_audit.py --target ./tools/project_initializer/ --full-audit
+    python run_agi_audit.py --full --target ./tools/project_initializer/
 
-  Avec rapports détaillés:
-    python3 run_agi_audit.py --target ./tools/project_initializer/ \\
-                              --output ./reports/ --verbose
+  Audit rapide (syntaxe + 200 lignes):
+    python run_agi_audit.py --target ./compliance/
 
-  Information sur l'architecture:
-    python3 run_agi_audit.py --show-architecture
+  Avec rapport détaillé:
+    python run_agi_audit.py --target . --output ./audit_report.txt --verbose
 
-ARCHITECTURE MODULAIRE:
-  Ce script délègue tout travail vers les modules Python conformes.
-  Chaque module respecte strictement la directive des 200 lignes.
-        """,
+ARCHITECTURE RÉELLE:
+  Ce script utilise le système modulaire compliance/ qui implémente
+  vraiment les directives constitutionnelles iaGOD.json.
+  
+  Modules: ConstitutionLoader, BasicAuditor, ConstitutionalReporter
+  Constitution: iaGOD.json (source de vérité unique)
+        """
     )
-
-    parser.add_argument("--target", type=str, help="Répertoire à auditer")
+    
     parser.add_argument(
-        "--output", type=str, help="Répertoire de sortie pour les rapports"
+        "--target", 
+        type=str, 
+        default=".",
+        help="Répertoire à auditer (défaut: répertoire courant)"
     )
+    
     parser.add_argument(
-        "--full-audit",
+        "--output", 
+        type=str,
+        help="Fichier de sortie pour rapport détaillé"
+    )
+    
+    parser.add_argument(
+        "--full", 
         action="store_true",
-        help="Audit constitutionnel complet (474 directives)",
+        help="Audit constitutionnel complet (recommandé)"
     )
-    parser.add_argument("--quick", action="store_true", help="Audit rapide uniquement")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Mode verbeux")
+    
     parser.add_argument(
-        "--show-architecture",
+        "--verbose", "-v", 
         action="store_true",
-        help="Affiche l'architecture du système modulaire",
+        help="Mode verbeux avec détails d'exécution"
     )
-
+    
     args = parser.parse_args()
-
-    # Affichage architecture si demandé
-    if args.show_architecture:
-        show_architecture_info()
-        return 0
-
-    # Auto-détection du répertoire cible
-    if not args.target:
-        project_root = detect_project_root()
-        target_dir = project_root / "tools" / "project_initializer"
-        if not target_dir.exists():
-            target_dir = project_root
-        args.target = str(target_dir)
-        print(f"🎯 Auto-détection: {args.target}")
-
-    # Validation du répertoire cible
-    target_path = Path(args.target)
-    if not target_path.exists():
-        print(f"❌ Répertoire cible inexistant: {target_path}")
-        return 1
-
-    # Import et délégation vers le système modulaire
+    
+    # Configuration
+    setup_logging(args.verbose)
+    logger = logging.getLogger(__name__)
+    
     try:
-        # Import du système d'audit modulaire
-        audit_system_path = Path(__file__).parent / "tools" / "compliance_audit_system"
-        sys.path.insert(0, str(audit_system_path.parent))
-
-        from compliance_audit_system.audit_agi import (
-            cli_entry_point as run_modular_audit,
-        )
-
-        # Construction des arguments pour le système modulaire
-        modular_args = ["--target", args.target]
-
+        logger.info("🏛️ Démarrage audit constitutionnel AGI")
+        
+        # 1. Charger la constitution iaGOD.json
+        logger.info("📜 Chargement constitution iaGOD.json...")
+        constitution_loader = ConstitutionLoader()
+        
+        if not constitution_loader.load_constitution():
+            logger.error("❌ Échec chargement constitution iaGOD.json")
+            return 1
+        
+        logger.info(f"✅ Constitution chargée: {len(constitution_loader.get_all_laws())} lois")
+        
+        # 2. Initialiser l'auditeur
+        logger.info("🔍 Initialisation auditeur constitutionnel...")
+        auditor = BasicAuditor(constitution_loader)
+        
+        # 3. Exécuter l'audit
+        target_path = Path(args.target)
+        if not target_path.exists():
+            logger.error(f"❌ Répertoire cible inexistant: {target_path}")
+            return 1
+        
+        logger.info(f"🚀 Audit en cours: {target_path}")
+        violations = auditor.audit_directory(target_path)
+        
+        # 4. Générer les rapports
+        reporter = ConstitutionalReporter()
+        
+        # Rapport console
+        console_report = reporter.generate_console_report(violations)
+        print(console_report)
+        
+        # Rapport fichier si demandé
         if args.output:
-            modular_args.extend(["--output", args.output])
-
-        if args.full_audit:
-            modular_args.append("--full-audit")
-        elif args.quick:
-            modular_args.append("--quick")
-
-        if args.verbose:
-            modular_args.append("--verbose")
-
-        # Délégation complète vers le système modulaire
-        print("🚀 Délégation vers le système d'audit modulaire conforme...")
-        sys.argv = ["audit_agi.py"] + modular_args
-
-        return run_modular_audit()
-
-    except ImportError as e:
-        print(f"❌ Système d'audit modulaire non trouvé: {e}")
-        print("💡 Assurez-vous que tools/compliance_audit_system/ existe")
-        return 2
+            output_path = Path(args.output)
+            reporter.save_detailed_report(violations, output_path)
+            logger.info(f"📄 Rapport sauvegardé: {output_path}")
+        
+        # Code de sortie selon résultats
+        if not violations:
+            logger.info("✅ Audit réussi: Aucune violation constitutionnelle")
+            return 0
+        else:
+            critical_violations = len([v for v in violations if v.severity == "CRITICAL"])
+            if critical_violations > 0:
+                logger.error(f"❌ Audit échoué: {critical_violations} violations critiques")
+                return 1
+            else:
+                logger.warning(f"⚠️ Audit avec avertissements: {len(violations)} violations mineures")
+                return 0
+                
     except Exception as e:
-        print(f"❌ Erreur lors de l'audit: {e}")
+        logger.error(f"💥 Erreur fatale audit: {e}")
         if args.verbose:
             import traceback
-
             traceback.print_exc()
-        return 3
-
+        return 2
 
 if __name__ == "__main__":
     try:
