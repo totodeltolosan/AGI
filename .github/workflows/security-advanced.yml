@@ -1,0 +1,40 @@
+name: Security Advanced Scanning
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * 1'
+
+jobs:
+  security-scan:
+    name: Multi-Tool Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install security tools
+      run: |
+        pip install bandit safety semgrep
+        
+    - name: Bandit Security Scan
+      run: bandit -r eve/ -f json -o bandit-report.json || true
+      
+    - name: Safety Dependency Check
+      run: safety check --json --output safety-report.json || true
+      
+    - name: Semgrep SAST
+      run: semgrep --config=auto eve/ --json -o semgrep-report.json || true
+      
+    - name: Upload Security Reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: "*-report.json"
