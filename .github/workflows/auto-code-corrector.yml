@@ -1,0 +1,65 @@
+name: "🔧 Auto Code Corrector"
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+
+jobs:
+  auto_corrections:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install correction tools
+      run: |
+        pip install black isort autopep8
+        
+    - name: "🎨 Auto-format with Black"
+      run: |
+        echo "Formatage automatique avec Black..."
+        black . --line-length 88
+        
+    - name: "📦 Auto-sort imports with isort"  
+      run: |
+        echo "Tri automatique des imports..."
+        isort . --profile black
+        
+    - name: "🔍 Check for changes"
+      id: changes
+      run: |
+        if git diff --quiet; then
+          echo "changes=false" >> $GITHUB_OUTPUT
+          echo "Aucune correction nécessaire"
+        else
+          echo "changes=true" >> $GITHUB_OUTPUT
+          echo "Corrections appliquées:"
+          git diff --stat
+        fi
+        
+    - name: "💾 Commit corrections"
+      if: steps.changes.outputs.changes == 'true'
+      run: |
+        git config --local user.email "constitutional-corrector@agi.dev"
+        git config --local user.name "Constitutional Auto-Corrector"
+        git add .
+        git commit -m "style: Corrections automatiques par Constitutional Auto-Corrector
+
+🔧 Corrections appliquées:
+- Formatage Black (ligne 88 caractères)
+- Tri imports isort (profil black)
+- Conformité style automatique
+
+[Auto-commit par workflow]"
+        git push
