@@ -44,15 +44,13 @@ jobs:
             print('✅ GAIA PrometheusCore: Initialisation OK')
             
             # Test analyse de code
-            test_code = '''
+            test_code="
 def test_function():
     x = 1 + 1
     return x
-'''
-            analysis = prometheus.analyze_code(test_code)
-            print('✅ GAIA: Analyse de code fonctionnelle')
-            
-        except Exception as e:
+            test_code="def test_function(): return 1 + 1"
+            analysis=prometheus.analyze_code(test_code)
+            echo "✅ GAIA: Analyse de code fonctionnelle"
             print(f'⚠️ GAIA Integration: {e}')
             print('Note: Modules GAIA en migration')
         "

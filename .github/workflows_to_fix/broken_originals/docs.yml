@@ -72,10 +72,9 @@ nav:
 plugins:
   - search
   - mkdocstrings
-MKDOCS
-        fi
-        
-        # Créer la documentation de base
+        run: |
+          echo "Configuration MKDOCS"
+          echo "Créer la documentation de base"
         cat > docs/index.md << 'INDEX'
 # AGI-EVE Documentation
 

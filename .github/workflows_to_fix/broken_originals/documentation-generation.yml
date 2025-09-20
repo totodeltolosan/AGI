@@ -289,15 +289,11 @@ jobs:
         def generate_project_structure():
             structure = '''
         # Structure Projet AGI-EVE
-    AGI-EVE/
-    ├── core/                     # Noyau AGI
-    │   ├── compliance/           # Audit constitutionnel
-    │   └── tools/               # Outils projet
-    ├── eve/                     # Écosystème EVE
-    │   ├── cognitive/           # Intelligence cognitive (ALMA)
-    │   │   ├── brain/           # Cerveau IA
-    │   │   ├── agents/          # Agents cognitifs
-    │   │   └── interfaces/      # Interfaces ALMA
+            echo "# Structure Projet AGI-EVE"
+            echo "AGI-EVE/"
+            echo "├── core/                     # Noyau AGI"
+            echo "│   ├── compliance/           # Audit constitutionnel"
+            echo "│   └── tools/               # Outils projet"
     │   ├── simulation/          # Simulation univers
     │   │   ├── universe/        # Moteur univers (Monde)
     │   │   ├── evolution/       # EVE GENESIS

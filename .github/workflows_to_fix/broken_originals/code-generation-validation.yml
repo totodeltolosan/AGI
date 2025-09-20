@@ -66,23 +66,18 @@ jobs:
         print('🏭 Test génération code automatique...')
         
         # Template basique
-        template_code = '''
+        template_code = """
 def {function_name}({parameters}):
     \"\"\"{docstring}\"\"\"
     {body}
     return {return_value}
-'''
-        
-        # Données test
-        functions = [
-            {
-                'function_name': 'process_data',
-                'parameters': 'data, options=None',
-                'docstring': 'Process input data with options',
-                'body': 'processed = data.transform()\\n    if options:\\n        processed = processed.filter(options)',
-                'return_value': 'processed'
-            },
-            {
+                # Test data for code generation
+                test_data: |
+                  def process_data(data, options=None):
+                      processed = data.transform()
+                      if options:
+                          processed = processed.filter(options)
+                      return processed
                 'function_name': 'validate_input',
                 'parameters': 'input_data',
                 'docstring': 'Validate input data format',
@@ -129,7 +124,7 @@ def {function_name}({parameters}):
         print('📄 Test système templates...')
         
         # Template classe AGI conforme
-        class_template = Template('''#!/usr/bin/env python3
+        class_template = Template("""#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 \"\"\"
 $class_name - Module $description
@@ -154,7 +149,7 @@ class $class_name:
         # Logique métier
         processed_data = data
         return processed_data
-''')
+""")
         
         # Données test classes
         classes_data = [
@@ -212,7 +207,7 @@ class $class_name:
         
         # Générateur module AGI conforme
         def generate_agi_module(module_name, functions):
-            header = f'''#!/usr/bin/env python3
+            header = f"""#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 \\\"\\\"\\\"
 {module_name} - Module AGI Conforme
@@ -225,11 +220,11 @@ from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
-'''
+"""
             
             function_templates = []
             for func in functions:
-                func_code = f'''
+                func_code = f"""
 def {func['name']}({func['params']}) -> {func['return_type']}:
     \\\"\\\"\\\"
     {func['docstring']}
@@ -249,18 +244,18 @@ def {func['name']}({func['params']}) -> {func['return_type']}:
         logger.error(f\"Error in {func['name']}: {{e}}\")
         raise
 
-'''
+"""
                 function_templates.append(func_code)
             
             # Assembler module
             module_code = header + ''.join(function_templates)
             
             # Ajouter footer AGI
-            footer = '''
+            footer = """
 if __name__ == \"__main__\":
     # Module conforme AGI - Tests unitaires
     pass
-'''
+"""
             module_code += footer
             
             return module_code
@@ -277,7 +272,7 @@ if __name__ == \"__main__\":
                         'docstring': 'Traite les données selon standards AGI',
                         'args_doc': 'data: Données à traiter\\n        validate: Activer validation',
                         'return_doc': 'Données traitées et validées',
-                        'implementation': '''if validate:\\n        _validate_data(data)\\n    result = _transform_data(data)'''
+                        'implementation': """if validate:\\n        _validate_data(data)\\n    result = _transform_data(data)"""
                     }
                 ]
             }
