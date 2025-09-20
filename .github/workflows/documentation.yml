@@ -2,7 +2,7 @@ name: Auto Documentation
 on:
   push:
     branches: [ main ]
-    paths: ['eve/**/*.py', 'docs/**']
+    paths: ['eve/**/*.py', 'docs/**', '*.md']
 
 jobs:
   build-docs:
@@ -18,16 +18,36 @@ jobs:
         
     - name: Install dependencies
       run: |
-        pip install sphinx sphinx-rtd-theme
+        pip install sphinx sphinx-rtd-theme sphinx-autodoc-typehints
+        
+    - name: Initialize docs if needed
+      run: |
+        if [ ! -f "docs/conf.py" ]; then
+          echo "📚 Initialisation nouvelle documentation"
+          mkdir -p docs
+          sphinx-quickstart -q -p "AGI-EVE" -a "Toni" --ext-autodoc --ext-viewcode docs/
+        else
+          echo "📚 Documentation existante détectée"
+        fi
+        
+    - name: Verify Python modules
+      run: |
+        if [ -d "eve" ]; then
+          echo "✅ Modules EVE détectés"
+          find eve -name "*.py" | head -5
+        else
+          echo "⚠️ Aucun module EVE trouvé"
+        fi
         
     - name: Build documentation
       run: |
-        mkdir -p docs
-        sphinx-quickstart -q -p "AGI-EVE" -a "Toni" --ext-autodoc docs/
-        sphinx-build -b html docs/ docs/_build/
+        cd docs
+        make clean || true
+        make html
         
     - name: Deploy to GitHub Pages
+      if: success()
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/_build
+        publish_dir: ./docs/_build/html
