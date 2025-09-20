@@ -1,0 +1,191 @@
+name: "🧹 Le Concierge - Correcteur Syntaxique Automatique"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**/*.py'
+  workflow_dispatch:  # Permet l'exécution manuelle
+
+env:
+  PYTHON_VERSION: "3.11"
+  CONCIERGE_BRANCH: ${{ github.head_ref }}
+
+jobs:
+  syntax_autocorrection:
+    runs-on: ubuntu-latest
+    name: "🧹 Correction Automatique"
+
+    # Permissions nécessaires pour pousser des commits
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+
+    steps:
+    - name: "🔄 Checkout PR Branch"
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        ref: ${{ github.head_ref }}
+        fetch-depth: 0
+
+    - name: "🐍 Setup Python"
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: "📦 Install Correction Tools"
+      run: |
+        python -m pip install --upgrade pip
+        pip install autoflake>=2.0.0    # Suppression imports inutiles
+        pip install isort>=5.12.0       # Tri des imports
+        pip install black>=23.0.0       # Formatage standard
+        pip install flake8>=6.0.0       # Vérification syntaxe
+        pip install autopep8>=2.0.0     # Corrections PEP8
+
+    - name: "📁 Detect Modified Files"
+      id: detect_files
+      run: |
+        # Récupérer les fichiers Python modifiés
+        git fetch origin main
+        MODIFIED_FILES=$(git diff --name-only origin/main...HEAD | grep '\.py$' || echo "")
+
+        if [ -z "$MODIFIED_FILES" ]; then
+          echo "modified_files=" >> $GITHUB_OUTPUT
+          echo "has_python_files=false" >> $GITHUB_OUTPUT
+          echo "🔍 Aucun fichier Python modifié détecté"
+        else
+          echo "modified_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$MODIFIED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "has_python_files=true" >> $GITHUB_OUTPUT
+          echo "🔍 Fichiers Python détectés:"
+          echo "$MODIFIED_FILES" | sed 's/^/  /'
+        fi
+
+    - name: "🧹 Execute Concierge Correction"
+      if: steps.detect_files.outputs.has_python_files == 'true'
+      run: |
+        python .github/scripts/concierge_corrector.py \
+          --files "${{ steps.detect_files.outputs.modified_files }}" \
+          --branch "${{ env.CONCIERGE_BRANCH }}" \
+          --verbose
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_SHA: ${{ github.sha }}
+
+    - name: "📋 Generate Correction Report"
+      if: steps.detect_files.outputs.has_python_files == 'true'
+      run: |
+        python .github/scripts/concierge_reporter.py \
+          --output correction_report.md
+      continue-on-error: true
+
+    - name: "📤 Upload Correction Report"
+      if: steps.detect_files.outputs.has_python_files == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: concierge-correction-report
+        path: correction_report.md
+      continue-on-error: true
+
+    - name: "💬 Comment PR with Results"
+      if: steps.detect_files.outputs.has_python_files == 'true'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+
+          try {
+            let reportContent = '';
+            if (fs.existsSync('correction_report.md')) {
+              reportContent = fs.readFileSync('correction_report.md', 'utf8');
+            } else {
+              reportContent = '🧹 **Le Concierge** a terminé son travail de correction automatique.';
+            }
+
+            const commentBody = `
+            ## 🧹 Rapport Le Concierge - Correction Automatique
+
+            ${reportContent}
+
+            ---
+            *Correction automatique appliquée selon la directive SYNTAX-CORRECTOR-v1.0*
+            `;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: commentBody
+            });
+          } catch (error) {
+            console.log('Erreur lors de la création du commentaire:', error.message);
+          }
+      continue-on-error: true
+
+  verify_corrections:
+    needs: syntax_autocorrection
+    runs-on: ubuntu-latest
+    name: "✅ Vérification Post-Correction"
+    if: always()
+
+    steps:
+    - name: "🔄 Checkout Updated Branch"
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+
+    - name: "🐍 Setup Python"
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: "🔍 Final Syntax Verification"
+      run: |
+        python .github/scripts/syntax_verifier.py \
+          --strict \
+          --report-file syntax_verification.json
+      continue-on-error: true
+
+    - name: "📊 Upload Verification Results"
+      uses: actions/upload-artifact@v3
+      with:
+        name: syntax-verification-results
+        path: syntax_verification.json
+      continue-on-error: true
+
+    - name: "🎯 Set Final Status"
+      id: final_status
+      run: |
+        if [ -f "syntax_verification.json" ]; then
+          ERRORS=$(jq -r '.syntax_errors // 0' syntax_verification.json 2>/dev/null || echo "0")
+          WARNINGS=$(jq -r '.warnings // 0' syntax_verification.json 2>/dev/null || echo "0")
+
+          if [ "$ERRORS" = "0" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "message=✅ Code conforme après correction automatique" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "message=❌ $ERRORS erreur(s) de syntaxe persistante(s)" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "status=warning" >> $GITHUB_OUTPUT
+          echo "message=⚠️ Vérification incomplète" >> $GITHUB_OUTPUT
+        fi
+
+    - name: "📢 Report Final Status"
+      run: |
+        echo "🎯 Statut final: ${{ steps.final_status.outputs.status }}"
+        echo "📝 Message: ${{ steps.final_status.outputs.message }}"
+
+        if [ "${{ steps.final_status.outputs.status }}" = "failure" ]; then
+          echo "::error::${{ steps.final_status.outputs.message }}"
+          exit 1
+        elif [ "${{ steps.final_status.outputs.status }}" = "warning" ]; then
+          echo "::warning::${{ steps.final_status.outputs.message }}"
+        else
+          echo "::notice::${{ steps.final_status.outputs.message }}"
+        fi
