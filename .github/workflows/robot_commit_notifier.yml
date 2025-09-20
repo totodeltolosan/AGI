@@ -45,5 +45,5 @@ jobs:
             <i>Rapport généré automatiquement par le système de surveillance AGI.</i>
           from: AGINotifier <${{ secrets.MAIL_USERNAME }}>
           # IMPORTANT: Remplacez l'email ci-dessous par le vôtre
-          to: votre.email@example.com
+          to: catalanotoni@gmail.com
           secure: true
