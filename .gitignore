@@ -53,7 +53,7 @@ datasets/
 # Rapports, logs et exports générés
 logs/
 *.log
-reports/
+#reports/
 exports/
 *.html
 *.pdf

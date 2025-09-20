@@ -1,0 +1,209 @@
+"""
+Module principal du cerveau de l'IA.
+Gère l'orchestration des différents modules cognitifs.
+"""
+
+# Imports de la bibliothèque standard
+import sys
+import time
+import queue
+import logging
+from pathlib import Path
+
+# Configuration du PYTHONPATH
+sys.path.append(str(Path(__file__).parent.parent))
+
+# Imports des modules cognitifs
+from enfant_eve.ia.modele_monde import ModeleMonde
+from enfant_eve.ia.planificateur import Planificateur
+from enfant_eve.ia.comportement import ModeleComportemental
+from enfant_eve.ia.ethique import ModuleEthique
+
+# Imports des modules de raisonnement
+from enfant_eve.ia.raisonnement import ModuleRaisonnement
+from enfant_eve.ia.abstraction import ModuleAbstraction
+from enfant_eve.ia.creativite import ModuleCreativite
+from enfant_eve.ia.arbitrage import ModuleArbitrage
+
+# Imports des utilitaires
+from enfant_eve.ia import cerveau_utils
+
+# Configuration du logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+
+class Cerveau:
+    """
+    Classe principale du processus IA. Orchestre tous les modules cognitifs.
+    """
+
+    def __init__(self, config, q_jeu_ia, q_ia_jeu, q_ia_gui, q_mentor_ia):
+        # --- Configuration et état de fonctionnement ---
+        self.running = True
+        self.config = config
+
+        # --- Queues de communication inter-processus ---
+        self.queues = {
+            "jeu_vers_ia": q_jeu_ia,
+            "ia_vers_jeu": q_ia_jeu,
+            "ia_vers_gui": q_ia_gui,
+            "mentor_vers_ia": q_mentor_ia,
+        }
+
+        # --- États internes de l'IA ---
+        self.mode_actuel = "DEMARRAGE"
+        self.progres_recent = time.time()
+        self.etat_avant_action = None
+        self.action_en_cours = None
+        self.dernier_plan_genere = None
+
+        # L'attribut est renommé pour ne pas écraser la méthode _doit_analyser_inconnu
+        self.flag_analyse_inconnu = False
+
+        self.dernier_objet_inconnu = None
+
+        # --- Initialisation des modules ---
+        self._initialiser_modules_cognitifs()
+        logger.info("✓ Cerveau de l'IA et tous ses modules cognitifs initialisés.")
+
+    def _initialiser_modules_cognitifs(self):
+        self.modele_monde = ModeleMonde()
+        self.comportement = ModeleComportemental(self.config.get("emotions", {}))
+        self.raisonnement = ModuleRaisonnement(self.modele_monde)
+        self.planificateur = Planificateur(self.modele_monde, self.config)
+        self.ethique = ModuleEthique(self.config.get("ethique", {}))
+        self.abstraction = ModuleAbstraction(self.modele_monde)
+        self.creativite = ModuleCreativite(
+            self.config.get("creativite", {}), self.modele_monde
+        )
+        self.arbitre = ModuleArbitrage(self.config.get("arbitrage", {}))
+
+    def run(self):
+        """Boucle principale de décision de l'IA."""
+        try:
+            self._sequence_de_demarrage()
+
+            # CORRECTION : La boucle est maintenant pilotée par l'arrivée des messages.
+            while self.running:
+                try:
+                    # 1. Attendre un message du jeu.
+                    # get(timeout=1) attendra 1 seconde au maximum.
+                    # C'est la correction la plus importante.
+                    etat_monde = self.queues["jeu_vers_ia"].get(timeout=1)
+                    self.progres_recent = time.time()
+
+                    # 2. Cycle cognitif complet
+                    self._reflechir(etat_monde)
+                    plan = self._decider()
+                    if plan:
+                        self._agir(plan)
+
+                except queue.Empty:
+                    # Ce bloc est atteint si aucun message n'est reçu après 1 seconde.
+                    # C'est normal, on continue simplement la boucle pour vérifier si self.running a changé.
+                    continue
+                except Exception as e:
+                    logger.error(
+                        f"ERREUR CRITIQUE DANS LE CYCLE COGNITIF: {e}", exc_info=True
+                    )
+                    time.sleep(1)  # Pause en cas d'erreur pour éviter le spam
+
+        except KeyboardInterrupt:
+            logger.info("Arrêt manuel du cerveau")
+        finally:
+            self.running = False
+
+    def _sequence_de_demarrage(self):
+        """Exécute la Directive 54 : Analyse de l'environnement au spawn."""
+        self.mode_actuel = "ANALYSE_SPAWN"
+        duree = self.config.get("ia", {}).get("duree_analyse_spawn_min", 0.1) * 60
+        temps_fin = time.time() + duree
+        print(f"Lancement de la séquence de démarrage ({duree:.1f}s)...")
+        while time.time() < temps_fin and self.running:
+            try:
+                # On utilise aussi un get avec timeout ici
+                etat_monde = self.queues["jeu_vers_ia"].get(timeout=0.5)
+                if etat_monde:
+                    self.modele_monde.update(etat_monde)
+                cerveau_utils.mettre_a_jour_gui_complet(self)
+            except queue.Empty:
+                # Normal s'il n'y a pas de message pendant l'analyse
+                continue
+        self.mode_actuel = "VEILLE"
+        print("✓ Séquence de démarrage terminée.")
+
+    def _reflechir(self, etat_monde):
+        """Met à jour les modèles internes de l'IA."""
+        self.modele_monde.update(etat_monde)
+
+        # Assurer que etat_joueur est un dictionnaire, même s'il est vide.
+        etat_joueur = etat_monde.get("etat_joueur") or {}
+        environnement = etat_monde.get("environnement") or {}
+        evenement = etat_monde.get("dernier_evenement")
+
+        self.comportement.update(evenement, etat_joueur, environnement)
+        self.mode_actuel = cerveau_utils.determiner_mode_operatoire(self, etat_monde)
+        cerveau_utils.mettre_a_jour_gui_complet(self)
+
+    def _decider(self):
+        """Génère et sélectionne le meilleur plan d'action."""
+        phase_de_vie = self.comportement.phase_de_vie
+
+        # Vérifier que le comportement est bien initialisé
+        if not hasattr(self.comportement, "phase_de_vie"):
+            print("ERREUR: Comportement non initialisé")
+            return None
+
+        # Vérifier que le planificateur est bien initialisé
+        if not self.planificateur:
+            print("ERREUR: Planificateur non initialisé")
+            return None
+
+        # S'assurer que le mode_actuel est défini
+        if not self.mode_actuel:
+            self.mode_actuel = "VEILLE"
+
+        try:
+            plans = self.planificateur.mettre_a_jour_objectifs(
+                self.comportement,  # Passer l'objet comportement complet
+                self.mode_actuel,
+                phase_de_vie,
+            )
+
+            if not plans:
+                return None
+
+            plan_choisi = self.arbitre.prioriser_objectifs(plans, self.mode_actuel)
+
+            if plan_choisi and self.ethique.valider_plan(plan_choisi):
+                self.dernier_plan_genere = plan_choisi
+                return plan_choisi
+
+        except (AttributeError, KeyError, TypeError, ValueError, IndexError) as e:
+            print(f"ERREUR dans la génération du plan: {e}")
+
+        return None
+
+    def _agir(self, plan):
+        """Exécute la prochaine action du plan choisi et met à jour la GUI."""
+        if plan and hasattr(plan, "prochaine_action"):
+            self.action_en_cours = plan.prochaine_action()
+            if self.action_en_cours:
+                self.queues["ia_vers_jeu"].put(self.action_en_cours)
+        else:
+            self.action_en_cours = None
+        cerveau_utils.mettre_a_jour_gui_complet(self)
+
+    def lancer_diagnostic(self):
+        """Passe en mode maintenance pour l'auto-diagnostic."""
+        print("ALERTE: Commande de maintenance reçue. Lancement du diagnostic...")
+        self.mode_actuel = "MAINTENANCE"
+        cerveau_utils.mettre_a_jour_gui_complet(self)
+        time.sleep(5)  # Simule une analyse
+        self.mode_actuel = "VEILLE"
+        print("Auto-diagnostic terminé.")
+
+    def _doit_analyser_inconnu(self, etat_monde):
+        """Placeholder pour la logique de la Directive 59."""
+        return False
