@@ -3,37 +3,19 @@ updates:
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+    open-pull-requests-limit: 5
     reviewers:
-      - "totodeltolosan"
+      - "votre-username"
     assignees:
-      - "totodeltolosan"
+      - "votre-username"
     commit-message:
       prefix: "deps"
       prefix-development: "deps-dev"
       include: "scope"
-
-  - package-ecosystem: "pip"
-    directory: "/eve/cognitive"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pip"
-    directory: "/eve/simulation"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pip"
-    directory: "/eve/development"
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "pip"
-    directory: "/eve/interfaces"
-    schedule:
-      interval: "weekly"
-
+      
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 2

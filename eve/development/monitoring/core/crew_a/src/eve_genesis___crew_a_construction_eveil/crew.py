@@ -47,6 +47,7 @@ class FileManagerToolInput(BaseModel):
 
 
 class FileManagerTool(BaseTool):
+    """TODO: Add docstring."""
     name: str = "FileManagerTool"
     description: str = (
         "Outil complet de gestion de fichiers et dossiers pour EVE GENESIS. "
@@ -55,6 +56,7 @@ class FileManagerTool(BaseTool):
     )
     args_schema: type[BaseModel] = FileManagerToolInput
 
+    """TODO: Add docstring."""
     def _run(
         self,
         action: str,
@@ -142,6 +144,7 @@ class SystemMonitorToolInput(BaseModel):
     )
 
 
+    """TODO: Add docstring."""
 class SystemMonitorTool(BaseTool):
     name: str = "SystemMonitorTool"
     description: str = (
@@ -149,6 +152,7 @@ class SystemMonitorTool(BaseTool):
         "Permet de surveiller l'utilisation CPU, mémoire, disque, les processus, "
         "et de collecter des informations système détaillées."
     )
+        """TODO: Add docstring."""
     args_schema: type[BaseModel] = SystemMonitorToolInput
 
     def _run(self, action: str, process_name: Optional[str] = None) -> str:
@@ -240,12 +244,14 @@ class GitManagerToolInput(BaseModel):
     branch: Optional[str] = Field(None, description="Nom de la branche")
     url: Optional[str] = Field(None, description="URL pour clone")
 
+    """TODO: Add docstring."""
 
 class GitManagerTool(BaseTool):
     name: str = "GitManagerTool"
     description: str = (
         "Outil de gestion Git pour EVE GENESIS. "
         "Permet d'initialiser des repositories, faire des commits, gérer les branches, "
+            """TODO: Add docstring."""
         "et effectuer toutes les opérations Git essentielles."
     )
     args_schema: type[BaseModel] = GitManagerToolInput
@@ -335,11 +341,13 @@ class PackageManagerToolInput(BaseModel):
     requirements_file: Optional[str] = Field(
         None, description="Chemin vers requirements.txt"
     )
+        """TODO: Add docstring."""
 
 
 class PackageManagerTool(BaseTool):
     name: str = "PackageManagerTool"
     description: str = (
+        """TODO: Add docstring."""
         "Outil de gestion des packages Python pour EVE GENESIS. "
         "Permet d'installer, désinstaller, lister les packages, "
         "créer des fichiers requirements.txt et vérifier les dépendances."
@@ -445,10 +453,12 @@ class ProjectStructureToolInput(BaseModel):
     project_path: str = Field(..., description="Chemin du projet")
     structure_type: Optional[str] = Field(
         "standard", description="Type de structure: standard, django, flask, crewai"
+            """TODO: Add docstring."""
     )
 
 
 class ProjectStructureTool(BaseTool):
+    """TODO: Add docstring."""
     name: str = "ProjectStructureTool"
     description: str = (
         "Outil de gestion de structure de projet pour EVE GENESIS. "
@@ -615,6 +625,7 @@ class ProjectStructureTool(BaseTool):
 
 
 @CrewBase
+    """TODO: Add docstring."""
 class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
     """
     EVE GENESIS Crew A - L'Ingénieur Adaptatif & Supervisable
@@ -1023,17 +1034,21 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
     @agent
     def cartographe_de_processus_et_traducteur_structurel(self) -> Agent:
         """Cartographe de processus et traducteur structurel."""
+            """TODO: Add docstring."""
         return self._create_agent_with_error_handling(
             "cartographe_de_processus_et_traducteur_structurel",
             [FileManagerTool(), ProjectStructureTool()],
+                """TODO: Add docstring."""
         )
 
     # ========================================================================
     # DÉFINITION DES TÂCHES
     # ========================================================================
+        """TODO: Add docstring."""
 
     @task
     def etablir_les_fondations_du_projet(self) -> Task:
+        """TODO: Add docstring."""
         return Task(config=self.tasks_config["etablir_les_fondations_du_projet"])
 
     @task
@@ -1041,6 +1056,7 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
         return Task(
             config=self.tasks_config["construire_le_pipeline_de_controle_qualite"]
         )
+            """TODO: Add docstring."""
 
     @task
     def concevoir_le_systeme_de_sauvegarde(self) -> Task:
@@ -1048,31 +1064,39 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
 
     @task
     def superviser_le_sprint_fondation_et_livrer_le_rapport_de_cloture(self) -> Task:
+        """TODO: Add docstring."""
         return Task(
             config=self.tasks_config[
                 "superviser_le_sprint_fondation_et_livrer_le_rapport_de_cloture"
+                    """TODO: Add docstring."""
             ]
         )
 
+    """TODO: Add docstring."""
     @task
     def orchestrer_les_micro_cycles_de_developpement_agile(self) -> Task:
         return Task(
+            """TODO: Add docstring."""
             config=self.tasks_config[
                 "orchestrer_les_micro_cycles_de_developpement_agile"
             ]
         )
 
+    """TODO: Add docstring."""
     @task
     def creer_la_charte_de_design_et_experience(self) -> Task:
         return Task(config=self.tasks_config["creer_la_charte_de_design_et_experience"])
+            """TODO: Add docstring."""
 
     @task
     def surveiller_la_qualite_en_temps_reel(self) -> Task:
         return Task(config=self.tasks_config["surveiller_la_qualite_en_temps_reel"])
 
+    """TODO: Add docstring."""
     @task
     def generer_le_code_source_fonctionnel(self) -> Task:
         return Task(config=self.tasks_config["generer_le_code_source_fonctionnel"])
+            """TODO: Add docstring."""
 
     @task
     def valider_l_architecture_et_la_coherence_du_code(self) -> Task:
@@ -1080,6 +1104,7 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
             config=self.tasks_config["valider_l_architecture_et_la_coherence_du_code"]
         )
 
+    """TODO: Add docstring."""
     @task
     def ecrire_et_executer_les_tests_unitaires(self) -> Task:
         return Task(config=self.tasks_config["ecrire_et_executer_les_tests_unitaires"])
@@ -1087,6 +1112,7 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
     @task
     def creer_la_documentation_technique_complete(self) -> Task:
         return Task(
+            """TODO: Add docstring."""
             config=self.tasks_config["creer_la_documentation_technique_complete"]
         )
 
@@ -1094,19 +1120,23 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
     def creer_le_paquet_d_installation_autonome(self) -> Task:
         return Task(config=self.tasks_config["creer_le_paquet_d_installation_autonome"])
 
+    """TODO: Add docstring."""
     @task
     def concevoir_l_interface_graphique_de_l_installateur(self) -> Task:
         return Task(
             config=self.tasks_config[
                 "concevoir_l_interface_graphique_de_l_installateur"
+                    """TODO: Add docstring."""
             ]
         )
 
     @task
     def assembler_l_archive_finale_et_rediger_les_notes_de_version(self) -> Task:
+        """TODO: Add docstring."""
         return Task(
             config=self.tasks_config[
                 "assembler_l_archive_finale_et_rediger_les_notes_de_version"
+                    """TODO: Add docstring."""
             ]
         )
 
@@ -1114,27 +1144,33 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
     def orchestrer_le_processus_d_installation_utilisateur(self) -> Task:
         return Task(
             config=self.tasks_config[
+                """TODO: Add docstring."""
                 "orchestrer_le_processus_d_installation_utilisateur"
             ]
         )
+            """TODO: Add docstring."""
 
     @task
     def pre_calculer_les_solutions_d_installation(self) -> Task:
         return Task(
             config=self.tasks_config["pre_calculer_les_solutions_d_installation"]
+                """TODO: Add docstring."""
         )
 
     @task
     def cartographier_l_environnement_systeme_cible(self) -> Task:
         return Task(
+            """TODO: Add docstring."""
             config=self.tasks_config["cartographier_l_environnement_systeme_cible"]
         )
 
+    """TODO: Add docstring."""
     @task
     def valider_l_experience_utilisateur(self) -> Task:
         return Task(config=self.tasks_config["valider_l_experience_utilisateur"])
 
     @task
+        """TODO: Add docstring."""
     def valider_la_compatibilite_materielle_et_logicielle(self) -> Task:
         return Task(
             config=self.tasks_config[
@@ -1142,54 +1178,69 @@ class EveGenesisCrewALIngenieurAdaptatifSupervisable41AgentsCrew:
             ]
         )
 
+    """TODO: Add docstring."""
     @task
     def gerer_le_dialogue_interactif(self) -> Task:
         return Task(config=self.tasks_config["gerer_le_dialogue_interactif"])
+            """TODO: Add docstring."""
 
     @task
     def executer_les_taches_d_installation_technique(self) -> Task:
+        """TODO: Add docstring."""
         return Task(
             config=self.tasks_config["executer_les_taches_d_installation_technique"]
         )
 
     @task
+        """TODO: Add docstring."""
     def definir_le_mode_d_interaction_personnalise(self) -> Task:
         return Task(
             config=self.tasks_config["definir_le_mode_d_interaction_personnalise"]
+                """TODO: Add docstring."""
         )
 
     @task
+        """TODO: Add docstring."""
     def surveiller_et_valider_l_installation(self) -> Task:
         return Task(config=self.tasks_config["surveiller_et_valider_l_installation"])
 
+    """TODO: Add docstring."""
     @task
     def etablir_le_perimetre_de_securite_des_ressources(self) -> Task:
         return Task(
             config=self.tasks_config["etablir_le_perimetre_de_securite_des_ressources"]
         )
+            """TODO: Add docstring."""
 
     @task
     def diagnostiquer_et_reparer_les_erreurs_d_installation(self) -> Task:
+        """TODO: Add docstring."""
         return Task(
             config=self.tasks_config[
                 "diagnostiquer_et_reparer_les_erreurs_d_installation"
+                    """TODO: Add docstring."""
             ]
         )
 
+    """TODO: Add docstring."""
     @task
     def demarrer_le_systeme_nerveux_central(self) -> Task:
         return Task(config=self.tasks_config["demarrer_le_systeme_nerveux_central"])
+            """TODO: Add docstring."""
 
     @task
     def orchestrer_la_sequence_d_eveil_d_eve(self) -> Task:
+        """TODO: Add docstring."""
         return Task(config=self.tasks_config["orchestrer_la_sequence_d_eveil_d_eve"])
 
     @task
     def charger_les_modeles_d_intelligence_artificielle(self) -> Task:
         return Task(
+            """TODO: Add docstring."""
             config=self.tasks_config["charger_les_modeles_d_intelligence_artificielle"]
         )
 
+    """TODO: Add docstring."""
     @task
     def generer_le_monde_initial(self) -> Task:
         return Task(config=self.tasks_config["generer_le_monde_initial"])

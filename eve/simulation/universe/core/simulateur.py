@@ -124,6 +124,7 @@ class GestionnaireAgents:
     """Gère le chargement, l'exécution et la récupération des agents."""
 
     def __init__(self, config: ConfigurationSimulateur):
+        """TODO: Add docstring."""
         self.config = config
         self.agents_charges: Dict[str, Any] = {}
         self.metriques: Dict[str, MetriqueAgent] = {}

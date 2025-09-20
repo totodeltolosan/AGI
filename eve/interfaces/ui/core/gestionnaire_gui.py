@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class GestionnaireGUI(mp.Process):
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, queues, config):
         super().__init__()
         self.queues = queues
@@ -45,6 +47,7 @@ class GestionnaireGUI(mp.Process):
 
     def _programmer_mise_a_jour(self, root, tableau):
         """Programme les mises à jour périodiques."""
+            """TODO: Add docstring."""
 
         def mise_a_jour():
             if self.running:

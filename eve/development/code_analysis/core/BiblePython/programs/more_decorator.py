@@ -6,7 +6,9 @@ log = logging.getLogger("retry")
 
 
 def retry(f):
+    """TODO: Add docstring."""
     @wraps(f)
+        """TODO: Add docstring."""
     def wrapper_function(*args, **kwargs):
         MAX_ATTEMPTS = 5
         for attempt in range(1, MAX_ATTEMPTS + 1):
@@ -28,6 +30,7 @@ counter = 0
 
 
 @retry
+    """TODO: Add docstring."""
 def save_to_database(arg):
     print("Write to a database or make a network call or etc.")
     print("This will be automatically retried if exception is thrown.")

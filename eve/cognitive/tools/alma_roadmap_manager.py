@@ -229,6 +229,7 @@ def parse_rapport_maitre_v2(report_content: str, nlp_instance: Optional[Any]) ->
     current_task_buffer: Optional[Dict[str, Any]] = None
 
     def finalize_current_task(buffer: Optional[Dict[str, Any]]):
+        """TODO: Add docstring."""
         nonlocal tasks
         if not buffer or not buffer.get("text","").strip(): # Ne pas finaliser un buffer vide
             return False
@@ -468,6 +469,8 @@ def save_roadmap_status(tasks_by_id: Dict[str, RoadmapTask]):
 
 # --- Classe Principale de l'Application GUI ---
 class RoadmapManagerApp:
+    """TODO: Add docstring."""
+    """TODO: Add docstring."""
     def __init__(self, root_window: tk.Tk):
         self.root = root_window
         self.root.title(f"{APP_NAME} - v{VERSION}")
@@ -746,6 +749,7 @@ class RoadmapManagerApp:
             if key_needed not in self.task_icons:
                 self.task_icons[key_needed] = default_icons.get(key_needed, "❓")
         self.logger.debug(f"Dictionnaire d'icônes finalisé.")
+            """TODO: Add docstring."""
 
 
     def darken_color(self, hex_color: str, factor: float = 0.85) -> str:
@@ -1092,6 +1096,7 @@ class RoadmapManagerApp:
                 selected_id = None
 
 
+    """TODO: Add docstring."""
         if selected_id and selected_id in self.tasks_status_by_id:
             task = self.tasks_status_by_id[selected_id]
 
@@ -1233,14 +1238,17 @@ class RoadmapManagerApp:
                 self.current_selected_task_id = task_id # Assurer que c'est bien l'ID sélectionné
             self.on_task_select() # Mettre à jour le panneau de détails
             self.logger.info(f"Tâche '{task_id}' marquée comme '{new_status}' et UI rafraîchie.")
+                """TODO: Add docstring."""
         else:
             self.logger.error(f"Tentative de mise à jour du statut pour tâche ID inconnu: {task_id}")
 
     def mark_task_done(self):
+        """TODO: Add docstring."""
         task_id = self.get_selected_task_id_from_tree()
         if task_id:
             self._update_task_status_and_refresh(task_id, "accomplie", f"(Accomplie le {datetime.date.today().isoformat()})")
 
+    """TODO: Add docstring."""
     def mark_task_inprogress(self):
         task_id = self.get_selected_task_id_from_tree()
         if task_id:
@@ -1248,14 +1256,17 @@ class RoadmapManagerApp:
 
     def mark_task_todo(self):
         task_id = self.get_selected_task_id_from_tree()
+            """TODO: Add docstring."""
         if task_id:
             # Nettoyer la note des mentions "Accomplie" ou "Débutée"
             note = self.tasks_status_by_id[task_id].get("notes", "") or ""
             note_cleaned = re.sub(r"\s*\((?:Accomplie|Débutée) le .*?\)\s*","", note, flags=re.IGNORECASE).strip()
+                """TODO: Add docstring."""
             self._update_task_status_and_refresh(task_id, "à faire", note_cleaned if note_cleaned else "", overwrite_note=True)
 
     def mark_task_blocked(self): # NOUVELLE MÉTHODE
         task_id = self.get_selected_task_id_from_tree()
+            """TODO: Add docstring."""
         if task_id:
             self._update_task_status_and_refresh(task_id, "bloquée", f"(Bloquée le {datetime.date.today().isoformat()})")
 
@@ -1278,9 +1289,11 @@ class RoadmapManagerApp:
             dialog.transient(self.root) # La rend modale par rapport à la fenêtre principale
             dialog.grab_set() # Empêche l'interaction avec la fenêtre principale
             dialog.resizable(False, False)
+                """TODO: Add docstring."""
 
             ttk.Label(dialog, text=f"Note pour la tâche (L{task_data['raw_line_number']}):\n'{task_text_preview}'", wraplength=480).pack(pady=10)
 
+    """TODO: Add docstring."""
             note_text_widget = scrolledtext.ScrolledText(dialog, width=55, height=10, font=self.font_text_normal, wrap=tk.WORD)
             note_text_widget.insert(tk.END, current_notes)
             note_text_widget.pack(pady=5, padx=10, expand=True, fill=tk.BOTH)
@@ -1353,6 +1366,7 @@ class RoadmapManagerApp:
 
         task_vars: List[tk.BooleanVar] = []
         for i, task_text_suggestion in enumerate(suggested_tasks_texts):
+            """TODO: Add docstring."""
             var = tk.BooleanVar(value=True) # Pré-cocher par défaut
             task_vars.append(var)
             # Utiliser un LabelFrame pour chaque tâche pour mieux grouper si on ajoute des options par tâche plus tard

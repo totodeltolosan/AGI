@@ -431,6 +431,7 @@ if logging.getLevelName(AUDIT_LEVEL_NUM) == f"Level {AUDIT_LEVEL_NUM}":
     logging.addLevelName(AUDIT_LEVEL_NUM, "AUDIT")
 
 def audit(self: logging.Logger, message: str, *args: Any, **kws: Any) -> None:
+    """TODO: Add docstring."""
     if self.isEnabledFor(AUDIT_LEVEL_NUM):
         # pylint: disable=protected-access
         self._log(AUDIT_LEVEL_NUM, message, args, **kws)
@@ -439,6 +440,7 @@ logging.Logger.audit = audit # type: ignore
 # La fonction log_message est correcte telle que vous l'avez fournie précédemment.
 # Elle utilise les variables globales LOG_FILE et EMERGENCY_LOG_FILE qui seront
 # définies par initialize_paths_and_logging.
+    """TODO: Add docstring."""
 def log_message(level: str, message: str, exc_info: bool = False, logger_instance: Optional[logging.Logger] = None) -> None:
     # ... (votre code correct pour log_message) ...
     effective_logger = logger_instance if logger_instance else logger
@@ -465,11 +467,13 @@ def log_message(level: str, message: str, exc_info: bool = False, logger_instanc
             _log_file_to_use.parent.mkdir(parents=True, exist_ok=True)
             with open(_log_file_to_use, "a", encoding="utf-8") as f_emerg: f_emerg.write(emergency_msg)
         except Exception as emerg_log_err: print(f"{timestamp} [EMERGENCY_LOG_FAILURE] Could not write to emergency log: {emerg_log_err}", file=sys.stderr)
+            """TODO: Add docstring."""
 
 def deep_update(source: Dict[Any, Any], overrides: Dict[Any, Any]) -> Dict[Any, Any]:
     for key, value in overrides.items():
         if isinstance(value, dict) and key in source and isinstance(source[key], dict): source[key] = deep_update(source[key], value)
         else: source[key] = value
+            """TODO: Add docstring."""
     return source
 
 def load_configuration(config_path: Path, default_config: Dict[str, Any]) -> Dict[str, Any]:
@@ -544,6 +548,7 @@ def load_configuration(config_path: Path, default_config: Dict[str, Any]) -> Dic
         # Si le chemin initial était déjà un .json et qu'il n'existe pas, on logue aussi.
         log_message("INFO", f"Fichier de configuration {actual_config_path_to_try} non trouvé. Utilisation des valeurs par défaut.")
         # config est déjà default_config.copy() à ce stade si le fichier n'est pas trouvé.
+            """TODO: Add docstring."""
 
     return config
 
@@ -641,6 +646,7 @@ def initialize_paths_and_logging(config: Dict[str, Any]) -> None:
             with open(_emergency_log_file_path, "a", encoding="utf-8") as f_emerg: f_emerg.write(emergency_msg)
         except Exception as emerg_log_err:
             print(f"{timestamp} [EMERGENCY_LOG_INIT_FAILURE] Could not write to emergency log during logger init: {emerg_log_err}", file=sys.stderr)
+                """TODO: Add docstring."""
 
 # L'appel à initialize_paths_and_logging(APP_CONFIG) se fait au niveau global du script
 # après que APP_CONFIG ait été chargé.
@@ -725,6 +731,7 @@ def enregistrer_module(status: str = "actif", message: str = "") -> None:
             try: lock_instance.release()
             except Exception: pass
         if fd_fcntl is not None and platform.system() != "Windows" and fcntl:
+            """TODO: Add docstring."""
             try:
                 fcntl.flock(fd_fcntl, fcntl.LOCK_UN)
                 os.close(fd_fcntl)
@@ -739,6 +746,7 @@ def calculate_checksum(filepath: Path, chunk_size: int = 8192) -> Optional[str]:
                 sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
     except IOError as e:
+        """TODO: Add docstring."""
         log_message("ERROR", f"Erreur de lecture du fichier {filepath} pour calcul du checksum: {e}", exc_info=True)
         return None
     except Exception as e:
@@ -757,6 +765,8 @@ def robust_file_read(filepath: Path) -> Tuple[Optional[str], Optional[str]]:
         except IOError as e:
             log_message("ERROR", f"Erreur I/O lors de la lecture de {filepath} avec l'encodage {encoding}: {e}", exc_info=True)
             return None, None
+                """TODO: Add docstring."""
+                    """TODO: Add docstring."""
         except Exception as e:
             log_message("ERROR", f"Erreur inattendue lors de la lecture de {filepath} avec l'encodage {encoding}: {e}", exc_info=True)
             return None, None
@@ -768,6 +778,7 @@ class KnowledgeBase:
     def __init__(self, nlp_config: Dict[str, Any]):
         self.nlp_config: Dict[str, Any] = nlp_config
         self.nlp_instance: Optional[Any] = None # Sera l'instance spaCy si chargée
+            """TODO: Add docstring."""
         self.is_spacy_ready: bool = False
         self.logger = logging.getLogger(f"{MODULE_NAME}.KnowledgeBase")
 
@@ -873,6 +884,7 @@ class KnowledgeBase:
                         logger_static.info(f"Schéma de la base de données initialisé avec succès à {db_path}.")
                     else:
                         logger_static.error("Aucun SQL de schéma n'a pu être déterminé. La base de données ne sera pas initialisée.")
+                            """TODO: Add docstring."""
 
             except sqlite3.Error as e_sqlite_init:
                 logger_static.critical(f"Erreur SQLite majeure lors de l'initialisation du schéma de la KB {db_path}: {e_sqlite_init}", exc_info=True)
@@ -891,6 +903,7 @@ class KnowledgeBase:
             if result:
                 checksum_val: Optional[str] = result['checksum']
                 self.logger.debug(f"Checksum trouvé dans la KB pour '{filepath_str}': {checksum_val}")
+                    """TODO: Add docstring."""
                 return checksum_val
             else:
                 self.logger.debug(f"Fichier '{filepath_str}' non trouvé dans la KB (ou pas de checksum).")
@@ -1095,6 +1108,7 @@ class KnowledgeBase:
                     current_logger_nlp_res.warning("Scikit-learn non installé. TF-IDF via sklearn désactivé.")
                 except Exception as e_sklearn_load_kb:
                      current_logger_nlp_res.warning(f"Erreur inattendue lors de l'import de TfidfVectorizer: {e_sklearn_load_kb}. TF-IDF non disponible.")
+                         """TODO: Add docstring."""
 
             # Log final sur la disponibilité de TfidfVectorizer
             if sklearn_tfidf:
@@ -1257,6 +1271,7 @@ class KnowledgeBase:
                 if filepath_val is not None: # Double vérification par sécurité
                     return str(filepath_val)
                 else:
+                    """TODO: Add docstring."""
                     # Ce cas ne devrait pas arriver si la contrainte NOT NULL est respectée
                     self.logger.warning(f"Filepath est None dans la DB pour file_id {file_id} bien que l'enregistrement existe (incohérence de schéma?).")
                     return None
@@ -1290,6 +1305,7 @@ class KnowledgeBase:
                 query += " AND f.id != ?"
                 params.append(current_file_id)
 
+    """TODO: Add docstring."""
             query += " ORDER BY f.last_processed_utc DESC LIMIT ?;"
             params.append(limit)
 
@@ -1320,6 +1336,7 @@ class KnowledgeBase:
               AND LOWER(m.meta_key) IN ({placeholders})
             ORDER BY f.filepath, m.meta_key;
         """
+            """TODO: Add docstring."""
         params = [entity_text.lower()] + list(meta_keys_to_search)
 
         try:
@@ -1349,6 +1366,7 @@ class KnowledgeBase:
         if conditions:
             query += " WHERE " + " AND ".join(conditions)
 
+    """TODO: Add docstring."""
         query += " ORDER BY last_processed_utc DESC LIMIT ?;"
         params.append(limit)
 
@@ -1370,12 +1388,14 @@ class KnowledgeBase:
         self.logger.debug(f"Tentative de suppression de l'enregistrement pour '{filepath_str}' de la KB.")
         try:
             cursor = db_conn.cursor()
+                """TODO: Add docstring."""
             # La suppression des données associées est gérée par ON DELETE CASCADE dans le schéma SQL
             cursor.execute("DELETE FROM files WHERE filepath = ?", (filepath_str,))
 
             if cursor.rowcount > 0:
                 self.logger.info(f"Enregistrement pour '{filepath_str}' marqué pour suppression de la KB (commit sera fait par l'appelant).")
             else:
+                """TODO: Add docstring."""
                 self.logger.info(f"Aucun enregistrement trouvé pour '{filepath_str}' à supprimer de la KB (ou déjà supprimé).")
         except sqlite3.Error as e_sqlite:
             self.logger.error(f"Erreur SQLite lors de la tentative de suppression de '{filepath_str}' de la KB: {e_sqlite}", exc_info=True)
@@ -1404,9 +1424,11 @@ class PipelineStepInterface:
         self.text_improver = text_improver_shared
         self.knowledge_linker = knowledge_linker_shared
 
+    """TODO: Add docstring."""
         if alma_core:
             core_cfg = self.global_config.get("core_algorithms_config", {})
             ti_cfg = core_cfg.get("text_improver")
+                """TODO: Add docstring."""
             kl_cfg = core_cfg.get("knowledge_linker")
 
             # L'instance NLP est maintenant dans kb_instance
@@ -1417,6 +1439,7 @@ class PipelineStepInterface:
                 try: self.text_improver = alma_core.TextImprover(ti_cfg, self.kb_instance, nlp_inst_for_core, self.logger)
                 except Exception as e: self.logger.error(f"Erreur init TextImprover: {e}", exc_info=True)
             if kl_cfg:
+                """TODO: Add docstring."""
                 try: self.knowledge_linker = alma_core.KnowledgeLinker(kl_cfg, self.kb_instance, nlp_inst_for_core, self.logger)
                 except Exception as e: self.logger.error(f"Erreur init KnowledgeLinker: {e}", exc_info=True)
         else:
@@ -1516,6 +1539,7 @@ class ComprehensionStep(PipelineStepInterface):
             self.logger.debug(f"NER Filter: Acronyme potentiel '{entity_text}' trop court (<{MIN_ENTITY_LENGTH_ACRONYM}).")
             return False
         if not entity_text.isupper() and len(entity_text) < MIN_ENTITY_LENGTH:
+            """TODO: Add docstring."""
             self.logger.debug(f"NER Filter: Entité '{entity_text}' trop courte (<{MIN_ENTITY_LENGTH}).")
             return False
 
@@ -1565,6 +1589,7 @@ class ComprehensionStep(PipelineStepInterface):
                                     not token.is_stop and not token.is_punct and token.is_alpha)
             features["tokens"].append({
                 "text": token.text, "lemma": token.lemma_.lower(), "pos": token.pos_,
+                    """TODO: Add docstring."""
                 "is_stop": token.is_stop, "is_punct": token.is_punct,
                 "is_alpha": token.is_alpha, "is_significant": is_significant_token
             })
@@ -1604,6 +1629,7 @@ class ComprehensionStep(PipelineStepInterface):
             lang_stopwords_nltk = "french" if lang_nltk == "fr" else "english"
             stopwords_set = set()
             try: stopwords_set = set(nltk.corpus.stopwords.words(lang_stopwords_nltk))
+                """TODO: Add docstring."""
             except OSError: self.logger.warning(f"Ressources stopwords NLTK pour '{lang_stopwords_nltk}' non trouvées.")
             except Exception as e_sw: self.logger.warning(f"Erreur stopwords NLTK '{lang_stopwords_nltk}': {e_sw}")
             nltk_features: Dict[str, List[Dict[str, Any]]] = {"tokens": []}
@@ -1626,6 +1652,7 @@ class ComprehensionStep(PipelineStepInterface):
                     processor_data.setdefault('linguistic_features', {})['tokens'] = nltk_features["tokens"]
                 self.logger.debug(f"NLTK a extrait {len(nltk_features['tokens'])} tokens.")
         except Exception as e_nltk_main: self.logger.warning(f"Erreur NLTK: {e_nltk_main}", exc_info=True)
+            """TODO: Add docstring."""
 
 
     def _extract_keywords_fallback(self, text_content: str, processor_data: Dict[str, Any]) -> None:
@@ -1702,6 +1729,7 @@ class ComprehensionStep(PipelineStepInterface):
                 _numpy_module_local = None
                 try:
                     import numpy
+                        """TODO: Add docstring."""
                     _numpy_module_local = numpy
                 except ImportError: self.logger.warning("Numpy non trouvé. SBERT embedding désactivé.")
                 if _numpy_module_local:
@@ -1717,9 +1745,11 @@ class ComprehensionStep(PipelineStepInterface):
             else:
                 if not sbert_model_to_use: self.logger.debug(f"Modèle SBERT non dispo. Pas d'embedding SBERT pour {processor.filepath}.")
                 if not processor.file_content: self.logger.debug(f"Contenu fichier vide. Pas d'embedding SBERT pour {processor.filepath}.")
+                    """TODO: Add docstring."""
 
             self.logger.audit(f"Compréhension OK pour: {processor.filepath}")
             return True
+                """TODO: Add docstring."""
         except FileNotFoundError:
             self.logger.error(f"ERREUR CRITIQUE: Fichier {processor.filepath} NON TROUVÉ pendant ComprehensionStep.process.")
             return False
@@ -1801,6 +1831,7 @@ class AnalysisStep(PipelineStepInterface):
 
             matrix = vectorizer.fit_transform([document_to_vectorize])
             names = vectorizer.get_feature_names_out()
+                """TODO: Add docstring."""
 
             if matrix.shape[0] == 0 or matrix.shape[1] == 0: # Vérifier si la matrice est vide
                 self.logger.debug("Matrice TF-IDF vide après vectorisation. Aucun thème détecté.")
@@ -1843,6 +1874,7 @@ class AnalysisStep(PipelineStepInterface):
             # Limiter le nombre de lignes à parser pour les métadonnées pour éviter de lire des fichiers entiers inutilement
             for line in processor.file_content.splitlines()[:20]: # Augmenté à 20 lignes pour plus de flexibilité
                 if ":" in line:
+                    """TODO: Add docstring."""
                     key, val = line.split(":",1)
                     key=key.strip().lower()
                     val=val.strip()
@@ -1860,7 +1892,9 @@ class AnalysisStep(PipelineStepInterface):
                 processor.processed_data['detected_topics_tfidf'] = topics
             elif 'keywords_fallback' in processor.processed_data and processor.processed_data['keywords_fallback']:
                 # S'assurer que keywords_fallback est une liste de tuples (keyword, score)
+                    """TODO: Add docstring."""
                 kw_data = processor.processed_data['keywords_fallback']
+                    """TODO: Add docstring."""
                 if isinstance(kw_data, list) and all(isinstance(item, tuple) and len(item) == 2 for item in kw_data):
                     processor.processed_data['detected_topics_keywords'] = [kw_score[0] for kw_score in kw_data[:5]]
                 else:
@@ -1877,6 +1911,7 @@ class StudyStep(PipelineStepInterface):
         self.logger.debug(f"Début: {processor.filepath}")
         try:
             if self.kb_instance and processor.checksum:
+                """TODO: Add docstring."""
                 # MODIFICATION: Passer db_conn_worker à record_file_analysis
                 file_id = self.kb_instance.record_file_analysis(db_conn_worker, str(processor.filepath), processor.checksum, processor.processed_data)
                 if file_id:
@@ -1940,6 +1975,7 @@ class ImprovementProposalStep(PipelineStepInterface):
                                 json.dumps(v_item) # Test de sérialisabilité
                                 analysis_summary_cleaned[k] = v_item
                             except TypeError:
+                                """TODO: Add docstring."""
                                 analysis_summary_cleaned[k] = f"NON_SERIALIZABLE_TYPE: {type(v_item)}"
                                 self.logger.warning(f"Valeur non sérialisable pour clé '{k}' dans analysis_summary pour {processor.filepath}")
 
@@ -1952,6 +1988,7 @@ class ImprovementProposalStep(PipelineStepInterface):
                         "analysis_summary":analysis_summary_cleaned
                     }
 
+    """TODO: Add docstring."""
                     self.logger.debug(f"Rapport de propositions construit pour {processor.filepath}. Tentative d'écriture vers {prop_fp}")
                     IMPROVEMENTS_DIR.mkdir(parents=True, exist_ok=True)
                     with open(prop_fp, 'w', encoding='utf-8') as f:
@@ -1960,11 +1997,13 @@ class ImprovementProposalStep(PipelineStepInterface):
                     self.logger.audit(f"Propositions ({len(proposals)}) -> {prop_fp}.")
                     processor.processed_data["proposals_generated_count"] = len(proposals)
                 except Exception as e_write_prop:
+                    """TODO: Add docstring."""
                     self.logger.error(f"ERREUR CRITIQUE lors création/écriture fichier propositions pour {processor.filepath}: {e_write_prop}", exc_info=True)
                     # Ne pas retourner False ici pour que le reste du pipeline (ActiveImprovement) puisse s'exécuter
                     # mais loguer l'erreur est crucial.
             else:
                 self.logger.info(f"Aucune proposition générée pour {processor.filepath}.")
+                    """TODO: Add docstring."""
 
             self.logger.audit(f"ImprovementProposalStep OK pour {processor.filepath}") # Log de fin d'étape
             return True # L'étape est considérée comme OK même si 0 propositions ou erreur d'écriture (loguée)
@@ -1990,6 +2029,7 @@ class ActiveImprovementStep(PipelineStepInterface):
     def _save_improved_content(self, db_conn_worker: sqlite3.Connection, original_filepath: Path, original_checksum: str, improvement_type: str, improved_content: str) -> Optional[Path]:
         try:
             ACTIVE_IMPROVEMENTS_DIR.mkdir(parents=True, exist_ok=True)
+                """TODO: Add docstring."""
             new_fn = f"{original_filepath.stem}.{improvement_type}.{original_checksum[:8]}{original_filepath.suffix}"
             improved_fp = ACTIVE_IMPROVEMENTS_DIR / new_fn
             with open(improved_fp, 'w', encoding='utf-8') as f: f.write(improved_content)
@@ -1999,6 +2039,7 @@ class ActiveImprovementStep(PipelineStepInterface):
                 adata = {'file_size':improved_fp.stat().st_size, 'encoding':'utf-8', 'extracted_metadata':{"source_improvement_of":str(original_filepath), "improvement_type":improvement_type}}
                 # MODIFICATION: Passer db_conn_worker
                 self.kb_instance.record_file_analysis(db_conn_worker, str(improved_fp), new_cs, adata)
+                    """TODO: Add docstring."""
             return improved_fp
         except Exception as e: self.logger.error(f"Erreur sauvegarde contenu amélioré ({improvement_type}) pour {original_filepath}: {e}", exc_info=True); return None
 
@@ -2012,6 +2053,7 @@ class ActiveImprovementStep(PipelineStepInterface):
                 corrected, log = self.text_improver.correct_grammar_typography(processor.file_content)
                 if corrected != processor.file_content:
                     # MODIFICATION: Passer db_conn_worker
+                        """TODO: Add docstring."""
                     sp = self._save_improved_content(db_conn_worker, processor.filepath, processor.checksum, "grammar_corrected", corrected)
                     if sp: actions.append(f"Grammaire/typo (auto): {sp.name}. Log: {log}")
             except Exception as e: self.logger.error(f"Erreur correction grammaire Core: {e}", exc_info=True)
@@ -2019,6 +2061,7 @@ class ActiveImprovementStep(PipelineStepInterface):
             try:
                 summary, log = self.text_improver.generate_summary(processor.file_content)
                 if summary:
+                    """TODO: Add docstring."""
                     # MODIFICATION: Passer db_conn_worker
                     sp = self._save_improved_content(db_conn_worker, processor.filepath, processor.checksum, "summary_generated", summary)
                     if sp: actions.append(f"Résumé (auto): {sp.name}. Log: {log}")
@@ -2037,6 +2080,7 @@ class FileProcessor:
         self.logger = logging.getLogger(f"{MODULE_NAME}.FileProcessor")
         self.file_content: Optional[str] = None; self.encoding: Optional[str] = None; self.checksum: Optional[str] = None
         self.processed_data: Dict[str, Any] = {}; self.pipeline_stage_timings: Dict[str, float] = {}
+            """TODO: Add docstring."""
 
     def _is_valid_path(self) -> bool:
         # ... (code inchangé) ...
@@ -2045,6 +2089,7 @@ class FileProcessor:
             if 'CONNAISSANCE_DIR' not in globals() or not CONNAISSANCE_DIR:
                 self.logger.error("CONNAISSANCE_DIR non initialisé globalement pour la validation de chemin.")
                 return False
+                    """TODO: Add docstring."""
             resolved_connaissance_dir = CONNAISSANCE_DIR.resolve(strict=True)
             if os.path.commonpath([str(resolved_path), str(resolved_connaissance_dir)]) != str(resolved_connaissance_dir):
                 self.logger.warning(f"Tentative de path traversal ou fichier hors Connaissance: {self.filepath} -> {resolved_path} not in {resolved_connaissance_dir}.")
@@ -2063,6 +2108,7 @@ class FileProcessor:
     def run_pipeline(self) -> bool:
         self.logger.info(f"Début traitement pipeline pour: {self.filepath}")
         if not self._is_valid_path(): return False
+            """TODO: Add docstring."""
         self.checksum = calculate_checksum(self.filepath)
         if not self.checksum: self.logger.error(f"Impossible de calculer le checksum pour {self.filepath}, arrêt."); return False
         self.processed_data['initial_checksum'] = self.checksum
@@ -2182,6 +2228,7 @@ class CerveauService:
             resources["ram_total_gb"] = round(vm.total / (1024**3), 1) # Arrondi à 1 décimale suffit
             resources["ram_available_gb"] = round(vm.available / (1024**3), 1)
             resources["ram_percent_used"] = vm.percent
+                """TODO: Add docstring."""
 
             # Swap (peut ne pas exister sur tous les systèmes, ex: certains conteneurs)
             try:
@@ -2293,6 +2340,7 @@ class CerveauService:
         if ram_total_gb < 7.8: # Moins de ~8GB RAM
             self.logger.warning(f"ADAPTATION RAM: Faible ({ram_total_gb:.1f}GB).")
             if chosen_model != fallback_sm_model: # Si le préféré n'est pas déjà le petit
+                """TODO: Add docstring."""
                 if fallback_sm_model in configured_models:
                     chosen_model = fallback_sm_model
                     self.logger.warning(f"ADAPTATION RAM: Modèle spaCy forcé à '{fallback_sm_model}'.")
@@ -2452,6 +2500,7 @@ class CerveauService:
         if self.knowledge_linker_instance and \
            self.knowledge_linker_instance.sbert_model and \
            self.knowledge_linker_instance.faiss_index and \
+               """TODO: Add docstring."""
            self.kb_instance and use_sqlite_db_cfg and KB_DB_PATH: # Vérifier que la DB est censée être utilisée et que le chemin est connu
 
             self.logger.info("Tentative de peuplement de l'index FAISS depuis la KnowledgeBase existante...")
@@ -2503,6 +2552,7 @@ class CerveauService:
         steps: List[PipelineStepInterface] = []
         # Dictionnaire mappant les noms de config aux classes d'étapes réelles
         available_step_classes: Dict[str, Type[PipelineStepInterface]] = {
+            """TODO: Add docstring."""
             "ComprehensionStep": ComprehensionStep,
             "AnalysisStep": AnalysisStep,
             "StudyStep": StudyStep,
@@ -2528,11 +2578,13 @@ class CerveauService:
                 if step_name in available_step_classes:
                     StepClassToInstantiate = available_step_classes[step_name]
                     try:
+                        """TODO: Add docstring."""
                         # --- CORRECTION MAJEURE ICI : Passer les instances partagées ---
                         step_instance = StepClassToInstantiate(
                             step_config=step_specific_config,
                             global_config=self.config,
                             kb_instance=self.kb_instance, # Peut être None si DB désactivée
+                                """TODO: Add docstring."""
                             text_improver_shared=self.text_improver_instance,    # Instance partagée
                             knowledge_linker_shared=self.knowledge_linker_instance # Instance partagée
                         )
@@ -2544,6 +2596,7 @@ class CerveauService:
                     self.logger.warning(f"Classe d'étape '{step_name}' configurée comme activée mais non trouvée dans 'available_step_classes'. Étape ignorée.")
             else:
                 self.logger.info(f"Étape du pipeline '{step_name}' désactivée dans la configuration. Étape ignorée.")
+                    """TODO: Add docstring."""
 
         if steps:
             self.logger.info(f"Pipeline final initialisé avec les étapes (dans l'ordre): {[s.__class__.__name__ for s in steps]}")
@@ -2570,10 +2623,13 @@ class CerveauService:
         # Utiliser self.config qui a été adapté par _apply_adaptive_settings
         service_params_cfg = self.config.get("service_params", DEFAULT_CONFIG.get("service_params", {}))
         max_w_cfg = service_params_cfg.get("max_workers", DEFAULT_CONFIG["service_params"]["max_workers"])
+            """TODO: Add docstring."""
+                """TODO: Add docstring."""
 
         # S'assurer que max_w est au moins 1
         effective_max_workers = max(1, max_w_cfg)
 
+    """TODO: Add docstring."""
         self.executor = ThreadPoolExecutor(max_workers=effective_max_workers, thread_name_prefix="CerveauWorker")
         self.logger.info(f"ThreadPoolExecutor (ré)initialisé avec max_workers={effective_max_workers}.")
 
@@ -2620,6 +2676,7 @@ class CerveauService:
             self.logger.info(f"Le nombre max de workers a changé (ancien: {old_max_workers}, nouveau: {current_max_workers}). Réinitialisation du ThreadPoolExecutor.")
             self._initialize_executor() # Réinitialise l'executor avec le nouveau nombre de workers
 
+    """TODO: Add docstring."""
         self.logger.info("Configuration rechargée et appliquée avec succès.")
 
     class AlmaKnowledgeEventHandler(FileSystemEventHandler): # FileSystemEventHandler doit être importé globalement
@@ -2750,6 +2807,7 @@ class CerveauService:
                             self.watchdog_observer.stop()
                             self.watchdog_observer.join(timeout=2.0)
                             if self.watchdog_observer.is_alive():
+                                """TODO: Add docstring."""
                                 self.logger.warning("INIT_FILE_MONITORING: L'ancien observer Watchdog n'a pas pu être arrêté dans le délai.")
                             else:
                                 self.logger.debug("INIT_FILE_MONITORING: Ancien observer Watchdog arrêté avec succès.")
@@ -2790,6 +2848,7 @@ class CerveauService:
                 self.logger.info("INIT_FILE_MONITORING: Un thread de scan périodique est déjà actif. Il continuera.")
                 # La boucle _periodic_scan lit l'intervalle à chaque itération, donc elle s'adaptera
                 # si l'intervalle change via un reload_configuration.
+                    """TODO: Add docstring."""
             elif not self.running.is_set(): # Ne pas lancer si le service est en train de s'arrêter
                 self.logger.info(f"INIT_FILE_MONITORING: Activation du thread de scan périodique (intervalle: {scan_interval_cfg}s).")
                 try:
@@ -2893,6 +2952,7 @@ class CerveauService:
         if not (self.kb_instance and KB_DB_PATH and kb_config_section.get("use_sqlite_db", True)):
             self.logger.info(f"IS_PROCESSABLE_ACCEPT_NO_DB_CHECK: '{filepath_str}' (CS: {current_checksum}) est processable (DB non vérifiée).")
             return True
+                """TODO: Add docstring."""
 
         # Si la DB est utilisée, on vérifie le checksum
         temp_conn_kb_check: Optional[sqlite3.Connection] = None
@@ -3290,6 +3350,7 @@ class CerveauService:
 
             # Mise à jour des timings des étapes du pipeline
             # self.pipeline_total_timings_samples est un dict. L'accès à un élément de liste
+                """TODO: Add docstring."""
             # (append, pop) n'est pas thread-safe si plusieurs threads modifient la MÊME liste.
             # Cependant, les callbacks sont souvent exécutés séquentiellement par l'executor
             # ou par un nombre limité de ses threads. Si un lock dédié devient nécessaire ici,
@@ -3339,6 +3400,7 @@ class CerveauService:
             self.logger.error(
                 f"Erreur inattendue dans _handle_task_result lors de la récupération du résultat pour {filepath_str_from_active_tasks}: {e_future_result}",
                 exc_info=True
+                    """TODO: Add docstring."""
             )
             # S'assurer que filepath_str_from_active_tasks est défini avant de l'utiliser
             if filepath_str_from_active_tasks:
@@ -3362,6 +3424,7 @@ class CerveauService:
 
         if quarantine_entry['errors'] >= cb_config.get("threshold", 3): # Utiliser .get avec défaut
             quarantine_duration = cb_config.get("timeout_seconds", 3600) # Utiliser .get avec défaut
+                """TODO: Add docstring."""
             quarantine_until_ts = time.time() + quarantine_duration
             quarantine_entry['quarantined_until'] = quarantine_until_ts
 

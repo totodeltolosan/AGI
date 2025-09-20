@@ -16,21 +16,26 @@ class CaptureAudio:
     """Gère le flux audio du microphone de manière robuste et configurable."""
 
     def __init__(self, device_id=None):
+        """TODO: Add docstring."""
         self.device = device_id
         self.gain = parametres.AMPLIFICATION_LOGICIELLE
         self.listeners = []
         self.stream = None
         self.is_running = False
 
+    """TODO: Add docstring."""
     def ajouter_auditeur(self, audio_queue: queue.Queue):
         if audio_queue not in self.listeners:
             self.listeners.append(audio_queue)
+                """TODO: Add docstring."""
 
     def _callback(self, indata, frames, time, status):
         if status: print(f"[Avertissement Capture] {status}")
         donnees_traitees = indata * self.gain
+            """TODO: Add docstring."""
         for q in self.listeners: q.put(donnees_traitees.copy())
 
+    """TODO: Add docstring."""
     def set_gain(self, nouveau_gain: float):
         self.gain = nouveau_gain
 
@@ -54,12 +59,14 @@ class CaptureAudio:
             self.stream.start()
             self.is_running = True
             return True
+                """TODO: Add docstring."""
         except Exception as e:
             print(f"[Erreur Capture] Démarrage impossible: {e}")
             return False
 
     def stop(self):
         if self.stream and self.is_running:
+            """TODO: Add docstring."""
             self.stream.stop(); self.stream.close()
             self.is_running = False; self.stream = None
             print("[Capture] Microphone arrêté.")

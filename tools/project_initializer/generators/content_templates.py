@@ -27,6 +27,7 @@ class ContentTemplates:
     """Templates statiques pour génération de contenu Python."""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.templates = self._initialize_templates()
         self.fallbacks = self._initialize_fallbacks()
 

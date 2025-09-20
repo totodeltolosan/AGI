@@ -155,6 +155,7 @@ class TextImprover:
     comme la correction grammaticale et la génération de résumés.
     """
     def __init__(self,
+        """TODO: Add docstring."""
                  config: Dict[str, Any],
                  kb_instance: Optional['KnowledgeBase'], # Forward reference pour type hinting
                  nlp_spacy_instance: Optional[Any],      # Type: spacy.Language, instance spaCy de cerveau.py
@@ -587,6 +588,7 @@ class KnowledgeLinker:
     Analyse les données pour trouver des liens sémantiques et des incohérences.
     Utilise SBERT/FAISS pour la similarité si disponible, sinon fallback sur spaCy.
     """
+        """TODO: Add docstring."""
     def __init__(self,
                  config: Dict[str, Any],
                  kb_instance: Optional['KnowledgeBase'], # Forward reference pour type hinting

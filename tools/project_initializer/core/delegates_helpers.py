@@ -31,6 +31,7 @@ class DelegatesHelpers:
     """Fonctions utilitaires pour délégation d'opérations AGI."""
 
     def __init__(self, logger=None):
+        """TODO: Add docstring."""
         self.logger = logger
         self.execution_cache: Dict[str, Any] = {}
 

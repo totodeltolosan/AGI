@@ -28,6 +28,7 @@ class JSONGenerator:
     """
 
     def __init__(self, logger):
+        """TODO: Add docstring."""
         self.logger = logger
         self.generated_files: List[str] = []
 

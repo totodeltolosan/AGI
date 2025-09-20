@@ -27,6 +27,7 @@ class ParserConfig:
     """Configuration pour parsing de fichiers AGI.md."""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.default_specifications = self._initialize_default_specifications()
         self.fallback_specifications = self._initialize_fallback_specifications()
         self.parsing_rules = self._initialize_parsing_rules()

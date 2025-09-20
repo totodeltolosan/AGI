@@ -20,6 +20,7 @@ class StructureHelpers:
     """Gestionnaire principal des structures projet AGI"""
     
     def __init__(self):
+        """TODO: Add docstring."""
         self.logger = logging.getLogger(__name__)
         self.validator = StructureValidator()
         self.templates = STRUCTURE_TEMPLATES

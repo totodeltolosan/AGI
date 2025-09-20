@@ -28,6 +28,7 @@ class ParserHelpers:
     """Fonctions utilitaires pour parsing de fichiers AGI.md."""
 
     def __init__(self, logger=None):
+        """TODO: Add docstring."""
         self.logger = logger
         self.section_patterns = self._initialize_section_patterns()
         self.domain_patterns = self._initialize_domain_patterns()

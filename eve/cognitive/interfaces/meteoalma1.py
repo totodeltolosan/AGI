@@ -157,6 +157,8 @@ DEFAULT_WEATHER_ICON = "❓"
 DEFAULT_WEATHER_DESCRIPTION = "Inconnu"
 
 class MeteoAlmaApp:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, root_window):
         self.root = root_window
         self.logger = logging.getLogger("MeteoAlmaApp")
@@ -210,6 +212,7 @@ class MeteoAlmaApp:
         self.update_status("Prêt. Chargement des données initiales...")
         self.start_fetch_weather_data()
         self.logger.info("MeteoAlmaApp initialisée.")
+            """TODO: Add docstring."""
 
     def _on_mousewheel(self, event, canvas: tk.Canvas):
         # Sous Linux, event.delta est souvent 120 ou -120.
@@ -218,27 +221,32 @@ class MeteoAlmaApp:
         if event.num == 5 or event.delta < 0: # Molette vers le bas (Linux: button 5)
             canvas.yview_scroll(1, "units")
         elif event.num == 4 or event.delta > 0: # Molette vers le haut (Linux: button 4)
+            """TODO: Add docstring."""
             canvas.yview_scroll(-1, "units")
 
     def _bind_mousewheel_to_children(self, widget_or_frame, canvas: tk.Canvas):
         widget_or_frame.bind('<Enter>', lambda e, c=canvas: self._bind_mousewheel_events(c))
         widget_or_frame.bind('<Leave>', lambda e, c=canvas: self._unbind_mousewheel_events(c))
+            """TODO: Add docstring."""
         for child in widget_or_frame.winfo_children():
             self._bind_mousewheel_to_children(child, canvas) # Récursif
 
     def _bind_mousewheel_events(self, canvas: tk.Canvas):
         # Linux utilise Button-4 et Button-5 pour la molette
         canvas.bind_all("<Button-4>", lambda e, c=canvas: self._on_mousewheel(e, c))
+            """TODO: Add docstring."""
         canvas.bind_all("<Button-5>", lambda e, c=canvas: self._on_mousewheel(e, c))
         # Windows/macOS utilisent MouseWheel
         canvas.bind_all("<MouseWheel>", lambda e, c=canvas: self._on_mousewheel(e, c))
 
     def _unbind_mousewheel_events(self, canvas: tk.Canvas):
+        """TODO: Add docstring."""
         canvas.unbind_all("<Button-4>")
         canvas.unbind_all("<Button-5>")
         canvas.unbind_all("<MouseWheel>")
 
 
+    """TODO: Add docstring."""
     def _get_weather_display_info(self, weather_code: int, is_day: Optional[int] = 1) -> Tuple[str, str]:
         description, unicode_char = WMO_CODES.get(weather_code, (DEFAULT_WEATHER_DESCRIPTION, DEFAULT_WEATHER_ICON))
         if weather_code == 0 and is_day == 0:
@@ -866,6 +874,7 @@ class MeteoAlmaApp:
                 self.wind_ax.clear()
                 self.wind_ax.text(0.5, 0.5, "Erreur graphique vent",
                                   ha='center', va='center',
+                                      """TODO: Add docstring."""
                                   transform=self.wind_ax.transAxes, color="red")
 
             if hasattr(self, 'wind_graph_canvas_widget') and self.wind_graph_canvas_widget:
@@ -1132,6 +1141,7 @@ class MeteoAlmaApp:
                 # else:
                 #     insights.append(f"ℹ️ TENDANCE PRESSION: Stable ou faible variation ({diff_3h:.1f} hPa/3h).")
 
+    """TODO: Add docstring."""
             # On pourrait aussi ajouter une tendance sur 6h si p_6h est disponible.
 
         if not insights: # Si aucune alerte ou info majeure
@@ -1154,6 +1164,7 @@ class MeteoAlmaApp:
             displayed_time_str = "(--:--)"
             if current_time_str:
                 try:
+                    """TODO: Add docstring."""
                     # Convertir l'heure ISO en HH:MM locale
                     current_dt_utc = datetime.datetime.fromisoformat(current_time_str.replace("Z", "+00:00"))
                     current_dt_local = current_dt_utc.astimezone() # Convertir au fuseau horaire local du système
@@ -1231,6 +1242,7 @@ class MeteoAlmaApp:
                     sunrise_dt_str = datetime.datetime.fromisoformat(sunrise_iso.replace("Z", "+00:00")).strftime('%H:%M') if sunrise_iso != "N/A" else "N/A"
                     sunset_dt_str = datetime.datetime.fromisoformat(sunset_iso.replace("Z", "+00:00")).strftime('%H:%M') if sunset_iso != "N/A" else "N/A"
                     self.current_weather_labels["sunrise"].config(text=sunrise_dt_str)
+                        """TODO: Add docstring."""
                     self.current_weather_labels["sunset"].config(text=sunset_dt_str)
                 except ValueError:
                     self.current_weather_labels["sunrise"].config(text="N/A")
@@ -1243,6 +1255,7 @@ class MeteoAlmaApp:
     def _clear_scrollable_frame(self, frame: ttk.Frame):
         for widget in frame.winfo_children():
             widget.destroy()
+                """TODO: Add docstring."""
 
     def _degrees_to_cardinal(self, d: Optional[float]) -> str:
         """Convertit une direction en degrés en point cardinal."""
@@ -1341,6 +1354,7 @@ class MeteoAlmaApp:
             # Météo (Icône)
             ttk.Label(row_frame, text=icon_unicode, font=self.icon_font, anchor="center").grid(row=0, column=1, padx=3, sticky="ew")
             # Température
+                """TODO: Add docstring."""
             ttk.Label(row_frame, text=temp_str, font=self.small_data_font, anchor="w").grid(row=0, column=2, padx=3, sticky="w")
             # Description
             ttk.Label(row_frame, text=short_desc_text, font=self.small_data_font, anchor="w").grid(row=0, column=3, padx=3, sticky="w")
@@ -1422,9 +1436,11 @@ class MeteoAlmaApp:
 
             wind_dir_dom_deg = wind_dir_dom_deg_list[i] if i < len(wind_dir_dom_deg_list) else None
             wind_dom_str = self._degrees_to_cardinal(wind_dir_dom_deg)
+                """TODO: Add docstring."""
 
             uv_max_val = uv_max_list[i] if i < len(uv_max_list) else None
             uv_max_str = f"{uv_max_val:.1f}" if isinstance(uv_max_val, float) else (str(uv_max_val) if uv_max_val is not None else "N/A")
+                """TODO: Add docstring."""
 
             ttk.Label(row_frame, text=date_str, font=self.small_data_font, anchor="w").grid(row=0, column=0, padx=3, sticky="w")
             ttk.Label(row_frame, text=icon_unicode, font=self.icon_font, anchor="center").grid(row=0, column=1, padx=3, sticky="ew")
@@ -1442,6 +1458,7 @@ class MeteoAlmaApp:
         if not SAVE_DIR.is_dir():
             self.update_status(f"Erreur: Dossier de sauvegarde {SAVE_DIR} non trouvé.")
             messagebox.showerror("Erreur Sauvegarde", f"Le dossier de sauvegarde n'existe pas:\n{SAVE_DIR}", parent=self.root)
+                """TODO: Add docstring."""
             return
         now = datetime.datetime.now()
         filename = f"meteo_data_{now.strftime('%Y%m%d_%H%M%S')}.json"
@@ -1534,6 +1551,7 @@ class MeteoAlmaApp:
         except requests.exceptions.RequestException as e: # Inclut HTTPError pour 404, etc.
             msg = f"Erreur de requête API Open-Meteo: {e}"
             self.root.after(0, self.update_status, msg)
+                """TODO: Add docstring."""
             self.root.after(0, lambda m=msg, e_arg=e: messagebox.showerror("Erreur API Météo", m, parent=self.root))
             self.logger.error(msg, exc_info=True)
         except json.JSONDecodeError:

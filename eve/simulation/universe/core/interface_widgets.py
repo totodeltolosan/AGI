@@ -26,6 +26,7 @@ class EffetLueur(QGraphicsEllipseItem):
     """Un item graphique qui crée un effet de lueur (bloom) autour d'un autre item."""
 
     def __init__(self, parent: QGraphicsItem):
+        """TODO: Add docstring."""
         super().__init__(parent)
         self.setPen(QPen(Qt.PenStyle.NoPen))
         self.setZValue(parent.zValue() - 1)
@@ -51,6 +52,7 @@ class EntiteGraphique(QGraphicsEllipseItem):
 
     itemClique = pyqtSignal(str)
 
+    """TODO: Add docstring."""
     def __init__(self, entite_id: str, data: Dict[str, Any]):
         super().__init__()
         self.entite_id = entite_id
@@ -58,12 +60,15 @@ class EntiteGraphique(QGraphicsEllipseItem):
         self.setAcceptHoverEvents(True)
         self.lueur: Optional[EffetLueur] = None
         self.categorie = data.get("categorie", "inconnu")
+            """TODO: Add docstring."""
 
     def hoverEnterEvent(self, event):
         self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+            """TODO: Add docstring."""
         super().hoverEnterEvent(event)
 
     def hoverLeaveEvent(self, event):
+        """TODO: Add docstring."""
         self.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
         super().hoverLeaveEvent(event)
 
@@ -129,6 +134,7 @@ class EntiteGraphique(QGraphicsEllipseItem):
 
 
 class VueInteractive(QGraphicsView):
+    """TODO: Add docstring."""
     """Une QGraphicsView personnalisée qui gère le zoom, le déplacement et les clics sur le fond."""
 
     sceneCliquee = pyqtSignal()
@@ -136,12 +142,14 @@ class VueInteractive(QGraphicsView):
     def __init__(self, scene: QGraphicsScene, parent: Optional[QWidget] = None) -> None:
         super().__init__(scene, parent)
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
+            """TODO: Add docstring."""
         self.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
         self.setViewportUpdateMode(QGraphicsView.ViewportUpdateMode.FullViewportUpdate)
         self.setBackgroundBrush(QColor(5, 5, 15))
 
     def wheelEvent(self, event):
+        """TODO: Add docstring."""
         zoom_facteur = 1.15
         if event.angleDelta().y() > 0:
             self.scale(zoom_facteur, zoom_facteur)

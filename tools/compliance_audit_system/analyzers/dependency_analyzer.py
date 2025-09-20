@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/analyzers/dependency_analyzer.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Analyseur de Dépendances - Système d'Audit AGI
 Responsabilité unique : Analyse des dépendances et du couplage entre modules
 Respecte strictement la directive des 200 lignes
@@ -50,6 +59,7 @@ class DependencyAnalyzer:
     """Analyseur de dépendances et couplage pour conformité AGI"""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.coupling_thresholds = {
             "max_outgoing": 15,  # Maximum dépendances sortantes
             "max_incoming": 10,  # Maximum dépendances entrantes

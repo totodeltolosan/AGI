@@ -50,6 +50,7 @@ DEFAULT_PATHS_CONFIG_PARLEALMA: Dict[str, str] = {
 PARLEALMA_APP_CONFIG: Dict[str, Any] = {"paths": DEFAULT_PATHS_CONFIG_PARLEALMA.copy(), "db_timeout_seconds": 10}
 
 def load_db_config_for_parlealma() -> None:
+    """TODO: Add docstring."""
     global PARLEALMA_APP_CONFIG
     logger.debug("load_db_config_for_parlealma: Début chargement config DB.")
     base_alma_dir_str = os.getenv("ALMA_BASE_DIR")
@@ -79,6 +80,7 @@ def load_db_config_for_parlealma() -> None:
     logger.debug(f"load_db_config_for_parlealma: Config finale: {PARLEALMA_APP_CONFIG}")
 
 
+    """TODO: Add docstring."""
 def get_kb_db_path_for_parlealma() -> Optional[Path]:
     logger.debug("get_kb_db_path_for_parlealma: Tentative de récupération du chemin de la KB.")
     base_alma_dir_str = os.getenv("ALMA_BASE_DIR")
@@ -101,6 +103,8 @@ def get_kb_db_path_for_parlealma() -> Optional[Path]:
     else:
         logger.error(f"get_kb_db_path_for_parlealma: KnowledgeBase non trouvée à {kb_path.resolve()}")
         return None
+            """TODO: Add docstring."""
+                """TODO: Add docstring."""
 
 class NLUEngine:
     def __init__(self, spacy_model_name: str = "fr_core_news_sm"):
@@ -136,6 +140,7 @@ class NLUEngine:
             self.matcher = Matcher(self.nlp.vocab)
             self._add_intent_patterns()
             logger.info(f"NLUEngine: Modèle spaCy '{self.spacy_model_name}' et Matcher initialisés.")
+                """TODO: Add docstring."""
         except Exception as e:
             logger.error(f"NLUEngine __init__ (ID: {self.instance_id}): ERREUR init: {e}.", exc_info=True)
 
@@ -181,6 +186,7 @@ class NLUEngine:
 
         # Trier les noms de fichiers trouvés par leur position de début dans le segment
         sorted_filenames = sorted(found_filenames_with_pos.keys(), key=lambda fn: found_filenames_with_pos[fn])
+            """TODO: Add docstring."""
 
         logger.debug(f"NLUEngine _extract_filenames (ID: {self.instance_id}): Candidats uniques pour segment '{text_segment[:30]}...': {sorted_filenames}")
         return sorted_filenames
@@ -264,8 +270,10 @@ class NLUEngine:
             logger.debug(f"NLUEngine process_input (ID: {self.instance_id}): Doc(s) trouvé(s) sans intent Matcher, fallback sur: {detected_intent_str}")
 
         final_intent_standardized = detected_intent_str.lower().replace("_", "-")
+            """TODO: Add docstring."""
 
         logger.info(f"NLUEngine process_input (ID: {self.instance_id}): Résultat NLU -> Intention: '{final_intent_standardized}', Slots: {slots}")
+            """TODO: Add docstring."""
         return {"intention": final_intent_standardized, "slots": slots, "texte_original": text, "doc_spacy": doc}
 
 class KnowledgeInterface:
@@ -283,6 +291,7 @@ class KnowledgeInterface:
                 load_db_config_for_parlealma() # Assure que la config est chargée
 
             paths_cfg = PARLEALMA_APP_CONFIG.get("paths", DEFAULT_PATHS_CONFIG_PARLEALMA)
+                """TODO: Add docstring."""
             self.base_connaissance_path_str = str(Path(base_alma_dir_str) / paths_cfg["connaissance_dir_suffix"]) + os.sep
         else: # Fallback si ALMA_BASE_DIR n'est pas défini (moins idéal)
             self.base_connaissance_path_str = "Connaissance" + os.sep
@@ -300,6 +309,7 @@ class KnowledgeInterface:
             cursor = conn.cursor()
             cursor.execute(query, params)
             results = [dict(row) for row in cursor.fetchall()]
+                """TODO: Add docstring."""
             logger.debug(f"KnowledgeInterface _execute_query (ID: {self.instance_id}): {len(results)} lignes retournées.")
             return results
         except sqlite3.Error as e:
@@ -335,6 +345,7 @@ class KnowledgeInterface:
             return results_like_suffix[0]["filepath"]
 
         # 4. Fallback sur LIKE plus large (moins précis)
+            """TODO: Add docstring."""
         results_like_broader = self._execute_query(query_like_suffix, (f"%{document_name_fragment}%",))
         if results_like_broader:
             if len(results_like_broader) > 1: logger.warning(f"KI _get_doc_path: Plusieurs fichiers LIKE '%{document_name_fragment}%'. Prise du premier.")
@@ -342,12 +353,14 @@ class KnowledgeInterface:
             return results_like_broader[0]["filepath"]
 
         logger.debug(f"KnowledgeInterface _get_document_full_path_from_name: Fragment '{document_name_fragment}' non résolu.")
+            """TODO: Add docstring."""
         return None
 
     def get_document_author(self, document_name: str) -> Tuple[Optional[str], bool]:
         exact_filepath = self._get_document_full_path_from_name(document_name)
         if not exact_filepath: return None, False
         query = "SELECT m.meta_value FROM metadata m JOIN files f ON m.file_id = f.id WHERE f.filepath = ? AND m.meta_key = 'author';"
+            """TODO: Add docstring."""
         results = self._execute_query(query, (exact_filepath,))
         if results: return results[0]["meta_value"], True
         return None, True
@@ -355,6 +368,7 @@ class KnowledgeInterface:
     def get_document_entities(self, document_name: str, limit: int = 10) -> Tuple[Optional[List[Dict[str, Any]]], bool]:
         exact_filepath = self._get_document_full_path_from_name(document_name)
         if not exact_filepath: return None, False
+            """TODO: Add docstring."""
         query = "SELECT ne.entity_text, ne.entity_type, COUNT(*) as occurrences FROM named_entities ne JOIN files f ON ne.file_id = f.id WHERE f.filepath = ? GROUP BY LOWER(ne.entity_text), ne.entity_type ORDER BY occurrences DESC, ne.entity_text ASC LIMIT ?;"
         results = self._execute_query(query, (exact_filepath, limit))
         return results if results else [], True
@@ -363,12 +377,15 @@ class KnowledgeInterface:
         exact_filepath = self._get_document_full_path_from_name(document_name)
         if not exact_filepath: return None
         query = "SELECT filepath, checksum, last_processed_utc, size_bytes, encoding FROM files WHERE filepath = ?;"
+            """TODO: Add docstring."""
         results = self._execute_query(query, (exact_filepath,))
+            """TODO: Add docstring."""
         return results[0] if results else None
 
 class DialogueManager:
     def __init__(self, knowledge_if: KnowledgeInterface):
         self.knowledge_if = knowledge_if
+            """TODO: Add docstring."""
         self.session_context: Dict[str, Any] = {
             "last_mentioned_document": None,
             "clarification_pending_for_slot": None,
@@ -480,9 +497,11 @@ class DialogueManager:
             else:
                 response_action["texte_reponse"] = "De quel document souhaitez-vous des informations ?"
                 self.session_context["clarification_pending_for_slot"] = "document_nom"; self.session_context["pending_intent_after_clarification"] = intent
+                    """TODO: Add docstring."""
         elif intent == "small-talk-etat-alma":
             response_action["texte_reponse"] = "Je fonctionne de manière optimale, merci de demander ! Prêt à vous assister."
             if not is_clarification_handled_this_turn: self._reset_clarification_context()
+                """TODO: Add docstring."""
         elif intent == "salutation":
             response_action["texte_reponse"] = "Bonjour Toni ! Comment puis-je vous assister aujourd'hui ?"
             if not is_clarification_handled_this_turn: self._reset_clarification_context()
@@ -490,6 +509,7 @@ class DialogueManager:
             response_action = {"action_type": "terminer_dialogue", "texte_reponse": "Au revoir Toni !"}
         elif intent == "unknown" and doc_name:
              response_action["texte_reponse"] = f"J'ai noté une référence à '{doc_name}'. Que souhaitez-vous savoir à son sujet ou que puis-je faire ?"
+                 """TODO: Add docstring."""
 
         logger.debug(f"DialogueManager handle_nlu_output (ID: {self.instance_id}): Action finale: {response_action}")
         return response_action
@@ -502,6 +522,7 @@ class NLGEngine:
 
     def generate_response(self, dm_action: Dict[str, Any]) -> str:
         logger.debug(f"NLGEngine generate_response (ID: {self.instance_id}): Action DM: {dm_action}")
+            """TODO: Add docstring."""
         action_type = dm_action.get("action_type", "repondre_texte")
         response_text = dm_action.get("texte_reponse", "Je ne suis pas sûr de savoir comment répondre à cela.")
 
@@ -514,6 +535,7 @@ class NLGEngine:
                 response_text = f"{dm_action.get('texte_reponse', 'Veuillez préciser parmi les documents suivants :')}\n{options_text}\nEntrez le numéro correspondant ou le nom exact du document."
             else:
                 response_text = dm_action.get('texte_reponse', "Je ne suis pas sûr de quel document vous parlez. Pouvez-vous préciser ?")
+                    """TODO: Add docstring."""
 
         logger.debug(f"NLGEngine generate_response (ID: {self.instance_id}): Réponse finale: '{response_text}'")
         return response_text
@@ -531,6 +553,7 @@ class ParleALMACLI:
         if not kb_path:
             logger.critical("Impossible de localiser la KnowledgeBase. ParleALMA ne peut pas démarrer.")
             raise FileNotFoundError("KnowledgeBase non trouvée. Vérifiez ALMA_BASE_DIR et la configuration.")
+                """TODO: Add docstring."""
 
         spacy_model_to_use = "fr_core_news_sm"
         try:

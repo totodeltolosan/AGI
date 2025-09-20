@@ -10,6 +10,7 @@ class EntiteVivante(ABC):
     """Classe de base pour toutes les formes de vie dans EVE."""
 
     def __init__(self, x, y):
+        """TODO: Add docstring."""
         self.id = uuid.uuid4()
         self.x, self.y = x, y
         self.age, self.energie = 0, 1.0

@@ -12,6 +12,7 @@ class Analyst:
     """
 
     def __init__(self, supervisor: SupervisorInterface):
+        """TODO: Add docstring."""
         self.supervisor = supervisor
 
         # Liste des mots vides français pour l'extraction de mots-clés

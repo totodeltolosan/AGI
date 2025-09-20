@@ -13,6 +13,7 @@ from datetime import datetime
 
 # --- CLASSE DE COULEURS (copiée depuis prometheus_core.py) ---
 class Colors:
+    """TODO: Add docstring."""
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
     OKCYAN = "\033[96m"
@@ -27,16 +28,21 @@ class Colors:
 # ==============================================================================
 # === BLOC 1 : CLASSE SUPERVISORINTERFACE (À COLLER ICI) ===
 # ==============================================================================
+    """TODO: Add docstring."""
 class SupervisorInterface:
+    """TODO: Add docstring."""
     @staticmethod
     def display_info(message: str):
         print(f"{Colors.OKCYAN}[PROMETHEUS] - {message}{Colors.ENDC}")
+            """TODO: Add docstring."""
 
     @staticmethod
     def display_error(message: str):
+        """TODO: Add docstring."""
         print(f"{Colors.FAIL}[PROMETHEUS] - {message}{Colors.ENDC}")
 
     @staticmethod
+        """TODO: Add docstring."""
     def display_code_info(message: str):
         print(f"{Colors.MAGENTA}[CODE-HUNTER] - {message}{Colors.ENDC}")
 
@@ -48,6 +54,7 @@ class SupervisorInterface:
         )
         while True:
             response = input(prompt).lower().strip()
+                """TODO: Add docstring."""
             if response in ["oui", "o", "non", "n", "quitter", "q"]:
                 return response
             print(f"{Colors.FAIL}Réponse invalide.{Colors.ENDC}")

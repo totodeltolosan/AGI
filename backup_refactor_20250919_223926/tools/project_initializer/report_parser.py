@@ -47,6 +47,7 @@ class AGIReportParser:
     """
 
     def __init__(self, logger, agi_md_path: Optional[str] = None):
+        """TODO: Add docstring."""
         self.logger = logger
         self.helpers = ParserHelpers(logger)
         self.config = ParserConfig()

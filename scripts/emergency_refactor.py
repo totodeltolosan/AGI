@@ -7,6 +7,8 @@ from pathlib import Path
 from datetime import datetime
 
 class EmergencyRefactor:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, project_root="/home/toni/Documents/Projet AGI"):
         self.project_root = Path(project_root)
         self.backup_dir = self.project_root / f"backup_refactor_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -19,6 +21,7 @@ class EmergencyRefactor:
             "tools/project_initializer/structure_generator.py",
             "tools/project_initializer/report_parser.py"
         ]
+            """TODO: Add docstring."""
         
     def create_backup(self):
         print("💾 CRÉATION SAUVEGARDE REFACTORISATION")
@@ -32,6 +35,7 @@ class EmergencyRefactor:
                 shutil.copy2(full_path, backup_path)
                 print(f"✅ Sauvegardé: {file_path}")
         
+            """TODO: Add docstring."""
         print(f"📁 Sauvegarde: {self.backup_dir}")
         
     def refactor_structure_helpers(self):

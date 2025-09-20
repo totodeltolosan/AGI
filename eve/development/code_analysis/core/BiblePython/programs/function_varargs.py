@@ -1,4 +1,5 @@
 def total(a=5, *numbers, **phonebook):
+    """TODO: Add docstring."""
     print('a', a)
     
     #iterate through all the items in tuple

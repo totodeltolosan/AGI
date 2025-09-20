@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/orchestrator.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Orchestrateur Principal du Système d'Audit de Conformité AGI
 Module central respectant scrupuleusement la directive des 200 lignes
 
@@ -36,6 +45,7 @@ class AuditOrchestrator:
     """Orchestrateur principal - Coordination des audits AGI"""
 
     def __init__(self, config: AuditConfig):
+        """TODO: Add docstring."""
         self.config = config
         self.logger = logger_factory.create_logger("orchestrator", config.verbose)
         self.results = {}

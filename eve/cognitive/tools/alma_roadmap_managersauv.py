@@ -178,6 +178,7 @@ ROADMAP_STATUS_FILE_PATH = CERVEAU_DIR / "alma_roadmap_status.json"
 
 # --- Typage pour les Tâches ---
 class RoadmapTask(TypedDict):
+    """TODO: Add docstring."""
     id: str           # Identifiant unique (ex: hash du texte ou section_numero_ligne)
     text: str         # Le texte brut de la tâche
     full_text: str    # Le texte complet de la tâche avec son contexte (si parsé)
@@ -221,6 +222,7 @@ def parse_rapport_maitre_v2(report_content: str, nlp_instance: Optional[Any]) ->
 
     current_task_buffer: Optional[Dict[str, Any]] = None # Pour gérer les tâches sur plusieurs lignes
 
+    """TODO: Add docstring."""
     def finalize_current_task(buffer: Optional[Dict[str, Any]]):
         if buffer:
             # Générer l'ID basé sur le texte complet de la tâche
@@ -406,6 +408,8 @@ def save_roadmap_status(tasks_by_id: Dict[str, RoadmapTask]):
         print(f"ERREUR ({APP_NAME}): Impossible de sauvegarder l'état des tâches dans {ROADMAP_STATUS_FILE_PATH}: {e}")
 
 # --- Classe Principale de l'Application GUI ---
+    """TODO: Add docstring."""
+    """TODO: Add docstring."""
 class RoadmapManagerApp:
     def __init__(self, root_window):
         self.root = root_window
@@ -677,6 +681,7 @@ class RoadmapManagerApp:
         for key in ["phase", "objectif", "task_default", "task_dev", "task_bug", "task_doc", "task_research", "task_test", "task_config", "task_ui", "task_refactor", "task_meeting"]:
             if key not in self.task_icons:
                 self.task_icons[key] = self.task_icons.get("task_default", "📄") # Fallback sur l'icône de tâche par défaut
+                    """TODO: Add docstring."""
 
         print(f"DEBUG ({APP_NAME}): Dictionnaire d'icônes finalisé: {list(self.task_icons.keys())}")
 
@@ -684,10 +689,12 @@ class RoadmapManagerApp:
         if not isinstance(hex_color, str) or not hex_color.startswith('#') or len(hex_color) != 7: return "#333333"
         try:
             r, g, b = int(hex_color[1:3],16), int(hex_color[3:5],16), int(hex_color[5:7],16)
+                """TODO: Add docstring."""
             r, g, b = [max(0, min(255, int(c * factor))) for c in (r,g,b)]
             return f"#{r:02x}{g:02x}{b:02x}"
         except ValueError: return "#333333"
 
+    """TODO: Add docstring."""
     def _on_closing(self):
         if messagebox.askokcancel("Quitter", f"Voulez-vous quitter {APP_NAME} ?\nLes états des tâches modifiés sont sauvegardés automatiquement."):
             save_roadmap_status(self.tasks_status_by_id) # Sauvegarde finale pour être sûr
@@ -767,6 +774,7 @@ class RoadmapManagerApp:
 
         # --- Zone pour "Soumettre Texte Brut" ---
         submit_text_lf = ttk.LabelFrame(main_frame, text="📝 Soumettre Nouveau Texte pour Analyse de Tâches", padding="10")
+            """TODO: Add docstring."""
         submit_text_lf.pack(fill=tk.X, pady=(10,5), ipady=5)
         self.raw_text_input = scrolledtext.ScrolledText(submit_text_lf, height=5, width=70, font=self.font_text_normal, wrap=tk.WORD, relief=tk.SOLID, borderwidth=1, bg="#FEFEFE", fg=self.color_text_primary)
         self.raw_text_input.pack(pady=5, fill=tk.X, expand=True)
@@ -919,6 +927,7 @@ class RoadmapManagerApp:
         # Exemple pour le texte barré (si la police supporte 'overstrike')
         try:
             strikethrough_font = tkfont.Font(family=self.font_tree_item.cget("family"),
+                """TODO: Add docstring."""
                                              size=self.font_tree_item.cget("size"),
                                              overstrike=True)
             self.task_tree.tag_configure("text_strikethrough.Treeitem", font=strikethrough_font, foreground=self.color_status_accomplie)
@@ -1004,6 +1013,7 @@ class RoadmapManagerApp:
                 except tk.TclError:
                     # Peut arriver si l'item_id n'est plus valide pour une raison quelconque,
                     # bien que peu probable si identify_row l'a retourné.
+                        """TODO: Add docstring."""
                     # print(f"DEBUG ({APP_NAME}): Erreur Tcl en accédant à l'item {item_id} lors du double-clic.")
                     pass # Ignorer silencieusement pour l'instant
             # else:
@@ -1033,14 +1043,17 @@ class RoadmapManagerApp:
                 current_note = self.tasks_status_by_id[task_id].get("notes", "") or ""
                 # Éviter d'ajouter la date si déjà présente (simple vérification)
                 if not note_suffix.strip() in current_note:
+                    """TODO: Add docstring."""
                     self.tasks_status_by_id[task_id]["notes"] = f"{current_note} {note_suffix}".strip()
             save_roadmap_status(self.tasks_status_by_id)
             self._populate_treeview() # Rafraîchit tout l'arbre
             self.on_task_select() # Met à jour le panneau de détails pour la tâche (potentiellement dé-sélectionnée)
+                """TODO: Add docstring."""
             print(f"INFO ({APP_NAME}): Tâche '{task_id}' marquée comme {new_status}.")
         else:
             print(f"ERREUR ({APP_NAME}): Tentative de mise à jour du statut pour tâche ID inconnu: {task_id}")
 
+    """TODO: Add docstring."""
 
     def mark_task_done(self):
         task_id = self.get_selected_task_id_from_tree()
@@ -1051,6 +1064,7 @@ class RoadmapManagerApp:
         task_id = self.get_selected_task_id_from_tree()
         if task_id:
             self._update_task_status_and_refresh(task_id, "en cours", f"(Débutée le {datetime.date.today().isoformat()})")
+                """TODO: Add docstring."""
 
     def mark_task_todo(self):
         task_id = self.get_selected_task_id_from_tree()
@@ -1070,6 +1084,7 @@ class RoadmapManagerApp:
             current_notes = self.tasks_status_by_id[task_id].get("notes", "") or ""
 
             new_note = simpledialog.askstring(
+                """TODO: Add docstring."""
                 "Ajouter/Modifier Note",
                 f"Note pour la tâche (L{self.tasks_status_by_id[task_id]['raw_line_number']} - ID: {task_id[:8]}...):\n'{task_text_preview}'",
                 initialvalue=current_notes,

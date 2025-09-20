@@ -19,6 +19,7 @@ from bs4 import BeautifulSoup
 
 # --- CLASSE DE COULEURS PARTAGÉE ---
 class Colors:
+    """TODO: Add docstring."""
     OKCYAN = "\033[96m"
     OKGREEN = "\033[92m"
     FAIL = "\033[91m"

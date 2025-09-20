@@ -7,9 +7,11 @@ import yaml
 
 
 def _get_project_root():
+    """TODO: Add docstring."""
     return Path(os.getcwd())
 
 
+    """TODO: Add docstring."""
 def _get_version_code_from_launcher(launcher_path):
     try:
         tree = ast.parse(launcher_path.read_text(encoding="utf-8"))
@@ -25,6 +27,7 @@ def _get_version_code_from_launcher(launcher_path):
         pass
     return None
 
+    """TODO: Add docstring."""
 
 def verifier_conformite_architecturale():
     root = _get_project_root()
@@ -60,6 +63,7 @@ def verifier_conformite_architecturale():
                 )
     results["communication_queues"] = queue_found_count >= 2
     return results
+        """TODO: Add docstring."""
 
 
 def analyser_coherence_config():
@@ -110,6 +114,7 @@ def analyser_coherence_config():
         results["erreurs_validation"].append(f"JSON invalide: {str(e)}")
     except Exception as e:
         results["erreurs_validation"].append(f"Erreur lecture config: {str(e)}")
+            """TODO: Add docstring."""
     return results
 
 
@@ -171,6 +176,7 @@ def valider_schemas_exportation():
                     "guide.jsonl: format JSONL non détecté"
                 )
         except Exception as e:
+            """TODO: Add docstring."""
             results["erreurs_schemas"].append(f"Erreur simulation guide: {str(e)}")
     return results
 
@@ -222,6 +228,7 @@ def auditer_securite_gestion_erreurs():
         except Exception:
             continue
     results["try_except_present"] = total_try_except > 0
+        """TODO: Add docstring."""
     results["logging_present"] = total_logging_imports > 0
     results["gestion_exceptions_count"] = total_try_except
     return results
@@ -252,6 +259,7 @@ def verifier_integration_qualite():
         else:
             results["erreurs_precommit"].append("Structure YAML invalide")
     except yaml.YAMLError as e:
+        """TODO: Add docstring."""
         results["erreurs_precommit"].append(f"YAML invalide: {str(e)}")
     except Exception as e:
         results["erreurs_precommit"].append(f"Erreur lecture precommit: {str(e)}")
@@ -275,6 +283,7 @@ def auditer_gestion_memoire_disque():
                 results["gestion_ram_presente"] = True
             if "archive" in content.lower() or "zip" in content.lower():
                 results["archivage_implemente"] = True
+                    """TODO: Add docstring."""
             if "disk_usage" in content or "statvfs" in content:
                 results["verification_espace_disque"] = True
         except Exception:

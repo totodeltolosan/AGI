@@ -32,10 +32,12 @@ CONFIG = {
 
 # --- Fonctions Utilitaires ---
 def print_header(titre):
+    """TODO: Add docstring."""
     print("\n" + "═"*70)
     print(f" {titre.upper()} ".center(70, "═"))
     print("═"*70)
 
+    """TODO: Add docstring."""
 def plot_confusion_matrix(y_true, y_pred, classes, filename):
     mat = confusion_matrix(y_true, y_pred, labels=classes)
     plt.figure(figsize=(12, 10))
@@ -50,6 +52,7 @@ def plot_confusion_matrix(y_true, y_pred, classes, filename):
     plt.savefig(filename)
     print(f"\n[Rapport] Matrice de confusion sauvegardée dans '{filename}'")
 
+    """TODO: Add docstring."""
 # --- Fonction Principale ---
 def entrainer_nouveau_modele():
     print_header("Phase 1: Préparation des Données")

@@ -4,9 +4,11 @@ from datetime import datetime
 
 
 def _get_project_root():
+    """TODO: Add docstring."""
     return Path(__file__).parent
 
 
+    """TODO: Add docstring."""
 def _load_report_data():
     root = _get_project_root()
     data = {}
@@ -26,6 +28,7 @@ def _load_report_data():
             data[key] = {"erreur": f"Fichier {path.name} manquant"}
     return data
 
+    """TODO: Add docstring."""
 
 def _calculate_static_scores(statique_data):
     score = 0
@@ -52,6 +55,7 @@ def _calculate_static_scores(statique_data):
     ) and not taches.get("documentation", {}).get("fonctions_non_explicites"):
         score += 1
     return score, max_score
+        """TODO: Add docstring."""
 
 
 def _calculate_archi_scores(archi_data):
@@ -82,6 +86,7 @@ def _calculate_archi_scores(archi_data):
         score += 1
     if all(validations.get("gestion_memoire_disque", {}).values()):
         score += 1
+            """TODO: Add docstring."""
     return score, max_score
 
 
@@ -103,6 +108,7 @@ def _calculate_test_scores(tests_data):
         score += 1
     scenario_tests = dyn_tests.get("scenario_minetest", {})
     if scenario_tests.get("etat_final_valide", False):
+        """TODO: Add docstring."""
         score += 1
     return score, max_score
 
@@ -125,6 +131,7 @@ def _calculate_ia_scores(ia_data):
         score += 1
     if eval_ia.get("creativite_nouveaute", {}).get("constructions_originales", 0) > 0:
         score += 1
+            """TODO: Add docstring."""
     if eval_ia.get("finalite_projet_eve", {}).get("preparation_eve", 0.0) > 0.7:
         score += 1
     return score, max_score
@@ -147,6 +154,7 @@ def calculer_statistiques_avancement(data):
         "qualite_code": (s_score / s_max) if s_max > 0 else 0.0,
         "maturite_ia": (i_score / i_max) if i_max > 0 else 0.0,
         "preparation_eve": data.get("ia", {})
+            """TODO: Add docstring."""
         .get("evaluations_ia", {})
         .get("finalite_projet_eve", {})
         .get("preparation_eve", 0.0),
@@ -182,6 +190,7 @@ def _gen_css():
         .code-block { background: #0a0a0a; border: 1px solid #333; border-radius: 5px; padding: 15px; margin: 10px 0; overflow-x: auto; font-family: 'Courier New', monospace; color: #00ff88; }
         .table { width: 100%; border-collapse: collapse; margin: 15px 0; }
         .table th, .table td { border: 1px solid #444; padding: 10px; text-align: left; }
+            """TODO: Add docstring."""
         .table th { background: rgba(0, 255, 255, 0.2); color: #00ffff; }
         .progress-bar { background: #333; border-radius: 10px; overflow: hidden; height: 20px; margin: 10px 0; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, #00ff88, #00ffff); transition: width 0.5s ease; }
@@ -195,9 +204,11 @@ def _gen_status_tag(is_ok, warning_count=0, error_count=0):
     if warning_count > 0:
         return (
             f"<span class='task-status status-warning'>{warning_count} ALERTE(S)</span>"
+                """TODO: Add docstring."""
         )
     return (
         "<span class='task-status status-success'>OK</span>"
+            """TODO: Add docstring."""
         if is_ok
         else "<span class='task-status status-error'>ÉCHEC</span>"
     )
@@ -243,6 +254,7 @@ def _gen_section_statique(data):
         html += f"<p>Fichiers trop longs: {_gen_code_block(json.dumps(taches['refactorisation']['fichiers_trop_longs'], indent=2))}</p>"
     if complex_funcs > 0:
         html += f"<p>Fonctions complexes: {_gen_code_block(json.dumps(taches['refactorisation']['fonctions_complexes'], indent=2))}</p>"
+            """TODO: Add docstring."""
     non_explicit_vars = len(
         taches.get("documentation", {}).get("variables_non_explicites", [])
     )
@@ -293,6 +305,7 @@ def _gen_section_architecture(data):
     precommit_valide = validations.get("integration_qualite", {}).get(
         "precommit_valide", False
     )
+        """TODO: Add docstring."""
     precommit_err = len(
         validations.get("integration_qualite", {}).get("erreurs_precommit", [])
     )
@@ -321,6 +334,7 @@ def _gen_section_tests(data):
         "queues_fonctionnelles", False
     )
     integ_err = len(integ_tests.get("erreurs_integration", []))
+        """TODO: Add docstring."""
     html += f"<div class='task-item'> <div class='task-title'>3.2. Tests d'Intégration</div> {_gen_status_tag(integ_ok, integ_err, integ_err)} </div>"
     if integ_err > 0:
         html += f"<p>Erreurs intégration: {_gen_code_block('<br>'.join(integ_tests['erreurs_integration']))}</p>"
@@ -372,6 +386,7 @@ def _gen_section_ia(data):
     contradictions = connaissances.get("contradictions_detectees", 0)
     html += f"<div class='task-item'> <div class='task-title'>4.4. Cohérence Connaissances</div> {_gen_status_tag(graphe_ok and contradictions == 0, contradictions)} </div>"
     cycles = eval_ia.get("cycles_environnementaux", {})
+        """TODO: Add docstring."""
     cycles_ok = cycles.get("adaptation_jour_nuit", False) and cycles.get(
         "adaptation_meteo", False
     )
@@ -426,6 +441,7 @@ def _gen_recommendations(data):
         or tests.get("tests_unitaires", {}).get("tests_executes", 0) == 0
     ):
         recos.append("Haute: Écrire/corriger les tests unitaires.")
+            """TODO: Add docstring."""
     if not tests.get("scenario_minetest", {}).get("etat_final_valide"):
         recos.append("Haute: Développer des scénarios Minetest fonctionnels.")
     ia_data = data.get("ia", {}).get("evaluations_ia", {})
@@ -521,6 +537,7 @@ def generer_rapport_html():
                 </div>
             </div>
 
+    """TODO: Add docstring."""
             <div class="section">
                 <div class="section-header">
                     <h2>5. Recommandations</h2>

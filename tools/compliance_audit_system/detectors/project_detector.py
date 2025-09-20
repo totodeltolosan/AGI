@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/detectors/project_detector.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Détecteur de Projet AGI - Système d'Audit de Conformité
 Responsabilité unique : Détection et validation de la structure projet AGI
 Respecte strictement la directive des 200 lignes
@@ -14,6 +23,7 @@ class ProjectDetector:
     """Détecteur de structure et caractéristiques projet AGI"""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.agi_markers = {
             "constitution": ["AGI.md", "agi.md"],
             "documentation": ["AGI2.md", "AGI3.md", "AGI4.md", "AGI5.md", "AGIHELP.md"],

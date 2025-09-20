@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/validators/security_validator.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Validateur de Sécurité - Système d'Audit AGI
 Responsabilité unique : Détection des problèmes de sécurité dans le code Python
 Respecte strictement la directive des 200 lignes
@@ -37,6 +46,7 @@ class SecurityValidator:
     """Validateur de sécurité pour code Python"""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.dangerous_patterns = {
             # Exécution de code dangereux
             "code_execution": [

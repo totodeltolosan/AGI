@@ -18,6 +18,7 @@ class TesteurComplet:
     """
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.resultats = []
         self.erreurs = []
         self.warnings = []
@@ -655,14 +656,19 @@ class TesteurComplet:
 class MockModeleMonde:
     """Mock du modèle monde pour les tests"""
 
+    """TODO: Add docstring."""
     def get_etat_joueur(self):
         return {"health": 20, "hunger": 20, "position": (0, 0, 64)}
+            """TODO: Add docstring."""
 
     def get_inventaire(self):
+        """TODO: Add docstring."""
         return {"wood": 10, "stone": 5, "food": 3}
 
+    """TODO: Add docstring."""
     def get_environnement_local(self):
         return {"lumiere": 15, "mobs_hostiles": [], "type_terrain": "plains"}
+            """TODO: Add docstring."""
 
     def get_position_joueur(self):
         return (0, 0)

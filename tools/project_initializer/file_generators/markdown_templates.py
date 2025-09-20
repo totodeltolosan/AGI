@@ -45,6 +45,7 @@ class MarkdownTemplates:
     """
 
     def __init__(self, logger=None):
+        """TODO: Add docstring."""
         self.logger = logger or self._create_default_logger()
         self.helpers = MarkdownHelpers(self.logger)
         self.config = MarkdownConfig()

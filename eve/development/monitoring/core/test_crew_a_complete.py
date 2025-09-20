@@ -49,6 +49,7 @@ class CrewATestMonitor:
     """Moniteur pour l'exécution du Crew A."""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.start_time = datetime.now()
         self.stats = {
             "tasks_completed": 0,

@@ -18,6 +18,7 @@ class ClassifieurSonore:
     """Utilise le modèle YAMNet pour classifier des sons."""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.model = None
         self.class_names = []
         self.charger_modele()

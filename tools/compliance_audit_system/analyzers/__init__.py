@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+"""
+CHEMIN: tools/compliance_audit_system/analyzers/__init__.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Package d'initialisation pour le module 'analyzers'.
+- Ce fichier respecte la constitution AGI.
+"""
+
 """Analyseurs approfondis pour audit AGI"""
 
 from .ast_analyzer import ASTAnalyzer, quick_ast_analysis

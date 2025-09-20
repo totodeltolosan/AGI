@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/toni/Documents/Projet AGI/run_agi_audit.py", line 21, in <module>
+    from compliance import (
+    ...<3 lines>...
+    )
+  File "/home/toni/Documents/Projet AGI/compliance/__init__.py", line 20, in <module>
+    from .orchestrator import AuditOrchestrator
+  File "/home/toni/Documents/Projet AGI/compliance/orchestrator.py", line 22, in <module>
+    from .rules.base_rule import BaseRule
+ImportError: cannot import name 'BaseRule' from 'compliance.rules.base_rule' (/home/toni/Documents/Projet AGI/compliance/rules/base_rule.py)

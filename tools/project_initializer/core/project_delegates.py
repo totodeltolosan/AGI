@@ -250,7 +250,9 @@ class ProjectDelegates:
         return self.delegation_stats.copy()
 
     def __str__(self) -> str:
+        """TODO: Add docstring."""
         return f"ProjectDelegates(operations={self.delegation_stats['operations']})"
 
+    """TODO: Add docstring."""
     def __repr__(self) -> str:
         return f"ProjectDelegates(helpers={self.helpers}, config={self.config})"

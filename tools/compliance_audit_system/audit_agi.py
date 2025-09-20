@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/audit_agi.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Script Principal d'Audit AGI - Point d'Entrée Unifié
 Responsabilité unique : Interface ligne de commande et coordination de haut niveau
 Respecte strictement la directive des 200 lignes - CONFORME AGI.md

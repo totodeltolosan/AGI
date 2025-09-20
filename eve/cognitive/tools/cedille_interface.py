@@ -37,6 +37,7 @@ except Exception as e_gen_import:
 
 
 class CedilleApp(tk.Tk):
+    """TODO: Add docstring."""
     AVAILABLE_MODELS = {
         "GPT-2 French Small (dbddv01)": "dbddv01/gpt2-french-small",
         "Cédille Small (Coddity)": "Coddity/Cedille-small-6k",
@@ -44,6 +45,7 @@ class CedilleApp(tk.Tk):
     }
     DEFAULT_MODEL_KEY = "GPT-2 French Small (dbddv01)"
 
+    """TODO: Add docstring."""
     def __init__(self):
         super().__init__()
         self.title("Interface Cédille ALMA")
@@ -66,6 +68,7 @@ class CedilleApp(tk.Tk):
         self._setup_ui()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         logger.info("Interface Cédille initialisée.")
+            """TODO: Add docstring."""
 
     def _setup_ui(self):
         self.main_frame = ttk.Frame(self, padding="10")
@@ -105,6 +108,7 @@ class CedilleApp(tk.Tk):
         self.status_label.pack(pady=(10,5), fill=tk.X, padx=5)
 
         style = ttk.Style()
+            """TODO: Add docstring."""
         style.configure("Accent.TButton", font=("Segoe UI", 10, "bold"), padding=5)
 
     def on_model_select(self, event=None):
@@ -117,10 +121,12 @@ class CedilleApp(tk.Tk):
             self.tokenizer = None
             self.model_loaded = False
             self._update_status(f"Modèle '{selected_key}' sélectionné. Cliquez sur 'Générer' pour charger.")
+                """TODO: Add docstring."""
         elif not new_model_id:
             logger.warning(f"Clé de modèle sélectionnée inconnue : {selected_key}")
 
     def _update_status(self, message: str, is_error: bool = False):
+        """TODO: Add docstring."""
         self.status_var.set(message)
         self.status_label.config(foreground="red" if is_error else "")
         self.update_idletasks()
@@ -156,6 +162,7 @@ class CedilleApp(tk.Tk):
             self.model_loading_in_progress = False
             # Réactiver le bouton seulement si transformers est disponible ET si le chargement n'est plus en cours
             # La logique de réactivation est mieux gérée dans _generation_task_with_button_re_enable
+                """TODO: Add docstring."""
             if not self.model_loaded: # Si le chargement a échoué
                  self.generate_button.config(state=tk.NORMAL if TRANSFORMERS_AVAILABLE else tk.DISABLED)
 
@@ -204,16 +211,19 @@ class CedilleApp(tk.Tk):
             self.output_text.config(state=tk.DISABLED)
             self._update_status("Génération terminée.")
             logger.info(f"Texte généré avec succès. Longueur de la réponse : {len(generated_text_only)} char.")
+                """TODO: Add docstring."""
 
         except Exception as e:
             logger.error(f"Erreur lors de la génération de texte: {e}", exc_info=True)
             messagebox.showerror("Erreur Génération", f"Une erreur est survenue lors de la génération:\n{e}")
+                """TODO: Add docstring."""
             self._update_status("Erreur de génération.", is_error=True)
 
     def start_generation_thread(self):
         self.generate_button.config(state=tk.DISABLED)
         thread = threading.Thread(target=self._generation_task_with_button_re_enable, daemon=True)
         thread.start()
+            """TODO: Add docstring."""
 
     def _generation_task_with_button_re_enable(self):
         try:

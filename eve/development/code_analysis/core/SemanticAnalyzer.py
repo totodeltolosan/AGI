@@ -17,6 +17,7 @@ from typing import List, Dict
 
 # --- CLASSE DE COULEURS PARTAGÉE ---
 class Colors:
+    """TODO: Add docstring."""
     OKCYAN = "\033[96m"
     MAGENTA = "\033[95m"
     ENDC = "\033[0m"

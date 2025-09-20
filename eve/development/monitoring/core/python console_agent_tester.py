@@ -17,6 +17,8 @@ import signal
 
 
 class ConsoleAgentTester:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self):
         self.api_process = None
         self.api_running = False

@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/validators/line_validator.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Validateur de Lignes - Système d'Audit AGI
 Responsabilité unique : Validation de la directive des 200 lignes maximum
 Respecte strictement la directive des 200 lignes
@@ -37,6 +46,7 @@ class LineValidator:
     """Validateur de la directive des 200 lignes maximum"""
 
     def __init__(self, max_lines: int = 200):
+        """TODO: Add docstring."""
         self.max_lines = max_lines
         self.results: List[LineViolation] = []
 

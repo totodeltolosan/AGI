@@ -34,6 +34,7 @@ class SudoPasswordDialog(simpledialog.Dialog):
     """Dialogue pour demander le mot de passe sudo."""
 
     def body(self, master):
+        """TODO: Add docstring."""
         tk.Label(master, text="Mot de passe sudo:").grid(
             row=0, column=0, padx=5, pady=5, sticky="w"
         )
@@ -42,13 +43,16 @@ class SudoPasswordDialog(simpledialog.Dialog):
         master.grid_columnconfigure(1, weight=1)
         return self.entry  # initial focus
 
+    """TODO: Add docstring."""
     def apply(self):
         global GLOBAL_SUDO_PASSWORD
         GLOBAL_SUDO_PASSWORD = self.entry.get()
         self.result = True  # Indicate success
 
 
+    """TODO: Add docstring."""
 class SystemAnalyzerApp:
+    """TODO: Add docstring."""
     def __init__(self, master):
         self.master = master
         master.title("Analyse Système God Mode++++ (Ultime Évolution IA)")
@@ -75,12 +79,14 @@ class SystemAnalyzerApp:
 
         self.check_prerequisites()
         self.create_widgets()
+            """TODO: Add docstring."""
         self.refresh_all_statuses()  # Initial refresh
         self.process_queue()  # Start processing queue for live output (moved after initial refresh)
 
     def on_closing(self):
         if messagebox.askokcancel(
             "Quitter", "Voulez-vous vraiment quitter l'application ?"
+                """TODO: Add docstring."""
         ):
             self.master.destroy()
             sys.exit(0)  # Ensure all threads and processes exit cleanly
@@ -118,6 +124,7 @@ class SystemAnalyzerApp:
                 "Curl n'est pas installé. Certaines fonctionnalités IA (Ollama) pourraient ne pas fonctionner. Installez-le avec 'sudo apt install curl'.",
             )
         if not self.check_command_exists("pip3"):
+            """TODO: Add docstring."""
             messagebox.showwarning(
                 "Prérequis manquant",
                 "pip3 n'est pas installé. Certaines fonctionnalités IA (Jupyter) pourraient ne pas fonctionner. Installez-le avec 'sudo apt install python3-pip'.",
@@ -164,16 +171,19 @@ class SystemAnalyzerApp:
 
         # Bouton pour rafraîchir tous les statuts (utile après des changements)
         refresh_btn = ttk.Button(
+            """TODO: Add docstring."""
             self.master,
             text="Rafraîchir Tous les Statuts",
             command=self.refresh_all_statuses,
         )
         refresh_btn.pack(side=tk.BOTTOM, pady=5)
 
+    """TODO: Add docstring."""
     def log_message(self, message, tag=None):
         self.log_text.config(state=tk.NORMAL)
         self.log_text.insert(tk.END, message + "\n", tag)
         self.log_text.see(tk.END)
+            """TODO: Add docstring."""
         self.log_text.config(state=tk.DISABLED)
         self.master.update_idletasks()  # Force GUI update
 
@@ -186,8 +196,10 @@ class SystemAnalyzerApp:
         global GLOBAL_SUDO_PASSWORD
         if not GLOBAL_SUDO_PASSWORD:
             dialog = SudoPasswordDialog(self.master)
+                """TODO: Add docstring."""
             if dialog.result:  # dialog.result is True if password was entered
                 return GLOBAL_SUDO_PASSWORD
+                    """TODO: Add docstring."""
             else:
                 self.log_message(
                     "Opération sudo annulée : mot de passe non fourni.", "error"
@@ -265,6 +277,7 @@ class SystemAnalyzerApp:
                     self.output_queue.put(
                         (
                             callback,
+                                """TODO: Add docstring."""
                             (
                                 return_code,
                                 full_output if full_output is not None else "",
@@ -296,6 +309,7 @@ class SystemAnalyzerApp:
                         self.log_text.see(tk.END)
                         self.log_text.config(state=tk.DISABLED)
                     else:
+                        """TODO: Add docstring."""
                         self.log_message(
                             f"Unexpected tuple item in queue: {item}", "error"
                         )
@@ -303,11 +317,13 @@ class SystemAnalyzerApp:
                     self.log_message(
                         f"Unexpected non-tuple item in queue: {item}", "error"
                     )
+                        """TODO: Add docstring."""
         except queue.Empty:
             pass
         self.master.after(100, self.process_queue)  # Check again after 100ms
 
     def check_command_exists(self, cmd):
+        """TODO: Add docstring."""
         return (
             subprocess.run(
                 f"command -v {cmd}", shell=True, capture_output=True
@@ -320,6 +336,7 @@ class SystemAnalyzerApp:
             subprocess.run(f"dpkg -s {pkg}", shell=True, capture_output=True).returncode
             == 0
         )
+            """TODO: Add docstring."""
 
     def refresh_all_statuses(self):
         self.log_message("\nRafraîchissement de tous les statuts...", "info")
@@ -349,6 +366,7 @@ class SystemAnalyzerApp:
             "Architecture",
             "Modèle Système",
             "BIOS",
+                """TODO: Add docstring."""
             "Uptime",
             "Utilisateur",
             "Heure Système",
@@ -407,6 +425,7 @@ class SystemAnalyzerApp:
             callback=lambda rc, out, key="Utilisateur": self._update_label(
                 rc, out, key
             ),
+                """TODO: Add docstring."""
         )
         self.run_command_threaded(
             "Récupération Heure Système",
@@ -419,6 +438,7 @@ class SystemAnalyzerApp:
             "Récupération Fuseau Horaire",
             "timedatectl show --property=Timezone --value",
             callback=lambda rc, out, key="Fuseau Horaire": self._update_label(
+                """TODO: Add docstring."""
                 rc, out, key
             ),
         )
@@ -585,6 +605,7 @@ class SystemAnalyzerApp:
         ttk.Button(
             audio_frame,
             text="Purger FluidSynth/JACK",
+                """TODO: Add docstring."""
             command=self.purge_audio_packages,
         ).pack(side=tk.LEFT, padx=5, pady=2)
 
@@ -593,6 +614,7 @@ class SystemAnalyzerApp:
         usb_frame.pack(fill="x", pady=5)
         self.usb_status_label = ttk.Label(usb_frame, text="Statut: Chargement...")
         self.usb_status_label.pack(anchor="w")
+            """TODO: Add docstring."""
         ttk.Button(
             usb_frame, text="Rafraîchir USB", command=self.update_usb_status
         ).pack(side=tk.LEFT, padx=5, pady=2)
@@ -625,12 +647,14 @@ class SystemAnalyzerApp:
             self.entropy_status_label.config(
                 text=f"Statut: ❌ Entropie basse ({entropy_val} bits). Problème critique.",
                 foreground="red",
+                    """TODO: Add docstring."""
             )
             # Intelligent suggestion: if low, try to activate rngd
             if (
                 not self.check_package_installed("rng-tools")
                 or subprocess.run(
                     "systemctl is-enabled rngd.service", shell=True, capture_output=True
+                        """TODO: Add docstring."""
                 ).returncode
                 != 0
             ):
@@ -652,6 +676,7 @@ class SystemAnalyzerApp:
             callback=self._process_entropy_status_callback,
         )
 
+    """TODO: Add docstring."""
     def adjust_kernel_entropy_thresholds(self):
         if messagebox.askyesno(
             "Confirmer",
@@ -667,6 +692,7 @@ class SystemAnalyzerApp:
                 'echo "kernel.random.write_wakeup_threshold = 2048" | sudo tee -a /etc/sysctl.d/99-custom-entropy.conf > /dev/null',
                 needs_sudo=True,
             )
+                """TODO: Add docstring."""
             self.run_command_threaded(
                 "Application sysctl", "sudo sysctl -p", needs_sudo=True
             )
@@ -674,6 +700,7 @@ class SystemAnalyzerApp:
                 "Info", "Seuils ajustés. Un redémarrage est recommandé."
             )
 
+    """TODO: Add docstring."""
     def _process_ufw_status_callback(self, return_code, output):
         if "Status: active" in output:
             self.ufw_status_label.config(
@@ -699,6 +726,7 @@ class SystemAnalyzerApp:
         )
 
     def activate_ufw_default(self):
+        """TODO: Add docstring."""
         if messagebox.askyesno(
             "Confirmer",
             "Voulez-vous ACTIVER UFW avec les règles par défaut (refuser tout entrant, autoriser tout sortant) ?",
@@ -715,12 +743,14 @@ class SystemAnalyzerApp:
             )
             self.run_command_threaded(
                 "Activation de UFW",
+                    """TODO: Add docstring."""
                 "sudo ufw enable",
                 needs_sudo=True,
                 callback=self._process_ufw_status_callback,
             )
             messagebox.showinfo(
                 "Info",
+                    """TODO: Add docstring."""
                 "UFW activé. N'oubliez pas d'ajouter des règles spécifiques si vous hébergez des services (ex: 'sudo ufw allow ssh').",
             )
 
@@ -734,6 +764,7 @@ class SystemAnalyzerApp:
             self.pro_status_label.config(
                 text="Statut: ❌ Votre machine n'est PAS attachée à Ubuntu Pro.",
                 foreground="red",
+                    """TODO: Add docstring."""
             )
             if messagebox.askyesno(
                 "Suggestion IA",
@@ -779,12 +810,14 @@ class SystemAnalyzerApp:
             original_masked_proc.returncode == 0
         )  # is-masked returns 0 if masked
 
+    """TODO: Add docstring."""
         status_text = ""
         if fix_active:
             status_text += "Fix (kbd-backlight-fix) est en place. "
         else:
             status_text += "Fix (kbd-backlight-fix) n'est pas actif. "
 
+    """TODO: Add docstring."""
         if original_masked:
             status_text += "Service original masqué. "
         else:
@@ -816,6 +849,7 @@ class SystemAnalyzerApp:
         )
 
     def apply_backlight_fix(self):
+        """TODO: Add docstring."""
         if messagebox.askyesno(
             "Confirmer",
             "Voulez-vous créer et activer le service 'kbd-backlight-fix.service' pour le rétroéclairage du clavier ?",
@@ -828,6 +862,8 @@ After=multi-user.target
 Type=oneshot
 ExecStart=/bin/sh -c 'echo 1 > /sys/class/leds/dell::kbd_backlight/brightness'
 
+    """TODO: Add docstring."""
+    """TODO: Add docstring."""
 [Install]
 WantedBy=multi-user.target
 """
@@ -881,6 +917,7 @@ WantedBy=multi-user.target
                         f"Impossible de lire la luminosité actuelle: {result_current.stderr.strip()}",
                         "error",
                     )
+                        """TODO: Add docstring."""
                     messagebox.showerror(
                         "Erreur",
                         "Impossible de lire la luminosité actuelle. Vérifiez les permissions ou l'existence du fichier.",
@@ -896,6 +933,7 @@ WantedBy=multi-user.target
                         f"sudo -S bash -c 'echo 0 > /sys/class/leds/dell::kbd_backlight/brightness'",
                         shell=True,
                         input=self.get_sudo_password() + "\n",
+                            """TODO: Add docstring."""
                     )
                     time.sleep(1)
                     self.log_message("Tentative d'allumer (1)...", "info")
@@ -903,6 +941,7 @@ WantedBy=multi-user.target
                         f"sudo -S bash -c 'echo 1 > /sys/class/leds/dell::kbd_backlight/brightness'",
                         shell=True,
                         input=self.get_sudo_password() + "\n",
+                            """TODO: Add docstring."""
                     )
                     messagebox.showinfo(
                         "Test Terminé", "Vérifiez si le rétroéclairage a réagi."
@@ -924,6 +963,7 @@ WantedBy=multi-user.target
                 "Suggestion IA",
                 "Des erreurs ACPI persistent. Envisagez une mise à jour du BIOS ou la modification de GRUB.",
             )
+                """TODO: Add docstring."""
         else:
             self.acpi_status_label.config(
                 text="Statut: ✅ Aucune erreur ACPI critique récente détectée.",
@@ -955,12 +995,14 @@ WantedBy=multi-user.target
                 self.run_command_threaded(
                     "Mise à jour GRUB", "sudo update-grub", needs_sudo=True
                 )
+                    """TODO: Add docstring."""
                 messagebox.showinfo(
                     "Info",
                     "GRUB mis à jour. Un redémarrage est nécessaire pour appliquer les changements.",
                 )
 
     def _process_audio_status_callback(self, return_code, output):
+        """TODO: Add docstring."""
         status_text = ""
         pkgs_present = False
         if "fluidsynth" in output or "jackd1" in output or "jack-mixer" in output:
@@ -975,6 +1017,7 @@ WantedBy=multi-user.target
             capture_output=True,
             text=True,
         ).stdout
+            """TODO: Add docstring."""
         if ps_output.strip():
             status_text += "❌ Processus FluidSynth/JACK actifs. "
             if pkgs_present and messagebox.askyesno(
@@ -986,6 +1029,7 @@ WantedBy=multi-user.target
                 messagebox.showwarning(
                     "Attention",
                     "Des processus FluidSynth/JACK sont actifs, mais les paquets ne sont pas détectés. Cela peut indiquer des résidus ou une application qui les lance sans les paquets APT. Redémarrez ou tuez les processus manuellement.",
+                        """TODO: Add docstring."""
                 )
         else:
             status_text += "✅ Aucun processus FluidSynth/JACK actif. "
@@ -993,6 +1037,7 @@ WantedBy=multi-user.target
         self.audio_status_label.config(text=f"Statut: {status_text}")
 
     def update_audio_status(self):
+        """TODO: Add docstring."""
         self.run_command_threaded(
             "Vérification paquets/processus audio",
             "dpkg -l | grep -E 'fluidsynth|jackd1|jack-mixer'",
@@ -1047,6 +1092,7 @@ WantedBy=multi-user.target
         self.tools_checkboxes = {}
         self.tools_status_labels = {}
         self.tools_info = {
+            """TODO: Add docstring."""
             "cpufrequtils": "cpufreq-info (optimisation CPU Scaling Governor)",
             "preload": "Préchargement des applications",
             "fzf": "Optimisation du terminal",
@@ -1075,6 +1121,7 @@ WantedBy=multi-user.target
             self.tools_checkboxes[pkg] = var
 
             status_label = ttk.Label(tool_frame, text="Statut: Inconnu")
+                """TODO: Add docstring."""
             status_label.pack(side=tk.LEFT, padx=10)
             self.tools_status_labels[pkg] = status_label
 
@@ -1118,6 +1165,7 @@ WantedBy=multi-user.target
                 label.config(text="Statut: ❌ Non installé", foreground="red")
                 self.tools_checkboxes[pkg].set(False)
 
+    """TODO: Add docstring."""
     def install_tool(self, pkg):
         if self.check_package_installed(pkg):
             messagebox.showinfo("Info", f"{pkg} est déjà installé.")
@@ -1155,6 +1203,7 @@ WantedBy=multi-user.target
 
             self.run_command_threaded(
                 f"Installation de {pkg}",
+                    """TODO: Add docstring."""
                 install_cmd,
                 needs_sudo=True,
                 callback=lambda rc, out, p=pkg: self._post_install_tool(rc, out, p),
@@ -1239,11 +1288,14 @@ WantedBy=multi-user.target
         ttk.Label(
             files_frame,
             text="Pour les environnements Python: 'rm -rf venv' ou 'conda env remove -n <env_name>'.",
+                """TODO: Add docstring."""
         ).pack(anchor="w")
         ttk.Button(
+            """TODO: Add docstring."""
             files_frame,
             text="Lancer ncdu /home/toni",
             command=lambda: self.run_command_threaded(
+                """TODO: Add docstring."""
                 "Analyse espace disque avec ncdu", "ncdu /home/toni"
             ),
         ).pack(side=tk.LEFT, padx=5, pady=2)
@@ -1287,7 +1339,9 @@ WantedBy=multi-user.target
 
     def update_optimizations_status(self):
         self.update_noatime_status()
+            """TODO: Add docstring."""
 
+    """TODO: Add docstring."""
     def purge_old_snaps(self):
         if messagebox.askyesno(
             "Confirmer",
@@ -1306,6 +1360,7 @@ WantedBy=multi-user.target
                     if (
                         len(parts) >= 3 and parts[2] == "disabled"
                     ):  # Check if it's an old revision
+                        """TODO: Add docstring."""
                         snaps_to_remove.append(
                             (parts[0], parts[1])
                         )  # snapname, revision
@@ -1324,6 +1379,7 @@ WantedBy=multi-user.target
                     )
                 self.log_message(
                     "Nettoyage des anciennes révisions de Snaps terminé.", "success"
+                        """TODO: Add docstring."""
                 )
                 self.log_message(
                     "Vous pouvez également exécuter 'sudo snap refresh --hold=false --cleanup' pour un nettoyage plus général.",
@@ -1466,8 +1522,10 @@ WantedBy=multi-user.target
             text="Lancer debsums -c",
             command=lambda: self.run_command_threaded(
                 "Lancement debsums", "sudo debsums -c", needs_sudo=True
+                    """TODO: Add docstring."""
             ),
         ).pack(side=tk.LEFT, padx=5, pady=2)
+            """TODO: Add docstring."""
 
         # Docker Security
         docker_sec_frame = ttk.LabelFrame(
@@ -1480,6 +1538,7 @@ WantedBy=multi-user.target
             command=lambda: self.run_command_threaded(
                 "Nettoyage Docker", "sudo docker system prune -a", needs_sudo=True
             ),
+                """TODO: Add docstring."""
         ).pack(side=tk.LEFT, padx=5, pady=2)
 
         # AppArmor
@@ -1506,10 +1565,12 @@ WantedBy=multi-user.target
             ),
         ).pack(side=tk.LEFT, padx=5, pady=2)
         ttk.Button(
+            """TODO: Add docstring."""
             net_services_frame,
             text="Ports UDP en écoute",
             command=lambda: self.run_command_threaded(
                 "Ports UDP", "sudo ss -uuln", needs_sudo=True
+                    """TODO: Add docstring."""
             ),
         ).pack(side=tk.LEFT, padx=5, pady=2)
 
@@ -1542,6 +1603,7 @@ WantedBy=multi-user.target
                     'APT::Periodic::Update-Package-Lists "1";' in output
                     and 'APT::Periodic::Unattended-Upgrade "1";' in output
                 ):
+                    """TODO: Add docstring."""
                     self.unattended_status_label.config(
                         text="Statut: ✅ Installé et configuré pour les mises à jour auto.",
                         foreground="green",
@@ -1571,6 +1633,7 @@ WantedBy=multi-user.target
                 ):
                     self.run_command_threaded(
                         "Activation ptrace_scope",
+                            """TODO: Add docstring."""
                         'echo "kernel.yama.ptrace_scope = 1" | sudo tee -a /etc/sysctl.d/99-sysctl.conf > /dev/null',
                         needs_sudo=True,
                     )
@@ -1761,11 +1824,13 @@ WantedBy=multi-user.target
             command=self.check_intel_ai_optimizations,
         ).pack(side=tk.LEFT, padx=5, pady=2)
 
+    """TODO: Add docstring."""
         # Vision IA
         vision_ai_frame = ttk.LabelFrame(
             frame, text="5. Vision : Projets IA locaux pour votre PC"
         )
         vision_ai_frame.pack(fill="x", pady=5)
+            """TODO: Add docstring."""
         ttk.Label(
             vision_ai_frame,
             text="Voici des idées pour exploiter l'IA sur votre machine, en mode 'God Ultimate IA free' :",
@@ -1773,6 +1838,7 @@ WantedBy=multi-user.target
         ttk.Label(
             vision_ai_frame,
             text="- Assistant Personnel IA Local et Privé (Ollama + RAG avec vos documents)",
+                """TODO: Add docstring."""
         ).pack(anchor="w")
         ttk.Label(
             vision_ai_frame,
@@ -1809,6 +1875,7 @@ WantedBy=multi-user.target
             text="- Vie Privée et Contrôle (avantage clé de l'IA locale)",
         ).pack(anchor="w")
         ttk.Label(
+            """TODO: Add docstring."""
             vision_ai_frame,
             text="- Optimisation Continue de l'IA Locale (quantification, fine-tuning, ONNX)",
         ).pack(anchor="w")
@@ -1818,6 +1885,7 @@ WantedBy=multi-user.target
         ).pack(anchor="w")
 
         ttk.Button(
+            """TODO: Add docstring."""
             frame, text="Rafraîchir Tous les Statuts IA", command=self.update_ai_status
         ).pack(pady=10)
 
@@ -1827,6 +1895,7 @@ WantedBy=multi-user.target
                 self.ollama_status_label.config(
                     text="Statut: ✅ Ollama est installé.", foreground="green"
                 )
+                    """TODO: Add docstring."""
             else:
                 self.ollama_status_label.config(
                     text="Statut: ❌ Ollama n'est pas installé.", foreground="red"
@@ -1843,6 +1912,7 @@ WantedBy=multi-user.target
                     foreground="green",
                 )
             else:
+                """TODO: Add docstring."""
                 self.llama_cpp_status_label.config(
                     text="Statut: ❌ Llama.cpp n'est pas cloné/compilé.",
                     foreground="red",
@@ -1871,6 +1941,7 @@ WantedBy=multi-user.target
                 text="Statut: ✅ Jupyter Notebook est installé.", foreground="green"
             )
         else:
+            """TODO: Add docstring."""
             self.jupyter_status_label.config(
                 text="Statut: ❌ Jupyter Notebook n'est pas installé.", foreground="red"
             )
@@ -1904,6 +1975,7 @@ WantedBy=multi-user.target
 
     def delete_ollama_model(self):
         if not self.check_command_exists("ollama"):
+            """TODO: Add docstring."""
             messagebox.showwarning("Attention", "Ollama n'est pas installé.")
             return
 
@@ -1916,6 +1988,7 @@ WantedBy=multi-user.target
                 "Confirmer Suppression",
                 f"Êtes-vous sûr de vouloir supprimer le modèle '{model_name}' ?",
             ):
+                """TODO: Add docstring."""
                 self.run_command_threaded(
                     f"Suppression modèle Ollama {model_name}",
                     f"ollama rm {model_name}",
@@ -1987,6 +2060,7 @@ WantedBy=multi-user.target
         if self.check_command_exists("ov_core_info"):
             self.log_message("✅ OpenVINO semble installé.", "success")
         else:
+            """TODO: Add docstring."""
             self.log_message(
                 "❌ OpenVINO n'est pas détecté. OpenVINO peut accélérer l'inférence IA sur les CPU Intel.",
                 "warning",

@@ -1,6 +1,9 @@
 class Person:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, name):
         self.name = name
+            """TODO: Add docstring."""
 
     def say_hi(self):
         print('Hello, my name is', self.name)

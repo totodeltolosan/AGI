@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class ProcessusJeu(mp.Process):
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, queues, config):
         super().__init__()
         self.queues = queues

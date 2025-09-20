@@ -27,6 +27,7 @@ class DelegatesConfig:
     """Configuration pour délégation d'opérations de projet AGI."""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.domain_configurations = self._initialize_domain_configurations()
         self.generation_rules = self._initialize_generation_rules()
         self.validation_rules = self._initialize_validation_rules()

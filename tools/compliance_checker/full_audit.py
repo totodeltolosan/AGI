@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_checker/full_audit.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Script d'Audit Constitutionnel Complet - AGI Project
 Vérifie automatiquement la conformité de chaque fichier du générateur
 par rapport aux 474 directives de AGI.md
@@ -23,6 +32,7 @@ from enum import Enum
 
 
 class ComplianceStatus(Enum):
+    """TODO: Add docstring."""
     RESPECTEE = "✅ RESPECTÉE"
     VIOLEE = "❌ VIOLÉE"
     NON_APPLICABLE = "⚠️ NON APPLICABLE"
@@ -57,6 +67,7 @@ class FileAuditResult:
 class ConstitutionalAuditor:
     """Auditeur principal pour la vérification constitutionnelle AGI"""
 
+    """TODO: Add docstring."""
     def __init__(self, verbose: bool = False):
         self.verbose = verbose
         self.constitution_rules = self._load_constitutional_rules()

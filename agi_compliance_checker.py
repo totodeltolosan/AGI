@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: agi_compliance_checker.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 AGI Compliance Checker - Vérificateur limite 200 lignes
 Conforme à AGI.md - Vérifie que tous les fichiers Python respectent la limite
 """
@@ -15,6 +24,7 @@ class AGIComplianceChecker:
     """Vérificateur de conformité aux directives AGI.md"""
 
     def __init__(self, max_lines: int = 200):
+        """TODO: Add docstring."""
         self.max_lines = max_lines
         self.violations = []
         self.compliant_files = []
@@ -139,6 +149,7 @@ class AGIComplianceChecker:
 
 
 def main():
+    """TODO: Add docstring."""
     parser = argparse.ArgumentParser(
         description="Vérificateur de conformité AGI.md (limite 200 lignes)",
         formatter_class=argparse.RawDescriptionHelpFormatter,

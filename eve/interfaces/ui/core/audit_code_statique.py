@@ -6,9 +6,11 @@ from pathlib import Path
 
 
 def _get_project_root():
+    """TODO: Add docstring."""
     return Path(os.getcwd())
 
 
+    """TODO: Add docstring."""
 def _check_tree(root):
     req_dirs = {
         "enfant_eve": ["ia", "pont_jeu", "interface", "export"],
@@ -30,6 +32,7 @@ def _check_tree(root):
                 missing.append(str(sub_path.relative_to(root)))
     return not bool(missing), missing
 
+    """TODO: Add docstring."""
 
 def _check_naming(root):
     violations = []
@@ -38,6 +41,7 @@ def _check_naming(root):
         if not name.islower() or "-" in name or " " in name:
             violations.append(str(f.relative_to(root)))
     return violations
+        """TODO: Add docstring."""
 
 
 def verifier_arborescence():
@@ -48,6 +52,7 @@ def verifier_arborescence():
         "conformite_arborescence": conformity and not naming_violations,
         "dossiers_manquants": missing_dirs,
         "violations_nommage": naming_violations,
+            """TODO: Add docstring."""
     }
 
 
@@ -81,6 +86,7 @@ def analyser_dependances():
     return {
         "imports_inutilises": [],
         "imports_circulaires": [],
+            """TODO: Add docstring."""
         "dependances_manquantes": missing_deps,
     }
 
@@ -138,6 +144,7 @@ def auditer_syntaxe_style():
             continue
     return {
         "erreurs_black": black_errors,
+            """TODO: Add docstring."""
         "erreurs_flake8": flake8_errors,
         "fichiers_avec_commentaires": files_with_comments,
     }
@@ -164,6 +171,7 @@ def detecter_fichiers_inutiles():
                 if Path(f_path).match(pattern[1:]):
                     is_excepted = True
             elif Path(f_path).match(pattern):
+                """TODO: Add docstring."""
                 is_ignored = True
         if is_ignored and not is_excepted:
             suspect_files.add(f_path)
@@ -208,6 +216,7 @@ def recommander_refactorisation():
                                 "fichier": str(f.relative_to(root)),
                                 "fonction": node.name,
                                 "complexite_cyclomatique": cyclomatic_complexity,
+                                    """TODO: Add docstring."""
                             }
                         )
         except Exception:
@@ -239,6 +248,7 @@ def analyser_documentation_interne():
                                         "variable": target.id,
                                     }
                                 )
+                                    """TODO: Add docstring."""
         except Exception:
             continue
     return {

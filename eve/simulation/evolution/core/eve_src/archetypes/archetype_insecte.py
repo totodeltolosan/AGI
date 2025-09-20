@@ -12,6 +12,7 @@ class Insecte(EntiteVivante):
     """Forme de vie simple, mobile, herbivore et à reproduction rapide."""
 
     def __init__(self, x, y, genome=None):
+        """TODO: Add docstring."""
         super().__init__(x, y)
         self.energie = 50
         self.couleur = QColor("gray")

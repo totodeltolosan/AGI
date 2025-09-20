@@ -172,6 +172,7 @@ except Exception as e:
 # --- Fin de la section de configuration globale ---
 
 def sanitize_filename(title: str, max_len: int = 100) -> str:
+    """TODO: Add docstring."""
     title = str(title).strip()
     title = re.sub(r'[\n\r]+', ' ', title)
     title = re.sub(r'[\\/*?:"<>|]', "", title)
@@ -181,11 +182,13 @@ def sanitize_filename(title: str, max_len: int = 100) -> str:
     if not title: title = "fichier_sans_titre"
     return title[:max_len]
 
+    """TODO: Add docstring."""
 def get_target_dir_for_source(source_key: str) -> Path:
     suffix = SOURCES_CONFIG.get(source_key, {}).get("target_dir_suffix", "default_imports")
     return CONNAISSANCE_DIR_BASE / suffix
 
 # --- Fonctions de Fetch (Intégralement reprises de votre V1.5.3, avec corrections mineures) ---
+    """TODO: Add docstring."""
 
 def fetch_wikipedia_articles(app_instance, query: str, num_to_fetch: int, target_dir: Path):
     articles_downloaded_this_run = 0
@@ -313,6 +316,7 @@ def fetch_wikipedia_articles(app_instance, query: str, num_to_fetch: int, target
              # et qu'on n'a plus de candidats, la boucle externe (for slot_number) s'arrêtera
              # ou la condition if not page_titles_candidates: return ... le fera.
 
+    """TODO: Add docstring."""
     return articles_downloaded_this_run
 
 def fetch_arxiv_abstracts(app_instance, query: str, num_to_fetch: int, target_dir: Path):
@@ -470,6 +474,7 @@ def fetch_arxiv_abstracts(app_instance, query: str, num_to_fetch: int, target_di
         app_instance.update_status(f"arXiv: Erreur init recherche: {type(e_search_init_arxiv).__name__}", "error")
         print(f"ERREUR INITIALISATION RECHERCHE ARXIV (Query API: '{search_query_arxiv_for_api}'):")
         traceback.print_exc()
+            """TODO: Add docstring."""
 
     return articles_downloaded_this_run
 
@@ -592,6 +597,7 @@ def fetch_gutenberg_books(app_instance, query: str, num_to_fetch: int, target_di
         if not book_successfully_fetched_for_slot:
             status_msg_fail = f"Gutenberg: Échec final pour livre {slot_index + 1}/{num_to_fetch}."
             if is_specific_id_mode and book_id_specific: status_msg_fail += f" (ID: {book_id_specific})"
+                """TODO: Add docstring."""
             app_instance.update_status(status_msg_fail, "warning")
             if is_specific_id_mode: break # Si ID spécifique a échoué, on n'essaie pas plus pour Gutenberg
     return articles_downloaded_this_run
@@ -707,6 +713,8 @@ def fetch_and_save_thread_target_main(app_instance, source_key: str, query: str,
         final_box_msg = f"Aucun article de {source_name_display} n'a pu être récupéré {query_for_display}."
         app_instance.root.after(0, lambda: messagebox.showerror(final_box_title, final_box_msg))
         final_message_type = "error"
+            """TODO: Add docstring."""
+                """TODO: Add docstring."""
 
     app_instance.update_status(final_status_msg, final_message_type)
     app_instance.enable_button() # Réactiver le bouton de lancement
@@ -716,6 +724,7 @@ class WikiInjectorApp:
     def _initialize_fonts(self):
         global FONT_TITLE, FONT_SUBTITLE, FONT_BODY_BOLD, FONT_BODY_NORMAL, \
                FONT_BUTTON, FONT_STATUS_MESSAGE, FONT_TOOLTIP
+                   """TODO: Add docstring."""
         actual_font_family_to_use = FONT_FAMILY_PRIMARY_NAME_WISHED
         try:
             tkfont.Font(family=FONT_FAMILY_PRIMARY_NAME_WISHED, size=10)
@@ -731,6 +740,7 @@ class WikiInjectorApp:
                 if "italic" in style_str: options["slant"] = "italic"
             return options
         FONT_TITLE = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_TITLE_DEF))
+            """TODO: Add docstring."""
         FONT_SUBTITLE = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_SUBTITLE_DEF))
         FONT_BODY_BOLD = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_BODY_BOLD_DEF))
         FONT_BODY_NORMAL = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_BODY_NORMAL_DEF))
@@ -840,6 +850,7 @@ class WikiInjectorApp:
         else:
             string_var.set(new_default_value)
 
+    """TODO: Add docstring."""
         menu = option_menu_widget["menu"]
         menu.delete(0, "end")
         for option in new_options_list:
@@ -854,8 +865,10 @@ class WikiInjectorApp:
             source_key = self.source_display_to_key_map[selected_display_name]
             self.source_key_var.set(source_key)
         elif self.available_source_keys: # Si le display name n'est pas mappé (ex: "Aucune source")
+            """TODO: Add docstring."""
             self.source_key_var.set(self.available_source_keys[0]) # Fallback sur la première source dispo
             self.current_source_display_var.set(SOURCES_CONFIG[self.available_source_keys[0]]["display_name"]) # Mettre à jour l'affichage
+                """TODO: Add docstring."""
         else:
             self.source_key_var.set("") # Aucune source valide
 
@@ -896,6 +909,7 @@ class WikiInjectorApp:
                                      current_cat_val if current_cat_val in arxiv_categories_display else arxiv_categories_display[0],
                                      arxiv_categories_display)
 
+    """TODO: Add docstring."""
             self.category_menu.pack(fill=tk.X, expand=True) # Afficher le menu catégorie
             if self.category_var.get() == ARXIV_SEARCH_TYPE_KEYWORD:
                 self.category_query_label.config(text=source_config_ui.get("keyword_label", "Mots-clés :"))
@@ -905,6 +919,7 @@ class WikiInjectorApp:
                 # query_entry est déjà caché
         elif query_input_type == "none":
              self.category_query_label.config(text=source_config_ui.get("query_label", "Prêt (aucune requête nécessaire)."))
+                 """TODO: Add docstring."""
         self.update_max_progress()
 
     def update_max_progress(self):
@@ -997,8 +1012,10 @@ class WikiInjectorApp:
                 status_action_description = f"pour '{query_display_for_status[:30]}...'"
             elif query_display_for_status: # Contient déjà "(mode aléatoire)" ou une catégorie
                 status_action_description = query_display_for_status
+                    """TODO: Add docstring."""
             else: # Fallback si tout est vide (devrait être rare)
                 status_action_description = "(paramètres non spécifiés)"
+                    """TODO: Add docstring."""
 
 
             self.update_status(f"Démarrage ({source_display_name}): Récupération de {num_articles_to_request} article(s) {status_action_description}", "info")
@@ -1009,6 +1026,7 @@ class WikiInjectorApp:
                 daemon=True
             )
             fetch_thread.start()
+                """TODO: Add docstring."""
 
     def update_progress(self, value):
         self.root.after(0, lambda: self.progress_var.set(value))

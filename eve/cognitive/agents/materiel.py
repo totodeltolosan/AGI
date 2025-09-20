@@ -28,6 +28,7 @@ class _ProfileurMateriel:
     L'encapsulation permet de garder le code organisé.
     """
     def _obtenir_os(self):
+        """TODO: Add docstring."""
         try:
             return {
                 "systeme": platform.system(),
@@ -37,6 +38,7 @@ class _ProfileurMateriel:
             }
         except Exception as e: return {"erreur": str(e)}
 
+    """TODO: Add docstring."""
     def _obtenir_cpu(self):
         try:
             info_brute = cpuinfo.get_cpu_info()
@@ -47,11 +49,13 @@ class _ProfileurMateriel:
                 "frequence_max_mhz": psutil.cpu_freq().max if psutil.cpu_freq() else 'N/A'
             }
         except Exception as e: return {"erreur": str(e)}
+            """TODO: Add docstring."""
 
     def _obtenir_memoire_totale(self):
         try:
             ram_gb = round(psutil.virtual_memory().total / (1024**3), 2)
             return {"ram_totale_gb": ram_gb}
+                """TODO: Add docstring."""
         except Exception as e: return {"erreur": str(e)}
 
     def _obtenir_disques(self):

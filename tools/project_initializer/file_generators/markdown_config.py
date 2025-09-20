@@ -27,6 +27,7 @@ class MarkdownConfig:
     """Configuration et templates statiques pour génération Markdown."""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.templates = self._initialize_templates()
         self.fallbacks = self._initialize_fallbacks()
         self.config = self._initialize_config()

@@ -27,6 +27,7 @@ class MarkdownUtils:
     """
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.domain_descriptions = self._init_domain_descriptions()
         self.file_descriptions = self._init_file_descriptions()
 

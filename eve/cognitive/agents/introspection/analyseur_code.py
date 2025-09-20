@@ -20,6 +20,7 @@ DOSSIERS_A_EXCLURE = {'__pycache__', 'venv', '.git', '.vscode', 'introspection',
 FICHIERS_A_EXCLURE = {'inspecteur_cerveau.py'}
 
 def scanner_projet(chemin_racine: str) -> list[str]:
+    """TODO: Add docstring."""
     fichiers_py_trouves = []
     for racine, dossiers, fichiers in os.walk(chemin_racine, topdown=True):
         dossiers[:] = [d for d in dossiers if d not in DOSSIERS_A_EXCLURE]
@@ -28,6 +29,7 @@ def scanner_projet(chemin_racine: str) -> list[str]:
                 fichiers_py_trouves.append(str(Path(racine) / nom_fichier))
     return sorted(fichiers_py_trouves)
 
+    """TODO: Add docstring."""
 def analyser_fichier(chemin_fichier: str, tous_les_fichiers_du_projet: list) -> dict:
     print(f"[Analyseur] Analyse de : {Path(chemin_fichier).name}")
     try:

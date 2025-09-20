@@ -173,6 +173,8 @@ DEFAULT_WEATHER_ICON = "❓"
 DEFAULT_WEATHER_DESCRIPTION = "Inconnu"
 
 class MeteoAlmaApp:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, root_window):
         self.root = root_window
 
@@ -404,6 +406,7 @@ class MeteoAlmaApp:
         self.logger.debug("      Contenu de l'onglet 'Analyses & Alertes' initialisé.")
 
         self.logger.info("_setup_ui terminé avec succès.")
+            """TODO: Add docstring."""
 
     def _on_mousewheel(self, event, canvas: tk.Canvas):
         # self.logger.debug(f"_on_mousewheel: event.delta={getattr(event, 'delta', 'N/A')}, event.num={getattr(event, 'num', 'N/A')} sur canvas ID {id(canvas)}") # Peut être trop verbeux
@@ -424,6 +427,7 @@ class MeteoAlmaApp:
         except tk.TclError as e_scroll:
             self.logger.warning(f"Erreur TclError pendant yview_scroll sur canvas ID {id(canvas)}: {e_scroll}")
         except Exception as e_gen_scroll:
+            """TODO: Add docstring."""
             self.logger.error(f"Erreur inattendue dans _on_mousewheel sur canvas ID {id(canvas)}: {e_gen_scroll}", exc_info=True)
 
     def _bind_mousewheel_to_children(self, widget_or_frame, canvas: tk.Canvas):
@@ -441,6 +445,7 @@ class MeteoAlmaApp:
                     self._bind_mousewheel_to_children(child, canvas) # Appel récursif
             self.logger.debug(f"  Fin _bind_mousewheel_to_children pour '{widget_or_frame.winfo_name() if hasattr(widget_or_frame, 'winfo_name') else id(widget_or_frame)}'.")
         except Exception as e_bind_children:
+            """TODO: Add docstring."""
             self.logger.error(f"  Erreur dans _bind_mousewheel_to_children pour '{widget_or_frame.winfo_name() if hasattr(widget_or_frame, 'winfo_name') else id(widget_or_frame)}': {e_bind_children}", exc_info=True)
 
 
@@ -460,6 +465,7 @@ class MeteoAlmaApp:
             canvas.bind("<Button-5>", lambda e, c=canvas: self._on_mousewheel(e, c), add='+')
             canvas.bind("<MouseWheel>", lambda e, c=canvas: self._on_mousewheel(e, c), add='+') # Pour Windows/macOS
             self.logger.debug(f"  Événements de molette (Button-4, Button-5, MouseWheel) liés au canvas ID {id(canvas)}.")
+                """TODO: Add docstring."""
         except Exception as e_bind_canvas:
              self.logger.error(f"  Erreur lors de la liaison des événements de molette au canvas ID {id(canvas)}: {e_bind_canvas}", exc_info=True)
 
@@ -1317,6 +1323,7 @@ class MeteoAlmaApp:
                 self.wind_ax.clear()
                 self.wind_ax.text(0.5, 0.5, "Erreur génération\ngraphique", ha='center', va='center', transform=self.wind_ax.transAxes, color="red", fontsize=9)
             if hasattr(self, 'wind_graph_canvas_widget') and self.wind_graph_canvas_widget:
+                """TODO: Add docstring."""
                 self.wind_graph_canvas_widget.draw_idle()
             else:
                 self.logger.warning("    _draw_windspeed_hourly_graph (dans except Exception): wind_graph_canvas_widget non disponible pour draw_idle.")
@@ -1801,6 +1808,7 @@ class MeteoAlmaApp:
 
 
         if not insights: # Si aucune alerte ou info majeure
+            """TODO: Add docstring."""
             self.logger.info("  Aucune alerte ou tendance majeure détectée, ajout du message par défaut.")
             insights.append("Analyse météo: Pas d'alertes ou de tendances majeures pour le moment.")
 
@@ -1841,6 +1849,7 @@ class MeteoAlmaApp:
             else:
                 self.logger.debug(f"    current.time absent ou invalide. Utilisation de la valeur par défaut '{displayed_time_str}'.")
 
+    """TODO: Add docstring."""
             if hasattr(self, 'current_data_time_label') and self.current_data_time_label:
                  self.current_data_time_label.config(text=displayed_time_str)
             else:
@@ -1979,6 +1988,7 @@ class MeteoAlmaApp:
                 self.logger.debug("    Données journalières (daily.time) absentes ou vides, lever/coucher du soleil non mis à jour.")
                 if "sunrise" in self.current_weather_labels: self.current_weather_labels["sunrise"].config(text="N/A")
                 if "sunset" in self.current_weather_labels: self.current_weather_labels["sunset"].config(text="N/A")
+                    """TODO: Add docstring."""
 
             self.logger.info("_update_current_weather_display terminé avec succès.")
 
@@ -2025,6 +2035,7 @@ class MeteoAlmaApp:
         try:
             # S'assurer que d est bien un nombre avant les opérations mathématiques
             d_float = float(d)
+                """TODO: Add docstring."""
             ix = round(d_float / (360. / len(dirs)))
             cardinal_point = dirs[int(ix % len(dirs))]
             self.logger.debug(f"  Conversion: {d}° -> ix={ix}, point cardinal='{cardinal_point}'.")
@@ -2162,6 +2173,7 @@ class MeteoAlmaApp:
                 ttk.Label(row_frame, text=f"💧{precip_prob_str}", font=self.small_data_font, anchor="w").grid(row=0, column=6, padx=3, sticky="w")
                 # self.logger.debug("        Tous les labels pour cette heure ont été créés et placés.") # Peut être trop verbeux
             except Exception as e_row_loop:
+                """TODO: Add docstring."""
                 self.logger.error(f"      Erreur majeure lors du traitement de l'heure {i+1} (index {i}): {e_row_loop}", exc_info=True)
                 # Optionnel: ajouter un label d'erreur pour cette ligne spécifique
                 # error_label_row = ttk.Label(row_frame, text="Erreur affichage données pour cette heure", foreground="red", font=self.small_data_font)
@@ -2288,6 +2300,7 @@ class MeteoAlmaApp:
                 ttk.Label(row_frame, text=icon_unicode, font=self.icon_font, anchor="center").grid(row=0, column=1, padx=3, sticky="ew")
                 ttk.Label(row_frame, text=max_min_temp_str, font=self.small_data_font, anchor="w").grid(row=0, column=2, padx=3, sticky="w")
                 ttk.Label(row_frame, text=desc_text, font=self.small_data_font, anchor="w").grid(row=0, column=3, padx=3, sticky="w")
+                    """TODO: Add docstring."""
                 ttk.Label(row_frame, text=wind_dom_str, font=self.small_data_font, anchor="w").grid(row=0, column=4, padx=3, sticky="w")
                 ttk.Label(row_frame, text=precip_sum_str, font=self.small_data_font, anchor="w").grid(row=0, column=5, padx=3, sticky="w")
                 ttk.Label(row_frame, text=uv_max_str, font=self.small_data_font, anchor="w").grid(row=0, column=6, padx=3, sticky="w")
@@ -2304,6 +2317,7 @@ class MeteoAlmaApp:
             try:
                 self.status_label.config(text=message)
                 # self.root.update_idletasks() # update_idletasks peut parfois causer des comportements inattendus s'il est appelé trop fréquemment ou au mauvais moment.
+                    """TODO: Add docstring."""
                                             # Il est souvent préférable de laisser la boucle d'événements Tkinter gérer les mises à jour.
                                             # Si tu as besoin d'une mise à jour immédiate pour une raison spécifique, tu peux le décommenter.
                 self.logger.debug("  Label de statut mis à jour.")
@@ -2361,6 +2375,7 @@ class MeteoAlmaApp:
             messagebox.showerror("Erreur Sauvegarde (Type)", f"Les données à sauvegarder ne sont pas au format JSON valide pour {filepath}:\n{e_type}", parent=self.root)
         except Exception as e_save: # Capture les autres exceptions
             error_msg_generic = f"Erreur inattendue lors de la sauvegarde dans {filepath}: {e_save}"
+                """TODO: Add docstring."""
             self.logger.error(f"  {error_msg_generic}", exc_info=True)
             self.update_status(f"Erreur sauvegarde: {e_save}")
             messagebox.showerror("Erreur Sauvegarde Inattendue", f"Une erreur inattendue est survenue lors de la sauvegarde dans {filepath}:\n{e_save}", parent=self.root)
@@ -2485,6 +2500,7 @@ class MeteoAlmaApp:
             self.root.after(0, lambda m=error_msg: messagebox.showerror("Erreur API Météo", m, parent=self.root))
         except json.JSONDecodeError as e_json:
             error_msg = f"Réponse invalide (non-JSON) de l'API Open-Meteo depuis {api_url_open_meteo}: {e_json}"
+                """TODO: Add docstring."""
             self.logger.error(f"  Thread '{thread_name}': {error_msg}", exc_info=True) # exc_info peut aider à voir le contenu non-JSON
             self.root.after(0, self.update_status, "Erreur: Réponse API Météo invalide (format).")
             self.root.after(0, lambda m=error_msg: messagebox.showerror("Erreur API Météo", m, parent=self.root))

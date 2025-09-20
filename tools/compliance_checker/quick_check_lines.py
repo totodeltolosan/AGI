@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_checker/quick_check_lines.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Quick Check Lines - Vérification rapide des violations de la directive 200 lignes
 Outil de validation de base pour le projet AGI
 
@@ -31,6 +40,7 @@ class LineChecker:
     """Vérificateur rapide de la directive 200 lignes"""
 
     def __init__(self, max_lines: int = 200):
+        """TODO: Add docstring."""
         self.max_lines = max_lines
         self.results: List[FileStatus] = []
 

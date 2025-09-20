@@ -122,6 +122,8 @@ PID_STATUS_FILE_PATH = LOGS_DIR_ALMA / PID_STATUS_FILENAME
 # La classe PerformanceMonitorApp et le bloc __main__ viendront après.
 # --- Classe Principale de l'Application GUI ---
 class PerformanceMonitorApp:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title(f"{APP_NAME_MONITOR} v{VERSION_MONITOR}")

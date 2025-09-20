@@ -7,11 +7,13 @@ class WebExplorer:
     """EXPLORATEUR WEB - Collecteur de données depuis Wikipedia"""
 
     def __init__(self, supervisor: SupervisorInterface):
+        """TODO: Add docstring."""
         self.supervisor = supervisor
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         }
 
+    """TODO: Add docstring."""
     def explore_url(self, url: str) -> tuple[list, str] | None:
         self.supervisor.display_info(f"🌐 Exploration de l'URL: {url}")
         try:

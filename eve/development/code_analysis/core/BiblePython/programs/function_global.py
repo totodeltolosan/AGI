@@ -2,6 +2,7 @@ x = 50
 
 
 def func():
+    """TODO: Add docstring."""
     global x
 
     print('x is', x)

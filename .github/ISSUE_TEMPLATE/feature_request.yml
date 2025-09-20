@@ -1,36 +1,26 @@
-name: Feature Request
+name: ✨ Feature Request
 description: Proposer une nouvelle fonctionnalité
 title: "[FEATURE] "
-labels: ["enhancement", "feature-request"]
+labels: ["enhancement", "needs-discussion"]
 body:
-  - type: dropdown
-    id: module
-    attributes:
-      label: Module EVE concerné
-      options:
-        - cognitive (ALMA)
-        - simulation (Monde/EVE GENESIS) 
-        - development (gaia/Test Eve)
-        - interfaces (Projet simulateur)
-        - integration (Bridges)
-        - core (AGI)
-    validations:
-      required: true
-
   - type: textarea
     id: problem
     attributes:
       label: Problème à résoudre
-      placeholder: Quel problème cette fonctionnalité résout-elle ?
-
+      description: Quel problème cette fonctionnalité résoudrait-elle ?
+    validations:
+      required: true
+      
   - type: textarea
     id: solution
     attributes:
       label: Solution proposée
-      placeholder: Décrivez la solution que vous aimeriez voir
-
+      description: Décrivez votre solution idéale
+    validations:
+      required: true
+      
   - type: textarea
     id: alternatives
     attributes:
       label: Alternatives considérées
-      placeholder: Avez-vous pensé à d'autres solutions ?
+      description: Avez-vous considéré d'autres solutions ?

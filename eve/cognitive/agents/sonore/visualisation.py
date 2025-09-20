@@ -20,6 +20,8 @@ ax.set_ylim(-0.5, 0.5); ax.set_xlim(0, parametres.CHUNK_SIZE)
 ax.set_title("Visualisation du Son en Temps Réel")
 
 def visualiser_depuis_queue(audio_queue):
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def update_plot(frame):
         data = None
         while not audio_queue.empty(): data = audio_queue.get_nowait()

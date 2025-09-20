@@ -18,6 +18,7 @@ class GestionnaireSauvegarde:
     """
 
     def __init__(self, dossier_sauvegardes="sauvegardes"):
+        """TODO: Add docstring."""
         self.dossier_sauvegardes = Path(dossier_sauvegardes)
         self.dossier_sauvegardes.mkdir(exist_ok=True)
         self.dossier_checkpoints = self.dossier_sauvegardes / "checkpoints"
@@ -163,12 +164,15 @@ gestionnaire_sauvegarde = GestionnaireSauvegarde()
 
 
 def sauvegarder_etat(cerveau, nom_sauvegarde=None):
+    """TODO: Add docstring."""
     return gestionnaire_sauvegarde.sauvegarder_etat(cerveau, nom_sauvegarde)
 
 
+    """TODO: Add docstring."""
 def charger_etat(chemin_sauvegarde):
     return gestionnaire_sauvegarde.charger_etat(chemin_sauvegarde)
 
+    """TODO: Add docstring."""
 
 def checkpoint_automatique(cerveau):
     return gestionnaire_sauvegarde.sauvegarder_etat(cerveau, auto_checkpoint=True)

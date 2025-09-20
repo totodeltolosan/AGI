@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""
+CHEMIN: tools/project_initializer/structure_validators.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
 """Structure Validators - Validation Structures AGI"""
 
 from pathlib import Path
@@ -9,6 +18,7 @@ class StructureValidator:
     """Validation conformité structures projet AGI"""
     
     def __init__(self):
+        """TODO: Add docstring."""
         self.logger = logging.getLogger(__name__)
         
     def validate_output_directory(self, output_dir: Path) -> bool:

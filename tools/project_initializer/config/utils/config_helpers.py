@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""
+CHEMIN: tools/project_initializer/config/utils/config_helpers.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module utilitaire avec fonctions de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
 """Config Helpers - Fonctions Utilitaires pour Configuration AGI"""
 
 from typing import Dict, List, Any

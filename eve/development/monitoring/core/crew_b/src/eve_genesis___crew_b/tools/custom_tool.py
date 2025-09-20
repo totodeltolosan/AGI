@@ -30,6 +30,7 @@ class FileManagerInput(BaseModel):
 
 
 class FileManagerTool(BaseTool):
+    """TODO: Add docstring."""
     name: str = "File Manager"
     description: str = (
         "Manage files and directories for EVE GENESIS content and data. "
@@ -37,6 +38,7 @@ class FileManagerTool(BaseTool):
     )
     args_schema: Type[BaseModel] = FileManagerInput
 
+    """TODO: Add docstring."""
     def _run(self, action: str, path: str, content: Optional[str] = None) -> str:
         try:
             path_obj = Path(path)
@@ -103,12 +105,14 @@ class ConfigManagerInput(BaseModel):
     )
 
 
+    """TODO: Add docstring."""
 class ConfigManagerTool(BaseTool):
     name: str = "Configuration Manager"
     description: str = (
         "Manage dynamic configurations for EVE GENESIS evolution and enrichment. "
         "Handles agent settings, narrative parameters, and system evolution configs."
     )
+        """TODO: Add docstring."""
     args_schema: Type[BaseModel] = ConfigManagerInput
 
     def _run(
@@ -197,11 +201,13 @@ class APIClientInput(BaseModel):
     data: Optional[Dict[str, Any]] = Field(None, description="Request data")
     timeout: int = Field(10, description="Request timeout in seconds")
 
+    """TODO: Add docstring."""
 
 class APIClientTool(BaseTool):
     name: str = "API Client"
     description: str = (
         "Communicate with EVE GENESIS APIs and external services. "
+            """TODO: Add docstring."""
         "Enables inter-agent communication and external data integration."
     )
     args_schema: Type[BaseModel] = APIClientInput
@@ -260,10 +266,12 @@ class SystemMonitorInput(BaseModel):
         ...,
         description="Action: 'check_resources', 'monitor_performance', 'adaptive_check'",
     )
+        """TODO: Add docstring."""
 
 
 class SystemMonitorTool(BaseTool):
     name: str = "System Monitor"
+        """TODO: Add docstring."""
     description: str = (
         "Monitor system performance for EVE GENESIS adaptive behaviors. "
         "Provides resource info for evolutionary optimization."
@@ -341,9 +349,11 @@ class DataGeneratorInput(BaseModel):
     )
     output_format: str = Field(
         "json", description="Output format: 'json', 'yaml', 'text'"
+            """TODO: Add docstring."""
     )
 
 
+    """TODO: Add docstring."""
 class DataGeneratorTool(BaseTool):
     name: str = "Data Generator"
     description: str = (

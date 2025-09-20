@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/__init__.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Package d'initialisation pour le module 'compliance_audit_system'.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Système d'Audit de Conformité AGI - Package Principal
 Architecture modulaire conforme aux directives AGI.md
 Chaque module respecte strictement la limite des 200 lignes

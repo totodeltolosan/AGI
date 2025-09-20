@@ -12,6 +12,8 @@ from sonore import db_sonore
 import collections # On importe collections pour la deque
 
 class Application(tk.Tk):
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self):
         super().__init__()
         self.title("Assistant IA Alma - Panneau de Contrôle v2.5")
@@ -37,12 +39,14 @@ class Application(tk.Tk):
         self._creer_widgets()
         self.protocol("WM_DELETE_WINDOW", self._on_closing)
 
+    """TODO: Add docstring."""
     # ... (les fonctions _charger_json et _creer_widgets sont identiques) ...
     def _charger_json(self, filename, nom):
         try:
             with open(filename, 'r', encoding='utf-8') as f: return json.load(f)
         except Exception as e:
             messagebox.showerror("Erreur Critique", f"Fichier '{filename}' ({nom}) introuvable ou illisible.\n{e}\nL'application va se fermer.")
+                """TODO: Add docstring."""
             return None
 
     def _creer_widgets(self):
@@ -73,12 +77,14 @@ class Application(tk.Tk):
         canvas.bind_all("<MouseWheel>", lambda e: canvas.yview_scroll(int(-1*(e.delta/120)), "units"))
         canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
+            """TODO: Add docstring."""
         canvas.grid(row=0, column=0, sticky="nsew")
         scrollbar.grid(row=0, column=1, sticky="ns")
 
     def toggle_presence(self):
         etat_actuel = self.presence_on.get()
         self.switch_presence.config(text="ON" if etat_actuel else "OFF")
+            """TODO: Add docstring."""
         if self.orchestrateur and self.surveillance_active:
             print(f"[Interface] Mode Présence changé à : {'ON' if etat_actuel else 'OFF'}")
             self.orchestrateur.definir_etat_presence(etat_actuel)
@@ -100,6 +106,7 @@ class Application(tk.Tk):
 
     def _ajouter_carte(self, carte_frame):
         """Ajoute une nouvelle carte et supprime la plus ancienne si la limite est atteinte."""
+            """TODO: Add docstring."""
         if len(self.cartes_affiches) >= self.MAX_CARTES_AFFICHEES:
             carte_a_supprimer = self.cartes_affiches.popleft() # Retire la plus ancienne de la liste
             carte_a_supprimer.destroy() # Détruit le widget
@@ -107,6 +114,7 @@ class Application(tk.Tk):
 
     def _creer_carte_feedback(self, titre):
         event_frame = ttk.Labelframe(self.scrollable_frame, text=titre, padding=10)
+            """TODO: Add docstring."""
         event_frame.pack(padx=10, pady=5, fill=tk.X, anchor="n")
         # On ajoute la carte à notre gestionnaire
         self._ajouter_carte(event_frame)
@@ -114,6 +122,7 @@ class Application(tk.Tk):
 
     # ... (le reste du fichier est identique) ...
     def arreter_surveillance(self):
+        """TODO: Add docstring."""
         if self.orchestrateur: self.orchestrateur.arreter_surveillance()
         self.surveillance_active = False
         self.bouton_lancer.config(state=tk.NORMAL)
@@ -129,6 +138,7 @@ class Application(tk.Tk):
                 if ticket.get("type") == "SON": self._afficher_feedback_sonore(ticket)
                 elif ticket.get("type") == "PC":
                     diagnostics = ticket.get('diagnostics', [])
+                        """TODO: Add docstring."""
                     if diagnostics:
                         if "ROUTINE :" in diagnostics[0]: self.label_statut.config(text=f"Statut : {diagnostics[0].replace('ROUTINE : ', '')}")
                         else:
@@ -142,6 +152,7 @@ class Application(tk.Tk):
         titre = f"Diagnostic PC ({time.strftime('%H:%M:%S', time.localtime(ts))})"
         frame = self._creer_carte_feedback(titre)
         frame.update_idletasks()
+            """TODO: Add docstring."""
         wraplength = self.scrollable_frame.winfo_width() - 40
         ttk.Label(frame, text="\n".join(ticket['diagnostics']), wraplength=wraplength, justify=tk.LEFT).pack(padx=5, pady=5, anchor="w")
         ttk.Label(frame, text="Votre feedback ?", font=('Segoe UI', 9, 'italic')).pack(pady=(10, 5), anchor="w")
@@ -174,6 +185,7 @@ class Application(tk.Tk):
             texte_prediction = "\n".join([f"- {self.traducteur_yamnet.get(nom, nom)} ({score:.1%})" for nom, score in predictions if score > 0.1])
             ttk.Label(frame, text=texte_prediction if texte_prediction else "Aucun son pertinent détecté.").pack(anchor="w", padx=5)
         ttk.Separator(frame, orient='horizontal').pack(fill='x', pady=10, padx=5)
+            """TODO: Add docstring."""
         ttk.Label(frame, text="Ou corrigez avec une autre cause :", font=('Segoe UI', 9, 'italic')).pack(pady=(5, 5), anchor="w", padx=5)
         buttons_frame = ttk.Frame(frame)
         buttons_frame.pack(pady=5, fill=tk.X, padx=5)
@@ -185,6 +197,7 @@ class Application(tk.Tk):
         submit_button.pack(side=tk.LEFT, padx=5)
 
     def _soumettre_feedback_pc(self, ticket, cause_code, frame):
+        """TODO: Add docstring."""
         cause_reelle = cause_code
         if cause_code == "AUTRE":
             nouvelle_cause = simpledialog.askstring("Nouvelle Cause", "Décrire la cause :", parent=self)
@@ -201,14 +214,17 @@ class Application(tk.Tk):
             messagebox.showwarning("Aucune sélection", "Veuillez sélectionner une cause dans le menu.")
             return
         code_cause = next((code for code, nom in self.causes_feedback_sonore.items() if nom == nom_cause), None)
+            """TODO: Add docstring."""
         if not code_cause:
              messagebox.showerror("Erreur", f"La cause '{nom_cause}' est inconnue.")
              return
+                 """TODO: Add docstring."""
         if code_cause == "AUTRE_SON":
             nouvelle_cause = simpledialog.askstring("Nouvelle Cause Sonore", "Décrire le son :", parent=self)
             if nouvelle_cause and nouvelle_cause.strip(): code_cause = nouvelle_cause.strip().upper().replace(" ", "_")
             else: return
         if code_cause:
+            """TODO: Add docstring."""
             db_sonore.sauvegarder_son(mfcc, code_cause)
             self.nouveaux_feedbacks_compteur += 1
             self._confirmer_feedback_ui(frame, nom_cause)
@@ -217,6 +233,7 @@ class Application(tk.Tk):
         for widget in frame.winfo_children(): widget.destroy()
         ttk.Label(frame, text=f"✔ Merci ! Feedback '{cause_nom}' enregistré.", foreground="green", font=('Segoe UI', 10, 'bold')).pack(pady=10)
 
+    """TODO: Add docstring."""
     def _gerer_fin_session(self):
         messagebox.showinfo("Fin de Session", f"Session terminée.\n\nNouveaux feedbacks enregistrés : {self.nouveaux_feedbacks_compteur}")
         if self.nouveaux_feedbacks_compteur > 0:

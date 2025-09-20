@@ -5,6 +5,8 @@ from pathlib import Path
 
 
 class AnalyseurTest01:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, dossier_test="tests/scenario_01"):
         self.dossier_test = Path(dossier_test)
         self.resultats = {

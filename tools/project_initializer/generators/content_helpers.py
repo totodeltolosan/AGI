@@ -31,6 +31,7 @@ class ContentHelpers:
     """Fonctions utilitaires pour génération de contenu Python."""
 
     def __init__(self, logger=None):
+        """TODO: Add docstring."""
         self.logger = logger
         self.template_mappings = self._initialize_template_mappings()
         self.domain_contexts = self._initialize_domain_contexts()

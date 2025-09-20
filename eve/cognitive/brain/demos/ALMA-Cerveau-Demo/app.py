@@ -48,6 +48,7 @@ CERVEAU_COMPONENTS_READY = False
 
 # --- Initialisation des Composants Cerveau ---
 def initialize_alma_components_for_space():
+    """TODO: Add docstring."""
     global cerveau_module, core_module, KnowledgeBase_class, FileProcessor_class, PipelineStepClasses
     global TextImprover_class, KnowledgeLinker_class
     global APP_CONFIG_SPACE, KB_INSTANCE_SPACE, TEXT_IMPROVER_INSTANCE_SPACE, KNOWLEDGE_LINKER_INSTANCE_SPACE
@@ -175,6 +176,7 @@ if not INITIALIZATION_ATTEMPTED:
 
 
 # --- Fonctions pour l'interface Gradio ---
+    """TODO: Add docstring."""
 def process_uploaded_file(gradio_file_object):
     if not CERVEAU_COMPONENTS_READY or not FileProcessor_class or not cerveau_module or not KB_INSTANCE_SPACE:
         return "Erreur: Composants Cerveau non prêts.", "{}", "{}"
@@ -268,6 +270,7 @@ def process_uploaded_file(gradio_file_object):
 
     return analysis_summary_text, entities_json, proposals_json
 
+    """TODO: Add docstring."""
 
 def get_current_kb_summary_for_gradio():
     # Similaire à la fonction get_kb_summary précédente, mais utilise les globales du Space

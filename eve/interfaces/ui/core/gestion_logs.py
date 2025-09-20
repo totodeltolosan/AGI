@@ -17,6 +17,7 @@ class ConfigurationLogs:
     """Configuration centralisée pour le système de logs."""
 
     def __init__(self, config_dict: Dict[str, Any] = None):
+        """TODO: Add docstring."""
         config = config_dict or {}
 
         # Tailles et limites
@@ -58,6 +59,7 @@ class ConfigurationLogs:
 class MetriquesLogs:
     """Collecte et analyse des métriques de logging."""
 
+    """TODO: Add docstring."""
     def __init__(self):
         self.compteurs = defaultdict(int)
         self.historique_tailles = deque(maxlen=1440)  # 24h de données par minute
@@ -177,6 +179,7 @@ class ValidateurLogs:
 
 class GestionnaireSynthese:
     """Gestion intelligente de la synthèse des logs."""
+        """TODO: Add docstring."""
 
     def __init__(self, config: ConfigurationLogs):
         self.config = config
@@ -320,6 +323,7 @@ class GestionnaireSynthese:
 
 
 class GestionnaireFichiers:
+    """TODO: Add docstring."""
     """Gestion avancée des fichiers avec compression et archivage."""
 
     def __init__(self, config: ConfigurationLogs):
@@ -433,6 +437,7 @@ class GestionnaireFichiers:
 class GestionnaireLogsIntelligent:
     """
     Système de logging intelligent ultra-robuste.
+        """TODO: Add docstring."""
     Implémente les Directives 25 et 91 avec haute disponibilité.
     """
 
@@ -946,6 +951,7 @@ class GestionnaireLogsIntelligent:
 
         except Exception as e:
             print(f"Erreur arrêt système logs: {e}")
+                """TODO: Add docstring."""
 
     def creer_thread_monitoring(self, cerveau):
         """Crée un thread pour le monitoring continu des logs (interface de compatibilité)."""

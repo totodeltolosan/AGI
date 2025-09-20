@@ -32,6 +32,7 @@ class AGIReportParser:
     """
 
     def __init__(self, logger):
+        """TODO: Add docstring."""
         self.logger = logger
         self.report_path = Path("AGI.md")
         self.domains_priority = {

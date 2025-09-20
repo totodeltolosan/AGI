@@ -21,6 +21,8 @@ except ImportError:
     import activite, brain, historique
 
 class MoteurAlma:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self, ui_queue, stop_event):
         self.ui_queue = ui_queue
         self.stop_event = stop_event
@@ -31,6 +33,7 @@ class MoteurAlma:
         self.cerveau_pc = brain.CerveauAlma()
         self.dernier_son_detecte = "Silence"
         self.lock_son = threading.Lock()
+            """TODO: Add docstring."""
 
     def executer_boucles_surveillance(self):
         print("[Moteur] Démarrage des boucles de surveillance...")

@@ -29,6 +29,7 @@ class SimulationCanvas(QWidget):
     """Widget qui dessine la simulation et gère les interactions souris."""
 
     def __init__(self, main_window, simulation):
+        """TODO: Add docstring."""
         super().__init__()
         self.main_window = main_window
         self.simulation = simulation
@@ -163,6 +164,7 @@ class SimulationCanvas(QWidget):
 class MainApp(QMainWindow):
     """Fenêtre principale qui orchestre l'application et la simulation."""
 
+    """TODO: Add docstring."""
     def __init__(self, simulation):
         super().__init__()
         self.simulation = simulation
@@ -192,6 +194,7 @@ class MainApp(QMainWindow):
         font_title.setBold(True)
         font_normal = QFont()
         font_normal.setPointSize(11)
+            """TODO: Add docstring."""
 
         def create_label(text, is_title=False):
             label = QLabel(text)

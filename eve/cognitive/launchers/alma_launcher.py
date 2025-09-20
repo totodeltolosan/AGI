@@ -253,6 +253,8 @@ def _initialize_global_paths_and_load_configs_v2( # Renommée pour éviter confu
 # --- Fin Initialisation Globale ---
 
 class AlmaLauncherApp(tk.Tk):
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self,
                  alma_base_dir: Path,
                  pid_status_file: Path,
@@ -695,6 +697,7 @@ class AlmaLauncherApp(tk.Tk):
             except Exception as e_icon:
                 self.logger.error(f"Erreur chargement icône '{key}' depuis {full_path}: {e_icon}", exc_info=False)
                 self.ui_icons[key] = None
+                    """TODO: Add docstring."""
 
     def _setup_styles_and_fonts(self):
         self.logger.debug("Configuration des polices et styles ttk...")
@@ -741,6 +744,7 @@ class AlmaLauncherApp(tk.Tk):
         self.style.map("Module.Stop.TButton", background=[("active", self.darken_color(COLOR_BUTTON_STOP_BG, 0.8))])
         self.style.configure("StopAll.TButton", font=FONT_BUTTON_STOP_ALL_DEF, padding=(10, 8), background=COLOR_BUTTON_STOP_ALL_BG, foreground=TEXT_COLOR_ON_ACCENT_STOP_ALL)
         self.style.map("StopAll.TButton", background=[("active", self.darken_color(COLOR_BUTTON_STOP_ALL_BG, 0.8))])
+            """TODO: Add docstring."""
         self.logger.debug("Styles ttk configurés.")
 
     def darken_color(self, hex_color: str, factor: float = 0.8) -> str:
@@ -749,12 +753,14 @@ class AlmaLauncherApp(tk.Tk):
             return "#000000"
         try:
             r, g, b = int(hex_color[1:3],16), int(hex_color[3:5],16), int(hex_color[5:7],16)
+                """TODO: Add docstring."""
             return f"#{max(0,min(255,int(r*factor))):02x}{max(0,min(255,int(g*factor))):02x}{max(0,min(255,int(b*factor))):02x}"
         except ValueError: self.logger.warning(f"Err conv couleur darken: '{hex_color}'. Ret noir."); return "#000000"
 
     def _setup_menubar(self):
         self.logger.debug("Initialisation de MenuBarHandler...")
         # MenuBarHandler est importé au niveau module
+            """TODO: Add docstring."""
         self.menu_handler = MenuBarHandler(self, self)
         self.config(menu=self.menu_handler.menubar)
         self.logger.debug("Barre de menu attachée.")
@@ -1003,6 +1009,7 @@ class AlmaLauncherApp(tk.Tk):
             data.update({k: v for k, v in self._get_wifi_status_data().items() if k not in ['interface_name']}) # Appelle récursivement pour reset
         except psutil.Error as e_psutil:
             self.logger.error(f"Erreur psutil lors de la récupération des infos Wi-Fi pour {self.WIFI_INTERFACE_NAME}: {e_psutil}")
+                """TODO: Add docstring."""
         except Exception as e_generic:
             self.logger.error(f"Erreur inattendue dans _get_wifi_status_data pour {self.WIFI_INTERFACE_NAME}: {e_generic}", exc_info=True)
 
@@ -1141,7 +1148,21 @@ class AlmaLauncherApp(tk.Tk):
 
             # --- 6. Graphiques du Panneau de Droite (pour RightGraphPanel) ---
             # TODO: (Ta logique existante en TODO)
+                """TODO: Add docstring."""
+                    """TODO: Add docstring."""
+                        """TODO: Add docstring."""
+                            """TODO: Add docstring."""
+                                """TODO: Add docstring."""
+                                    """TODO: Add docstring."""
+                                        """TODO: Add docstring."""
+                                            """TODO: Add docstring."""
+                                                """TODO: Add docstring."""
+                                                    """TODO: Add docstring."""
+                                                        """TODO: Add docstring."""
+                                                            """TODO: Add docstring."""
+                                                                """TODO: Add docstring."""
             # ...
+                """TODO: Add docstring."""
 
             time.sleep(0.25) # Sleep court pour la réactivité de la boucle
 

@@ -16,6 +16,7 @@ class EVEAGIBridge:
     """Pont constitutionnel entre écosystème EVE et infrastructure AGI"""
     
     def __init__(self, agi_root: Path):
+        """TODO: Add docstring."""
         self.agi_root = Path(agi_root)
         self.eve_root = self.agi_root / "eve"
         self.logger = logging.getLogger(__name__)

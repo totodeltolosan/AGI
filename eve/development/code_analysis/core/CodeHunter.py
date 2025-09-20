@@ -26,6 +26,7 @@ from SemanticAnalyzer import SemanticAnalyzer
 
 # --- CLASSE DE COULEURS PARTAGÉE ---
 class Colors:
+    """TODO: Add docstring."""
     OKCYAN = "\033[96m"
     MAGENTA = "\033[95m"
     ENDC = "\033[0m"
@@ -129,6 +130,7 @@ class CodeHunter:
         return [match.strip() for match in matches]
 
     # Méthode utilitaire pour l'affichage
+        """TODO: Add docstring."""
     def _display_code_info(self, message: str):
         if hasattr(self.supervisor, "display_code_info"):
             self.supervisor.display_code_info(message)

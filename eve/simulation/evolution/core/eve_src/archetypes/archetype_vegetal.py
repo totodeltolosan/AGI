@@ -10,6 +10,7 @@ class Vegetal(EntiteVivante):
     """Forme de vie statique qui génère de l'énergie par photosynthèse."""
 
     def __init__(self, x, y, genome=None):
+        """TODO: Add docstring."""
         super().__init__(x, y)
         self.energie = random.uniform(10.0, 30.0)
         self.couleur = QColor("darkgreen")

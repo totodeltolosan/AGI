@@ -32,6 +32,7 @@ class PrometheusCore:
     """
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.supervisor = SupervisorInterface()
         self.explorer = WebExplorer(self.supervisor)
         self.analyst = Analyst(self.supervisor)
@@ -144,12 +145,14 @@ class PrometheusCore:
                 f"ERREUR CRITIQUE: Impossible de sauvegarder la base de connaissances. {e}"
             )
 
+    """TODO: Add docstring."""
     def log_action(self, message: str):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_entry = f"[{timestamp}] {message}"
         self.logs.append(log_entry)
         if len(self.logs) > LOG_LIMIT:
             self.logs.pop(0)
+                """TODO: Add docstring."""
 
     def update_status_html(self):
         # Simplifiée pour cette version - peut être étendue selon les besoins

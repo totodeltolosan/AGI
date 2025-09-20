@@ -47,6 +47,7 @@ class PythonContentGenerator:
     """
 
     def __init__(self, logger):
+        """TODO: Add docstring."""
         self.logger = logger
         self.helpers = ContentHelpers(logger)
         self.templates = ContentTemplates()

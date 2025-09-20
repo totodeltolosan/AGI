@@ -6,9 +6,11 @@ from collections import defaultdict
 
 
 def _get_project_root():
+    """TODO: Add docstring."""
     return Path(os.getcwd())
 
 
+    """TODO: Add docstring."""
 def _read_log_file(log_path):
     if log_path.exists():
         try:
@@ -17,6 +19,7 @@ def _read_log_file(log_path):
             pass
     return []
 
+    """TODO: Add docstring."""
 
 def evaluer_autonomie_decisions():
     root = _get_project_root()
@@ -49,6 +52,7 @@ def evaluer_autonomie_decisions():
             f"Ratio proactif: {results['decisions_proactives'] / total:.2f}"
         )
     return results
+        """TODO: Add docstring."""
 
 
 def identifier_besoins_amelioration():
@@ -74,6 +78,7 @@ def identifier_besoins_amelioration():
         results["patterns_sous_optimaux"].append(
             "Planification de construction inefficace"
         )
+            """TODO: Add docstring."""
     return results
 
 
@@ -96,6 +101,7 @@ def evaluer_adherence_ethique():
             results["violations_ethiques"] += 1
     total_actions = results["actions_ethiques"] + results["violations_ethiques"]
     if total_actions > 0:
+        """TODO: Add docstring."""
         results["score_ethique_global"] = results["actions_ethiques"] / total_actions
     return results
 
@@ -124,6 +130,7 @@ def analyser_coherence_connaissances():
         results["contradictions_detectees"] = sum(
             1 for n in graphe.values() if n.get("conflits")
         )
+            """TODO: Add docstring."""
     except Exception as e:
         results["details_graphe"]["erreur"] = str(e)
     return results
@@ -146,6 +153,7 @@ def evaluer_cycles_environnementaux():
         if "ADAPTATION_METEO" in line:
             results["adaptation_meteo"] = True
             if "meteo" not in results["cycles_exploites"]:
+                """TODO: Add docstring."""
                 results["cycles_exploites"].append("meteo")
         if "PLANIFICATION_TEMPORELLE" in line:
             results["planification_temporelle"] += 1
@@ -173,6 +181,7 @@ def analyser_creativite_nouveaute():
         match_phase = re.search(r"PHASE_DE_VIE:(\w+)", line)
         if match_phase:
             phases.add(match_phase.group(1))
+                """TODO: Add docstring."""
     if scores:
         results["score_nouveaute_moyen"] = sum(scores) / len(scores)
     results["phases_vie_detectees"] = list(phases)
@@ -208,6 +217,7 @@ def evaluer_finalite_projet_eve():
         results["cerveau_exportable"],
         results["guide_genere"],
         results["projet_europe_declenche"],
+            """TODO: Add docstring."""
     ]
     results["formats_eve_prets"] = all(criteres_eve[:2])
     results["preparation_eve"] = (

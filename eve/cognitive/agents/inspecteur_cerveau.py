@@ -11,6 +11,7 @@ import os
 MODEL_FILE = 'alma_model.joblib'
 
 def inspecter_cerveau():
+    """TODO: Add docstring."""
     print("="*60)
     print("===== INSPECTION DU CERVEAU D'ALMA =====")
     print("="*60)

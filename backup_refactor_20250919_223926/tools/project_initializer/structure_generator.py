@@ -47,6 +47,7 @@ class StructureGenerator:
     """
 
     def __init__(self, logger):
+        """TODO: Add docstring."""
         self.logger = logger
         self.helpers = StructureHelpers(logger)
         self.config = StructureConfig()

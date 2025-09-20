@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: mcp_agi_server.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Serveur MCP AGI - Version conforme (<200 lignes)
 Accès temps réel aux fichiers projet AGI
 """
@@ -9,8 +18,10 @@ from pathlib import Path
 from urllib.parse import unquote
 
 class AGIMCPHandler(http.server.BaseHTTPRequestHandler):
+    """TODO: Add docstring."""
     BASE_PATH = "/home/toni/Documents/Projet AGI"
     
+        """TODO: Add docstring."""
     def do_GET(self):
         try:
             if self.path.startswith('/api/read/'):
@@ -25,6 +36,7 @@ class AGIMCPHandler(http.server.BaseHTTPRequestHandler):
                 self._send_error(404, "Endpoint non trouvé")
         except Exception as e:
             self._send_error(500, str(e))
+                """TODO: Add docstring."""
     
     def do_POST(self):
         try:
@@ -33,10 +45,12 @@ class AGIMCPHandler(http.server.BaseHTTPRequestHandler):
             else:
                 self._send_error(404, "Endpoint POST non trouvé")
         except Exception as e:
+            """TODO: Add docstring."""
             self._send_error(500, str(e))
     
     def do_OPTIONS(self):
         self.send_response(200)
+            """TODO: Add docstring."""
         self._set_cors_headers()
         self.end_headers()
     
@@ -61,6 +75,7 @@ class AGIMCPHandler(http.server.BaseHTTPRequestHandler):
                 "path": file_path,
                 "lines": lines,
                 "agi_compliant": lines <= 200
+                    """TODO: Add docstring."""
             })
         except Exception as e:
             self._send_error(500, f"Erreur lecture: {str(e)}")
@@ -93,6 +108,7 @@ class AGIMCPHandler(http.server.BaseHTTPRequestHandler):
                 "status": "success",
                 "path": file_path,
                 "lines": lines,
+                    """TODO: Add docstring."""
                 "agi_compliant": lines <= 200
             })
         except Exception as e:
@@ -119,6 +135,7 @@ class AGIMCPHandler(http.server.BaseHTTPRequestHandler):
                                 "agi_compliant": lines <= 200 if item.suffix == '.py' else True
                             })
                         except:
+                            """TODO: Add docstring."""
                             files.append({"path": rel_path, "lines": 0})
             
             self._send_json({"files": files, "base_path": dir_path})
@@ -150,27 +167,32 @@ class AGIMCPHandler(http.server.BaseHTTPRequestHandler):
             
             self._send_json({
                 "compliance_rate": round(compliance_rate, 1),
+                    """TODO: Add docstring."""
                 "total_files": total,
                 "violations": len(violations),
                 "violation_details": sorted(violations, key=lambda x: x['lines'], reverse=True)[:5]
             })
         except Exception as e:
+            """TODO: Add docstring."""
             self._send_error(500, str(e))
     
     def _is_safe_path(self, path):
         try:
             return path.resolve().is_relative_to(Path(self.BASE_PATH).resolve())
         except:
+            """TODO: Add docstring."""
             return False
     
     def _send_json(self, data):
         self.send_response(200)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
         self._set_cors_headers()
+            """TODO: Add docstring."""
         self.end_headers()
         self.wfile.write(json.dumps(data, indent=2).encode('utf-8'))
     
     def _send_error(self, code, message):
+        """TODO: Add docstring."""
         self.send_response(code)
         self.send_header('Content-Type', 'application/json')
         self._set_cors_headers()

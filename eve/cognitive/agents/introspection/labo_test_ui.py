@@ -25,6 +25,8 @@ from . import cinematique_intro
 from . import generateur_html
 
 class LaboratoireIntrospection(QMainWindow):
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Alma - Laboratoire d'Introspection du Code")
@@ -40,6 +42,7 @@ class LaboratoireIntrospection(QMainWindow):
         self.central_widget.hide()
         self.setup_sound()
         self.anim_main_ui_fade_in = None
+            """TODO: Add docstring."""
 
     def setup_ui(self):
         main_layout = QVBoxLayout(self.central_widget)
@@ -71,6 +74,7 @@ class LaboratoireIntrospection(QMainWindow):
         main_layout.addWidget(splitter)
         self.bouton_analyser.clicked.connect(self.lancer_analyse_complete)
         self.bouton_generer_html.clicked.connect(self.generer_rapport)
+            """TODO: Add docstring."""
         self.vue_projet.selectionModel().selectionChanged.connect(self.afficher_details_fichier)
 
     def setup_sound(self):
@@ -79,6 +83,7 @@ class LaboratoireIntrospection(QMainWindow):
         if sound_path.exists():
             self.start_sound.setSource(sound_path.as_uri())
             self.start_sound.setVolume(0.5)
+                """TODO: Add docstring."""
         else:
             print("[Alerte] Fichier 'assets/start_sound.wav' non trouvé.")
 
@@ -87,6 +92,7 @@ class LaboratoireIntrospection(QMainWindow):
         self.splash.resize(500, 500)
         self.splash.move(self.geometry().center() - self.splash.rect().center())
         self.splash.finished.connect(self.on_splash_finished)
+            """TODO: Add docstring."""
         self.splash.show()
         self.start_sound.play()
         self.splash.start()
@@ -95,6 +101,7 @@ class LaboratoireIntrospection(QMainWindow):
         self.central_widget.show()
         self.anim_main_ui_fade_in = QPropertyAnimation(self.opacity_effect, b"opacity", self)
         self.anim_main_ui_fade_in.setDuration(800)
+            """TODO: Add docstring."""
         self.anim_main_ui_fade_in.setStartValue(0.0)
         self.anim_main_ui_fade_in.setEndValue(1.0)
         self.anim_main_ui_fade_in.start()
@@ -105,6 +112,7 @@ class LaboratoireIntrospection(QMainWindow):
         QApplication.processEvents()
         try:
             self.fichiers_du_projet = analyseur_code.scanner_projet(self.chemin_projet)
+                """TODO: Add docstring."""
             self.modele_systeme_fichiers.setRootPath(self.chemin_projet)
             self.vue_projet.setRootIndex(self.modele_systeme_fichiers.index(self.chemin_projet))
             self.details_viewer.setText(f"{len(self.fichiers_du_projet)} fichiers trouvés. Prêt pour l'analyse.")
@@ -142,6 +150,7 @@ class LaboratoireIntrospection(QMainWindow):
         <hr>
         <b>Fonctions Définies :</b>
         <p>{', '.join(f"<code>{f}()</code>" for f in resultats_analyse['fonctions_definies']) if resultats_analyse['fonctions_definies'] else 'Aucune'}</p>
+            """TODO: Add docstring."""
         <hr>
         <b>Dépendances Externes :</b>
         <p>{', '.join(f"<code>{i}</code>" for i in resultats_analyse['dependances_externes']) if resultats_analyse['dependances_externes'] else 'Aucune'}</p>

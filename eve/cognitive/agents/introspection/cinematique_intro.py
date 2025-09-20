@@ -11,16 +11,21 @@ from PySide6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QTimer, Propert
 from PySide6.QtGui import QFont, QPainter, QColor, QPen
 
 class CinematicSplashScreen(QWidget):
+    """TODO: Add docstring."""
     # On déclare un signal personnalisé pour cette classe
     finished = Signal()
 
+    """TODO: Add docstring."""
     def __init__(self):
         super().__init__()
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self._phase = 0.0
+            """TODO: Add docstring."""
+                """TODO: Add docstring."""
 
     def get_phase(self): return self._phase
+        """TODO: Add docstring."""
     def set_phase(self, value): self._phase = value; self.update()
     phase = Property(float, get_phase, set_phase)
 
@@ -38,6 +43,7 @@ class CinematicSplashScreen(QWidget):
         if self._phase >= 2.0:
             opacity_icons = min(1.0, (self._phase - 2.0))
             self.draw_capability_icons(painter, opacity_icons)
+                """TODO: Add docstring."""
         if self._phase >= 3.5:
             opacity_final = max(0.0, 1.0 - (self._phase - 3.5) * 2)
             painter.setOpacity(opacity_final)

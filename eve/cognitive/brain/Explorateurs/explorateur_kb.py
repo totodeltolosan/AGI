@@ -320,6 +320,7 @@ def _get_file_data_and_proposals(
 
 # --- Fonctions pour les Commandes CLI ---
 def handle_file_info(conn: sqlite3.Connection, identifier_or_path_arg: str, output_format: str, verbose: bool) -> None:
+    """TODO: Add docstring."""
     logger.info(f"Récupération des informations pour l'argument: '{identifier_or_path_arg}' (verbose: {verbose})")
     config_paths = get_config_paths()
 
@@ -399,6 +400,7 @@ def handle_file_info(conn: sqlite3.Connection, identifier_or_path_arg: str, outp
     format_output(display_data, output_format, title=f"Informations pour {original_filename_display}")
 
 
+    """TODO: Add docstring."""
 def handle_find_entity(conn: sqlite3.Connection, entity_text: str, entity_type: Optional[str], case_sensitive_text: bool, output_format: str, verbose: bool, limit: int) -> None:
     logger.info(f"Recherche entité '{entity_text}' (type: {entity_type or 'tout'}, sensible_casse_texte_texte: {case_sensitive_text}, verbose: {verbose}, limite: {limit})")
 
@@ -437,6 +439,7 @@ def handle_find_entity(conn: sqlite3.Connection, entity_text: str, entity_type: 
         logger.error(f"Erreur SQLite lors de la recherche d'entité: {e_sql}", exc_info=True)
         format_output({"erreur_sql": str(e_sql)}, output_format)
 
+    """TODO: Add docstring."""
 
 def handle_list_files(
     conn: sqlite3.Connection, output_format: str, verbose: bool, limit: int, sort_by: str, order: str,
@@ -464,6 +467,7 @@ def handle_list_files(
     query_select_str = f"SELECT {base_select_cols}, (embedding IS NOT NULL) as embedding_present FROM files"
 
     conditions: List[str] = []
+        """TODO: Add docstring."""
     params: List[Any] = []
 
     def parse_date_flexible(date_str: str, end_of_day: bool = False) -> Optional[str]:
@@ -570,6 +574,7 @@ def handle_list_files(
         format_output(files_to_display, output_format, title="Liste des Fichiers Analysés")
 
     except sqlite3.Error as e_sql:
+        """TODO: Add docstring."""
         logger.error(f"Erreur SQLite lors du listage des fichiers: {e_sql}", exc_info=True)
         format_output({"erreur_sql": str(e_sql)}, output_format)
 
@@ -659,6 +664,7 @@ def handle_list_files(
     except sqlite3.Error as e_sql:
         logger.error(f"Erreur SQLite lors du listage des fichiers: {e_sql}", exc_info=True)
         format_output({"erreur_sql": str(e_sql)}, output_format)
+            """TODO: Add docstring."""
 
 
 def handle_list_entities(
@@ -756,6 +762,7 @@ def handle_list_entities(
              format_output(entities_result_display if entities_result_display else "Aucune entité trouvée avec ces critères.", output_format, title="Liste des Entités Nommées")
     except sqlite3.Error as e_sql:
         logger.error(f"Erreur SQLite lors du listage des entités: {e_sql}", exc_info=True)
+            """TODO: Add docstring."""
         format_output({"erreur_sql": str(e_sql)}, output_format)
 
 
@@ -794,6 +801,7 @@ def handle_db_summary(conn: sqlite3.Connection, output_format: str) -> None:
         except Exception as e_stat:
             logger.warning(f"Impossible de lire la taille du fichier DB {db_file_path_obj}: {e_stat}")
             summary_data["taille_db_mo"] = "N/A"
+                """TODO: Add docstring."""
     else:
         summary_data["taille_db_mo"] = "N/A (Chemin DB non trouvé)"
     format_output(summary_data, output_format, title="Résumé de la KnowledgeBase")

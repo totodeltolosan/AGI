@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/reporters/json_reporter.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Rapporteur JSON - Système d'Audit AGI
 Responsabilité unique : Génération de rapports JSON structurés pour traitement automatisé
 Respecte strictement la directive des 200 lignes
@@ -16,6 +25,7 @@ class JSONReporter:
     """Générateur de rapports JSON pour l'audit AGI"""
 
     def __init__(self, output_dir: Path):
+        """TODO: Add docstring."""
         self.output_dir = output_dir
         self.output_dir.mkdir(parents=True, exist_ok=True)
 

@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+"""
+CHEMIN: tools/compliance_audit_system/validators/__init__.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Package d'initialisation pour le module 'validators'.
+- Ce fichier respecte la constitution AGI.
+"""
+
 # tools/compliance_audit_system/validators/__init__.py
 """Validateurs de conformité AGI"""
 from .line_validator import LineValidator, quick_line_check

@@ -57,6 +57,7 @@ class Gene:
     interaction_partners: Set[str] = field(default_factory=set)
 
     def __post_init__(self):
+        """TODO: Add docstring."""
         if not self.methylation_pattern:
             self.methylation_pattern = [
                 random.choice([True, False]) for _ in range(len(self.sequence))
@@ -89,6 +90,7 @@ class Chromosome:
 class EpigeneticController:
     """Contrôleur épigénétique pour la régulation de l'expression génique"""
 
+    """TODO: Add docstring."""
     def __init__(self):
         self.methylation_enzymes = {"DNMT1": 1.0, "DNMT3A": 0.8, "DNMT3B": 0.7}
         self.histone_modifications = defaultdict(float)
@@ -143,6 +145,7 @@ class EpigeneticController:
 
 class EvolutionaryConstraints:
     """Système de contraintes évolutives et canalisations"""
+        """TODO: Add docstring."""
 
     def __init__(self):
         self.developmental_constraints = {}
@@ -204,6 +207,7 @@ class EvolutionaryConstraints:
 
 
 class NetworkEvolution:
+    """TODO: Add docstring."""
     """Système d'évolution en réseau des interactions génétiques"""
 
     def __init__(self):

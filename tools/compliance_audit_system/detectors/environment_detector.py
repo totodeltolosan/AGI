@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/detectors/environment_detector.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Détecteur d'Environnement - Système d'Audit AGI
 Responsabilité unique : Validation de l'environnement d'exécution
 Respecte strictement la directive des 200 lignes
@@ -16,6 +25,7 @@ class EnvironmentDetector:
     """Détecteur et validateur d'environnement pour audit AGI"""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.min_python_version = (3, 7)
         self.required_modules = ["ast", "pathlib", "typing", "dataclasses"]
 

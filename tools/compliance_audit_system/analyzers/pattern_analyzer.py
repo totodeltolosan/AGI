@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/analyzers/pattern_analyzer.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Analyseur de Patterns - Système d'Audit AGI
 Responsabilité unique : Détection des patterns architecturaux et anti-patterns
 Respecte strictement la directive des 200 lignes
@@ -49,6 +58,7 @@ class PatternAnalyzer:
     """Analyseur de patterns architecturaux pour conformité AGI"""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.good_patterns = {
             # Patterns de responsabilité unique
             "single_responsibility": [

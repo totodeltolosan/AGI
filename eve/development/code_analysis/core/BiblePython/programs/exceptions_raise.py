@@ -1,6 +1,7 @@
 class ShortInputException(Exception):
     '''A user-defined exception class.'''
     def __init__(self, length, atleast):
+        """TODO: Add docstring."""
         Exception.__init__(self)
         self.length = length
         self.atleast = atleast

@@ -191,6 +191,7 @@ class EntiteGraphique(QGraphicsEllipseItem):
     """Item graphique optimisé représentant une entité cosmique."""
 
     def __init__(
+        """TODO: Add docstring."""
         self, entite_id: str, parent_fenetre: QObject, categorie: str = "inconnu"
     ):
         super().__init__()
@@ -226,6 +227,7 @@ class VueInteractive(QGraphicsView):
 
     clicVide = pyqtSignal()
 
+    """TODO: Add docstring."""
     def __init__(
         self,
         scene: QGraphicsScene,
@@ -280,6 +282,7 @@ class VueInteractive(QGraphicsView):
 
 class GestionnaireRendu:
     """Gestionnaire centralisé du rendu des entités avec optimisations."""
+        """TODO: Add docstring."""
 
     def __init__(self):
         self.cache_couleurs: Dict[str, QColor] = {}
@@ -405,6 +408,7 @@ class ValidateurDonnees:
 
 
 class GestionnaireScene:
+    """TODO: Add docstring."""
     """Gestionnaire optimisé de la scène graphique avec cache et performances."""
 
     def __init__(self, scene: QGraphicsScene, vue: VueInteractive):
@@ -635,6 +639,7 @@ class GestionnaireScene:
 # ========================================================================
 
 
+    """TODO: Add docstring."""
 class GestionnaireAffichage:
     """Gestionnaire de l'affichage des statistiques et informations."""
 
@@ -778,6 +783,7 @@ class FenetrePrincipale(QMainWindow):
 
     # Signaux
     pause_demandee = pyqtSignal()
+        """TODO: Add docstring."""
     reprise_demandee = pyqtSignal()
     vitesse_changee = pyqtSignal(str)
     sauvegarde_demandee = pyqtSignal()

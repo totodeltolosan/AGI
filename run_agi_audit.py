@@ -1,167 +1,116 @@
 #!/usr/bin/env python3
 """
-Script Principal d'Audit AGI - Version Constitutionnelle Réelle
-================================================================
+Script Principal d'Audit AGI - v2.1 (Architecture Conforme et Corrigée)
+=======================================================================
 
 CHEMIN: run_agi_audit.py
 
 Rôle Fondamental (Conforme iaGOD.json) :
-- Interface utilisateur pour audit constitutionnel réel
-- Délégation vers système modulaire conforme
-- Intégration vraie avec iaGOD.json (pas de mensonges)
-- Respecter directive < 200 lignes
-
-Conforme aux directives constitutionnelles:
-- META-001: Directive Suprême de Finalité  
-- META-003: Axiome de la Vérité Constitutionnelle
-- COMP-CST-001: Constitution Exécutable iaGOD.json
+- Interface utilisateur CLI pour l'audit constitutionnel.
+- Délégation à l'architecture modulaire et conforme du package `compliance`.
+- Orchestrer le chargement, l'audit et le reporting.
+- Respecter la directive < 200 lignes.
 """
 
 import sys
 import argparse
 import logging
 from pathlib import Path
-from typing import Optional
 
-# Import du système d'audit constitutionnel réel
-from compliance import (
-    ConstitutionLoader,
-    BasicAuditor, 
-    ConstitutionalReporter
-)
+# Import direct des modules spécifiques pour éviter les dépendances circulaires
+from compliance.loader import ConstitutionLoader
+from compliance.orchestrator import AuditOrchestrator
+from compliance.reporter import AuditReporter
+
 
 def setup_logging(verbose: bool = False):
-    """Configure le système de logging"""
+    """Configure le système de logging."""
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
-        format='%(asctime)s | %(levelname)s | %(name)s | %(message)s',
-        datefmt='%H:%M:%S'
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+        datefmt="%H:%M:%S",
     )
+
 
 def main():
-    """Point d'entrée principal conforme iaGOD.json"""
+    """Point d'entrée principal orchestrant l'audit."""
     parser = argparse.ArgumentParser(
-        description="🏛️ Audit AGI - Système Constitutionnel Réel (iaGOD.json)",
+        description="🏛️ Audit AGI - Système Constitutionnel v2.1 (Conforme)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-EXEMPLES D'UTILISATION:
-
-  Audit constitutionnel complet:
-    python run_agi_audit.py --full --target ./tools/project_initializer/
-
-  Audit rapide (syntaxe + 200 lignes):
-    python run_agi_audit.py --target ./compliance/
-
-  Avec rapport détaillé:
-    python run_agi_audit.py --target . --output ./audit_report.txt --verbose
-
-ARCHITECTURE RÉELLE:
-  Ce script utilise le système modulaire compliance/ qui implémente
-  vraiment les directives constitutionnelles iaGOD.json.
-  
-  Modules: ConstitutionLoader, BasicAuditor, ConstitutionalReporter
-  Constitution: iaGOD.json (source de vérité unique)
-        """
     )
-    
+
     parser.add_argument(
-        "--target", 
-        type=str, 
-        default=".",
-        help="Répertoire à auditer (défaut: répertoire courant)"
-    )
-    
-    parser.add_argument(
-        "--output", 
+        "--target",
         type=str,
-        help="Fichier de sortie pour rapport détaillé"
+        default=".",
+        help="Répertoire à auditer (défaut: répertoire courant)",
     )
-    
     parser.add_argument(
-        "--full", 
-        action="store_true",
-        help="Audit constitutionnel complet (recommandé)"
+        "--output", type=str, help="Fichier de sortie pour le rapport détaillé"
     )
-    
     parser.add_argument(
-        "--verbose", "-v", 
+        "--verbose",
+        "-v",
         action="store_true",
-        help="Mode verbeux avec détails d'exécution"
+        help="Mode verbeux avec détails d'exécution",
     )
-    
+
     args = parser.parse_args()
-    
-    # Configuration
+
     setup_logging(args.verbose)
     logger = logging.getLogger(__name__)
-    
+
     try:
-        logger.info("🏛️ Démarrage audit constitutionnel AGI")
-        
-        # 1. Charger la constitution iaGOD.json
-        logger.info("📜 Chargement constitution iaGOD.json...")
-        constitution_loader = ConstitutionLoader()
-        
-        if not constitution_loader.load_constitution():
-            logger.error("❌ Échec chargement constitution iaGOD.json")
+        # 1. Charger la constitution
+        logger.info("📜 Chargement de la constitution iaGOD.json...")
+        loader = ConstitutionLoader()
+        if not loader.load():
+            logger.error("❌ Échec critique : impossible de charger la constitution.")
             return 1
-        
-        logger.info(f"✅ Constitution chargée: {len(constitution_loader.get_all_laws())} lois")
-        
-        # 2. Initialiser l'auditeur
-        logger.info("🔍 Initialisation auditeur constitutionnel...")
-        auditor = BasicAuditor(constitution_loader)
-        
+
+        # 2. Initialiser l'orchestrateur avec les lois chargées
+        logger.info("🔍 Initialisation de l'orchestrateur d'audit...")
+        orchestrator = AuditOrchestrator(constitution=loader.get_all_laws())
+
         # 3. Exécuter l'audit
         target_path = Path(args.target)
-        if not target_path.exists():
-            logger.error(f"❌ Répertoire cible inexistant: {target_path}")
+        if not target_path.exists() or not target_path.is_dir():
+            logger.error(f"❌ Répertoire cible invalide : {target_path}")
             return 1
-        
-        logger.info(f"🚀 Audit en cours: {target_path}")
-        violations = auditor.audit_directory(target_path)
-        
-        # 4. Générer les rapports
-        reporter = ConstitutionalReporter()
-        
-        # Rapport console
-        console_report = reporter.generate_console_report(violations)
+
+        audit_context = orchestrator.run_audit(target_path)
+
+        # 4. Générer et afficher les rapports
+        reporter = AuditReporter()
+        console_report = reporter.generate_console_report(audit_context)
         print(console_report)
-        
-        # Rapport fichier si demandé
+
         if args.output:
-            output_path = Path(args.output)
-            reporter.save_detailed_report(violations, output_path)
-            logger.info(f"📄 Rapport sauvegardé: {output_path}")
-        
-        # Code de sortie selon résultats
-        if not violations:
-            logger.info("✅ Audit réussi: Aucune violation constitutionnelle")
-            return 0
-        else:
-            critical_violations = len([v for v in violations if v.severity == "CRITICAL"])
-            if critical_violations > 0:
-                logger.error(f"❌ Audit échoué: {critical_violations} violations critiques")
-                return 1
-            else:
-                logger.warning(f"⚠️ Audit avec avertissements: {len(violations)} violations mineures")
-                return 0
-                
+            reporter.save_report_to_file(audit_context, Path(args.output))
+
+        # 5. Déterminer le code de sortie en fonction des violations
+        if not audit_context.violations:
+            return 0  # Succès
+
+        if any(v.severity == "CRITICAL" for v in audit_context.violations):
+            return 1  # Échec critique
+
+        return 0  # Succès avec avertissements
+
     except Exception as e:
-        logger.error(f"💥 Erreur fatale audit: {e}")
+        logger.error(f"💥 Erreur fatale inattendue durant l'audit : {e}")
         if args.verbose:
             import traceback
+
             traceback.print_exc()
         return 2
+
 
 if __name__ == "__main__":
     try:
         exit_code = main()
         sys.exit(exit_code)
     except KeyboardInterrupt:
-        print("\n🛑 Audit interrompu par l'utilisateur")
+        print("\n🛑 Audit interrompu par l'utilisateur.")
         sys.exit(130)
-    except Exception as e:
-        print(f"💥 Erreur fatale: {e}")
-        sys.exit(255)

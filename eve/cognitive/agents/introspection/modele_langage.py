@@ -19,6 +19,7 @@ class ModeleAnalyseCode:
     _instance = None
 
     def __new__(cls):
+        """TODO: Add docstring."""
         if cls._instance is None:
             print("[NLP] Création d'une nouvelle instance du modèle de langage.")
             cls._instance = super(ModeleAnalyseCode, cls).__new__(cls)

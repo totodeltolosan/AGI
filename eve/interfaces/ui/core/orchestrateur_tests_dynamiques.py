@@ -8,9 +8,11 @@ from pathlib import Path
 
 
 def _get_project_root():
+    """TODO: Add docstring."""
     return Path(os.getcwd())
 
 
+    """TODO: Add docstring."""
 def executer_tests_unitaires():
     root = _get_project_root()
     tests_dir = root / "tests"
@@ -57,6 +59,7 @@ def executer_tests_unitaires():
     results["temps_execution"] = time.time() - start_time
     return results
 
+    """TODO: Add docstring."""
 
 def executer_tests_integration():
     root = _get_project_root()
@@ -76,6 +79,7 @@ def executer_tests_integration():
     else:
         results["erreurs_integration"].append("lanceur.py non trouvé")
     return results
+        """TODO: Add docstring."""
 
 
 def orchestrer_scenario_minetest():
@@ -109,6 +113,7 @@ def orchestrer_scenario_minetest():
     results["actions_loggees"] = 50  # Simulate some actions
     results["etat_final_valide"] = True
     results["duree_scenario"] = simulated_duration
+        """TODO: Add docstring."""
     return results
 
 
@@ -128,6 +133,7 @@ def collecter_metriques_performance():
     logs_dir = root / "logs"
     if logs_dir.exists():
         total_size = sum(f.stat().st_size for f in logs_dir.rglob("*") if f.is_file())
+            """TODO: Add docstring."""
         results["taille_logs_generees"] = total_size
     return results
 

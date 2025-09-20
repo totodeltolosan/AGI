@@ -13,6 +13,7 @@ class Animal(EntiteVivante):
     """Implémentation de l'archétype Animal, piloté par un AdvancedGenome."""
 
     def __init__(self, x, y, genome: AdvancedGenome = None):
+        """TODO: Add docstring."""
         super().__init__(x, y)
         self.energie = CONFIG["organisme"]["energie_initiale"]
         self.en_gestation = 0

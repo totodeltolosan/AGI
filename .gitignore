@@ -81,3 +81,4 @@ exports/
 !AGI.md
 !AGIFUTUR.md
 !AGIHELP.md
+*.sqlite

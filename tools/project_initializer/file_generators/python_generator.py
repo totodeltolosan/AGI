@@ -43,6 +43,7 @@ class PythonGenerator:
     """
 
     def __init__(self, logger):
+        """TODO: Add docstring."""
         self.logger = logger
         self.templates = PythonTemplates()
         self.generated_files: Set[str] = set()

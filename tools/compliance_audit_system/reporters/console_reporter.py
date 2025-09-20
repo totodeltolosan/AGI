@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/reporters/console_reporter.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Rapporteur Console - Système d'Audit AGI
 Responsabilité unique : Génération de rapports console formatés et lisibles
 Respecte strictement la directive des 200 lignes
@@ -14,6 +23,7 @@ class ConsoleReporter:
     """Générateur de rapports console pour l'audit AGI"""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.colors = {
             "RED": "\033[0;31m",
             "GREEN": "\033[0;32m",

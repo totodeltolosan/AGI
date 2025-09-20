@@ -252,6 +252,7 @@ wikipedia.set_lang("fr")
 # --- Fin Configuration ---
 
 def sanitize_filename(title: str, max_len: int = 100) -> str:
+    """TODO: Add docstring."""
     title = str(title).strip()
     title = re.sub(r'[\n\r]+', ' ', title)
     title = re.sub(r'[\\/*?:"<>|]', "", title)
@@ -262,11 +263,13 @@ def sanitize_filename(title: str, max_len: int = 100) -> str:
     if not title: title = "fichier_sans_titre"
     return title[:max_len]
 
+    """TODO: Add docstring."""
 def get_target_dir_for_source(source_key: str) -> Path:
     suffix = SOURCES_CONFIG.get(source_key, {}).get("target_dir_suffix", "default_imports")
     return CONNAISSANCE_DIR_BASE / suffix
 
 MAX_FETCH_ATTEMPTS_PER_SLOT = 5 # Nombre de tentatives pour remplir un "slot" d'article
+    """TODO: Add docstring."""
 
 def fetch_wikipedia_articles(app_instance, query: str, num_to_fetch: int, target_dir: Path):
     articles_downloaded_this_run = 0
@@ -345,6 +348,7 @@ def fetch_wikipedia_articles(app_instance, query: str, num_to_fetch: int, target
 
         if not article_successfully_fetched_for_slot:
              app_instance.update_status(f"Wiki: Échec pour obtenir l'article {i+1} après {MAX_FETCH_ATTEMPTS_PER_SLOT} tentatives.", "warning")
+                 """TODO: Add docstring."""
     return articles_downloaded_this_run
 
 def fetch_arxiv_abstracts(app_instance, query: str, num_to_fetch: int, target_dir: Path):
@@ -428,6 +432,7 @@ def fetch_arxiv_abstracts(app_instance, query: str, num_to_fetch: int, target_di
 
     except Exception as e_search_init_arxiv:
         app_instance.update_status(f"Erreur init recherche arXiv: {str(e_search_init_arxiv)[:30]}", "error")
+            """TODO: Add docstring."""
         print(f"Erreur initialisation recherche arXiv pour '{search_query_arxiv}': {e_search_init_arxiv}")
     return articles_downloaded_this_run
 
@@ -587,6 +592,7 @@ def fetch_gutenberg_books(app_instance, query: str, num_to_fetch: int, target_di
             if is_specific_id_mode and book_id_specific: status_msg_fail += f" (ID: {book_id_specific})"
             app_instance.update_status(status_msg_fail, "warning")
             if is_specific_id_mode: # Si l'ID spécifique a échoué, on n'essaie pas plus pour Gutenberg
+                """TODO: Add docstring."""
                 break
 
     return articles_downloaded_this_run
@@ -632,6 +638,7 @@ def fetch_and_save_thread_target_main(app_instance, source_key: str, query: str,
         final_status_msg = f"{source_name_display}: Échec. Aucun élément récupéré {query_display}."
         final_box_msg = f"Aucun élément de {source_name_display} n'a pu être téléchargé {query_display}."
         messagebox.showerror("Échec", final_box_msg); final_message_type = "error"
+            """TODO: Add docstring."""
 
     app_instance.update_status(final_status_msg, final_message_type)
     app_instance.enable_button()
@@ -652,6 +659,7 @@ class WikiInjectorApp:
             # Test simple pour voir si la police souhaitée est disponible avec Tkinter
             tkfont.Font(family=FONT_FAMILY_PRIMARY_NAME_WISHED, size=10)
             print(f"INFO: Police primaire '{FONT_FAMILY_PRIMARY_NAME_WISHED}' trouvée et sera utilisée.")
+                """TODO: Add docstring."""
         except tk.TclError:
             print(f"AVERTISSEMENT: Police primaire '{FONT_FAMILY_PRIMARY_NAME_WISHED}' non trouvée. Utilisation de la police de fallback '{FONT_FAMILY_FALLBACK_NAME}'.")
             actual_font_family_to_use = FONT_FAMILY_FALLBACK_NAME
@@ -674,6 +682,7 @@ class WikiInjectorApp:
         FONT_TITLE = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_TITLE_DEF))
         FONT_SUBTITLE = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_SUBTITLE_DEF))
         FONT_BODY_BOLD = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_BODY_BOLD_DEF))
+            """TODO: Add docstring."""
         FONT_BODY_NORMAL = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_BODY_NORMAL_DEF))
         FONT_BUTTON = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_BUTTON_DEF))
         FONT_STATUS_MESSAGE = tkfont.Font(family=actual_font_family_to_use, **get_font_creation_options(FONT_STATUS_MESSAGE_DEF))
@@ -921,6 +930,7 @@ class WikiInjectorApp:
                 self.category_query_label.config(text=source_config["query_label_category"]) # "Catégorie arXiv :"
                 self.query_entry.pack_forget() # Cacher le champ texte
 
+    """TODO: Add docstring."""
         elif source_key == "gutenberg":
             self.category_query_label.config(text=source_config["query_label_default"])
             self.query_entry.pack(fill=tk.X, expand=True)
@@ -931,6 +941,7 @@ class WikiInjectorApp:
     def update_max_progress(self):
         # ... (inchangé, c'est bien)
         try:
+            """TODO: Add docstring."""
             num_articles = self.num_articles_var.get()
             if num_articles <= 0: num_articles = 1
         except tk.TclError:
@@ -983,9 +994,11 @@ class WikiInjectorApp:
 
         query_display_for_status = query_to_use[:25]
         if source_key == "arxiv" and self.category_var.get() != ARXIV_SEARCH_TYPE_KEYWORD and self.category_var.get():
+            """TODO: Add docstring."""
             query_display_for_status = self.category_var.get()[:25] # Afficher le nom de la catégorie
         elif not query_to_use:
             query_display_for_status = "(aléatoire)"
+                """TODO: Add docstring."""
 
         self.update_status(f"Démarrage ({source_config['display_name']}): '{query_display_for_status}...' ({num_articles})", "info")
 
@@ -997,6 +1010,7 @@ class WikiInjectorApp:
         self.root.after(0, lambda: self.progress_var.set(value))
 
     def update_status(self, text, level="info"):
+        """TODO: Add docstring."""
         # ... (inchangé, c'est bien)
         color = COLOR_TEXT
         if level == "success": color = "#27AE60"

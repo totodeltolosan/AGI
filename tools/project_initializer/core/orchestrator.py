@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/project_initializer/core/orchestrator.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Orchestrateur Principal du Générateur AGI
 Coordonne la création complète du squelette de projet AGI
 Conforme à AGI.md - Limite stricte: <200 lignes

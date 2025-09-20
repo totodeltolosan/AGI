@@ -5,6 +5,7 @@ import time
 import sys
 
 def monitor_eve_status(task_id):
+    """TODO: Add docstring."""
     print(f"🎯 Monitoring EVE GENESIS Task: {task_id}")
     print("=" * 60)
 

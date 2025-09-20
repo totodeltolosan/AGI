@@ -31,6 +31,7 @@ class StructureHelpers:
     """Fonctions utilitaires pour génération d'arborescence."""
 
     def __init__(self, logger=None):
+        """TODO: Add docstring."""
         self.logger = logger
 
     def filter_domains(

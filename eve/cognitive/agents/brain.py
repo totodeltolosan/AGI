@@ -9,6 +9,8 @@ import statistics
 import json
 
 class CerveauAlma:
+    """TODO: Add docstring."""
+        """TODO: Add docstring."""
     def __init__(self):
         self.pipeline_ia = None
         self.label_encoder = None
@@ -19,6 +21,7 @@ class CerveauAlma:
         self.memoire_cpu = collections.deque(maxlen=self.TAILLE_MEMOIRE)
         self.baseline = {"calculee": False, "cpu": {}}
         self._charger_baseline()
+            """TODO: Add docstring."""
 
     def charger_modele_ia(self):
         model_file = 'alma_model.joblib'
@@ -48,6 +51,7 @@ class CerveauAlma:
         for col in colonnes_attendues:
             donnees_finales[col] = donnees_aplati.get(col, 'INCONNU')
 
+    """TODO: Add docstring."""
         return pd.DataFrame([donnees_finales])
 
     def analyser(self, donnees_completes: dict, presence_on: bool = True):
@@ -85,12 +89,14 @@ class CerveauAlma:
                     diagnostics.append(f"[AVERTISSEMENT] Erreur lors de l'inférence IA : {e}")
 
         if not diagnostics:
+            """TODO: Add docstring."""
             return ["ROUTINE : État Nominal"]
         return diagnostics
 
     def _calculer_et_sauvegarder_baseline(self):
         self.baseline["cpu"]["moyenne"] = statistics.mean(self.memoire_cpu)
         self.baseline["cpu"]["ecart_type"] = statistics.stdev(self.memoire_cpu) if len(self.memoire_cpu) > 1 else 0
+            """TODO: Add docstring."""
         self.baseline["calculee"] = True
         print("[Brain] Ligne de base PC calculée.")
         self._sauvegarder_baseline()
@@ -98,6 +104,7 @@ class CerveauAlma:
     def _sauvegarder_baseline(self):
         try:
             with open(self.FICHIER_BASELINE, 'w', encoding='utf-8') as f:
+                """TODO: Add docstring."""
                 json.dump(self.baseline, f, indent=4)
             print(f"[Brain] Ligne de base sauvegardée dans {self.FICHIER_BASELINE}.")
         except Exception as e:

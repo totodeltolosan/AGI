@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/utils/logger_factory.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Fabrique de Loggers - Système d'Audit AGI
 Responsabilité unique : Création et configuration des loggers pour traçabilité
 Respecte strictement la directive des 200 lignes
@@ -16,6 +25,7 @@ class AGILogger:
     """Logger spécialisé pour le système d'audit AGI"""
 
     def __init__(
+        """TODO: Add docstring."""
         self,
         name: str,
         level: int = logging.INFO,
@@ -101,6 +111,7 @@ class AGILogger:
 class ColoredFormatter(logging.Formatter):
     """Formateur de logs coloré pour terminal"""
 
+    """TODO: Add docstring."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.colors = {
@@ -111,6 +122,7 @@ class ColoredFormatter(logging.Formatter):
             "CRITICAL": "\033[35m",  # Magenta
             "RESET": "\033[0m",  # Reset
         }
+            """TODO: Add docstring."""
 
     def format(self, record):
         # Coloration du niveau de log

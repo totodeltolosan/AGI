@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/validators/syntax_validator.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Validateur de Syntaxe - Système d'Audit AGI
 Responsabilité unique : Validation de la syntaxe Python et qualité du code
 Respecte strictement la directive des 200 lignes
@@ -46,6 +55,7 @@ class SyntaxValidator:
     """Validateur de syntaxe Python et qualité de code"""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.python_version = sys.version_info[:2]
 
     def validate_file(self, file_path: Path) -> Dict:
@@ -282,6 +292,7 @@ class SyntaxValidator:
         """Calcule le niveau maximum d'imbrication"""
         max_depth = 0
 
+    """TODO: Add docstring."""
         def calculate_depth(node, current_depth=0):
             nonlocal max_depth
             max_depth = max(max_depth, current_depth)

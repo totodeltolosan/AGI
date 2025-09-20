@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: integration/bridges/eve_agi_active.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de support.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 EVE-AGI Bridge Actif - Post-Migration
 ===================================
 

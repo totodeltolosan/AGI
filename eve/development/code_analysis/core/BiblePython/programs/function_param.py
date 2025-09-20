@@ -1,4 +1,5 @@
 def print_max(a, b):
+    """TODO: Add docstring."""
     if a > b:
         print(a, 'is maximum')
     elif a == b:

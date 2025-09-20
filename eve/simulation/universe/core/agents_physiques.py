@@ -174,6 +174,7 @@ class CalculateurForcesGravitationnelles:
     """Calculateur spécialisé pour les forces gravitationnelles."""
 
     def __init__(self, config: ConfigurationPhysique):
+        """TODO: Add docstring."""
         self.config = config
         self.metriques = MetriquesPhysiques()
 
@@ -811,6 +812,7 @@ class Alchimiste:
 class GestionnaireSauvegarde:
     """Gestionnaire spécialisé pour les opérations de sauvegarde."""
 
+    """TODO: Add docstring."""
     def __init__(self, repertoire: Union[str, Path] = "sauvegardes"):
         self.repertoire = Path(repertoire)
         self.repertoire.mkdir(exist_ok=True)

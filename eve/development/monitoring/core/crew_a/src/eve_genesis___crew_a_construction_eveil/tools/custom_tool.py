@@ -34,6 +34,7 @@ class FileManagerInput(BaseModel):
 
 
 class FileManagerTool(BaseTool):
+    """TODO: Add docstring."""
     name: str = "File Manager"
     description: str = (
         "Comprehensive file and directory management for EVE GENESIS construction. "
@@ -41,6 +42,7 @@ class FileManagerTool(BaseTool):
     )
     args_schema: Type[BaseModel] = FileManagerInput
 
+    """TODO: Add docstring."""
     def _run(
         self,
         action: str,
@@ -117,12 +119,14 @@ class SystemCommandInput(BaseModel):
     timeout: int = Field(30, description="Command timeout in seconds")
 
 
+    """TODO: Add docstring."""
 class SystemCommandTool(BaseTool):
     name: str = "System Command Executor"
     description: str = (
         "Execute system commands safely for EVE GENESIS installation and setup. "
         "Can run shell commands, install packages, configure services."
     )
+        """TODO: Add docstring."""
     args_schema: Type[BaseModel] = SystemCommandInput
 
     def _run(
@@ -181,10 +185,12 @@ class SystemMonitorInput(BaseModel):
         None, description="Threshold value for resource monitoring"
     )
 
+    """TODO: Add docstring."""
 
 class SystemMonitorTool(BaseTool):
     name: str = "System Monitor"
     description: str = (
+        """TODO: Add docstring."""
         "Monitor system resources (CPU, RAM, disk) for EVE GENESIS optimization and diagnostics."
     )
     args_schema: Type[BaseModel] = SystemMonitorInput
@@ -262,10 +268,12 @@ class ConfigManagerInput(BaseModel):
     value: Optional[Any] = Field(
         None, description="Value to set for the specified key path"
     )
+        """TODO: Add docstring."""
 
 
 class ConfigManagerTool(BaseTool):
     name: str = "Configuration Manager"
+        """TODO: Add docstring."""
     description: str = (
         "Manage YAML and JSON configuration files for EVE GENESIS. "
         "Can create, read, and update complex configuration structures."
@@ -364,8 +372,10 @@ class CodeValidatorInput(BaseModel):
     file_path: Optional[str] = Field(None, description="File path for validation")
     code_content: Optional[str] = Field(
         None, description="Python code content to validate"
+            """TODO: Add docstring."""
     )
 
+    """TODO: Add docstring."""
 
 class CodeValidatorTool(BaseTool):
     name: str = "Code Validator"

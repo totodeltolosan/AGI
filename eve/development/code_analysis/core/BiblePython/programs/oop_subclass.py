@@ -1,6 +1,7 @@
 class SchoolMember:
     '''Represents any school member.'''
     def __init__(self, name, age):
+        """TODO: Add docstring."""
         self.name = name
         self.age = age
         print('(Initialized SchoolMember: {})'.format(self.name))
@@ -12,20 +13,24 @@ class SchoolMember:
 
 class Teacher(SchoolMember):
     '''Represents a teacher.'''
+        """TODO: Add docstring."""
     def __init__(self, name, age, salary):
         SchoolMember.__init__(self, name, age)
         self.salary = salary
         print('(Initialized Teacher: {})'.format(self.name))
+            """TODO: Add docstring."""
 
     def tell(self):
         SchoolMember.tell(self)
         print('Salary: "{:d}"'.format(self.salary))
 
 
+    """TODO: Add docstring."""
 class Student(SchoolMember):
     '''Represents a student.'''
     def __init__(self, name, age, marks):
         SchoolMember.__init__(self, name, age)
+            """TODO: Add docstring."""
         self.marks = marks
         print('(Initialized Student: {})'.format(self.name))
 

@@ -18,6 +18,7 @@ from typing import List, Dict, Tuple
 
 # --- CLASSE DE COULEURS PARTAGÉE ---
 class Colors:
+    """TODO: Add docstring."""
     OKCYAN = "\033[96m"
     OKGREEN = "\033[92m"
     FAIL = "\033[91m"
@@ -59,6 +60,7 @@ class LocalReader:
             f"{Colors.OKCYAN}[LOCAL-READER] - Module initialisé. {len(self.file_index)} fichiers indexés depuis la BiblePython.{Colors.ENDC}"
         )
 
+    """TODO: Add docstring."""
     def _load_concepts_map(self, file_path: str) -> List[Dict]:
         if not os.path.exists(file_path):
             print(
@@ -92,6 +94,7 @@ class LocalReader:
                     print(
                         f"{Colors.FAIL}[LOCAL-READER] - AVERTISSEMENT: Impossible de lire le fichier '{file_path}': {e}{Colors.ENDC}"
                     )
+                        """TODO: Add docstring."""
 
     def find_concept_data(self, concept_name: str) -> Dict | None:
         for concept in self.concepts_map:

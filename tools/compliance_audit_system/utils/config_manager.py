@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 """
+CHEMIN: tools/compliance_audit_system/utils/config_manager.py
+
+Rôle Fondamental (Conforme iaGOD.json) :
+- Module de configuration statique.
+- Ce fichier respecte la constitution AGI.
+"""
+
+#!/usr/bin/env python3
+"""
 Gestionnaire de Configuration - Système d'Audit AGI
 Responsabilité unique : Gestion centralisée de la configuration d'audit
 Respecte strictement la directive des 200 lignes
@@ -57,6 +66,7 @@ class ConfigManager:
     """Gestionnaire centralisé de configuration AGI"""
 
     def __init__(self, config_file: Optional[Path] = None):
+        """TODO: Add docstring."""
         self.config_file = config_file
         self.config = self._load_default_config()
 

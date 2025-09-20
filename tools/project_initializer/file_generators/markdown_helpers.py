@@ -30,6 +30,7 @@ class MarkdownHelpers:
     """Fonctions utilitaires pour génération de templates Markdown."""
 
     def __init__(self, logger=None):
+        """TODO: Add docstring."""
         self.logger = logger
 
     def process_template(self, template: str, context: Dict[str, Any]) -> str:

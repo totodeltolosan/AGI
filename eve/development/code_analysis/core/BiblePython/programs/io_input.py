@@ -1,7 +1,9 @@
 def reverse(text):
+    """TODO: Add docstring."""
     return text[::-1]
 
 
+    """TODO: Add docstring."""
 def is_palindrome(text):
     return text == reverse(text)
 

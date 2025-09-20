@@ -88,6 +88,7 @@ class GestionnaireConfiguration:
     """Gestionnaire centralisé de la configuration avec validation."""
 
     def __init__(self):
+        """TODO: Add docstring."""
         self.config_par_defaut = self._obtenir_config_defaut()
         self.config_actuelle: Optional[ConfigurationApplication] = None
 
@@ -196,6 +197,7 @@ class GestionnaireConfiguration:
 class DiagnosticSysteme:
     """Diagnostic système complet avec rapports détaillés."""
 
+    """TODO: Add docstring."""
     def __init__(self):
         self.derniere_verification: Optional[float] = None
         self.cache_dependances: Optional[Dict[str, bool]] = None
@@ -443,6 +445,7 @@ class GestionnaireLogging:
 
 class FactoryComposants:
     """Factory pour créer les composants de l'application de manière robuste."""
+        """TODO: Add docstring."""
 
     def __init__(self, config: ConfigurationApplication, logger: logging.Logger):
         self.config = config
@@ -563,6 +566,7 @@ class FactoryComposants:
 
 
 class GestionnaireTimers:
+    """TODO: Add docstring."""
     """Gestionnaire centralisé des timers avec configuration flexible."""
 
     def __init__(
@@ -622,6 +626,7 @@ class GestionnaireTimers:
 # ========================================================================
 
 
+    """TODO: Add docstring."""
 class Application(QObject):
     """Application principale avec architecture modulaire et monitoring avancé."""
 
