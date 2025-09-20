@@ -1,1 +1,325 @@
-[Le contenu du workflow maître que j'ai créé]
+name: 🎯 MASTER Constitutional Auto-Corrector
+
+on:
+  # NOUVEAU : Déclenchement sur les Pull Requests vers la branche main
+  pull_request:
+    branches:
+      - main
+
+  # Déclenchement manuel pour contrôler les corrections
+  workflow_dispatch:
+    inputs:
+      correction_mode:
+        description: 'Mode de correction'
+        required: true
+        default: 'critical_only'
+        type: choice
+        options:
+        - critical_only
+        - all_violations
+        - single_file
+        - analysis_only
+
+      target_file:
+        description: 'Fichier cible (si single_file mode)'
+        required: false
+        default: ''
+
+      max_corrections:
+        description: 'Nombre maximum de corrections par run'
+        required: true
+        default: '5'
+        # Le type doit être 'string' pour les inputs numériques dans les workflows manuels
+        type: string
+
+  # Déclenchement automatique quotidien en mode analyse
+  schedule:
+    - cron: '0 2 * * *'  # 2h00 chaque jour
+
+# Permissions étendues pour modifications de code
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  actions: read
+
+env:
+  CONSTITUTIONAL_THRESHOLD: 200
+  MAX_EXECUTION_TIME: 300  # 5 minutes par correction
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  master-analyzer:
+    name: 🧠 Master Constitutional Analyzer
+    runs-on: ubuntu-latest
+    outputs:
+      violations_matrix: ${{ steps.analysis.outputs.violations_matrix }}
+      total_violations: ${{ steps.analysis.outputs.total_violations }}
+      critical_violations: ${{ steps.analysis.outputs.critical_violations }}
+      correction_strategy: ${{ steps.analysis.outputs.correction_strategy }}
+
+    steps:
+    - name: 🔍 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for analysis
+
+    - name: 🐍 Setup Python Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: 📦 Install Analysis Dependencies
+      run: |
+        pip install --upgrade pip
+        pip install PyYAML requests click rich ast-unparse black isort
+        pip install github3.py gitpython
+
+    - name: 🧠 Advanced Constitutional Analysis
+      id: analysis
+      run: |
+        # Le long script Python de master_analyzer.py va ici
+        # (Je le copie depuis le document AGI9.md pour être sûr)
+        cat > master_analyzer.py << 'EOF'
+        #!/usr/bin/env python3
+        import os, json, ast, sys, subprocess
+        from pathlib import Path
+        from typing import Dict, List, Tuple
+        import requests
+
+        class MasterConstitutionalAnalyzer:
+            def __init__(self):
+                self.repo_owner = os.getenv("GITHUB_REPOSITORY_OWNER", "totodeltolosan")
+                self.repo_name = os.getenv("GITHUB_REPOSITORY", "totodeltolosan/AGI").split('/')[-1]
+                self.github_token = os.getenv('GITHUB_TOKEN')
+                self.constitutional_threshold = int(os.getenv('CONSTITUTIONAL_THRESHOLD', 200))
+                self.violations = []
+                self.correction_strategies = {}
+
+            def analyze_file_structure(self, filepath: str) -> Dict:
+                try:
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    tree = ast.parse(content)
+                    analysis = {
+                        'filepath': filepath,
+                        'lines': len(content.splitlines()),
+                        'excess': max(0, len(content.splitlines()) - self.constitutional_threshold),
+                        'functions': [], 'classes': [], 'imports': [], 'complexity_score': 0
+                    }
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.FunctionDef):
+                            func_end = getattr(node, 'end_lineno', node.lineno)
+                            analysis['functions'].append({'name': node.name, 'lines': func_end - node.lineno + 1})
+                        elif isinstance(node, ast.ClassDef):
+                            class_end = getattr(node, 'end_lineno', node.lineno)
+                            analysis['classes'].append({'name': node.name, 'lines': class_end - node.lineno + 1})
+                    analysis['complexity_score'] = len(analysis['functions']) + len(analysis['classes']) * 2
+                    return analysis
+                except Exception as e:
+                    print(f"⚠️ Erreur analyse {filepath}: {e}", file=sys.stderr)
+                    return None
+
+            def scan_project_violations(self) -> List[Dict]:
+                violations = []
+                for py_file in Path('.').rglob('*.py'):
+                    if any(part in str(py_file) for part in ['.git', '__pycache__', '.venv']):
+                        continue
+                    analysis = self.analyze_file_structure(str(py_file))
+                    if analysis and analysis['excess'] > 0:
+                        violations.append(analysis)
+                return violations
+
+            def run_master_analysis(self):
+                print("🎯 MASTER CONSTITUTIONAL ANALYZER")
+                project_violations = self.scan_project_violations()
+                critical_violations = [v for v in project_violations if v['excess'] > 100]
+
+                violations_matrix = []
+                for violation in sorted(critical_violations, key=lambda v: v['excess'], reverse=True)[:5]:
+                    violations_matrix.append({
+                        'file': violation['filepath'],
+                        'lines': violation['lines'],
+                        'excess': violation['excess'],
+                        'priority': 'critical'
+                    })
+
+                github_output = os.getenv('GITHUB_OUTPUT')
+                if github_output:
+                    with open(github_output, 'a') as f:
+                        f.write(f"violations_matrix={json.dumps(violations_matrix)}\n")
+                        f.write(f"total_violations={len(project_violations)}\n")
+                        f.write(f"critical_violations={len(critical_violations)}\n")
+                print("✅ Analyse maître terminée")
+
+        if __name__ == "__main__":
+            analyzer = MasterConstitutionalAnalyzer()
+            analyzer.run_master_analysis()
+        EOF
+        python master_analyzer.py
+
+  master-corrector:
+    name: 🔧 Master Constitutional Corrector
+    runs-on: ubuntu-latest
+    needs: master-analyzer
+    if: needs.master-analyzer.outputs.total_violations > 0 && needs.master-analyzer.outputs.total_violations != '0'
+    strategy:
+      matrix:
+        violation: ${{ fromJson(needs.master-analyzer.outputs.violations_matrix) }}
+      max-parallel: 3
+      fail-fast: false
+
+    steps:
+    - name: 🔍 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🐍 Setup Python Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install Correction Tools
+      run: |
+        pip install black isort ast-unparse rope
+
+    - name: 🔧 Constitutional Auto-Corrector
+      run: |
+        # Le long script Python de constitutional_corrector.py va ici
+        # (Je le copie depuis le document AGI9.md pour être sûr)
+        cat > constitutional_corrector.py << 'EOF'
+        #!/usr/bin/env python3
+        import os, ast, json, shutil, subprocess
+        from pathlib import Path
+        from typing import List, Dict
+
+        class ConstitutionalCorrector:
+            def __init__(self, target_file: str, violation_data: Dict):
+                self.target_file = target_file
+                self.violation_data = violation_data
+                self.constitutional_threshold = int(os.getenv('CONSTITUTIONAL_THRESHOLD', 200))
+                self.backup_dir = Path("constitutional_backups")
+                self.backup_dir.mkdir(exist_ok=True)
+
+            def create_backup(self):
+                if Path(self.target_file).exists():
+                    backup_path = self.backup_dir / f"{Path(self.target_file).name}.backup.{os.urandom(4).hex()}"
+                    shutil.copy2(self.target_file, backup_path)
+                    print(f"💾 Backup créé: {backup_path}")
+
+            def extract_functions_to_modules(self) -> List[str]:
+                try:
+                    with open(self.target_file, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    tree = ast.parse(content)
+
+                    extractable_nodes = []
+                    for node in ast.walk(tree):
+                        if isinstance(node, (ast.FunctionDef, ast.ClassDef)):
+                            end_lineno = getattr(node, 'end_lineno', node.lineno)
+                            lines = end_lineno - node.lineno + 1
+                            if lines > 20:
+                                extractable_nodes.append({'node': node, 'lines': lines})
+
+                    created_modules = []
+                    original_lines = content.splitlines()
+                    lines_to_replace = set()
+
+                    for item in sorted(extractable_nodes, key=lambda x: x['lines'], reverse=True)[:2]:
+                        node = item['node']
+                        module_name = f"{Path(self.target_file).stem}_{node.name.lower()}.py"
+                        module_path = Path(self.target_file).parent / module_name
+
+                        start_line, end_line = node.lineno, getattr(node, 'end_lineno', node.lineno)
+                        if any(l in lines_to_replace for l in range(start_line, end_line + 1)):
+                            continue
+
+                        with open(module_path, 'w', encoding='utf-8') as f:
+                            f.write(ast.unparse(node))
+                        created_modules.append(str(module_path))
+
+                        for l in range(start_line, end_line + 1):
+                            lines_to_replace.add(l)
+
+                        original_lines[start_line - 1] = f"from .{module_path.stem} import {node.name}"
+
+                    final_content = []
+                    for i, line in enumerate(original_lines, 1):
+                        if i not in lines_to_replace or (i > 0 and original_lines[i-2].startswith("from .")):
+                            final_content.append(line)
+
+                    with open(self.target_file, 'w', encoding='utf-8') as f:
+                        f.write('\n'.join(final_content))
+                    return created_modules
+                except Exception as e:
+                    print(f"❌ Erreur extraction: {e}", file=sys.stderr)
+                    return []
+
+            def apply_code_formatting(self):
+                subprocess.run(['black', self.target_file], check=False)
+                subprocess.run(['isort', self.target_file], check=False)
+
+            def run_correction(self):
+                print(f"🔧 CORRECTION: {self.target_file}")
+                self.create_backup()
+                if self.violation_data.get('excess', 0) > 50:
+                    self.extract_functions_to_modules()
+                self.apply_code_formatting()
+
+        if __name__ == "__main__":
+            violation_data = json.loads('${{ toJson(matrix.violation) }}')
+            target_file = violation_data['file']
+            corrector = ConstitutionalCorrector(target_file, violation_data)
+            corrector.run_correction()
+        EOF
+        python constitutional_corrector.py
+
+    - name: 🚀 Auto-Commit Constitutional Fix
+      run: |
+        git config --global user.name "Constitutional Auto-Corrector"
+        git config --global user.email "agi-corrector@users.noreply.github.com"
+        git add .
+        if git diff --staged --quiet; then
+          echo "Aucun changement à commiter"
+        else
+          git commit -m "refactor(auto): Corrige violation constitutionnelle dans ${{ matrix.violation.file }}"
+          git push
+        fi
+
+  master-reporter:
+    name: 📊 Master Constitutional Reporter
+    runs-on: ubuntu-latest
+    needs: [master-analyzer, master-corrector]
+    if: always()
+
+    steps:
+    - name: 🔍 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 📊 Generate Master Report
+      run: |
+        cat > CONSTITUTIONAL_MASTER_REPORT.md << EOF
+        # 🎯 MASTER CONSTITUTIONAL CORRECTION REPORT
+        **Date:** $(date)
+        **Run ID:** ${{ github.run_id }}
+
+        ## 📊 Analyse Globale
+        - **Total violations détectées:** ${{ needs.master-analyzer.outputs.total_violations }}
+        - **Violations critiques:** ${{ needs.master-analyzer.outputs.critical_violations }}
+
+        ## 🔧 Corrections Tentées
+        ${{ needs.master-analyzer.outputs.violations_matrix }}
+
+        ---
+        *Rapport généré par AGI Constitutional System v9.0*
+        EOF
+
+    - name: 🚀 Commit Master Report
+      run: |
+        git config --global user.name "Master Constitutional Reporter"
+        git config --global user.email "master-reporter@users.noreply.github.com"
+        git add CONSTITUTIONAL_MASTER_REPORT.md
+        git commit -m "docs(report): Rapport de correction constitutionnelle du $(date)" || echo "Pas de changements"
+        git push || echo "Erreur push report"
