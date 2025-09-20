@@ -19,71 +19,576 @@ jobs:
       with:
         python-version: '3.11'
         
-    - name: Install Analysis Tools
+    - name: Install GAIA analysis dependencies
       run: |
-        pip install ast-tools pylint bandit
+        pip install ast-analyze pylint bandit radon
+        pip install networkx matplotlib seaborn
+        pip install pytest pytest-cov
         
-    - name: GAIA Code Analysis
+    - name: Verify and create GAIA infrastructure
       run: |
-        echo "🌍 GAIA CODE ANALYSIS"
-        echo "===================="
+        echo "🌍 CRÉATION INFRASTRUCTURE GAIA ANALYSE CODE"
+        echo "========================================"
         
-        # Test code analysis functionality
-        echo "Initializing GAIA analysis..."
-        
-        # Create test code for analysis
-        cat > test_analysis.py << 'TESTCODE'
-        def test_function():
-            """Test function for GAIA analysis"""
-            x = 1 + 1
-            return x
+        if [ ! -d "eve/development/code_analysis" ]; then
+          echo "🏗️ Création infrastructure analyse code GAIA"
+          
+          # Structure analyse GAIA
+          mkdir -p eve/development/code_analysis/{core,analyzers,reporters,tests}
+          
+          # Core GAIA analyzer
+          cat > eve/development/code_analysis/core/gaia_analyzer.py << 'PYTHON'
+"""
+GAIA Code Analyzer - Analyseur de code intelligent pour projet AGI
+Conforme aux directives architecturales (<200 lignes)
+"""
 
-        def complex_function(data, options=None):
-            """More complex function"""
-            result = []
-            for item in data:
-                if options and item > options.get('threshold', 0):
-                    result.append(item * 2)
-            return result
-        TESTCODE
-        
-        # Run basic analysis
-        echo "Running GAIA analysis on test code..."
-        python3 -c "
-        import ast
-        import os
+import ast
+import os
+from typing import Dict, List, Any, Tuple, Optional
+from pathlib import Path
+import networkx as nx
 
-        if os.path.exists('test_analysis.py'):
-            with open('test_analysis.py', 'r') as f:
-                code = f.read()
+class CodeMetrics:
+    """Métriques code individuelles"""
+    
+    def __init__(self, filepath: str):
+        self.filepath = filepath
+        self.lines_total = 0
+        self.lines_code = 0
+        self.lines_comments = 0
+        self.lines_blank = 0
+        self.complexity_cyclomatic = 0
+        self.functions_count = 0
+        self.classes_count = 0
+        self.imports_count = 0
+        self.constitutional_compliant = True
+        
+class DependencyAnalyzer:
+    """Analyseur dépendances inter-modules"""
+    
+    def __init__(self):
+        self.dependency_graph = nx.DiGraph()
+        self.modules = {}
+        
+    def analyze_imports(self, filepath: str, ast_tree: ast.AST) -> List[str]:
+        """Extraction imports depuis AST"""
+        imports = []
+        
+        for node in ast.walk(ast_tree):
+            if isinstance(node, ast.Import):
+                for name in node.names:
+                    imports.append(name.name)
+            elif isinstance(node, ast.ImportFrom):
+                if node.module:
+                    imports.append(node.module)
+                    
+        return imports
+    
+    def build_dependency_graph(self, modules_data: Dict[str, Any]):
+        """Construction graphe dépendances"""
+        for module_path, data in modules_data.items():
+            module_name = Path(module_path).stem
+            self.dependency_graph.add_node(module_name, **data)
             
+            for import_name in data.get('imports', []):
+                # Filtrer imports locaux projet
+                if any(import_name.startswith(prefix) for prefix in ['eve', 'core', 'tools']):
+                    self.dependency_graph.add_edge(module_name, import_name)
+    
+    def detect_circular_dependencies(self) -> List[List[str]]:
+        """Détection dépendances circulaires"""
+        try:
+            cycles = list(nx.simple_cycles(self.dependency_graph))
+            return cycles
+        except:
+            return []
+    
+    def calculate_centrality(self) -> Dict[str, float]:
+        """Calcul centralité modules (importance architecturale)"""
+        if self.dependency_graph.number_of_nodes() == 0:
+            return {}
+            
+        try:
+            centrality = nx.betweenness_centrality(self.dependency_graph)
+            return centrality
+        except:
+            return {}
+
+class ConstitutionalAnalyzer:
+    """Analyseur conformité constitutionnelle AGI"""
+    
+    CONSTITUTIONAL_LIMITS = {
+        'max_lines_per_file': 200,
+        'max_complexity_per_function': 10,
+        'max_functions_per_file': 15,
+        'max_classes_per_file': 5
+    }
+    
+    def __init__(self):
+        self.violations = []
+        
+    def analyze_file(self, filepath: str, metrics: CodeMetrics) -> Dict[str, Any]:
+        """Analyse conformité constitutionnelle fichier"""
+        violations = []
+        
+        # Vérification limite lignes
+        if metrics.lines_total > self.CONSTITUTIONAL_LIMITS['max_lines_per_file']:
+            violations.append({
+                'type': 'COMP-ARC-001',
+                'description': f'Fichier dépasse {self.CONSTITUTIONAL_LIMITS["max_lines_per_file"]} lignes',
+                'current_value': metrics.lines_total,
+                'limit': self.CONSTITUTIONAL_LIMITS['max_lines_per_file'],
+                'severity': 'CRITICAL'
+            })
+        
+        # Vérification complexité
+        if metrics.complexity_cyclomatic > self.CONSTITUTIONAL_LIMITS['max_complexity_per_function']:
+            violations.append({
+                'type': 'COMP-SEC-001',
+                'description': 'Complexité cyclomatique élevée',
+                'current_value': metrics.complexity_cyclomatic,
+                'limit': self.CONSTITUTIONAL_LIMITS['max_complexity_per_function'],
+                'severity': 'HIGH'
+            })
+        
+        return {
+            'constitutional_compliant': len(violations) == 0,
+            'violations': violations,
+            'compliance_score': max(0, 1 - len(violations) * 0.2)
+        }
+
+class GAIAAnalyzer:
+    """Analyseur principal GAIA - Intelligence d'analyse de code"""
+    
+    def __init__(self):
+        self.dependency_analyzer = DependencyAnalyzer()
+        self.constitutional_analyzer = ConstitutionalAnalyzer()
+        self.modules_data = {}
+        self.project_metrics = {}
+        
+    def analyze_file(self, filepath: str) -> CodeMetrics:
+        """Analyse fichier individuel"""
+        metrics = CodeMetrics(filepath)
+        
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Métriques basiques
+            lines = content.split('\n')
+            metrics.lines_total = len(lines)
+            metrics.lines_blank = sum(1 for line in lines if not line.strip())
+            metrics.lines_comments = sum(1 for line in lines if line.strip().startswith('#'))
+            metrics.lines_code = metrics.lines_total - metrics.lines_blank - metrics.lines_comments
+            
+            # Analyse AST
             try:
-                tree = ast.parse(code)
-                functions = [node.name for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
-                print(f'Functions found: {functions}')
-                print('✅ GAIA: Analyse de code fonctionnelle')
-            except Exception as e:
-                print(f'Analysis error: {e}')
+                tree = ast.parse(content)
+                
+                # Compter éléments
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.FunctionDef):
+                        metrics.functions_count += 1
+                    elif isinstance(node, ast.ClassDef):
+                        metrics.classes_count += 1
+                
+                # Imports
+                imports = self.dependency_analyzer.analyze_imports(filepath, tree)
+                metrics.imports_count = len(imports)
+                
+                # Complexité (approximation)
+                metrics.complexity_cyclomatic = self._calculate_complexity(tree)
+                
+            except SyntaxError:
+                pass  # Fichier avec erreur syntaxe
+                
+        except Exception as e:
+            print(f"Erreur analyse {filepath}: {e}")
+            
+        return metrics
+    
+    def _calculate_complexity(self, tree: ast.AST) -> int:
+        """Calcul complexité cyclomatique approximative"""
+        complexity = 1  # Base
+        
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.If, ast.While, ast.For, ast.With)):
+                complexity += 1
+            elif isinstance(node, ast.ExceptHandler):
+                complexity += 1
+                
+        return complexity
+    
+    def analyze_project(self, project_path: str = '.') -> Dict[str, Any]:
+        """Analyse complète projet"""
+        python_files = []
+        
+        # Découverte fichiers Python
+        for root, dirs, files in os.walk(project_path):
+            if '.git' in root or '__pycache__' in root:
+                continue
+            for file in files:
+                if file.endswith('.py'):
+                    python_files.append(os.path.join(root, file))
+        
+        # Analyse fichiers individuels
+        all_metrics = {}
+        constitutional_violations = []
+        
+        for filepath in python_files:
+            metrics = self.analyze_file(filepath)
+            all_metrics[filepath] = metrics
+            
+            # Analyse constitutionnelle
+            constitutional_result = self.constitutional_analyzer.analyze_file(filepath, metrics)
+            if not constitutional_result['constitutional_compliant']:
+                constitutional_violations.extend(constitutional_result['violations'])
+                metrics.constitutional_compliant = False
+            
+            self.modules_data[filepath] = {
+                'metrics': metrics,
+                'constitutional': constitutional_result
+            }
+        
+        # Analyse dépendances
+        self.dependency_analyzer.build_dependency_graph(self.modules_data)
+        circular_deps = self.dependency_analyzer.detect_circular_dependencies()
+        centrality = self.dependency_analyzer.calculate_centrality()
+        
+        # Métriques projet globales
+        total_lines = sum(m.lines_total for m in all_metrics.values())
+        total_functions = sum(m.functions_count for m in all_metrics.values())
+        total_classes = sum(m.classes_count for m in all_metrics.values())
+        compliant_files = sum(1 for m in all_metrics.values() if m.constitutional_compliant)
+        
+        return {
+            'files_analyzed': len(python_files),
+            'total_lines_code': total_lines,
+            'total_functions': total_functions,
+            'total_classes': total_classes,
+            'constitutional_compliance': {
+                'compliant_files': compliant_files,
+                'total_files': len(python_files),
+                'compliance_rate': compliant_files / len(python_files) if python_files else 0,
+                'violations': constitutional_violations
+            },
+            'architecture_analysis': {
+                'circular_dependencies': circular_deps,
+                'module_centrality': centrality,
+                'most_central_modules': sorted(centrality.items(), key=lambda x: x[1], reverse=True)[:5]
+            },
+            'quality_metrics': {
+                'average_lines_per_file': total_lines / len(python_files) if python_files else 0,
+                'average_functions_per_file': total_functions / len(python_files) if python_files else 0,
+                'files_over_200_lines': sum(1 for m in all_metrics.values() if m.lines_total > 200)
+            }
+        }
+PYTHON
+
+          # Générateur rapports GAIA
+          cat > eve/development/code_analysis/reporters/gaia_reporter.py << 'PYTHON'
+"""
+GAIA Reporter - Génération rapports d'analyse de code
+Formats: JSON, Markdown, HTML avec visualisations
+"""
+
+import json
+from datetime import datetime
+from typing import Dict, Any, List
+from pathlib import Path
+
+class GAIAReporter:
+    """Générateur rapports GAIA"""
+    
+    def __init__(self, analysis_results: Dict[str, Any]):
+        self.results = analysis_results
+        self.timestamp = datetime.now()
+        
+    def generate_json_report(self, output_path: str = 'gaia_analysis.json'):
+        """Rapport JSON structuré"""
+        report = {
+            'metadata': {
+                'generated_at': self.timestamp.isoformat(),
+                'analyzer': 'GAIA v1.0',
+                'project': 'AGI Constitutional Project'
+            },
+            'summary': {
+                'files_analyzed': self.results.get('files_analyzed', 0),
+                'constitutional_compliance_rate': self.results.get('constitutional_compliance', {}).get('compliance_rate', 0),
+                'critical_violations': len([v for v in self.results.get('constitutional_compliance', {}).get('violations', []) if v.get('severity') == 'CRITICAL'])
+            },
+            'detailed_results': self.results
+        }
+        
+        with open(output_path, 'w') as f:
+            json.dump(report, f, indent=2)
+        
+        return output_path
+    
+    def generate_markdown_report(self, output_path: str = 'gaia_analysis.md') -> str:
+        """Rapport Markdown lisible"""
+        compliance = self.results.get('constitutional_compliance', {})
+        architecture = self.results.get('architecture_analysis', {})
+        quality = self.results.get('quality_metrics', {})
+        
+        md_content = f"""# 🌍 GAIA Code Analysis Report
+
+**Generated:** {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}  
+**Project:** AGI Constitutional Project
+
+## 📊 Executive Summary
+
+- **Files Analyzed:** {self.results.get('files_analyzed', 0)}
+- **Total Lines of Code:** {self.results.get('total_lines_code', 0):,}
+- **Constitutional Compliance:** {compliance.get('compliance_rate', 0)*100:.1f}%
+- **Functions:** {self.results.get('total_functions', 0)}
+- **Classes:** {self.results.get('total_classes', 0)}
+
+## 🏛️ Constitutional Compliance
+
+### Compliance Overview
+- ✅ **Compliant Files:** {compliance.get('compliant_files', 0)}/{compliance.get('total_files', 0)}
+- ❌ **Files Over 200 Lines:** {quality.get('files_over_200_lines', 0)}
+- 📊 **Compliance Rate:** {compliance.get('compliance_rate', 0)*100:.1f}%
+
+### Critical Violations
+"""
+        
+        violations = compliance.get('violations', [])
+        critical_violations = [v for v in violations if v.get('severity') == 'CRITICAL']
+        
+        if critical_violations:
+            for violation in critical_violations[:10]:  # Top 10
+                md_content += f"- **{violation.get('type', 'UNKNOWN')}**: {violation.get('description', 'No description')}\n"
         else:
-            print('✅ GAIA: Basic analysis completed')
+            md_content += "🎉 No critical violations detected!\n"
+        
+        md_content += f"""
+## 🏗️ Architecture Analysis
+
+### Dependency Health
+- **Circular Dependencies:** {len(architecture.get('circular_dependencies', []))}
+- **Most Central Modules:**
+"""
+        
+        most_central = architecture.get('most_central_modules', [])[:5]
+        for module, centrality in most_central:
+            md_content += f"  - `{module}`: {centrality:.3f}\n"
+        
+        md_content += f"""
+## 📈 Quality Metrics
+
+- **Average Lines per File:** {quality.get('average_lines_per_file', 0):.1f}
+- **Average Functions per File:** {quality.get('average_functions_per_file', 0):.1f}
+- **Code Health Score:** {self._calculate_health_score():.1f}/10
+
+## 🔍 Recommendations
+
+{self._generate_recommendations()}
+
+---
+*Generated by GAIA Code Analyzer - AGI Constitutional Project*
+"""
+        
+        with open(output_path, 'w') as f:
+            f.write(md_content)
+            
+        return output_path
+    
+    def _calculate_health_score(self) -> float:
+        """Score santé code (0-10)"""
+        compliance_rate = self.results.get('constitutional_compliance', {}).get('compliance_rate', 0)
+        circular_deps = len(self.results.get('architecture_analysis', {}).get('circular_dependencies', []))
+        
+        # Score basé sur conformité et architecture
+        base_score = compliance_rate * 8  # 8 points max pour conformité
+        
+        # Pénalité dépendances circulaires
+        circular_penalty = min(circular_deps * 0.5, 2)
+        
+        return max(0, min(10, base_score + 2 - circular_penalty))
+    
+    def _generate_recommendations(self) -> str:
+        """Génération recommandations automatiques"""
+        recommendations = []
+        
+        compliance = self.results.get('constitutional_compliance', {})
+        quality = self.results.get('quality_metrics', {})
+        architecture = self.results.get('architecture_analysis', {})
+        
+        # Recommandations conformité
+        if compliance.get('compliance_rate', 0) < 0.9:
+            over_limit = quality.get('files_over_200_lines', 0)
+            recommendations.append(f"🔧 **Refactor {over_limit} files** exceeding 200-line constitutional limit")
+        
+        # Recommandations architecture
+        circular_deps = len(architecture.get('circular_dependencies', []))
+        if circular_deps > 0:
+            recommendations.append(f"⚠️ **Resolve {circular_deps} circular dependencies** to improve modularity")
+        
+        # Recommandations qualité
+        avg_lines = quality.get('average_lines_per_file', 0)
+        if avg_lines > 150:
+            recommendations.append("📊 **Consider breaking down large modules** for better maintainability")
+        
+        if not recommendations:
+            recommendations.append("🎉 **Excellent code health!** Continue following constitutional guidelines")
+        
+        return '\n'.join(f"{i+1}. {rec}" for i, rec in enumerate(recommendations))
+    
+    def generate_summary_stats(self) -> Dict[str, Any]:
+        """Statistiques résumé pour CI/CD"""
+        compliance = self.results.get('constitutional_compliance', {})
+        
+        return {
+            'files_analyzed': self.results.get('files_analyzed', 0),
+            'compliance_rate': compliance.get('compliance_rate', 0),
+            'critical_violations': len([v for v in compliance.get('violations', []) if v.get('severity') == 'CRITICAL']),
+            'health_score': self._calculate_health_score(),
+            'status': 'PASS' if compliance.get('compliance_rate', 0) >= 0.8 else 'FAIL'
+        }
+PYTHON
+
+          echo "✅ Infrastructure GAIA créée"
+        else
+          echo "✅ Infrastructure GAIA existante détectée"
+        fi
+        
+    - name: Run comprehensive GAIA analysis
+      run: |
+        echo "🌍 EXÉCUTION ANALYSE GAIA COMPREHENSIVE"
+        echo "===================================="
+        
+        cd eve/development/code_analysis/
+        
+        # Test création analyseur GAIA
+        python -c "
+        import sys
+        sys.path.append('core')
+        
+        try:
+            from gaia_analyzer import GAIAAnalyzer
+            from reporters.gaia_reporter import GAIAReporter
+            
+            print('🌍 GAIA Analyzer initialisé')
+            
+            # Analyse complète projet
+            analyzer = GAIAAnalyzer()
+            results = analyzer.analyze_project('../../../')  # Racine projet
+            
+            print(f'📊 Analyse terminée:')
+            print(f'  - Fichiers: {results[\"files_analyzed\"]}')
+            print(f'  - Lignes code: {results[\"total_lines_code\"]:,}')
+            print(f'  - Conformité: {results[\"constitutional_compliance\"][\"compliance_rate\"]*100:.1f}%')
+            
+            # Génération rapports
+            reporter = GAIAReporter(results)
+            json_report = reporter.generate_json_report('../../../gaia_analysis.json')
+            md_report = reporter.generate_markdown_report('../../../gaia_analysis.md')
+            
+            print(f'📋 Rapports générés:')
+            print(f'  - JSON: {json_report}')
+            print(f'  - Markdown: {md_report}')
+            
+            # Statistiques pour CI/CD
+            stats = reporter.generate_summary_stats()
+            print(f'🎯 Status: {stats[\"status\"]}')
+            print(f'🏥 Health Score: {stats[\"health_score\"]:.1f}/10')
+            
+            # Échec si trop de violations critiques
+            if stats['critical_violations'] > 10:
+                print(f'❌ ÉCHEC: {stats[\"critical_violations\"]} violations critiques')
+                sys.exit(1)
+            
+        except Exception as e:
+            print(f'❌ Erreur GAIA: {e}')
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
         "
         
-        # Analyze project structure
-        echo "Analyzing project structure..."
-        find . -name "*.py" -type f | wc -l | xargs echo "Python files found:"
-        
-        echo "✅ GAIA analysis completed"
-        
-    - name: Generate Analysis Report
+    - name: Constitutional compliance check
       run: |
-        echo "Generating GAIA analysis report..."
-        echo "# GAIA Analysis Report" > gaia_report.md
-        echo "Date: $(date)" >> gaia_report.md
-        echo "Python files analyzed: $(find . -name '*.py' -type f | wc -l)" >> gaia_report.md
-        echo "✅ Analysis report generated"
+        echo "🏛️ VÉRIFICATION CONFORMITÉ CONSTITUTIONNELLE"
+        echo "========================================"
         
-    - name: Upload Analysis Report
-      uses: actions/upload-artifact@v3
+        # Extraction violations depuis rapport GAIA
+        if [ -f "gaia_analysis.json" ]; then
+          python -c "
+          import json
+          
+          with open('gaia_analysis.json', 'r') as f:
+              report = json.load(f)
+          
+          compliance = report['detailed_results']['constitutional_compliance']
+          violations = compliance['violations']
+          
+          print(f'Taux conformité: {compliance[\"compliance_rate\"]*100:.1f}%')
+          
+          critical_violations = [v for v in violations if v.get('severity') == 'CRITICAL']
+          high_violations = [v for v in violations if v.get('severity') == 'HIGH']
+          
+          print(f'Violations critiques: {len(critical_violations)}')
+          print(f'Violations importantes: {len(high_violations)}')
+          
+          if critical_violations:
+              print('📋 VIOLATIONS CRITIQUES:')
+              for i, violation in enumerate(critical_violations[:5]):
+                  print(f'  {i+1}. {violation[\"type\"]}: {violation[\"description\"]}')
+          
+          # Seuil échec
+          if len(critical_violations) > 5:
+              print('❌ ÉCHEC: Trop de violations constitutionnelles critiques')
+              exit(1)
+          else:
+              print('✅ Conformité constitutionnelle acceptable')
+          "
+        else
+          echo "⚠️ Rapport GAIA non trouvé"
+        fi
+        
+    - name: Architecture quality assessment
+      run: |
+        echo "🏗️ ÉVALUATION QUALITÉ ARCHITECTURE"
+        echo "==============================="
+        
+        if [ -f "gaia_analysis.json" ]; then
+          python -c "
+          import json
+          
+          with open('gaia_analysis.json', 'r') as f:
+              report = json.load(f)
+          
+          arch = report['detailed_results']['architecture_analysis']
+          quality = report['detailed_results']['quality_metrics']
+          
+          print('🔍 ANALYSE ARCHITECTURE:')
+          print(f'  - Dépendances circulaires: {len(arch[\"circular_dependencies\"])}')
+          print(f'  - Fichiers >200 lignes: {quality[\"files_over_200_lines\"]}')
+          print(f'  - Moyenne lignes/fichier: {quality[\"average_lines_per_file\"]:.1f}')
+          
+          if arch['most_central_modules']:
+              print('  - Modules centraux:')
+              for module, centrality in arch['most_central_modules'][:3]:
+                  print(f'    * {module}: {centrality:.3f}')
+          
+          # Alertes qualité
+          if len(arch['circular_dependencies']) > 3:
+              print('⚠️ ATTENTION: Nombreuses dépendances circulaires détectées')
+          
+          if quality['files_over_200_lines'] > 10:
+              print('⚠️ ATTENTION: Nombreux fichiers dépassent limite constitutionnelle')
+          
+          print('✅ Évaluation architecture terminée')
+          "
+        fi
+        
+    - name: Upload GAIA analysis artifacts
+      uses: actions/upload-artifact@v4
       with:
-        name: gaia-analysis-report
-        path: gaia_report.md
+        name: gaia-code-analysis
+        path: |
+          gaia_analysis.json
+          gaia_analysis.md
+          eve/development/code_analysis/
