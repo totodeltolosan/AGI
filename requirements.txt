@@ -1,0 +1,21 @@
+# Core dependencies
+pyyaml>=6.0
+click>=8.0.0
+rich>=13.0.0
+requests>=2.28.0
+
+# Development dependencies
+pytest>=7.0.0
+pytest-cov>=4.0.0
+black>=23.0.0
+pylint>=2.15.0
+mypy>=1.0.0
+pre-commit>=3.0.0
+
+# Security analysis
+bandit>=1.7.0
+safety>=2.0.0
+
+# Documentation
+mkdocs>=1.4.0
+mkdocs-material>=9.0.0

@@ -1,0 +1,158 @@
+name: 📊 Continuous Monitoring
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '*/10 * * * *'  # Toutes les 10 minutes
+    - cron: '0 */2 * * *'   # Toutes les 2 heures (rapport détaillé)
+    - cron: '0 8 * * *'     # Quotidien 8h (rapport complet)
+  workflow_dispatch:
+    inputs:
+      monitoring_depth:
+        description: 'Profondeur Monitoring'
+        required: true
+        default: 'standard'
+        type: choice
+        options:
+        - quick
+        - standard  
+        - deep
+        - forensic
+
+jobs:
+  system-monitoring:
+    name: System Health Monitoring
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Monitoring Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Monitoring Tools
+      run: |
+        pip install psutil
+        
+    - name: Continuous System Health Check
+      run: |
+        echo "📊 MONITORING CONTINU SYSTÈME AGI-EVE" > monitoring-report.md
+        echo "====================================" >> monitoring-report.md
+        echo "" >> monitoring-report.md
+        
+        python -c "
+        import psutil
+        import time
+        import json
+        import os
+        from datetime import datetime, timedelta
+        from pathlib import Path
+        
+        print('📊 Monitoring continu système AGI-EVE...')
+        
+        monitoring_depth = os.getenv('MONITORING_DEPTH', 'standard')
+        print(f'Profondeur monitoring: {monitoring_depth}')
+        
+        if monitoring_depth == 'quick':
+            monitoring_duration = 30
+            sample_interval = 5
+        elif monitoring_depth == 'deep':
+            monitoring_duration = 120
+            sample_interval = 10
+        else:
+            monitoring_duration = 60
+            sample_interval = 10
+        
+        print(f'Durée monitoring: {monitoring_duration}s')
+        
+        metrics_samples = []
+        start_time = time.time()
+        
+        while (time.time() - start_time) < monitoring_duration:
+            sample = {
+                'timestamp': time.time(),
+                'cpu_percent': psutil.cpu_percent(interval=1),
+                'memory_percent': psutil.virtual_memory().percent,
+                'disk_percent': psutil.disk_usage('/').percent,
+                'processes': len(psutil.pids())
+            }
+            
+            metrics_samples.append(sample)
+            
+            if len(metrics_samples) % 3 == 0:
+                print(f'📊 Sample {len(metrics_samples)}: CPU {sample[\"cpu_percent\"]}%, RAM {sample[\"memory_percent\"]}%')
+            
+            time.sleep(sample_interval)
+        
+        # Analyse des métriques
+        if metrics_samples:
+            cpu_values = [s['cpu_percent'] for s in metrics_samples]
+            cpu_avg = sum(cpu_values) / len(cpu_values)
+            cpu_max = max(cpu_values)
+            
+            memory_values = [s['memory_percent'] for s in metrics_samples]
+            memory_avg = sum(memory_values) / len(memory_values)
+            memory_max = max(memory_values)
+            
+            print(f'\\n## 📈 Analyse Métriques Système')
+            print(f'- **Échantillons**: {len(metrics_samples)}')
+            print(f'- **CPU moyen**: {cpu_avg:.1f}%')
+            print(f'- **CPU max**: {cpu_max:.1f}%')
+            print(f'- **RAM moyenne**: {memory_avg:.1f}%')
+            print(f'- **RAM max**: {memory_max:.1f}%')
+            
+            # Détection anomalies
+            anomalies = []
+            
+            if cpu_max > 90:
+                anomalies.append(f'🔴 CPU pic: {cpu_max:.1f}%')
+            elif cpu_avg > 70:
+                anomalies.append(f'🟡 CPU élevé: {cpu_avg:.1f}%')
+            
+            if memory_max > 85:
+                anomalies.append(f'🔴 RAM critique: {memory_max:.1f}%')
+            elif memory_avg > 70:
+                anomalies.append(f'🟡 RAM élevée: {memory_avg:.1f}%')
+            
+            print(f'\\n### 🚨 Anomalies')
+            if anomalies:
+                for anomaly in anomalies:
+                    print(f'- {anomaly}')
+            else:
+                print('✅ Aucune anomalie détectée')
+            
+            # Sauvegarder métriques
+            monitoring_report = {
+                'monitoring_config': {
+                    'depth': monitoring_depth,
+                    'duration': monitoring_duration,
+                    'samples': len(metrics_samples)
+                },
+                'system_metrics': {
+                    'cpu_avg': cpu_avg,
+                    'cpu_max': cpu_max,
+                    'memory_avg': memory_avg,
+                    'memory_max': memory_max
+                },
+                'anomalies': anomalies
+            }
+            
+            with open('system_monitoring.json', 'w') as f:
+                json.dump(monitoring_report, f, indent=2)
+            
+            print('\\n✅ Monitoring système terminé')
+        " >> monitoring-report.md
+        
+        env:
+          MONITORING_DEPTH: ${{ github.event.inputs.monitoring_depth || 'standard' }}
+          
+    - name: Upload Monitoring Reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: continuous-monitoring-report
+        path: |
+          monitoring-report.md
+          system_monitoring.json

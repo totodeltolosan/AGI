@@ -1,0 +1,38 @@
+name: 🔒 Problème de Sécurité
+description: Signaler un problème de sécurité (PRIVÉ UNIQUEMENT)
+title: "[SECURITY] "
+labels: ["security", "bug", "critical"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ ATTENTION: Problème de Sécurité
+        Ne divulguez JAMAIS de détails sensibles dans les issues publiques.
+        
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Sévérité"
+      options:
+        - "Critique"
+        - "Haute"
+        - "Moyenne"
+        - "Basse"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description (sans détails sensibles)"
+      description: "Description générale du problème"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: impact
+    attributes:
+      label: "Impact potentiel"
+      description: "Quel est l'impact de ce problème"
+    validations:
+      required: true

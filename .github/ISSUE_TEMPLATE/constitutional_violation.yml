@@ -1,0 +1,50 @@
+name: 🏛️ Violation Constitutionnelle
+description: Signaler une violation des directives constitutionnelles AGI
+title: "[VIOLATION] "
+labels: ["constitutional-violation", "technical-debt", "high-priority"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Violation des Directives Constitutionnelles AGI
+        Utilisez ce template pour signaler une violation des 474 directives constitutionnelles.
+  
+  - type: input
+    id: file_path
+    attributes:
+      label: "Fichier concerné"
+      description: "Chemin vers le fichier en violation"
+      placeholder: "ex: core/compliance/full_audit.py"
+    validations:
+      required: true
+  
+  - type: input
+    id: line_count
+    attributes:
+      label: "Nombre de lignes"
+      description: "Nombre de lignes du fichier"
+      placeholder: "ex: 769"
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: violation_type
+    attributes:
+      label: "Type de violation"
+      options:
+        - "Limite 200 lignes dépassée"
+        - "Architecture non conforme"
+        - "Documentation manquante"
+        - "Tests insuffisants"
+        - "Autre"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: suggested_solution
+    attributes:
+      label: "Solution proposée"
+      description: "Comment corriger cette violation"
+      placeholder: "Décomposer en X modules..."
+    validations:
+      required: true

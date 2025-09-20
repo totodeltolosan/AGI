@@ -1,0 +1,46 @@
+name: 📜 Nouvelle Directive AGI
+description: Proposer une nouvelle directive constitutionnelle
+title: "[DIRECTIVE] "
+labels: ["constitution", "enhancement", "discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Proposition de Nouvelle Directive Constitutionnelle
+        
+  - type: input
+    id: directive_id
+    attributes:
+      label: "ID de la directive"
+      description: "Format: CATEGORY-XXX"
+      placeholder: "ex: ARCH-475"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: directive_text
+    attributes:
+      label: "Texte de la directive"
+      description: "Formulation précise de la nouvelle directive"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: justification
+    attributes:
+      label: "Justification"
+      description: "Pourquoi cette directive est nécessaire"
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "Priorité"
+      options:
+        - "Critique"
+        - "Haute"
+        - "Moyenne"
+        - "Basse"
+    validations:
+      required: true
