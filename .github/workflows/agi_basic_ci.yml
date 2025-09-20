@@ -19,7 +19,18 @@ jobs:
       with:
         python-version: '3.11'
         
-    - name: 🏛️ Audit AGI
+    - name: 🏛️ Audit Constitutional (200 lignes max)
       run: |
-        python run_agi_audit.py --target . || true
-        echo "📊 Audit terminé"
+        echo "🔍 Vérification limite 200 lignes par fichier"
+        violations=$(find . -name "*.py" -not -path "./.git/*" -exec wc -l {} \; | awk '$1 > 200 {print $2 " (" $1 " lignes)"}')
+        
+        if [ ! -z "$violations" ]; then
+          echo "❌ VIOLATIONS CONSTITUTIONNELLES:"
+          echo "$violations"
+          exit 1
+        else
+          echo "✅ Conformité constitutionnelle validée"
+        fi
+        
+    - name: 📊 Audit terminé
+      run: echo "📊 Audit constitutionnel terminé avec succès"
