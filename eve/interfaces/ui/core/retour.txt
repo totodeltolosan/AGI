@@ -1,0 +1,1386 @@
+RAPPORT D'ANALYSE SYSTÈME AVANCÉ (v3.1 - God Mode)
+Généré le : dim. 14 sept. 2025 15:44:40 CEST
+Début de l'analyse... Cette opération est intensive et peut prendre plusieurs minutes.
+
+==============================================================================
+[ 1/13 ] VUE D'ENSEMBLE DU SYSTÈME
+==============================================================================
+
+--- Distribution et Noyau ---
+OS Release : Ubuntu 24.04.3 LTS
+Noyau : Linux 6.8.0-79-lowlatency x86_64 GNU/Linux
+
+--- Architecture et Matériel ---
+Architecture : x86_64
+Modèle du système : Dell Inc. Vostro 15-3568
+Version du BIOS : 3.11.0
+
+--- Session et Uptime ---
+Hostname : toni
+Uptime : up 1 day, 19 hours, 50 minutes
+Utilisateur actuel : toni
+Sessions actives : 
+toni     tty2         2025-09-12 19:54 (:0)
+toni     pts/0        2025-09-12 19:54 (:0)
+toni     pts/1        2025-09-13 19:42 (:0)
+toni     pts/4        2025-09-13 16:35 (:0)
+toni     pts/5        2025-09-14 15:42 (:0)
+
+--- Date et heure ---
+Heure système : dim. 14 sept. 2025 15:44:44 CEST
+Fuseau horaire : Europe/Paris
+
+==============================================================================
+[ 2/13 ] ANALYSE MATÉRIELLE DÉTAILLÉE
+==============================================================================
+
+--- Processeur (CPU) ---
+Modèle :                                142
+Thread(s) par cœur :                    2
+Cœur(s) par socket :                    2
+Socket(s) :                             1
+Vitesse maximale du processeur en MHz : 3100,0000
+Vitesse minimale du processeur en MHz : 400,0000
+Virtualisation :                        VT-x
+Cache L1d :                             64 KiB (2 instances)
+Cache L1i :                             64 KiB (2 instances)
+Cache L2 :                              512 KiB (2 instances)
+Cache L3 :                              3 MiB (1 instance)
+
+--- Mémoire Vive (RAM) ---
+               total       utilisé      libre     partagé tamp/cache   disponible
+Mem:            31Gi       7,5Gi        14Gi       664Mi        10Gi        23Gi
+Échange:       4,0Gi          0B       4,0Gi
+	Error Correction Type: None
+	Size: 16 GB
+	Locator: DIMM A
+	Bank Locator: BANK 0
+	Type: DDR4
+	Speed: 2400 MT/s
+	Manufacturer: 8C26000080AD
+	Part Number: TIMETEC-S16G-2400   
+	Configured Memory Speed: 2133 MT/s
+	Size: 16 GB
+	Locator: DIMM B
+	Bank Locator: BANK 2
+	Type: DDR4
+	Speed: 2400 MT/s
+	Manufacturer: 8C26000080AD
+	Part Number: TIMETEC-S16G-2400   
+	Configured Memory Speed: 2133 MT/s
+Capacité maximale supportée : 32 GB
+
+--- Périphériques PCI (Carte graphique, réseau, etc.) ---
+00:00.0 Host bridge: Intel Corporation Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers (rev 02)
+00:02.0 VGA compatible controller: Intel Corporation HD Graphics 620 (rev 02)
+00:04.0 Signal processing controller: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem (rev 02)
+00:14.0 USB controller: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller (rev 21)
+00:14.2 Signal processing controller: Intel Corporation Sunrise Point-LP Thermal subsystem (rev 21)
+00:15.0 Signal processing controller: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #0 (rev 21)
+00:15.1 Signal processing controller: Intel Corporation Sunrise Point-LP Serial IO I2C Controller #1 (rev 21)
+00:16.0 Communication controller: Intel Corporation Sunrise Point-LP CSME HECI #1 (rev 21)
+00:17.0 SATA controller: Intel Corporation Sunrise Point-LP SATA Controller [AHCI mode] (rev 21)
+00:1c.0 PCI bridge: Intel Corporation Sunrise Point-LP PCI Express Root Port #5 (rev f1)
+00:1c.5 PCI bridge: Intel Corporation Sunrise Point-LP PCI Express Root Port #6 (rev f1)
+00:1f.0 ISA bridge: Intel Corporation Sunrise Point-LP LPC Controller (rev 21)
+00:1f.2 Memory controller: Intel Corporation Sunrise Point-LP PMC (rev 21)
+00:1f.3 Audio device: Intel Corporation Sunrise Point-LP HD Audio (rev 21)
+00:1f.4 SMBus: Intel Corporation Sunrise Point-LP SMBus (rev 21)
+01:00.0 Network controller: Qualcomm Atheros QCA9377 802.11ac Wireless Network Adapter (rev 31)
+02:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev 0c)
+
+--- Périphériques USB ---
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 001 Device 002: ID 0458:0186 KYE Systems Corp. (Mouse Systems) Genius DX-120 Mouse
+Bus 001 Device 003: ID 1bcf:28c0 Sunplus Innovation Technology Inc. Integrated_Webcam_HD
+Bus 001 Device 004: ID 0bda:0129 Realtek Semiconductor Corp. RTS5129 Card Reader Controller
+Bus 001 Device 005: ID 0cf3:e009 Qualcomm Atheros Communications 
+Bus 001 Device 008: ID 19f7:0035 RODE Microphones RØDE NT-USB+
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+
+--- Batterie ---
+  native-path:          BAT0
+  vendor:               SMP
+  model:                DELL VN3N047
+  serial:               3175
+  power supply:         yes
+  updated:              dim. 14 sept. 2025 15:44:42 (2 seconds ago)
+  has history:          yes
+  has statistics:       yes
+  battery
+    present:             yes
+    rechargeable:        yes
+    state:               fully-charged
+    warning-level:       none
+    energy:              27,084 Wh
+    energy-empty:        0 Wh
+    energy-full:         27,084 Wh
+    energy-full-design:  41,44 Wh
+    energy-rate:         0,0148 W
+    voltage:             16,938 V
+    charge-cycles:       N/A
+    time to empty:       76,2 days
+    percentage:          100%
+    capacity:            65,3571%
+    technology:          lithium-ion
+    icon-name:          'battery-full-charged-symbolic'
+
+NOTE : L'outil 'sensors' n'est pas installé. Analyse correspondante ignorée.
+NOTE: 'lm-sensors' n'est pas installé. 'sudo apt install lm-sensors' puis 'sudo sensors-detect' pour l'activer.
+
+==============================================================================
+[ 3/13 ] STOCKAGE ET SYSTÈMES DE FICHIERS
+==============================================================================
+
+--- Vue d'ensemble des disques et partitions ---
+NAME     SIZE TYPE FSTYPE   MOUNTPOINT
+loop0      4K loop squashfs /snap/bare/5
+loop1    226M loop          /snap/thunderbird/796
+loop2  184,8M loop squashfs /snap/chromium/3235
+loop3  104,2M loop squashfs /snap/core/17212
+loop4   73,9M loop squashfs /snap/core22/2082
+loop5  104,2M loop squashfs /snap/core/17247
+loop6   73,9M loop squashfs /snap/core22/2111
+loop7   68,4M loop squashfs /snap/cups/1085
+loop8   66,8M loop squashfs /snap/core24/1151
+loop9   67,2M loop squashfs /snap/cups/1100
+loop10 246,3M loop squashfs /snap/firefox/6700
+loop11  66,8M loop squashfs /snap/core24/1055
+loop12 246,4M loop squashfs /snap/firefox/6738
+loop13 505,1M loop squashfs /snap/gnome-42-2204/176
+loop14  11,1M loop squashfs /snap/firmware-updater/167
+loop15  11,1M loop squashfs /snap/firmware-updater/147
+loop16 618,3M loop squashfs /snap/gnome-46-2404/125
+loop17 128,9M loop squashfs /snap/freeshow/102
+loop18  91,7M loop squashfs /snap/gtk-common-themes/1535
+loop19 128,9M loop squashfs /snap/freeshow/103
+loop20   604M loop squashfs /snap/gnome-46-2404/121
+loop21 290,8M loop squashfs /snap/mesa-2404/887
+loop22   516M loop squashfs /snap/gnome-42-2204/202
+loop23 290,8M loop squashfs /snap/mesa-2404/912
+loop24   568K loop squashfs /snap/snapd-desktop-integration/253
+loop25  50,8M loop squashfs /snap/snapd/25202
+loop26  49,3M loop squashfs /snap/snapd/24792
+loop27  86,7M loop squashfs /snap/simplescreenrecorder/1
+loop28 227,3M loop squashfs /snap/thunderbird/791
+loop29   576K loop squashfs /snap/snapd-desktop-integration/315
+loop31   186M loop          /snap/chromium/3248
+sda    232,9G disk          
+├─sda1     1G part vfat     /boot/efi
+└─sda2 231,8G part ext4     /
+sr0     1024M rom           
+
+--- Utilisation des partitions (Espace disque) ---
+Sys. de fichiers Type     Taille Utilisé Dispo Uti% Monté sur
+/dev/sda2        ext4       228G    148G   69G  69% /
+efivarfs         efivarfs   384K    277K  103K  74% /sys/firmware/efi/efivars
+/dev/sda1        vfat       1,1G    6,2M  1,1G   1% /boot/efi
+
+--- Utilisation des Inodes (Nombre de fichiers) ---
+Sys. de fichiers Type       Inœuds  IUtil.   ILibre IUti% Monté sur
+/dev/sda2        ext4     15196160 1485191 13710969   10% /
+efivarfs         efivarfs        0       0        0     - /sys/firmware/efi/efivars
+/dev/sda1        vfat            0       0        0     - /boot/efi
+
+--- Santé des disques (S.M.A.R.T.) ---
+Analyse de /dev/sda...
+smartctl 7.4 2023-08-01 r5530 [x86_64-linux-6.8.0-79-lowlatency] (local build)
+Copyright (C) 2002-23, Bruce Allen, Christian Franke, www.smartmontools.org
+
+=== START OF READ SMART DATA SECTION ===
+SMART overall-health self-assessment test result: PASSED
+
+
+--- 15 plus gros fichiers/dossiers dans le répertoire personnel ---
+56G	/home/toni
+16G	/home/toni/Documents
+9,0G	/home/toni/.ollama/models/blobs
+9,0G	/home/toni/.ollama/models
+9,0G	/home/toni/.ollama
+6,1G	/home/toni/venv/lib/python3.12/site-packages
+6,1G	/home/toni/venv/lib/python3.12
+6,1G	/home/toni/venv/lib
+6,1G	/home/toni/venv
+4,9G	/home/toni/miniconda3
+4,8G	/home/toni/Documents/connaisance a implenter plus tard
+4,6G	/home/toni/.ollama/models/blobs/sha256-667b0c1932bc6ffc593ed1d03f895bf2dc8dc6df21db3042284a6f4416b06a29
+4,4G	/home/toni/.ollama/models/blobs/sha256-6a0746a1ec1aef3e7ec53868f220ff6e389f6f8ef87a01d77c96807de94ca2aa
+4,4G	/home/toni/Desktop
+4,0G	/home/toni/Documents/Chez toto
+
+==============================================================================
+[ 4/13 ] LOGICIELS ET PAQUETS
+==============================================================================
+
+--- Gestionnaire de paquets (APT) ---
+Mise à jour de la liste des paquets...
+Nombre de paquets à mettre à jour : 0
+
+--- Nettoyage potentiel ---
+Nombre de paquets avec des fichiers de configuration résiduels : 84
+jack-mixer
+jackd1
+libasound2-plugins:i386
+libgdk-pixbuf-2.0-0:i386
+libgl1-mesa-dri:i386
+libglib2.0-0t64:i386
+libgnutls30t64:i386
+libgssapi-krb5-2:i386
+libgtk-3-0t64:i386
+libpulse0:i386
+libvdpau1:i386
+linux-image-6.8.0-45-lowlatency
+linux-image-6.8.0-47-lowlatency
+linux-image-6.8.0-48-lowlatency
+linux-image-6.8.0-49-lowlatency
+linux-image-6.8.0-50-lowlatency
+linux-image-6.8.0-51-lowlatency
+linux-image-6.8.0-52-lowlatency
+linux-image-6.8.0-54-lowlatency
+linux-image-6.8.0-55-generic
+linux-image-6.8.0-55-lowlatency
+linux-image-6.8.0-56-generic
+linux-image-6.8.0-56-lowlatency
+linux-image-6.8.0-57-generic
+linux-image-6.8.0-57-lowlatency
+linux-image-6.8.0-58-generic
+linux-image-6.8.0-58-lowlatency
+linux-image-6.8.0-59-generic
+linux-image-6.8.0-59-lowlatency
+linux-image-6.8.0-60-generic
+linux-image-6.8.0-60-lowlatency
+linux-image-6.8.0-62-generic
+linux-image-6.8.0-62-lowlatency
+linux-image-6.8.0-63-generic
+linux-image-6.8.0-63-lowlatency
+linux-image-6.8.0-64-generic
+linux-image-6.8.0-64-lowlatency
+linux-image-6.8.0-65-lowlatency
+linux-image-6.8.0-71-generic
+linux-image-6.8.0-78-generic
+linux-image-6.8.0-78-lowlatency
+linux-modules-6.8.0-45-lowlatency
+linux-modules-6.8.0-47-lowlatency
+linux-modules-6.8.0-48-lowlatency
+linux-modules-6.8.0-49-lowlatency
+linux-modules-6.8.0-50-lowlatency
+linux-modules-6.8.0-51-lowlatency
+linux-modules-6.8.0-52-lowlatency
+linux-modules-6.8.0-54-lowlatency
+linux-modules-6.8.0-55-generic
+linux-modules-6.8.0-55-lowlatency
+linux-modules-6.8.0-56-generic
+linux-modules-6.8.0-56-lowlatency
+linux-modules-6.8.0-57-generic
+linux-modules-6.8.0-57-lowlatency
+linux-modules-6.8.0-58-generic
+linux-modules-6.8.0-58-lowlatency
+linux-modules-6.8.0-59-generic
+linux-modules-6.8.0-59-lowlatency
+linux-modules-6.8.0-60-generic
+linux-modules-6.8.0-60-lowlatency
+linux-modules-6.8.0-62-generic
+linux-modules-6.8.0-62-lowlatency
+linux-modules-6.8.0-63-generic
+linux-modules-6.8.0-63-lowlatency
+linux-modules-6.8.0-64-generic
+linux-modules-6.8.0-64-lowlatency
+linux-modules-6.8.0-65-lowlatency
+linux-modules-6.8.0-71-generic
+linux-modules-6.8.0-78-generic
+linux-modules-6.8.0-78-lowlatency
+linux-modules-extra-6.8.0-55-generic
+linux-modules-extra-6.8.0-56-generic
+linux-modules-extra-6.8.0-57-generic
+linux-modules-extra-6.8.0-58-generic
+linux-modules-extra-6.8.0-59-generic
+linux-modules-extra-6.8.0-60-generic
+linux-modules-extra-6.8.0-62-generic
+linux-modules-extra-6.8.0-63-generic
+linux-modules-extra-6.8.0-64-generic
+linux-modules-extra-6.8.0-71-generic
+linux-modules-extra-6.8.0-78-generic
+pulseaudio
+studio-controls
+
+--- Sources de logiciels ---
+deb https://deb.opera.com/opera-stable/ stable non-free
+deb http://archive.ubuntu.com/ubuntu/ noble universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ noble-updates universe multiverse
+deb http://security.ubuntu.com/ubuntu/ noble-security main multiverse restricted universe
+deb [arch=amd64,arm64,armhf] https://packages.microsoft.com/repos/code stable main
+deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+deb http://archive.ubuntu.com/ubuntu/ noble universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ noble-updates universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ noble universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ noble-updates universe multiverse
+deb http://security.ubuntu.com/ubuntu/ noble-security universe multiverse
+deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+
+--- Environnement de développement ---
+Python : Python 3.13.5
+Pip : pip 25.2 from /home/toni/Documents/Projet simulateur/env/lib/python3.13/site-packages/pip (python 3.13)
+Conda : conda 25.5.1
+
+     active environment : base
+    active env location : /home/toni/miniconda3
+            shell level : 1
+       user config file : /home/toni/.condarc
+ populated config files : /home/toni/miniconda3/.condarc
+          conda version : 25.5.1
+    conda-build version : not installed
+         python version : 3.13.5.final.0
+                 solver : libmamba (default)
+       virtual packages : __archspec=1=skylake
+                          __conda=25.5.1=0
+                          __glibc=2.39=0
+                          __linux=6.8.0=0
+                          __unix=0=0
+       base environment : /home/toni/miniconda3  (writable)
+      conda av data dir : /home/toni/miniconda3/etc/conda
+  conda av metadata url : None
+           channel URLs : https://repo.anaconda.com/pkgs/main/linux-64
+                          https://repo.anaconda.com/pkgs/main/noarch
+                          https://repo.anaconda.com/pkgs/r/linux-64
+                          https://repo.anaconda.com/pkgs/r/noarch
+          package cache : /home/toni/miniconda3/pkgs
+                          /home/toni/.conda/pkgs
+       envs directories : /home/toni/miniconda3/envs
+                          /home/toni/.conda/envs
+               platform : linux-64
+             user-agent : conda/25.5.1 requests/2.32.4 CPython/3.13.5 Linux/6.8.0-79-lowlatency ubuntu/24.04.3 glibc/2.39 solver/libmamba conda-libmamba-solver/25.4.0 libmambapy/2.0.5 aau/0.7.1 c/. s/. e/.
+                UID:GID : 1000:1000
+             netrc file : None
+           offline mode : False
+
+GCC : gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+Docker : Docker version 27.5.1, build 27.5.1-0ubuntu3~24.04.2
+Git : git version 2.43.0
+
+==============================================================================
+[ 5/13 ] PERFORMANCES ET PROCESSUS
+==============================================================================
+
+--- Charge moyenne et mémoire virtuelle ---
+ 15:45:32 up 1 day, 19:51,  1 user,  load average: 2,65, 1,75, 1,31
+procs ----------mémoire---------- -échange- -----io---- -système- ------cpu--------
+ r  b   swpd  libre tampon  cache   si   so    bi    bo   in   cs us sy id wa st gu
+ 1  0      0 14540736 1223856 10174880    0    0    35   165 3189   19  9  3 87  0  0  0
+ 1  0      0 14540496 1223856 10174924    0    0     0     0  419 1000  1  0 99  0  0  0
+ 1  0      0 14540496 1223856 10174924    0    0     0     0  897 2027  1  3 96  0  0  0
+ 1  0      0 14549176 1223856 10174928    0    0     0     4 1101 3113  2  2 96  0  0  0
+ 0  0      0 14563220 1223856 10174924    0    0     0     0 1074 2637  3  1 96  0  0  0
+
+--- 10 processus les plus gourmands en CPU ---
+%CPU     PID USER     COMMAND
+28.7  602302 root     packagekitd
+ 9.4  176142 toni     htop
+ 6.9  579466 toni     chrome
+ 4.6  463639 toni     chrome
+ 3.4   79077 toni     code
+ 2.5  463581 toni     chrome
+ 2.1  289374 toni     code
+ 1.8    1715 root     Xorg
+ 1.6    2915 toni     kwin_x11
+ 1.4  290313 toni     python
+
+--- 10 processus les plus gourmands en Mémoire ---
+%MEM     PID USER     COMMAND
+ 3.2  289374 toni     code
+ 3.2  289995 toni     code
+ 2.4   79077 toni     code
+ 2.2    2442 root     python3
+ 1.5  463581 toni     chrome
+ 1.2    2959 toni     plasmashell
+ 1.0    2914 toni     kded5
+ 1.0  579466 toni     chrome
+ 1.0  290313 toni     python
+ 0.7   78978 toni     code
+
+--- Nombre total de processus ---
+286
+
+==============================================================================
+[ 6/13 ] RÉSEAU ET CONNECTIVITÉ
+==============================================================================
+
+--- Interfaces réseau et adresses IP ---
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: enp2s0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether 10:7d:1a:37:ed:be brd ff:ff:ff:ff:ff:ff
+3: wlp1s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether e8:9e:b4:04:df:f1 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.197.14/24 brd 192.168.197.255 scope global dynamic noprefixroute wlp1s0
+       valid_lft 2958sec preferred_lft 2958sec
+    inet6 fe80::e4ee:769d:7316:6310/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+4: br-1e621f8d2c7c: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:8f:62:17:eb brd ff:ff:ff:ff:ff:ff
+    inet 192.168.64.1/20 brd 192.168.79.255 scope global br-1e621f8d2c7c
+       valid_lft forever preferred_lft forever
+5: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:01:6d:e2:fb brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+6: br-75ee2d0127bc: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:29:f6:68:0f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.96.1/20 brd 192.168.111.255 scope global br-75ee2d0127bc
+       valid_lft forever preferred_lft forever
+7: br-bc7e84559003: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:a7:23:a2:49 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global br-bc7e84559003
+       valid_lft forever preferred_lft forever
+8: br-e4684a0d4c5e: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:90:2d:03:64 brd ff:ff:ff:ff:ff:ff
+    inet 172.26.0.1/16 brd 172.26.255.255 scope global br-e4684a0d4c5e
+       valid_lft forever preferred_lft forever
+
+--- Table de routage ---
+default via 192.168.197.95 dev wlp1s0 proto dhcp src 192.168.197.14 metric 600 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+172.18.0.0/16 dev br-bc7e84559003 proto kernel scope link src 172.18.0.1 linkdown 
+172.26.0.0/16 dev br-e4684a0d4c5e proto kernel scope link src 172.26.0.1 linkdown 
+192.168.64.0/20 dev br-1e621f8d2c7c proto kernel scope link src 192.168.64.1 linkdown 
+192.168.96.0/20 dev br-75ee2d0127bc proto kernel scope link src 192.168.96.1 linkdown 
+192.168.197.0/24 dev wlp1s0 proto kernel scope link src 192.168.197.14 metric 600 
+
+--- Serveurs DNS ---
+# This is /run/systemd/resolve/stub-resolv.conf managed by man:systemd-resolved(8).
+# Do not edit.
+#
+# This file might be symlinked as /etc/resolv.conf. If you're looking at
+# /etc/resolv.conf and seeing this text, you have followed the symlink.
+#
+# This is a dynamic resolv.conf file for connecting local clients to the
+# internal DNS stub resolver of systemd-resolved. This file lists all
+# configured search domains.
+#
+# Run "resolvectl status" to see details about the uplink DNS servers
+# currently in use.
+#
+# Third party programs should typically not access this file directly, but only
+# through the symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a
+# different way, replace this symlink by a static file or a different symlink.
+#
+# See man:systemd-resolved.service(8) for details about the supported modes of
+# operation for /etc/resolv.conf.
+
+nameserver 127.0.0.53
+options edns0 trust-ad
+search .
+
+--- Ports en écoute (TCP/UDP) ---
+Netid State  Recv-Q Send-Q   Local Address:Port  Peer Address:PortProcess                                   
+udp   UNCONN 0      0           172.17.0.1:57827      0.0.0.0:*    users:(("minidlnad",pid=1189,fd=10))     
+udp   UNCONN 0      0           172.26.0.1:60898      0.0.0.0:*    users:(("minidlnad",pid=1189,fd=13))     
+udp   UNCONN 0      0           127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=835,fd=16))
+udp   UNCONN 0      0        127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=835,fd=14))
+udp   UNCONN 0      0      239.255.255.250:1900       0.0.0.0:*    users:(("minidlnad",pid=1189,fd=5))      
+udp   UNCONN 0      0         192.168.96.1:51574      0.0.0.0:*    users:(("minidlnad",pid=1189,fd=11))     
+udp   UNCONN 0      0       192.168.197.14:51973      0.0.0.0:*    users:(("minidlnad",pid=1189,fd=8))      
+udp   UNCONN 0      0         192.168.64.1:36558      0.0.0.0:*    users:(("minidlnad",pid=1189,fd=9))      
+udp   UNCONN 0      0          224.0.0.251:5353       0.0.0.0:*    users:(("chrome",pid=463581,fd=192))     
+udp   UNCONN 0      0          224.0.0.251:5353       0.0.0.0:*    users:(("chrome",pid=463642,fd=105))     
+udp   UNCONN 0      0              0.0.0.0:5353       0.0.0.0:*    users:(("avahi-daemon",pid=1179,fd=12))  
+udp   UNCONN 0      0              0.0.0.0:40431      0.0.0.0:*    users:(("avahi-daemon",pid=1179,fd=14))  
+udp   UNCONN 0      0           172.18.0.1:57163      0.0.0.0:*    users:(("minidlnad",pid=1189,fd=12))     
+udp   UNCONN 0      0                 [::]:33600         [::]:*    users:(("avahi-daemon",pid=1179,fd=15))  
+udp   UNCONN 0      0                    *:1716             *:*    users:(("kdeconnectd",pid=3376,fd=16))   
+udp   UNCONN 0      0                 [::]:5353          [::]:*    users:(("avahi-daemon",pid=1179,fd=13))  
+tcp   LISTEN 0      4096         127.0.0.1:42965      0.0.0.0:*    users:(("containerd",pid=1642,fd=10))    
+tcp   LISTEN 0      2048           0.0.0.0:8080       0.0.0.0:*    users:(("python3",pid=2442,fd=13))       
+tcp   LISTEN 0      4096        127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=835,fd=17))
+tcp   LISTEN 0      4096         127.0.0.1:631        0.0.0.0:*    users:(("cupsd",pid=321856,fd=7))        
+tcp   LISTEN 0      16             0.0.0.0:8200       0.0.0.0:*    users:(("minidlnad",pid=1189,fd=6))      
+tcp   LISTEN 0      511          127.0.0.1:37533      0.0.0.0:*    users:(("code",pid=289374,fd=129))       
+tcp   LISTEN 0      4096     127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=835,fd=15))
+tcp   LISTEN 0      511                  *:5905             *:*    users:(("code",pid=289995,fd=36))        
+tcp   LISTEN 0      4096             [::1]:631           [::]:*    users:(("cupsd",pid=321856,fd=6))        
+tcp   LISTEN 0      50                   *:1716             *:*    users:(("kdeconnectd",pid=3376,fd=17))   
+tcp   LISTEN 0      4096                 *:11434            *:*    users:(("ollama",pid=2062,fd=3))         
+
+--- Statut du pare-feu (UFW) ---
+État : inactif
+
+==============================================================================
+[ 7/13 ] UTILISATEURS ET SÉCURITÉ
+==============================================================================
+
+--- Utilisateurs avec un shell de connexion ---
+root
+toni
+
+--- Dernières connexions réussies ---
+toni     pts/5        :0               Sun Sep 14 15:42 - 15:45  (00:02)
+toni     pts/6        :0               Sun Sep 14 10:26 - 13:39  (03:12)
+toni     pts/5        :0               Sun Sep 14 10:26 - 13:40  (03:13)
+toni     pts/3        :0               Sat Sep 13 21:54 - 21:54  (00:00)
+toni     pts/3        :0               Sat Sep 13 21:05 - 21:33  (00:28)
+toni     pts/1        :0               Sat Sep 13 19:42   still logged in
+toni     pts/4        :0               Sat Sep 13 16:35   still logged in
+toni     pts/3        :0               Sat Sep 13 16:34 - 19:29  (02:55)
+toni     pts/1        :0               Fri Sep 12 19:55 - 16:36  (20:41)
+toni     pts/0        :0               Fri Sep 12 19:54   still logged in
+
+wtmp commence Sat May 10 03:35:26 2025
+
+--- Dernières tentatives de connexion échouées ---
+toni                                   Mon Sep  1 10:15 - 10:15  (00:00)
+toni                                   Mon Sep  1 10:13 - 10:13  (00:00)
+toni                                   Mon Sep  1 10:05 - 10:05  (00:00)
+
+btmp commence Mon Sep  1 10:05:06 2025
+
+--- Fichiers Sudoers ---
+-r--r----- 1 root root 1800 janv. 29  2024 /etc/sudoers
+
+/etc/sudoers.d/:
+total 8
+-r--r----- 1 root root  175 févr. 19  2024 kdesu-sudoers
+-r--r----- 1 root root 1068 janv. 29  2024 README
+
+==============================================================================
+[ 8/13 ] SERVICES ET TÂCHES PLANIFIÉES
+==============================================================================
+
+--- Analyse du temps de démarrage (systemd) ---
+Startup finished in 6.056s (firmware) + 5.591s (loader) + 2.566s (kernel) + 18.530s (userspace) = 32.744s 
+graphical.target reached after 18.513s in userspace.
+38.971s apt-daily.service
+15.649s plocate-updatedb.service
+ 9.979s NetworkManager-wait-online.service
+ 3.292s systemd-udev-settle.service
+ 3.215s snapd.seeded.service
+ 3.118s snapd.service
+ 2.523s apt-daily-upgrade.service
+ 2.420s NetworkManager.service
+ 1.558s docker.service
+ 1.144s fwupd.service
+
+--- Services systemd en échec ---
+  UNIT                                               LOAD   ACTIVE SUB    DESCRIPTION
+● systemd-backlight@leds:dell::kbd_backlight.service loaded failed failed Load/Save Screen Backlight Brightness of leds:dell::kbd_backlight
+
+Legend: LOAD   → Reflects whether the unit definition was properly loaded.
+        ACTIVE → The high-level unit activation state, i.e. generalization of SUB.
+        SUB    → The low-level unit activation state, values depend on unit type.
+
+1 loaded units listed.
+
+--- Tâches Cron de l'utilisateur ---
+
+==============================================================================
+[ 9/13 ] JOURNAUX SYSTÈME (LOGS)
+==============================================================================
+
+--- 20 dernières erreurs critiques du journal système (journalctl) ---
+sept. 12 19:54:32 toni thermald[1233]: XML zone: invalid sensor type TSKN
+sept. 12 19:54:32 toni thermald[1233]: XML zone: invalid sensor type TMEM
+sept. 12 19:54:32 toni bluetoothd[1180]: profiles/sap/server.c:sap_server_register() Sap driver initialization failed.
+sept. 12 19:54:32 toni bluetoothd[1180]: sap-server: Operation not permitted (1)
+sept. 12 19:54:36 toni (uidsynth)[1906]: fluidsynth.service: Failed to drop capabilities: Operation not permitted
+sept. 12 19:54:36 toni systemd[1887]: Failed to start fluidsynth.service - FluidSynth Daemon.
+sept. 12 19:54:36 toni jackdbus[1942]: default: failed to stat "/var/lib/sddm/.config/jack/conf.xml", error is 2 (No such file or directory)
+sept. 12 19:54:36 toni jackdbus[1942]: default: open() failed to open conf filename.
+sept. 12 19:54:55 toni sddm-helper[2499]: gkr-pam: unable to locate daemon control file
+sept. 12 19:54:56 toni (uidsynth)[2521]: fluidsynth.service: Failed to drop capabilities: Operation not permitted
+sept. 12 19:54:56 toni systemd[2503]: Failed to start fluidsynth.service - FluidSynth Daemon.
+sept. 12 19:54:56 toni jackdbus[2552]: default: failed to stat "/home/toni/.config/jack/conf.xml", error is 2 (No such file or directory)
+sept. 12 19:54:56 toni jackdbus[2552]: default: open() failed to open conf filename.
+sept. 13 01:45:27 toni kernel: ACPI Error: Thread 506942080 cannot release Mutex [PATM] acquired by thread 4166483968 (20230628/exmutex-378)
+sept. 13 01:45:27 toni kernel: ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV._Q66 due to previous error (AE_AML_NOT_OWNER) (20230628/psparse-529)
+sept. 14 11:03:49 toni kernel: ACPI Error: Thread 2363238720 cannot release Mutex [PATM] acquired by thread 3383001088 (20230628/exmutex-378)
+sept. 14 11:03:49 toni kernel: ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV._Q66 due to previous error (AE_AML_NOT_OWNER) (20230628/psparse-529)
+sept. 14 12:35:41 toni kernel: ACPI Error: Thread 37835392 cannot release Mutex [PATM] acquired by thread 2707259392 (20230628/exmutex-378)
+sept. 14 12:35:41 toni kernel: ACPI Error: Aborting method \_SB.PCI0.LPCB.ECDV._Q66 due to previous error (AE_AML_NOT_OWNER) (20230628/psparse-529)
+sept. 14 15:42:50 toni kernel: usb 1-3: device not accepting address 7, error -71
+
+--- 20 derniers messages du noyau (dmesg) ---
+dmesg: échec de lecture du tampon de noyau: Opération non permise
+
+==============================================================================
+[ 10/13 ] ENVIRONNEMENT SHELL
+==============================================================================
+
+--- Variable PATH ---
+/home/toni/Documents/Projet simulateur/env/bin
+/home/toni/miniconda3/bin
+/home/toni/miniconda3/condabin
+/home/toni/.nvm/versions/node/v22.17.1/bin
+/home/toni/.local/bin
+/usr/local/sbin
+/usr/local/bin
+/usr/sbin
+/usr/bin
+/sbin
+/bin
+/usr/games
+/usr/local/games
+/snap/bin
+
+--- Variables d'environnement importantes ---
+SHELL=/bin/bash
+COLORTERM=truecolor
+LANGUAGE=
+SHELL_SESSION_ID=b05ddcc964644a6b8c01b0d857684b20
+CONDA_PREFIX=/home/toni/miniconda3
+HOME=/home/toni
+LANG=fr_FR.UTF-8
+PROFILEHOME=
+TERM=xterm-256color
+
+--- Fichiers de configuration du Shell ---
+-rw-r--r--  1 toni toni      4960 août  23 19:27 .bashrc
+-rw-r--r--  1 toni toni      3911 mai    7 21:53 .bashrc.save
+-rw-r--r--  1 toni toni       807 mars  31  2024 .profile
+
+==============================================================================
+[ 11/13 ] PERFORMANCE & KERNEL TUNING (NIVEAU EXPERT)
+==============================================================================
+
+--- Analyse de la 'Swappiness' (Utilisation du Swap) ---
+Valeur de vm.swappiness : 10
+
+--- Ordonnanceurs d'E/S (I/O Schedulers) ---
+Disque /dev/sda : none [mq-deadline] 
+
+--- Répartition des Interruptions Matérielles (IRQ) par CPU ---
+            CPU0       CPU1       CPU2       CPU3       
+ 124:          0          0    1204902          0  IR-PCI-MSI-0000:00:17.0    0-edge      ahci[0000:00:17.0]
+ 125:    8401357          0          0          0  IR-PCI-MSI-0000:00:14.0    0-edge      xhci_hcd
+ 130:          0          0          0          0  IR-PCI-MSIX-0000:02:00.0    0-edge      enp2s0
+ 138:   36103649          0          0          0  IR-PCI-MSI-0000:00:02.0    0-edge      i915
+
+--- Entropie disponible pour la cryptographie ---
+Entropie disponible : 256 bits
+AVERTISSEMENT : Niveau d'entropie bas.
+
+==============================================================================
+[ 12/13 ] SÉCURITÉ AVANCÉE & AUDIT SYSTÈME (NIVEAU EXPERT)
+==============================================================================
+
+--- Paramètres de Sécurité du Noyau (sysctl) ---
+fs.protected_hardlinks = 1
+fs.protected_symlinks = 1
+kernel.randomize_va_space = 2
+
+--- Recherche de Fichiers à Risque (World-Writable & SUID/SGID) ---
+Fichiers 'World-Writable' dans les répertoires système :
+Fichiers SUID/SGID potentiellement anormaux :
+  4495686    412 -rwsr-xr--   1 root     dip        420416 avril  3  2024 /usr/sbin/pppd
+  4462041     28 -rwxr-sr-x   1 root     shadow      26944 juin 12 16:45 /usr/sbin/pam_extrausers_chkpwd
+  4462046     32 -rwxr-sr-x   1 root     shadow      31040 juin 12 16:45 /usr/sbin/unix_chkpwd
+  4469908     64 -rwsr-xr-x   1 root     root        64152 mai 30  2024 /usr/bin/passwd
+  4457648     40 -rwsr-xr-x   1 root     root        39296 avril  8  2024 /usr/bin/fusermount3
+  4457533     40 -rwsr-xr-x   1 root     root        39296 juin  5 14:17 /usr/bin/umount
+  4457750     72 -rwxr-sr-x   1 root     shadow      72184 mai 30  2024 /usr/bin/chage
+  4458668    308 -rwxr-sr-x   1 root     plocate    313912 avril 18  2024 /usr/bin/plocate
+  4468504     40 -rwsr-xr-x   1 root     root        40664 mai 30  2024 /usr/bin/newgrp
+  4457323     52 -rwsr-xr-x   1 root     root        51584 juin  5 14:17 /usr/bin/mount
+  4459279     28 -rwxr-sr-x   1 root     shadow      27152 mai 30  2024 /usr/bin/expiry
+  4465460     32 -rwsr-xr-x   1 root     root        30952 déc.  2  2024 /usr/bin/pkexec
+  4462489    464 -rwsr-xr-x   1 root     root       475064 avril 16  2024 /usr/bin/firejail
+  4467186     56 -rwsr-xr-x   1 root     root        55680 juin  5 14:17 /usr/bin/su
+  4459570    272 -rwsr-xr-x   1 root     root       277936 juin 25 14:42 /usr/bin/sudo
+  4457329     40 -rwxr-sr-x   1 root     crontab     39664 mars 31  2024 /usr/bin/crontab
+  4469907     76 -rwsr-xr-x   1 root     root        76248 mai 30  2024 /usr/bin/gpasswd
+  4457314    304 -rwxr-sr-x   1 root     _ssh       309688 août 26 15:49 /usr/bin/ssh-agent
+  4458350     72 -rwsr-xr-x   1 root     root        72792 mai 30  2024 /usr/bin/chfn
+  4458925     44 -rwsr-xr-x   1 root     root        44760 mai 30  2024 /usr/bin/chsh
+
+--- Audit des 'Linux Capabilities' (Privilèges sans root) ---
+/usr/bin/kwin_wayland cap_sys_resource=ep
+/usr/bin/mtr-packet cap_net_raw=ep
+/usr/bin/ping cap_net_raw=ep
+
+--- Vérification de l'Intégrité des Binaires (debsums) ---
+NOTE : L'outil 'debsums' n'est pas installé. Analyse correspondante ignorée.
+NOTE: 'debsums' n'est pas installé.
+
+==============================================================================
+[ 13/13 ] INTÉGRITÉ & DIAGNOSTIC PROFOND (NIVEAU DIEU)
+==============================================================================
+
+--- État de 'Taint' du Noyau ---
+Valeur de 'Taint' : 0
+
+--- Fichiers Supprimés mais Toujours Ouverts (Espace disque fantôme) ---
+lsof: WARNING: can't stat() fuse.portal file system /run/user/1000/doc
+      Output information may be incomplete.
+COMMAND      PID USER   FD   TYPE DEVICE    SIZE/OFF NLINK     NODE NAME
+Xorg        1715 root   16u   REG    0,1           4     0   269561 /memfd:xshmfence (deleted)
+Xorg        1715 root   42u   REG    0,1           4     0   268080 /memfd:xshmfence (deleted)
+Xorg        1715 root   43u   REG    0,1           4     0   267597 /memfd:xshmfence (deleted)
+Xorg        1715 root   52u   REG    0,1           4     0     1141 /memfd:xshmfence (deleted)
+Xorg        1715 root   56u   REG    0,1           4     0     2265 /memfd:xshmfence (deleted)
+Xorg        1715 root   63u   REG    0,1           4     0      185 /memfd:xshmfence (deleted)
+Xorg        1715 root   66u   REG    0,1           4     0     3161 /memfd:xshmfence (deleted)
+Xorg        1715 root   67u   REG    0,1           4     0     3160 /memfd:xshmfence (deleted)
+Xorg        1715 root   68u   REG    0,1           4     0     3169 /memfd:xshmfence (deleted)
+Xorg        1715 root   72u   REG    0,1           4     0      225 /memfd:xshmfence (deleted)
+Xorg        1715 root   73u   REG    0,1           4     0      307 /memfd:xshmfence (deleted)
+Xorg        1715 root   74u   REG    0,1           4     0   175336 /memfd:xshmfence (deleted)
+Xorg        1715 root   80u   REG    0,1           4     0      313 /memfd:xshmfence (deleted)
+Xorg        1715 root   81u   REG    0,1           4     0     1289 /memfd:xshmfence (deleted)
+Xorg        1715 root   84u   REG    0,1           4     0      507 /memfd:xshmfence (deleted)
+Xorg        1715 root   85u   REG    0,1           4     0   264020 /memfd:xshmfence (deleted)
+Xorg        1715 root   86u   REG    0,1           4     0     1290 /memfd:xshmfence (deleted)
+Xorg        1715 root   87u   REG    0,1           4     0   267657 /memfd:xshmfence (deleted)
+Xorg        1715 root   88u   REG    0,1           4     0      498 /memfd:xshmfence (deleted)
+Xorg        1715 root   95u   REG    0,1           4     0   265294 /memfd:xshmfence (deleted)
+Xorg        1715 root   96u   REG    0,1           4     0   243143 /memfd:xshmfence (deleted)
+Xorg        1715 root  102u   REG    0,1           4     0     5318 /memfd:xshmfence (deleted)
+Xorg        1715 root  103u   REG    0,1           4     0   174446 /memfd:xshmfence (deleted)
+Xorg        1715 root  104u   REG    0,1           4     0     6240 /memfd:xshmfence (deleted)
+Xorg        1715 root  105u   REG    0,1           4     0   133120 /memfd:xshmfence (deleted)
+Xorg        1715 root  106u   REG    0,1           4     0   262950 /memfd:xshmfence (deleted)
+Xorg        1715 root  107u   REG    0,1           4     0     6220 /memfd:xshmfence (deleted)
+Xorg        1715 root  108u   REG    0,1           4     0   263725 /memfd:xshmfence (deleted)
+Xorg        1715 root  109u   REG    0,1           4     0     6405 /memfd:xshmfence (deleted)
+Xorg        1715 root  110u   REG    0,1           4     0    38523 /memfd:xshmfence (deleted)
+Xorg        1715 root  112u   REG    0,1           4     0    39979 /memfd:xshmfence (deleted)
+Xorg        1715 root  114u   REG    0,1           4     0    38534 /memfd:xshmfence (deleted)
+Xorg        1715 root  116u   REG    0,1           4     0    38535 /memfd:xshmfence (deleted)
+Xorg        1715 root  117u   REG    0,1           4     0    93327 /memfd:xshmfence (deleted)
+Xorg        1715 root  119u   REG    0,1           4     0   174447 /memfd:xshmfence (deleted)
+Xorg        1715 root  121u   REG    0,1           4     0   262877 /memfd:xshmfence (deleted)
+Xorg        1715 root  122u   REG    0,1           4     0    72910 /memfd:xshmfence (deleted)
+Xorg        1715 root  126u   REG    0,1           4     0    93328 /memfd:xshmfence (deleted)
+Xorg        1715 root  128u   REG    0,1           4     0    71017 /memfd:xshmfence (deleted)
+pipewire    2518 toni   36u   REG    0,1        2312     0     3115 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   39u   REG    0,1        2312     0     3116 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   46u   REG    0,1        2312     0      138 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   48u   REG    0,1        2312     0      140 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   50u   REG    0,1        2312     0      141 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   52u   REG    0,1        2312     0      142 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   55u   REG    0,1        2312     0    83864 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   57u   REG    0,1        4096     0    83865 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=4096 (deleted)
+pipewire    2518 toni   61u   REG    0,1        2312     0   268439 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+pipewire    2518 toni   63u   REG    0,1        2312     0   268440 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+wireplumb   2525 toni   43u   REG    0,1        2312     0    85219 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+wireplumb   2525 toni   44u   REG    0,1        2312     0    83864 /memfd:pipewire-memfd:flags=0x0000000f,type=2,size=2312 (deleted)
+startplas   2598 toni   10r   REG    8,2     1072110     0  2915141 /home/toni/.cache/ksycoca5_fr_srYnGQBvvgfPD2nZ837fV77gW30= (deleted)
+ksmserver   2912 toni   25r   REG    8,2     1072110     0  2915141 /home/toni/.cache/ksycoca5_fr_srYnGQBvvgfPD2nZ837fV77gW30= (deleted)
+kded5       2914 toni   28r   REG    8,2     4392486     0  2642839 /var/lib/dpkg/status (deleted)
+kded5       2914 toni   47r   REG    8,2      407601     0  2642574 /var/lib/apt/lists/packages.microsoft.com_repos_code_dists_stable_main_binary-armhf_Packages (deleted)
+kded5       2914 toni   48r   REG    8,2      398327     0  2642785 /var/lib/apt/lists/packages.microsoft.com_repos_code_dists_stable_main_binary-arm64_Packages (deleted)
+kded5       2914 toni   49r   REG    8,2      388550     0  2642786 /var/lib/apt/lists/packages.microsoft.com_repos_code_dists_stable_main_binary-amd64_Packages (deleted)
+kded5       2914 toni   56r   REG    8,2       52025     0  2642708 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_i18n_Translation-en (deleted)
+kded5       2914 toni   57r   REG    8,2       36082     0  2642530 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-i386_Packages (deleted)
+kded5       2914 toni   58r   REG    8,2      294216     0  2642661 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-amd64_Packages (deleted)
+kded5       2914 toni   59r   REG    8,2     3017884     0  2640928 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_universe_i18n_Translation-en (deleted)
+kded5       2914 toni   60r   REG    8,2     6216081     0  2640849 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-i386_Packages (deleted)
+kded5       2914 toni   61r   REG    8,2     9371359     0  2641342 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-amd64_Packages (deleted)
+kded5       2914 toni   62r   REG    8,2     7744254     0  2641157 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_restricted_i18n_Translation-en (deleted)
+kded5       2914 toni   63r   REG    8,2      116592     0  2641611 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_restricted_binary-i386_Packages (deleted)
+kded5       2914 toni   64r   REG    8,2    10755639     0  2642051 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_restricted_binary-amd64_Packages (deleted)
+kded5       2914 toni   66r   REG    8,2     2648343     0  2642625 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_main_binary-i386_Packages (deleted)
+kded5       2914 toni   67r   REG    8,2     7713546     0  2642570 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_main_binary-amd64_Packages (deleted)
+kded5       2914 toni   84r   REG    8,2        4652     0  2642498 /var/lib/apt/lists/deb.opera.com_opera-stable_dists_stable_non-free_binary-amd64_Packages (deleted)
+kded5       2914 toni   85r   REG    8,2        5510     0  2641412 /var/lib/apt/lists/dl.google.com_linux_chrome_deb_dists_stable_main_binary-amd64_Packages (deleted)
+kded5       2914 toni   86r   REG    8,2     1777745     0  2642796 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_universe_i18n_Translation-en (deleted)
+kded5       2914 toni   87r   REG    8,2     3383373     0  2642756 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_universe_binary-i386_Packages (deleted)
+kded5       2914 toni   88r   REG    8,2     5500805     0  2642778 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_universe_binary-amd64_Packages (deleted)
+kded5       2914 toni   96r   REG    8,2     1607915     0  2642622 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_main_binary-i386_Packages (deleted)
+kded5       2914 toni   97r   REG    8,2     6262893     0  2642485 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_main_binary-amd64_Packages (deleted)
+kded5       2914 toni   98r   REG    8,2       52025     0  2642362 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_i18n_Translation-en (deleted)
+kded5       2914 toni   99r   REG    8,2       36082     0  2641940 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-i386_Packages (deleted)
+kded5       2914 toni  100r   REG    8,2      294216     0  2642000 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-amd64_Packages (deleted)
+kded5       2914 toni  101r   REG    8,2     3017884     0  2640837 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_universe_i18n_Translation-en (deleted)
+kded5       2914 toni  102r   REG    8,2     6216081     0  2643104 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-i386_Packages (deleted)
+kded5       2914 toni  103r   REG    8,2     9371359     0  2642792 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-amd64_Packages (deleted)
+kded5       2914 toni  112r   REG    8,2     4392486     0  2642839 /var/lib/dpkg/status (deleted)
+kded5       2914 toni  118r   REG    8,2      407601     0  2642574 /var/lib/apt/lists/packages.microsoft.com_repos_code_dists_stable_main_binary-armhf_Packages (deleted)
+kded5       2914 toni  119r   REG    8,2      398327     0  2642785 /var/lib/apt/lists/packages.microsoft.com_repos_code_dists_stable_main_binary-arm64_Packages (deleted)
+kded5       2914 toni  120r   REG    8,2      388550     0  2642786 /var/lib/apt/lists/packages.microsoft.com_repos_code_dists_stable_main_binary-amd64_Packages (deleted)
+kded5       2914 toni  127r   REG    8,2       52025     0  2642708 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_i18n_Translation-en (deleted)
+kded5       2914 toni  128r   REG    8,2       36082     0  2642530 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-i386_Packages (deleted)
+kded5       2914 toni  129r   REG    8,2      294216     0  2642661 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-amd64_Packages (deleted)
+kded5       2914 toni  130r   REG    8,2     3017884     0  2640928 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_universe_i18n_Translation-en (deleted)
+kded5       2914 toni  131r   REG    8,2     6216081     0  2640849 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-i386_Packages (deleted)
+kded5       2914 toni  132r   REG    8,2     9371359     0  2641342 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-amd64_Packages (deleted)
+kded5       2914 toni  133r   REG    8,2     7744254     0  2641157 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_restricted_i18n_Translation-en (deleted)
+kded5       2914 toni  134r   REG    8,2      116592     0  2641611 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_restricted_binary-i386_Packages (deleted)
+kded5       2914 toni  135r   REG    8,2    10755639     0  2642051 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_restricted_binary-amd64_Packages (deleted)
+kded5       2914 toni  137r   REG    8,2     2648343     0  2642625 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_main_binary-i386_Packages (deleted)
+kded5       2914 toni  138r   REG    8,2     7713546     0  2642570 /var/lib/apt/lists/fr.archive.ubuntu.com_ubuntu_dists_noble-updates_main_binary-amd64_Packages (deleted)
+kded5       2914 toni  155r   REG    8,2        4652     0  2642498 /var/lib/apt/lists/deb.opera.com_opera-stable_dists_stable_non-free_binary-amd64_Packages (deleted)
+kded5       2914 toni  156r   REG    8,2        5510     0  2641412 /var/lib/apt/lists/dl.google.com_linux_chrome_deb_dists_stable_main_binary-amd64_Packages (deleted)
+kded5       2914 toni  157r   REG    8,2     1777745     0  2642796 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_universe_i18n_Translation-en (deleted)
+kded5       2914 toni  158r   REG    8,2     3383373     0  2642756 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_universe_binary-i386_Packages (deleted)
+kded5       2914 toni  159r   REG    8,2     5500805     0  2642778 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_universe_binary-amd64_Packages (deleted)
+kded5       2914 toni  167r   REG    8,2     1607915     0  2642622 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_main_binary-i386_Packages (deleted)
+kded5       2914 toni  168r   REG    8,2     6262893     0  2642485 /var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_noble-security_main_binary-amd64_Packages (deleted)
+kded5       2914 toni  169r   REG    8,2       52025     0  2642362 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_i18n_Translation-en (deleted)
+kded5       2914 toni  170r   REG    8,2       36082     0  2641940 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-i386_Packages (deleted)
+kded5       2914 toni  171r   REG    8,2      294216     0  2642000 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_multiverse_binary-amd64_Packages (deleted)
+kded5       2914 toni  172r   REG    8,2     3017884     0  2640837 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_universe_i18n_Translation-en (deleted)
+kded5       2914 toni  173r   REG    8,2     6216081     0  2643104 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-i386_Packages (deleted)
+kded5       2914 toni  174r   REG    8,2     9371359     0  2642792 /var/lib/apt/lists/archive.ubuntu.com_ubuntu_dists_noble-updates_universe_binary-amd64_Packages (deleted)
+plasmashe   2959 toni   27u   REG    0,1    67108864     0     2291 /memfd:pulseaudio (deleted)
+plasmashe   2959 toni   45u   REG    0,1    67108864     0     5312 /memfd:pulseaudio (deleted)
+plasmashe   2959 toni   48r   REG    8,2     1072110     0  2935514 /home/toni/.cache/ksycoca5_fr_srYnGQBvvgfPD2nZ837fV77gW30= (deleted)
+plasmashe   2959 toni   51r   REG    8,2     1072110     0  2935514 /home/toni/.cache/ksycoca5_fr_srYnGQBvvgfPD2nZ837fV77gW30= (deleted)
+plasmashe   2959 toni   54r   REG    8,2     1072110     0  2935514 /home/toni/.cache/ksycoca5_fr_srYnGQBvvgfPD2nZ837fV77gW30= (deleted)
+kdeconnec   3376 toni   19u   REG    0,1    67108864     0      711 /memfd:pulseaudio (deleted)
+kdeconnec   3376 toni   28r   REG    8,2      175220     0  4589280 /usr/share/mime/mime.cache (deleted)
+DiscoverN   3431 toni   16r   REG    8,2     1072110     0  2915141 /home/toni/.cache/ksycoca5_fr_srYnGQBvvgfPD2nZ837fV77gW30= (deleted)
+code       78978 toni   27u   REG    0,1    67108864     0     2291 /memfd:pulseaudio (deleted)
+code       78978 toni   45u   REG    0,1    67108864     0     5312 /memfd:pulseaudio (deleted)
+code       78978 toni   69u   REG   0,27           4     0   376575 /dev/shm/.org.chromium.Chromium.slKZ8C (deleted)
+code       78978 toni   74r   REG   0,27      262144     0   376576 /dev/shm/.org.chromium.Chromium.2Cj64e (deleted)
+code       78978 toni   91r   REG   0,27           8     0   376580 /dev/shm/.org.chromium.Chromium.9L95hi (deleted)
+code       78978 toni  118u   REG   0,27         144     0   376584 /dev/shm/.org.chromium.Chromium.3srLpG (deleted)
+code       78978 toni  122u   REG   0,27         144     0   376587 /dev/shm/.org.chromium.Chromium.7XAsUq (deleted)
+code       78978 toni  125r   REG   0,27      132818     0   376613 /dev/shm/.org.chromium.Chromium.T4ntG2 (deleted)
+code       79023 toni   35u   REG   0,27           4     0   376575 /dev/shm/.org.chromium.Chromium.slKZ8C (deleted)
+code       79023 toni   39u   REG   0,27         144     0   376584 /dev/shm/.org.chromium.Chromium.3srLpG (deleted)
+code       79023 toni   40r   REG   0,27          16     0   376579 /dev/shm/.org.chromium.Chromium.LLUyJ3 (deleted)
+code       79023 toni   41r   REG   0,27          16     0   376581 /dev/shm/.org.chromium.Chromium.zibN9R (deleted)
+code       79023 toni   42u   REG   0,27     2097152     0   569331 /dev/shm/.org.chromium.Chromium.EPw0EE (deleted)
+code       79023 toni   43u   REG   0,27     1048576     0   734177 /dev/shm/.org.chromium.Chromium.6JoGYF (deleted)
+code       79023 toni   44u   REG   0,27         144     0   376587 /dev/shm/.org.chromium.Chromium.7XAsUq (deleted)
+code       79023 toni   45u   REG   0,27     1048576     0   734178 /dev/shm/.org.chromium.Chromium.hiCaMg (deleted)
+code       79023 toni   46u   REG   0,27      262144     0   737605 /dev/shm/.org.chromium.Chromium.6G5SwA (deleted)
+code       79023 toni   48u   REG   0,27         144     0   376592 /dev/shm/.org.chromium.Chromium.DBC4ew (deleted)
+code       79023 toni   49u   REG   0,27        4096     0   598626 /dev/shm/.org.chromium.Chromium.cv2xPO (deleted)
+code       79023 toni   51u   REG   0,27         144     0   376595 /dev/shm/.org.chromium.Chromium.88wItX (deleted)
+code       79023 toni   53u   REG   0,27         144     0   574687 /dev/shm/.org.chromium.Chromium.4R8sDW (deleted)
+code       79023 toni   54u   REG   0,27         144     0   376615 /dev/shm/.org.chromium.Chromium.ZcN6ye (deleted)
+code       79023 toni   55u   REG   0,27       65536     0   734219 /dev/shm/.org.chromium.Chromium.v9lJTj (deleted)
+code       79023 toni   57u   REG   0,27         144     0   575543 /dev/shm/.org.chromium.Chromium.uzqdsv (deleted)
+code       79023 toni   58u   REG   0,27        4096     0   376633 /dev/shm/.org.chromium.Chromium.W4GuFM (deleted)
+code       79023 toni   59u   REG   0,27      131072     0   734220 /dev/shm/.org.chromium.Chromium.4thp6s (deleted)
+code       79023 toni   61u   REG   0,27     1048576     0   734189 /dev/shm/.org.chromium.Chromium.j5ecVC (deleted)
+code       79077 toni   17u   REG    0,1 17179869184     0    39991 /memfd:configurable_pool_shadow (deleted)
+code       79077 toni   20u   REG    0,1 17179869184     0    37408 /memfd:brp_pool_shadow (deleted)
+code       79077 toni   21u   REG    0,1 17179869184     0    37409 /memfd:regular_pool_shadow (deleted)
+code       79077 toni   25u   REG    8,2     4458584     0 11010063 /tmp/.org.chromium.Chromium.RGHwYI (deleted)
+code       79077 toni   27u   REG   0,27         144     0   376592 /dev/shm/.org.chromium.Chromium.DBC4ew (deleted)
+code       79077 toni   28u   REG   0,27     1048576     0   734177 /dev/shm/.org.chromium.Chromium.6JoGYF (deleted)
+code       79077 toni   29u   REG   0,27         144     0   376595 /dev/shm/.org.chromium.Chromium.88wItX (deleted)
+code       79077 toni   31u   REG   0,27     1048576     0   734178 /dev/shm/.org.chromium.Chromium.hiCaMg (deleted)
+code       79077 toni   32u   REG   0,27        4096     0   598626 /dev/shm/.org.chromium.Chromium.cv2xPO (deleted)
+code       79077 toni   33u   REG   0,27     2097152     0   569331 /dev/shm/.org.chromium.Chromium.EPw0EE (deleted)
+code       79077 toni   34u   REG   0,27        4096     0   376633 /dev/shm/.org.chromium.Chromium.W4GuFM (deleted)
+code       79077 toni   35u   REG   0,27         144     0   376615 /dev/shm/.org.chromium.Chromium.ZcN6ye (deleted)
+code       79077 toni   38u   REG   0,27      262144     0   737605 /dev/shm/.org.chromium.Chromium.6G5SwA (deleted)
+code       79077 toni   42u   REG   0,27         144     0   574687 /dev/shm/.org.chromium.Chromium.4R8sDW (deleted)
+code       79077 toni   61u   REG   0,27     1048576     0   734189 /dev/shm/.org.chromium.Chromium.j5ecVC (deleted)
+code       79077 toni   62u   REG   0,27         144     0   575543 /dev/shm/.org.chromium.Chromium.uzqdsv (deleted)
+code       79077 toni   64u   REG   0,27       65536     0   734219 /dev/shm/.org.chromium.Chromium.v9lJTj (deleted)
+code       79077 toni   65u   REG   0,27      131072     0   734220 /dev/shm/.org.chromium.Chromium.4thp6s (deleted)
+pet       289413 toni   43u   REG   0,27      219873     0   565222 /dev/shm/.org.chromium.Chromium.rxUcLu (deleted)
+pet       289413 toni   44u   REG   0,27      220066     0   565330 /dev/shm/.org.chromium.Chromium.HE8Dx2 (deleted)
+pet       289413 toni   45r   REG   0,27      220066     0   565330 /dev/shm/.org.chromium.Chromium.HE8Dx2 (deleted)
+pet       289413 toni   46r   REG   0,27      219873     0   565222 /dev/shm/.org.chromium.Chromium.rxUcLu (deleted)
+pet       289413 toni   47u   REG   0,27      219796     0   565225 /dev/shm/.org.chromium.Chromium.bQ8FCZ (deleted)
+pet       289413 toni   48r   REG   0,27      219796     0   565225 /dev/shm/.org.chromium.Chromium.bQ8FCZ (deleted)
+pet       289413 toni   49u   REG   0,27      220466     0   565332 /dev/shm/.org.chromium.Chromium.MzORn7 (deleted)
+pet       289413 toni   50r   REG   0,27      220466     0   565332 /dev/shm/.org.chromium.Chromium.MzORn7 (deleted)
+code      289562 toni   46u   REG   0,27       71264     0   565343 /dev/shm/.org.chromium.Chromium.h8EOea (deleted)
+code      289562 toni   47r   REG   0,27       71264     0   565343 /dev/shm/.org.chromium.Chromium.h8EOea (deleted)
+code      289995 toni   95u   REG   0,27     2097152     0   566006 /dev/shm/.org.chromium.Chromium.VPhMNO (deleted)
+code      289995 toni  107u   REG   0,27      154200     0   566010 /dev/shm/.org.chromium.Chromium.Ifoayy (deleted)
+code      289995 toni  111r   REG   0,27      154200     0   566010 /dev/shm/.org.chromium.Chromium.Ifoayy (deleted)
+code      301111 toni  120u   REG   0,27     2097152     0   574645 /dev/shm/.org.chromium.Chromium.5xOuUt (deleted)
+chrome    463581 toni    5u   REG    8,2     4194304     0  3014749 /home/toni/.config/google-chrome/BrowserMetrics/BrowserMetrics-68C65FA2-712DD.pma (deleted)
+chrome    463581 toni   27u   REG    0,1    67108864     0     2291 /memfd:pulseaudio (deleted)
+chrome    463581 toni   30r   REG   0,27           8     0   588617 /dev/shm/.com.google.Chrome.XRIqFm (deleted)
+chrome    463581 toni   45u   REG    0,1    67108864     0     5312 /memfd:pulseaudio (deleted)
+chrome    463581 toni   52u   REG   0,27      262144     0   588618 /dev/shm/.com.google.Chrome.SAKsWf (deleted)
+chrome    463581 toni   53u   REG   0,27           4     0   588619 /dev/shm/.com.google.Chrome.9FpCEi (deleted)
+chrome    463581 toni   56u   REG   0,27      524288     0   588622 /dev/shm/.com.google.Chrome.BkxtAi (deleted)
+chrome    463581 toni   58r   REG   0,27      262144     0   588620 /dev/shm/.com.google.Chrome.2VLNDZ (deleted)
+chrome    463581 toni   70u   REG   0,27      524288     0   588624 /dev/shm/.com.google.Chrome.Jdb5xs (deleted)
+chrome    463581 toni   84r   REG   0,27     1313616     0   588718 /dev/shm/.com.google.Chrome.BVxO71 (deleted)
+chrome    463581 toni   87u   REG   0,27      524288     0   590263 /dev/shm/.com.google.Chrome.vNjMK6 (deleted)
+chrome    463581 toni   93r   REG   0,27           8     0   588636 /dev/shm/.com.google.Chrome.L69B51 (deleted)
+chrome    463581 toni   94r   REG   0,27           8     0   588637 /dev/shm/.com.google.Chrome.5eSqrf (deleted)
+chrome    463581 toni   95u   REG   0,27         144     0   588647 /dev/shm/.com.google.Chrome.KZfWYG (deleted)
+chrome    463581 toni  105u   REG   0,27     2097152     0   595344 /dev/shm/.com.google.Chrome.reQYZf (deleted)
+chrome    463581 toni  107u   REG   0,27         144     0   588650 /dev/shm/.com.google.Chrome.tmqXRn (deleted)
+chrome    463581 toni  112r   REG   0,27           8     0   588653 /dev/shm/.com.google.Chrome.L87iKf (deleted)
+chrome    463581 toni  115r   REG   0,27      131056     0   588712 /dev/shm/.com.google.Chrome.wsrYyB (deleted)
+chrome    463581 toni  162u   REG   0,27       65536     0   732210 /dev/shm/.com.google.Chrome.iFFDJX (deleted)
+chrome    463581 toni  165u   REG   0,27     2097152     0   595345 /dev/shm/.com.google.Chrome.WPvzww (deleted)
+chrome    463581 toni  190u   REG   0,27       65536     0   732209 /dev/shm/.com.google.Chrome.Bg7rN3 (deleted)
+chrome    463581 toni  194r   REG   0,27           8     0   720554 /dev/shm/.com.google.Chrome.i8jWww (deleted)
+chrome    463581 toni  195r   REG   0,27           8     0   588695 /dev/shm/.com.google.Chrome.fGkOTk (deleted)
+chrome    463581 toni  196u   REG   0,27     2097152     0   588696 /dev/shm/.com.google.Chrome.da1E6B (deleted)
+chrome    463581 toni  205r   REG   0,27           8     0   740409 /dev/shm/.com.google.Chrome.OqWbis (deleted)
+chrome    463581 toni  211u   REG   0,27     2097152     0   713383 /dev/shm/.com.google.Chrome.TBDzdl (deleted)
+chrome    463581 toni  219u   REG   0,27     2097152     0   740410 /dev/shm/.com.google.Chrome.rFdkFG (deleted)
+chrome    463581 toni  220r   REG   0,27           8     0   740437 /dev/shm/.com.google.Chrome.1aEp0G (deleted)
+chrome    463581 toni  231r   REG   0,27      131056     0   588712 /dev/shm/.com.google.Chrome.wsrYyB (deleted)
+chrome    463581 toni  232r   REG   0,27       29196     0   588713 /dev/shm/.com.google.Chrome.E9wp8v (deleted)
+chrome    463581 toni  233r   REG   0,27         288     0   588714 /dev/shm/.com.google.Chrome.v97dNA (deleted)
+chrome    463581 toni  234r   REG   0,27         332     0   588715 /dev/shm/.com.google.Chrome.PFhdzn (deleted)
+chrome    463581 toni  235r   REG   0,27      264548     0   588716 /dev/shm/.com.google.Chrome.caTVFs (deleted)
+chrome    463581 toni  236r   REG   0,27      179528     0   588717 /dev/shm/.com.google.Chrome.G2MOK1 (deleted)
+chrome    463581 toni  239u   REG   0,27     2097152     0   740438 /dev/shm/.com.google.Chrome.WdNPNh (deleted)
+chrome    463581 toni  240r   REG   0,27           8     0   588948 /dev/shm/.com.google.Chrome.COIJG8 (deleted)
+chrome    463581 toni  241r   REG   0,27           8     0   740414 /dev/shm/.com.google.Chrome.S2SMdu (deleted)
+chrome    463581 toni  244r   REG   0,27           8     0   588753 /dev/shm/.com.google.Chrome.d9Xpd2 (deleted)
+chrome    463581 toni  245r   REG   0,27           8     0   588726 /dev/shm/.com.google.Chrome.OaT1SE (deleted)
+chrome    463581 toni  246u   REG   0,27     2097152     0   588755 /dev/shm/.com.google.Chrome.im7R9u (deleted)
+chrome    463581 toni  255r   REG   0,27           8     0   740445 /dev/shm/.com.google.Chrome.axiBKc (deleted)
+chrome    463581 toni  259r   REG   0,27           8     0   588827 /dev/shm/.com.google.Chrome.ue9xPo (deleted)
+chrome    463581 toni  264r   REG   0,27           8     0   588933 /dev/shm/.com.google.Chrome.bzzNIz (deleted)
+chrome    463581 toni  274u   REG   0,27     2097152     0   588934 /dev/shm/.com.google.Chrome.2Js4jv (deleted)
+chrome    463581 toni  317r   REG   0,27      180520     0   589557 /dev/shm/.com.google.Chrome.8Oymgu (deleted)
+chrome    463581 toni  319u   REG   0,27     2097152     0   720556 /dev/shm/.com.google.Chrome.lf4JE5 (deleted)
+chrome    463581 toni  335r   REG   0,27           8     0   589751 /dev/shm/.com.google.Chrome.SuQugP (deleted)
+chrome    463581 toni  338r   REG   0,27           8     0   590265 /dev/shm/.com.google.Chrome.IVYXZl (deleted)
+chrome    463581 toni  347u   REG   0,27     2097152     0   589752 /dev/shm/.com.google.Chrome.v6jBDY (deleted)
+chrome    463581 toni  352r   REG   0,27           8     0   589755 /dev/shm/.com.google.Chrome.RtiCRA (deleted)
+chrome    463581 toni  357r   REG   0,27           8     0   724874 /dev/shm/.com.google.Chrome.vnHkBX (deleted)
+chrome    463581 toni  359u   REG   0,27     2097152     0   724875 /dev/shm/.com.google.Chrome.QrSLKt (deleted)
+chrome    463581 toni  374r   REG   0,27           8     0   724878 /dev/shm/.com.google.Chrome.z8G4Dl (deleted)
+chrome    463581 toni  377r   REG   0,27           8     0   720586 /dev/shm/.com.google.Chrome.DOsDQ7 (deleted)
+chrome    463581 toni  380r   REG   0,27           8     0   720560 /dev/shm/.com.google.Chrome.L7q0Sg (deleted)
+chrome    463581 toni  384u   REG   0,27     2097152     0   720587 /dev/shm/.com.google.Chrome.NqrWOy (deleted)
+chrome    463581 toni  394r   REG   0,27           8     0   720597 /dev/shm/.com.google.Chrome.w4Hy37 (deleted)
+chrome    463581 toni  397r   REG   0,27           8     0   701522 /dev/shm/.com.google.Chrome.v5w0z8 (deleted)
+chrome    463581 toni  399u   REG   0,27     2097152     0   701523 /dev/shm/.com.google.Chrome.CJE60o (deleted)
+chrome    463581 toni  426r   REG   0,27           8     0   701528 /dev/shm/.com.google.Chrome.9X6Sg7 (deleted)
+cat       463586 toni   27u   REG    0,1    67108864     0     2291 /memfd:pulseaudio (deleted)
+cat       463586 toni   45u   REG    0,1    67108864     0     5312 /memfd:pulseaudio (deleted)
+cat       463587 toni   27u   REG    0,1    67108864     0     2291 /memfd:pulseaudio (deleted)
+cat       463587 toni   45u   REG    0,1    67108864     0     5312 /memfd:pulseaudio (deleted)
+chrome    463639 toni   36u   REG   0,27           4     0   588619 /dev/shm/.com.google.Chrome.9FpCEi (deleted)
+chrome    463639 toni   41r   REG   0,27          16     0   740411 /dev/shm/.com.google.Chrome.jjIdTl (deleted)
+chrome    463639 toni   42u   REG   0,27         144     0   588647 /dev/shm/.com.google.Chrome.KZfWYG (deleted)
+chrome    463639 toni   43r   REG   0,27          16     0   588644 /dev/shm/.com.google.Chrome.0xCtjL (deleted)
+chrome    463639 toni   45u   REG   0,27         144     0   740425 /dev/shm/.com.google.Chrome.wrsPMV (deleted)
+chrome    463639 toni   46u   REG   0,27         144     0   702865 /dev/shm/.com.google.Chrome.bv8IJd (deleted)
+chrome    463639 toni   47u   REG   0,27     1048576     0   740426 /dev/shm/.com.google.Chrome.Vm1mnT (deleted)
+chrome    463639 toni   48u   REG   0,27         144     0   588650 /dev/shm/.com.google.Chrome.tmqXRn (deleted)
+chrome    463639 toni   49u   REG   0,27       65536     0   740427 /dev/shm/.com.google.Chrome.bE1gxX (deleted)
+chrome    463639 toni   50r   REG   0,27          16     0   720555 /dev/shm/.com.google.Chrome.jIdnnr (deleted)
+chrome    463639 toni   52r   REG   0,27          16     0   588697 /dev/shm/.com.google.Chrome.4uT5D2 (deleted)
+chrome    463639 toni   53u   REG   0,27         144     0   720627 /dev/shm/.com.google.Chrome.5qeP04 (deleted)
+chrome    463639 toni   54u   REG   0,27     2097152     0   740428 /dev/shm/.com.google.Chrome.A5uSYm (deleted)
+chrome    463639 toni   55u   REG   0,27        4096     0   740429 /dev/shm/.com.google.Chrome.XcbR0e (deleted)
+chrome    463639 toni   57r   REG   0,27          16     0   740439 /dev/shm/.com.google.Chrome.Vcvncb (deleted)
+chrome    463639 toni   58r   REG   0,27     1048576     0   732562 /dev/shm/.com.google.Chrome.ko7kMc (deleted)
+chrome    463639 toni   59r   REG   0,27          16     0   720588 /dev/shm/.com.google.Chrome.B5Qttj (deleted)
+chrome    463639 toni   67r   REG   0,27          16     0   588754 /dev/shm/.com.google.Chrome.qoXZaB (deleted)
+chrome    463639 toni   76r   REG   0,27          16     0   588937 /dev/shm/.com.google.Chrome.hcHa0O (deleted)
+chrome    463639 toni   80u   REG   0,27        4096     0   740179 /dev/shm/.com.google.Chrome.9ouIQs (deleted)
+chrome    463639 toni   86u   REG   0,27         144     0   589690 /dev/shm/.com.google.Chrome.CYUnrZ (deleted)
+chrome    463639 toni   90r   REG   0,27          16     0   589753 /dev/shm/.com.google.Chrome.RbvxLB (deleted)
+chrome    463639 toni   93u   REG   0,27         144     0   589790 /dev/shm/.com.google.Chrome.VTN33Z (deleted)
+chrome    463639 toni   94u   REG   0,27       65536     0   589791 /dev/shm/.com.google.Chrome.Ku0amE (deleted)
+chrome    463639 toni   95u   REG   0,27       65536     0   589792 /dev/shm/.com.google.Chrome.UA4rkZ (deleted)
+chrome    463639 toni   96u   REG   0,27         144     0   589794 /dev/shm/.com.google.Chrome.iU1axi (deleted)
+chrome    463639 toni   97r   REG   0,27          16     0   724876 /dev/shm/.com.google.Chrome.EBk8HG (deleted)
+chrome    463639 toni   99u   REG   0,27         144     0   589810 /dev/shm/.com.google.Chrome.GCgtOj (deleted)
+chrome    463639 toni  100u   REG   0,27       65536     0   589812 /dev/shm/.com.google.Chrome.TuepzZ (deleted)
+chrome    463639 toni  101u   REG   0,27       65536     0   589813 /dev/shm/.com.google.Chrome.iupkEF (deleted)
+chrome    463639 toni  103u   REG   0,27         144     0   702868 /dev/shm/.com.google.Chrome.PCHpis (deleted)
+chrome    463639 toni  104u   REG   0,27       65536     0   702869 /dev/shm/.com.google.Chrome.3UD3Fb (deleted)
+chrome    463639 toni  105u   REG   0,27       65536     0   702870 /dev/shm/.com.google.Chrome.ihSXIa (deleted)
+chrome    463639 toni  112u   REG   0,27         144     0   590065 /dev/shm/.com.google.Chrome.pjSBk8 (deleted)
+chrome    463639 toni  123u   REG   0,27        4096     0   703307 /dev/shm/.com.google.Chrome.uSS7Db (deleted)
+chrome    463639 toni  127u   REG   0,27         144     0   720630 /dev/shm/.com.google.Chrome.ZdbMvV (deleted)
+chrome    463639 toni  129u   REG   0,27         144     0   722866 /dev/shm/.com.google.Chrome.zTNt08 (deleted)
+chrome    463639 toni  131u   REG   0,27        4096     0   720707 /dev/shm/.com.google.Chrome.nxGptm (deleted)
+chrome    463639 toni  135u   REG   0,27         144     0   719907 /dev/shm/.com.google.Chrome.rzsGqM (deleted)
+chrome    463639 toni  137u   REG   0,27         144     0   720754 /dev/shm/.com.google.Chrome.A0uy1Y (deleted)
+chrome    463639 toni  138u   REG   0,27         144     0   722869 /dev/shm/.com.google.Chrome.syq1ox (deleted)
+chrome    463639 toni  139u   REG   0,27       65536     0   720755 /dev/shm/.com.google.Chrome.LT2Gs1 (deleted)
+chrome    463639 toni  140u   REG   0,27       65536     0   720756 /dev/shm/.com.google.Chrome.UzEjCE (deleted)
+chrome    463639 toni  144u   REG   0,27         144     0   720910 /dev/shm/.com.google.Chrome.fd7Nd7 (deleted)
+chrome    463639 toni  170r   REG   0,27          16     0   701524 /dev/shm/.com.google.Chrome.4tW1zQ (deleted)
+chrome    463642 toni   24u   REG   0,27       65536     0   732209 /dev/shm/.com.google.Chrome.Bg7rN3 (deleted)
+chrome    463642 toni   30u   REG   0,27       65536     0   732210 /dev/shm/.com.google.Chrome.iFFDJX (deleted)
+chrome    463642 toni   32u   REG   0,27      131000     0   738878 /dev/shm/.com.google.Chrome.ENvI97 (deleted)
+chrome    463642 toni   34r   REG   0,27          16     0   588898 /dev/shm/.com.google.Chrome.sKauBv (deleted)
+chrome    463642 toni   35u   REG   0,27      131000     0   738879 /dev/shm/.com.google.Chrome.eoqlVX (deleted)
+chrome    463642 toni   37r   REG   0,27          16     0   720710 /dev/shm/.com.google.Chrome.V3QVtp (deleted)
+chrome    463642 toni   46r   REG   0,27          16     0   722863 /dev/shm/.com.google.Chrome.6TYrz5 (deleted)
+chrome    463642 toni   57r   REG   0,27          16     0   589761 /dev/shm/.com.google.Chrome.JEpwWE (deleted)
+chrome    463642 toni   79r   REG   0,27          16     0   589861 /dev/shm/.com.google.Chrome.fjLNJC (deleted)
+chrome    463642 toni   87r   REG   0,27          16     0   589854 /dev/shm/.com.google.Chrome.eXDBIv (deleted)
+chrome    463642 toni   95r   REG   0,27          16     0   720623 /dev/shm/.com.google.Chrome.lKgdNQ (deleted)
+chrome    463772 toni   25u   REG    8,2     2214900     0 11010065 /tmp/.com.google.Chrome.FaTIxs (deleted)
+chrome    463772 toni   48u   REG   0,27         144     0   589690 /dev/shm/.com.google.Chrome.CYUnrZ (deleted)
+chrome    463772 toni   51u   REG   0,27       65536     0   589692 /dev/shm/.com.google.Chrome.ByOw9y (deleted)
+chrome    463877 toni   29u   REG    8,2           0     0 11010077 /tmp/.com.google.Chrome.ZSTpG5 (deleted)
+chrome    463912 toni   38u   REG    8,2     1448227     0 11010055 /tmp/.com.google.Chrome.xPzmH0 (deleted)
+chrome    463912 toni   39u   REG   0,27         144     0   589790 /dev/shm/.com.google.Chrome.VTN33Z (deleted)
+chrome    463912 toni   40u   REG   0,27       65536     0   589791 /dev/shm/.com.google.Chrome.Ku0amE (deleted)
+chrome    463912 toni   41u   REG   0,27       65536     0   589792 /dev/shm/.com.google.Chrome.UA4rkZ (deleted)
+chrome    463912 toni   42u   REG   0,27         144     0   589794 /dev/shm/.com.google.Chrome.iU1axi (deleted)
+chrome    463912 toni   45u   REG   0,27         144     0   589810 /dev/shm/.com.google.Chrome.GCgtOj (deleted)
+chrome    463912 toni   46u   REG   0,27       65536     0   589812 /dev/shm/.com.google.Chrome.TuepzZ (deleted)
+chrome    463912 toni   47u   REG   0,27       65536     0   589813 /dev/shm/.com.google.Chrome.iupkEF (deleted)
+chrome    463912 toni   48u   REG   0,27         144     0   719907 /dev/shm/.com.google.Chrome.rzsGqM (deleted)
+chrome    463983 toni   31u   REG   0,27         144     0   590065 /dev/shm/.com.google.Chrome.pjSBk8 (deleted)
+chrome    463983 toni   39u   REG    8,2        3532     0 11010084 /tmp/.com.google.Chrome.UMfUBd (deleted)
+chrome    464193 toni   21u   REG    0,1    67108864     0   175520 /memfd:pulseaudio (deleted)
+chrome    560417 toni   25u   REG   0,27         144     0   702865 /dev/shm/.com.google.Chrome.bv8IJd (deleted)
+chrome    560417 toni   29u   REG   0,27         144     0   702868 /dev/shm/.com.google.Chrome.PCHpis (deleted)
+chrome    560417 toni   30u   REG   0,27       65536     0   702869 /dev/shm/.com.google.Chrome.3UD3Fb (deleted)
+chrome    560417 toni   31u   REG   0,27       65536     0   702870 /dev/shm/.com.google.Chrome.ihSXIa (deleted)
+chrome    560417 toni   39u   REG    8,2           0     0 11010096 /tmp/.com.google.Chrome.N5JEKW (deleted)
+chrome    579466 toni   34u   REG   0,27         144     0   720627 /dev/shm/.com.google.Chrome.5qeP04 (deleted)
+chrome    579466 toni   39u   REG    8,2     7044688     0 11010086 /tmp/.com.google.Chrome.W0HFG7 (deleted)
+chrome    579466 toni   42u   REG   0,27         144     0   720630 /dev/shm/.com.google.Chrome.ZdbMvV (deleted)
+chrome    579466 toni   44u   REG   0,27      131000     0   738878 /dev/shm/.com.google.Chrome.ENvI97 (deleted)
+chrome    579466 toni   48u   REG   0,27        4096     0   720707 /dev/shm/.com.google.Chrome.nxGptm (deleted)
+chrome    579466 toni   49u   REG   0,27        4096     0   740179 /dev/shm/.com.google.Chrome.9ouIQs (deleted)
+chrome    579466 toni   60u   REG   0,27         144     0   720754 /dev/shm/.com.google.Chrome.A0uy1Y (deleted)
+chrome    579466 toni   61u   REG   0,27       65536     0   720755 /dev/shm/.com.google.Chrome.LT2Gs1 (deleted)
+chrome    579466 toni   62u   REG   0,27       65536     0   720756 /dev/shm/.com.google.Chrome.UzEjCE (deleted)
+chrome    579466 toni   63u   REG   0,27      131000     0   738879 /dev/shm/.com.google.Chrome.eoqlVX (deleted)
+chrome    579466 toni   69u   REG   0,27         144     0   720910 /dev/shm/.com.google.Chrome.fd7Nd7 (deleted)
+chrome    579466 toni   81r   REG   0,27     1048576     0   732562 /dev/shm/.com.google.Chrome.ko7kMc (deleted)
+chrome    579501 toni   27u   REG   0,27         144     0   722866 /dev/shm/.com.google.Chrome.zTNt08 (deleted)
+chrome    579501 toni   37u   REG   0,27         144     0   722869 /dev/shm/.com.google.Chrome.syq1ox (deleted)
+chrome    579501 toni   39u   REG    8,2       39463     0 11010088 /tmp/.com.google.Chrome.mxcDHE (deleted)
+chrome    584524 toni   39u   REG    8,2           0     0 11010085 /tmp/.com.google.Chrome.c3Plo9 (deleted)
+chrome    601890 toni   22u   REG   0,27         144     0   740425 /dev/shm/.com.google.Chrome.wrsPMV (deleted)
+chrome    601890 toni   27u   REG   0,27     1048576     0   740426 /dev/shm/.com.google.Chrome.Vm1mnT (deleted)
+chrome    601890 toni   28u   REG   0,27       65536     0   740427 /dev/shm/.com.google.Chrome.bE1gxX (deleted)
+chrome    601890 toni   29u   REG   0,27     2097152     0   740428 /dev/shm/.com.google.Chrome.A5uSYm (deleted)
+chrome    601890 toni   30u   REG   0,27        4096     0   740429 /dev/shm/.com.google.Chrome.XcbR0e (deleted)
+chrome    601890 toni   40u   REG    8,2           0     0 11010058 /tmp/.com.google.Chrome.NiO2wY (deleted)
+chrome    602404 toni   43u   REG    8,2           0     0 11010072 /tmp/.com.google.Chrome.XYpGfZ (deleted)
+
+--- Modules du Noyau : Origine et Paramètres ---
+Module                  Size  Used by
+tcp_diag               12288  0
+udp_diag               12288  0
+inet_diag              28672  2 tcp_diag,udp_diag
+snd_usb_audio         512000  1
+snd_usbmidi_lib        53248  1 snd_usb_audio
+snd_ump                45056  1 snd_usb_audio
+ccm                    20480  6
+xt_conntrack           12288  5
+nft_chain_nat          12288  3
+xt_MASQUERADE          16384  5
+nf_nat                 61440  2 nft_chain_nat,xt_MASQUERADE
+nf_conntrack          196608  3 xt_conntrack,nf_nat,xt_MASQUERADE
+nf_defrag_ipv6         24576  1 nf_conntrack
+nf_defrag_ipv4         12288  1 nf_conntrack
+bridge                421888  0
+stp                    12288  1 bridge
+llc                    16384  2 bridge,stp
+xfrm_user              61440  1
+xfrm_algo              16384  1 xfrm_user
+xt_addrtype            12288  2
+nft_compat             20480  12
+nf_tables             380928  273 nft_compat,nft_chain_nat
+libcrc32c              12288  3 nf_conntrack,nf_nat,nf_tables
+vxlan                 159744  0
+ip6_udp_tunnel         16384  1 vxlan
+udp_tunnel             32768  1 vxlan
+rfcomm                102400  19
+snd_seq_dummy          12288  0
+snd_hrtimer            12288  1
+overlay               212992  1
+qrtr                   53248  2
+cmac                   12288  3
+algif_hash             12288  1
+algif_skcipher         16384  1
+af_alg                 32768  6 algif_hash,algif_skcipher
+bnep                   32768  2
+snd_hda_codec_hdmi     94208  1
+snd_ctl_led            24576  0
+snd_hda_codec_realtek   200704  1
+snd_hda_codec_generic   122880  1 snd_hda_codec_realtek
+snd_sof_pci_intel_skl    12288  0
+snd_sof_intel_hda_common   217088  1 snd_sof_pci_intel_skl
+soundwire_intel        73728  1 snd_sof_intel_hda_common
+snd_sof_intel_hda_mlink    45056  2 soundwire_intel,snd_sof_intel_hda_common
+soundwire_cadence      45056  1 soundwire_intel
+snd_sof_intel_hda      24576  1 snd_sof_intel_hda_common
+snd_sof_pci            24576  2 snd_sof_intel_hda_common,snd_sof_pci_intel_skl
+snd_sof_xtensa_dsp     12288  1 snd_sof_intel_hda_common
+snd_sof               380928  3 snd_sof_pci,snd_sof_intel_hda_common,snd_sof_intel_hda
+snd_sof_utils          16384  1 snd_sof
+soundwire_generic_allocation    12288  1 soundwire_intel
+soundwire_bus         110592  3 soundwire_intel,soundwire_generic_allocation,soundwire_cadence
+snd_soc_avs           188416  0
+snd_soc_hda_codec      24576  1 snd_soc_avs
+snd_soc_skl           208896  0
+snd_soc_hdac_hda       24576  2 snd_sof_intel_hda_common,snd_soc_skl
+snd_hda_ext_core       32768  7 snd_soc_avs,snd_soc_hda_codec,snd_sof_intel_hda_common,snd_soc_hdac_hda,snd_sof_intel_hda_mlink,snd_soc_skl,snd_sof_intel_hda
+snd_soc_sst_ipc        20480  1 snd_soc_skl
+snd_soc_sst_dsp        36864  1 snd_soc_skl
+snd_soc_acpi_intel_match    98304  3 snd_sof_intel_hda_common,snd_soc_skl,snd_sof_pci_intel_skl
+snd_soc_acpi           16384  3 snd_soc_acpi_intel_match,snd_sof_intel_hda_common,snd_soc_skl
+snd_soc_core          442368  7 snd_soc_avs,snd_soc_hda_codec,soundwire_intel,snd_sof,snd_sof_intel_hda_common,snd_soc_hdac_hda,snd_soc_skl
+snd_compress           28672  2 snd_soc_avs,snd_soc_core
+ac97_bus               12288  1 snd_soc_core
+snd_pcm_dmaengine      16384  1 snd_soc_core
+snd_hda_intel          61440  1
+intel_uncore_frequency    16384  0
+snd_intel_dspcfg       36864  5 snd_soc_avs,snd_hda_intel,snd_sof,snd_sof_intel_hda_common,snd_soc_skl
+intel_uncore_frequency_common    16384  1 intel_uncore_frequency
+snd_intel_sdw_acpi     16384  2 snd_sof_intel_hda_common,snd_intel_dspcfg
+snd_hda_codec         204800  9 snd_hda_codec_generic,snd_soc_avs,snd_hda_codec_hdmi,snd_soc_hda_codec,snd_hda_intel,snd_hda_codec_realtek,snd_soc_hdac_hda,snd_soc_skl,snd_sof_intel_hda
+snd_hda_core          139264  12 snd_hda_codec_generic,snd_soc_avs,snd_hda_codec_hdmi,snd_soc_hda_codec,snd_hda_intel,snd_hda_ext_core,snd_hda_codec,snd_hda_codec_realtek,snd_sof_intel_hda_common,snd_soc_hdac_hda,snd_soc_skl,snd_sof_intel_hda
+snd_hwdep              20480  2 snd_usb_audio,snd_hda_codec
+intel_tcc_cooling      12288  0
+x86_pkg_temp_thermal    20480  0
+intel_powerclamp       24576  0
+ath10k_pci             61440  0
+coretemp               24576  0
+snd_pcm               192512  14 snd_soc_avs,snd_hda_codec_hdmi,snd_hda_intel,snd_usb_audio,snd_hda_codec,soundwire_intel,snd_sof,snd_sof_intel_hda_common,snd_compress,snd_soc_core,snd_sof_utils,snd_soc_skl,snd_hda_core,snd_pcm_dmaengine
+ath10k_core           761856  1 ath10k_pci
+mei_pxp                16384  0
+ath                    40960  1 ath10k_core
+dell_laptop            32768  0
+snd_seq_midi           24576  0
+snd_seq_midi_event     16384  1 snd_seq_midi
+kvm_intel             487424  0
+btusb                  77824  0
+btrtl                  32768  1 btusb
+intel_rapl_msr         20480  0
+ee1004                 16384  0
+mei_hdcp               28672  0
+dell_smm_hwmon         32768  0
+snd_rawmidi            57344  3 snd_seq_midi,snd_usbmidi_lib,snd_ump
+mac80211             1748992  1 ath10k_core
+kvm                  1413120  1 kvm_intel
+dell_wmi               28672  1 dell_laptop
+btintel                57344  1 btusb
+binfmt_misc            24576  1
+i915                 4296704  66
+dell_smbios            32768  2 dell_wmi,dell_laptop
+snd_seq               118784  9 snd_seq_midi,snd_seq_midi_event,snd_seq_dummy
+irqbypass              12288  1 kvm
+processor_thermal_device_pci_legacy    12288  0
+cfg80211             1359872  3 ath,mac80211,ath10k_core
+processor_thermal_device    20480  1 processor_thermal_device_pci_legacy
+processor_thermal_wt_hint    16384  1 processor_thermal_device
+processor_thermal_rfim    32768  1 processor_thermal_device
+btbcm                  24576  1 btusb
+dcdbas                 20480  1 dell_smbios
+rapl                   20480  0
+processor_thermal_rapl    16384  1 processor_thermal_device
+drm_buddy              20480  1 i915
+rtsx_usb_ms            24576  0
+snd_seq_device         16384  4 snd_seq,snd_seq_midi,snd_ump,snd_rawmidi
+btmtk                  12288  1 btusb
+uvcvideo              147456  0
+snd_timer              49152  3 snd_seq,snd_hrtimer,snd_pcm
+ttm                   110592  1 i915
+intel_rapl_common      40960  2 intel_rapl_msr,processor_thermal_rapl
+ledtrig_audio          12288  3 snd_ctl_led,dell_wmi,dell_laptop
+wmi_bmof               12288  0
+dell_wmi_descriptor    16384  2 dell_wmi,dell_smbios
+memstick               28672  1 rtsx_usb_ms
+intel_cstate           24576  0
+uvc                    12288  1 uvcvideo
+libarc4                12288  1 mac80211
+nls_iso8859_1          12288  1
+snd                   143360  24 snd_ctl_led,snd_hda_codec_generic,snd_seq,snd_seq_device,snd_hda_codec_hdmi,snd_hwdep,snd_hda_intel,snd_usb_audio,snd_usbmidi_lib,snd_hda_codec,snd_hda_codec_realtek,snd_sof,snd_timer,snd_compress,snd_soc_core,snd_ump,snd_pcm,snd_rawmidi
+bluetooth            1032192  52 btrtl,btmtk,btintel,btbcm,bnep,btusb,rfcomm
+i2c_i801               36864  0
+drm_display_helper    237568  1 i915
+processor_thermal_wt_req    12288  1 processor_thermal_device
+processor_thermal_power_floor    12288  1 processor_thermal_device
+soundcore              16384  2 snd_ctl_led,snd
+i2c_smbus              16384  1 i2c_i801
+ecdh_generic           16384  2 bluetooth
+ecc                    45056  1 ecdh_generic
+cec                    94208  2 drm_display_helper,i915
+processor_thermal_mbox    12288  4 processor_thermal_power_floor,processor_thermal_wt_req,processor_thermal_rfim,processor_thermal_wt_hint
+mei_me                 53248  2
+int340x_thermal_zone    16384  1 processor_thermal_device
+intel_pch_thermal      20480  0
+mei                   172032  5 mei_hdcp,mei_pxp,mei_me
+rc_core                73728  1 cec
+i2c_algo_bit           16384  1 i915
+intel_xhci_usb_role_switch    12288  0
+intel_soc_dts_iosf     20480  1 processor_thermal_device_pci_legacy
+intel_hid              28672  0
+intel_pmc_core        118784  0
+sparse_keymap          12288  2 intel_hid,dell_wmi
+intel_vsec             20480  1 intel_pmc_core
+pmt_telemetry          16384  1 intel_pmc_core
+int3400_thermal        24576  0
+pmt_class              12288  1 pmt_telemetry
+acpi_pad              184320  0
+acpi_thermal_rel       20480  1 int3400_thermal
+input_leds             12288  0
+joydev                 32768  0
+mac_hid                12288  0
+serio_raw              20480  0
+sch_fq_codel           24576  2
+cuse                   16384  3
+msr                    12288  0
+parport_pc             53248  0
+ppdev                  24576  0
+lp                     28672  0
+parport                73728  3 parport_pc,lp,ppdev
+efi_pstore             12288  0
+nfnetlink              20480  4 nft_compat,nf_tables
+dmi_sysfs              24576  0
+ip_tables              32768  0
+x_tables               65536  5 xt_conntrack,nft_compat,xt_addrtype,ip_tables,xt_MASQUERADE
+autofs4                57344  2
+rtsx_usb_sdmmc         36864  0
+usbhid                 77824  0
+rtsx_usb               32768  2 rtsx_usb_sdmmc,rtsx_usb_ms
+hid_rmi                24576  0
+rmi_core              118784  1 hid_rmi
+videobuf2_vmalloc      20480  2 rmi_core,uvcvideo
+videobuf2_memops       16384  1 videobuf2_vmalloc
+videobuf2_v4l2         36864  2 rmi_core,uvcvideo
+videodev              352256  3 rmi_core,videobuf2_v4l2,uvcvideo
+videobuf2_common       81920  5 videobuf2_vmalloc,rmi_core,videobuf2_v4l2,uvcvideo,videobuf2_memops
+mc                     81920  5 videodev,snd_usb_audio,videobuf2_v4l2,uvcvideo,videobuf2_common
+hid_generic            12288  0
+crct10dif_pclmul       12288  1
+crc32_pclmul           12288  0
+polyval_clmulni        12288  0
+polyval_generic        12288  1 polyval_clmulni
+ghash_clmulni_intel    16384  0
+sha256_ssse3           32768  0
+sha1_ssse3             32768  0
+psmouse               217088  0
+intel_lpss_pci         28672  0
+xhci_pci               24576  0
+r8169                 118784  0
+ahci                   49152  2
+i2c_hid_acpi           12288  0
+libahci                53248  1 ahci
+intel_lpss             12288  1 intel_lpss_pci
+realtek                36864  1
+xhci_pci_renesas       20480  1 xhci_pci
+i2c_hid                40960  1 i2c_hid_acpi
+idma64                 20480  0
+video                  77824  3 dell_wmi,dell_laptop,i915
+hid                   180224  4 i2c_hid,usbhid,hid_generic,hid_rmi
+pinctrl_sunrisepoint    28672  0
+wmi                    28672  6 video,dell_wmi,wmi_bmof,dell_smm_hwmon,dell_smbios,dell_wmi_descriptor
+aesni_intel           356352  8
+crypto_simd            16384  1 aesni_intel
+cryptd                 24576  3 crypto_simd,ghash_clmulni_intel
+
+--- Statistiques du 'Slab Allocator' (Mémoire interne du noyau) ---
+slabtop : option invalide -- 'n'
+
+Usage:
+ slabtop [options]
+
+Options:
+ -d, --delay <secs>  délai des mises à jour
+ -o, --once          n'affiche qu'une seule fois puis arrête
+ -s, --sort <car>    spécifie le critère de tri par caractère (voir plus bas)
+
+ -h, --help     affiche cette aide et termine
+ -V, --version  affiche les informations de version et termine
+
+Voici les critères de tri acceptés:
+ a: trie selon le nombre d'objets actifs
+ b: trie selon les objets dans le slab
+ c: trie selon la taille de la cache
+ l: trie selon le nombre de slabs
+ v: trie selon le nombre de slabs actives (non affiché)
+ n: trie par nom
+ o: tri selon le nombre d'objets (choix par défaut)
+ p: trie selon les pages par slab (non affiché)
+ s: trie par taille d'objet
+ u: trie selon l'utilisation de la cache
+
+Pour plus de détails, consultez slabtop(1).
+
+--- Ressources IPC (Mémoire Partagée, Sémaphores) ---
+
+------ Files de messages --------
+clef       msqid      propriétaire perms      octets utilisés messages    
+
+------ Segment de mémoire partagée --------
+clef       shmid      propriétaire perms      octets     nattch     états      
+0x00000000 65561      toni       600        524288     2          dest         
+
+------ Tableaux de sémaphores --------
+clef       semid      propriétaire perms      nsems     
+
+
+--- Statut de Vérification du Système de Fichiers (ext4) ---
+Analyse de /dev/└─sda2 :
+tune2fs: Aucun fichier ou dossier de ce nom lors de la tentative d'ouverture de /dev/└─sda2
+Impossible de trouver un superbloc de système de fichiers valide.
+
+--- Limites de Ressources de l'Utilisateur (ulimit) ---
+real-time non-blocking time  (microseconds, -R) unlimited
+core file size              (blocks, -c) 0
+data seg size               (kbytes, -d) unlimited
+scheduling priority                 (-e) 0
+file size                   (blocks, -f) unlimited
+pending signals                     (-i) 127541
+max locked memory           (kbytes, -l) unlimited
+max memory size             (kbytes, -m) unlimited
+open files                          (-n) 1024
+pipe size                (512 bytes, -p) 8
+POSIX message queues         (bytes, -q) 819200
+real-time priority                  (-r) 95
+stack size                  (kbytes, -s) 8192
+cpu time                   (seconds, -t) unlimited
+max user processes                  (-u) 127541
+virtual memory              (kbytes, -v) unlimited
+file locks                          (-x) unlimited
+
+--- Scan de Vulnérabilités de Sécurité (Ubuntu Pro) ---
+WARNING: this output is intended to be human readable, and subject to change.
+In scripts, prefer using machine readable data from the `pro api` command,
+or use `pro security-status --format json`.
+
+3893 packages installed:
+     1742 packages from Ubuntu Main/Restricted repository
+     2147 packages from Ubuntu Universe/Multiverse repository
+     3 packages from third parties
+     1 package no longer available for download
+
+To get more information about the packages, run
+    pro security-status --help
+for a list of available options.
+
+This machine is receiving security patching for Ubuntu Main/Restricted
+repository until 2029.
+This machine is NOT attached to an Ubuntu Pro subscription.
+
+Ubuntu Pro with 'esm-infra' enabled provides security updates for
+Main/Restricted packages until 2034.
+
+Ubuntu Pro with 'esm-apps' enabled provides security updates for
+Universe/Multiverse packages until 2034. There are 48 pending security updates.
+
+Try Ubuntu Pro with a free personal subscription on up to 5 machines.
+Learn more at https://ubuntu.com/pro
+
+
+--- Analyse des Connexions Réseau Suivies (conntrack) ---
+NOTE : L'outil 'conntrack' n'est pas installé. Analyse correspondante ignorée.
+
+--- Outils de Diagnostic Avancé Installés ---
+NOTE : L'outil 'iotop' n'est pas installé. Analyse correspondante ignorée.
+NOTE : L'outil 'btop' n'est pas installé. Analyse correspondante ignorée.
+
+==============================================================================
+RÉSUMÉ DE L'ANALYSE (v3.1)
+==============================================================================
+Analyse terminée. Voici les points clés :
+
+[+] Mises à jour : 0 paquet(s) peuvent être mis à jour.
+[+] Nettoyage : 84 paquet(s) ont des configurations résiduelles.
+[!] Erreurs critiques : 20 erreur(s) critique(s) dans les journaux récents.
+[!] Services en échec : 1 service(s) systemd n'ont pas démarré correctement.
+[!] Avertissements de Sécurité : 3 point(s) d'attention de sécurité détecté(s).
+[?] Notes de Performance : 2 point(s) d'optimisation de performance potentiel(s).
+[?] Diagnostics Profonds : 6 point(s) d'analyse profonde à examiner.
+
+Veuillez transmettre l'intégralité de ce fichier 'retour.txt' pour la Phase 2 (Optimisation).
+FIN DU RAPPORT.
