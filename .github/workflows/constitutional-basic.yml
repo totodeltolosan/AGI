@@ -1,0 +1,77 @@
+name: 🏛️ Constitutional Basic
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 8 * * *'
+
+jobs:
+  constitutional-check:
+    name: Basic Constitutional Compliance
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Constitutional compliance check
+      run: |
+        echo "🏛️ CONSTITUTIONAL COMPLIANCE CHECK"
+        echo "=================================="
+        
+        # Générer rapport conformité basique
+        echo "Fichier,Lignes,Statut,Excès" > conformite_$(date +%Y%m%d).csv
+        
+        violations=0
+        conformes=0
+        total_excess=0
+        
+        find . -name "*.py" -not -path "./.git/*" | while read file; do
+          if [ -f "$file" ]; then
+            lines=$(wc -l < "$file" 2>/dev/null || echo "0")
+            if [ $lines -gt 200 ]; then
+              excess=$((lines - 200))
+              echo "$file,$lines,VIOLATION,$excess" >> conformite_$(date +%Y%m%d).csv
+              violations=$((violations + 1))
+              total_excess=$((total_excess + excess))
+            else
+              echo "$file,$lines,CONFORME,0" >> conformite_$(date +%Y%m%d).csv
+              conformes=$((conformes + 1))
+            fi
+          fi
+        done
+        
+        # Afficher résumé
+        total_files=$(wc -l < conformite_$(date +%Y%m%d).csv | awk '{print $1-1}')
+        violations=$(grep -c VIOLATION conformite_$(date +%Y%m%d).csv || echo "0")
+        conformes=$(grep -c CONFORME conformite_$(date +%Y%m%d).csv || echo "0")
+        
+        echo "📊 RÉSUMÉ CONSTITUTIONAL:"
+        echo "   Total fichiers: $total_files"
+        echo "   Conformes: $conformes"
+        echo "   Violations: $violations"
+        
+        if [ $violations -gt 0 ]; then
+          compliance_rate=$(( (conformes * 100) / total_files ))
+          echo "   Taux conformité: $compliance_rate%"
+          
+          if [ $compliance_rate -lt 70 ]; then
+            echo "🚨 CONSTITUTIONAL ALERT: Conformité critique ($compliance_rate%)"
+          else
+            echo "⚠️ Constitutional warning: Conformité à améliorer ($compliance_rate%)"
+          fi
+        else
+          echo "✅ CONSTITUTIONAL EXCELLENCE: 100% conformité"
+        fi
+        
+    - name: Upload constitutional report
+      uses: actions/upload-artifact@v3
+      with:
+        name: constitutional-report
+        path: conformite_*.csv

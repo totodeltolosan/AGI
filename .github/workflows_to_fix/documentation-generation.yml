@@ -1,0 +1,358 @@
+name: 📚 Documentation Generation
+
+on:
+  push:
+    paths: ['eve/interfaces/documentation/**', '**/*.py', '**/*.md']
+  pull_request:
+    paths: ['**/*.py', '**/*.md']
+  workflow_dispatch:
+
+jobs:
+  documentation-generation:
+    name: Auto Documentation Generation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Documentation Environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install Documentation Tools
+      run: |
+        pip install sphinx mkdocs mkdocs-material
+        pip install pdoc3 pydoc-markdown sphinx-autoapi
+        pip install mermaid-cli doc-generation-tools
+        
+    - name: Test EVE Documentation Generator
+      run: |
+        echo "📚 GÉNÉRATION DOCUMENTATION EVE" > docs-report.md
+        echo "===============================" >> docs-report.md
+        echo "" >> docs-report.md
+        
+        # Analyser système documentation EVE
+        if [ -d "eve/interfaces/documentation" ]; then
+          echo "## 📖 Générateur Documentation EVE" >> docs-report.md
+          
+          doc_modules=$(find eve/interfaces/documentation/ -name "*.py" | wc -l)
+          echo "- **Modules documentation**: $doc_modules" >> docs-report.md
+          echo "" >> docs-report.md
+          
+          # Chercher générateurs spécialisés
+          generators=("sphinx_gen" "markdown_gen" "api_doc_gen" "diagram_gen")
+          for gen in "${generators[@]}"; do
+            if find eve/interfaces/documentation/ -name "*$gen*" | grep -q .; then
+              echo "- ✅ **$gen**: Détecté" >> docs-report.md
+            else
+              echo "- ⚠️ **$gen**: À développer" >> docs-report.md
+            fi
+          done
+        fi
+        
+    - name: Auto-Generate Python Documentation
+      run: |
+        echo "" >> docs-report.md
+        echo "## 🐍 Documentation Python Automatique" >> docs-report.md
+        echo "" >> docs-report.md
+        
+        # Génération documentation automatique
+        python -c "
+        import ast
+        import os
+        import inspect
+        from typing import Dict, List, Any
+        
+        print('🐍 Génération documentation Python...')
+        
+        class DocGenerator:
+            def __init__(self):
+                self.docs = {}
+                
+            def extract_docstrings(self, filepath):
+                '''Extrait docstrings d\\'un fichier Python'''
+                try:
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        tree = ast.parse(f.read())
+                    
+                    docs = {
+                        'module_doc': ast.get_docstring(tree),
+                        'classes': {},
+                        'functions': {}
+                    }
+                    
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.ClassDef):
+                            docs['classes'][node.name] = {
+                                'docstring': ast.get_docstring(node),
+                                'methods': {}
+                            }
+                            
+                            for item in node.body:
+                                if isinstance(item, ast.FunctionDef):
+                                    docs['classes'][node.name]['methods'][item.name] = ast.get_docstring(item)
+                        
+                        elif isinstance(node, ast.FunctionDef) and not any(isinstance(parent, ast.ClassDef) for parent in ast.walk(tree)):
+                            docs['functions'][node.name] = ast.get_docstring(node)
+                    
+                    return docs
+                    
+                except Exception as e:
+                    return {'error': str(e)}
+            
+            def generate_markdown_doc(self, module_path, docs):
+                '''Génère documentation Markdown'''
+                md_content = f'# Documentation: {module_path}\\n\\n'
+                
+                if docs.get('module_doc'):
+                    md_content += f'{docs[\"module_doc\"]}\\n\\n'
+                
+                # Classes
+                if docs.get('classes'):
+                    md_content += '## Classes\\n\\n'
+                    for class_name, class_info in docs['classes'].items():
+                        md_content += f'### {class_name}\\n\\n'
+                        if class_info['docstring']:
+                            md_content += f'{class_info[\"docstring\"]}\\n\\n'
+                        
+                        if class_info['methods']:
+                            md_content += '#### Méthodes\\n\\n'
+                            for method_name, method_doc in class_info['methods'].items():
+                                md_content += f'##### {method_name}()\\n\\n'
+                                if method_doc:
+                                    md_content += f'{method_doc}\\n\\n'
+                
+                # Functions
+                if docs.get('functions'):
+                    md_content += '## Fonctions\\n\\n'
+                    for func_name, func_doc in docs['functions'].items():
+                        md_content += f'### {func_name}()\\n\\n'
+                        if func_doc:
+                            md_content += f'{func_doc}\\n\\n'
+                
+                return md_content
+        
+        # Générer documentation pour modules principaux
+        doc_gen = DocGenerator()
+        modules_documented = 0
+        total_docstrings = 0
+        
+        # Modules à documenter
+        target_dirs = ['core', 'eve', 'tools']
+        
+        for target_dir in target_dirs:
+            if os.path.exists(target_dir):
+                for root, dirs, files in os.walk(target_dir):
+                    for file in files:
+                        if file.endswith('.py') and not file.startswith('__'):
+                            filepath = os.path.join(root, file)
+                            docs = doc_gen.extract_docstrings(filepath)
+                            
+                            if not docs.get('error'):
+                                modules_documented += 1
+                                
+                                # Compter docstrings
+                                if docs.get('module_doc'):
+                                    total_docstrings += 1
+                                total_docstrings += len([d for d in docs.get('functions', {}).values() if d])
+                                for class_info in docs.get('classes', {}).values():
+                                    if class_info.get('docstring'):
+                                        total_docstrings += 1
+                                    total_docstrings += len([d for d in class_info.get('methods', {}).values() if d])
+                                
+                                # Générer markdown pour modules importants
+                                if any(keyword in filepath for keyword in ['core/', 'brain', 'main', 'engine']):
+                                    md_doc = doc_gen.generate_markdown_doc(filepath, docs)
+                                    
+                                    # Sauvegarder documentation
+                                    doc_filename = f'auto_doc_{file.replace(\".py\", \".md\")}'
+                                    with open(doc_filename, 'w', encoding='utf-8') as f:
+                                        f.write(md_doc)
+        
+        print(f'✅ Modules documentés: {modules_documented}')
+        print(f'✅ Total docstrings: {total_docstrings}')
+        
+        documentation_coverage = (total_docstrings / max(modules_documented, 1)) * 100
+        print(f'✅ Couverture doc: {documentation_coverage:.1f}%')
+        
+        if documentation_coverage >= 70:
+            print('✅ Documentation: Excellente couverture')
+        elif documentation_coverage >= 40:
+            print('⚠️ Documentation: Couverture moyenne')
+        else:
+            print('❌ Documentation: Couverture faible')
+        " >> docs-report.md
+        
+    - name: Generate Architecture Diagrams
+      run: |
+        echo "" >> docs-report.md
+        echo "## 🏗️ Diagrammes Architecture" >> docs-report.md
+        echo "" >> docs-report.md
+        
+        # Génération diagrammes automatiques
+        python -c "
+        import os
+        
+        print('🏗️ Génération diagrammes architecture...')
+        
+        # Générateur diagrammes Mermaid
+        def generate_architecture_diagram():
+            diagram = '''
+        graph TB
+            subgraph \"AGI Core\"
+                AGI[AGI Core]
+                COMP[Compliance]
+                TOOLS[Tools]
+            end
+            
+            subgraph \"EVE Ecosystem\"
+                COG[EVE Cognitive]
+                SIM[EVE Simulation] 
+                DEV[EVE Development]
+                INT[EVE Interfaces]
+            end
+            
+            subgraph \"Integration\"
+                BRIDGE[EVE-AGI Bridge]
+                CONST[Constitutional Governance]
+            end
+            
+            AGI --> BRIDGE
+            EVE --> BRIDGE
+            BRIDGE --> CONST
+            
+            COG --> |ALMA Legacy| INT
+            SIM --> |Monde/Genesis| INT
+            DEV --> |GAIA/TestEve| INT
+            
+            COMP --> |Audit| COG
+            COMP --> |Audit| SIM
+            COMP --> |Audit| DEV
+            
+            classDef agi fill:#e1f5fe
+            classDef eve fill:#f3e5f5
+            classDef integration fill:#e8f5e8
+            
+            class AGI,COMP,TOOLS agi
+            class COG,SIM,DEV,INT eve
+            class BRIDGE,CONST integration
+        '''
+            return diagram
+        
+        # Générer diagramme principal
+        arch_diagram = generate_architecture_diagram()
+        with open('architecture_diagram.mmd', 'w') as f:
+            f.write(arch_diagram)
+        
+        print('✅ Diagramme architecture: Généré')
+        
+        # Générer diagramme modules EVE
+        def generate_eve_modules_diagram():
+            return '''
+        graph LR
+            subgraph \"EVE Cognitive\"
+                BRAIN[Brain Core]
+                AGENTS[Cognitive Agents]
+                LAUNCH[ALMA Launcher]
+            end
+            
+            subgraph \"EVE Simulation\"
+                UNIV[Universe Engine]
+                EVOL[Evolution Core]
+                PHYS[Physics Agents]
+            end
+            
+            subgraph \"EVE Development\"
+                GAIA[GAIA Analysis]
+                MON[System Monitor]
+                GIT[Git Integration]
+            end
+            
+            BRAIN --> AGENTS
+            AGENTS --> LAUNCH
+            
+            UNIV --> EVOL
+            EVOL --> PHYS
+            
+            GAIA --> MON
+            MON --> GIT
+        '''
+        
+        eve_diagram = generate_eve_modules_diagram()
+        with open('eve_modules_diagram.mmd', 'w') as f:
+            f.write(eve_diagram)
+        
+        print('✅ Diagramme modules EVE: Généré')
+        
+        # Générer documentation structure
+        def generate_project_structure():
+            structure = '''
+        # Structure Projet AGI-EVE
+    AGI-EVE/
+    ├── core/                     # Noyau AGI
+    │   ├── compliance/           # Audit constitutionnel
+    │   └── tools/               # Outils projet
+    ├── eve/                     # Écosystème EVE
+    │   ├── cognitive/           # Intelligence cognitive (ALMA)
+    │   │   ├── brain/           # Cerveau IA
+    │   │   ├── agents/          # Agents cognitifs
+    │   │   └── interfaces/      # Interfaces ALMA
+    │   ├── simulation/          # Simulation univers
+    │   │   ├── universe/        # Moteur univers (Monde)
+    │   │   ├── evolution/       # EVE GENESIS
+    │   │   └── physics/         # Agents physiques
+    │   ├── development/         # Outils développement
+    │   │   ├── code_analysis/   # GAIA PrometheusCore
+    │   │   ├── monitoring/      # Test Eve Monitor
+    │   │   └── git_integration/ # Git Tools
+    │   └── interfaces/          # Interfaces utilisateur
+    │       ├── ui/              # Interfaces graphiques
+    │       ├── logs/            # Gestion logs
+    │       └── documentation/  # Génération docs
+    └── integration/             # Fusion AGI-EVE
+        ├── constitutional_eve/  # EVE sous constitution
+        └── unified_intelligence/# Intelligence unifiée
+        '''
+            return structure
+        
+        project_structure = generate_project_structure()
+        with open('project_structure.md', 'w') as f:
+            f.write(project_structure)
+        
+        print('✅ Documentation structure: Générée')
+        
+        # Générer index documentation
+        index_content = '''# Documentation AGI-EVE
+        
+        ## Architecture
+        - [Diagramme Architecture](architecture_diagram.mmd)
+        - [Modules EVE](eve_modules_diagram.mmd)  
+        - [Structure Projet](project_structure.md)
+        
+        ## Modules Documentés
+        '''
+        
+        # Ajouter liens vers docs auto-générées
+        for file in os.listdir('.'):
+            if file.startswith('auto_doc_') and file.endswith('.md'):
+                module_name = file.replace('auto_doc_', '').replace('.md', '')
+                index_content += f'- [{module_name}]({file})\\n'
+        
+        with open('docs_index.md', 'w') as f:
+            f.write(index_content)
+        
+        print('✅ Index documentation: Créé')
+        " >> docs-report.md
+        
+    - name: Upload Generated Documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: generated-documentation
+        path: |
+          docs-report.md
+          auto_doc_*.md
+          architecture_diagram.mmd
+          eve_modules_diagram.mmd
+          project_structure.md
+          docs_index.md
