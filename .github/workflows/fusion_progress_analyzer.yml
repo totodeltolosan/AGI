@@ -1,0 +1,142 @@
+name: "🔍 Le Stratège - Analyseur de Progression de Fusion"
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Tous les lundis à 2h du matin
+  workflow_dispatch:      # Permet l'exécution manuelle
+  push:
+    paths:
+      - 'eve/**'         # Se déclenche aussi quand EVE est modifié
+
+env:
+  PYTHON_VERSION: "3.11"
+  EVE_PATH: "eve"
+  REPORT_PATH: "reports"
+
+jobs:
+  fusion_progress_analysis:
+    runs-on: ubuntu-latest
+    name: "📊 Analyse Stratégique EVE"
+
+    steps:
+    - name: "🔄 Checkout Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: "🐍 Setup Python"
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: "📦 Install Dependencies"
+      run: |
+        python -m pip install --upgrade pip
+        pip install radon           # Pour complexité cyclomatique
+        pip install pygments       # Pour coloration syntaxique
+        pip install tabulate       # Pour tableaux formatés
+        pip install matplotlib     # Pour graphiques de progression
+        pip install seaborn        # Pour visualisations avancées
+
+    - name: "📁 Create Reports Directory"
+      run: |
+        mkdir -p ${{ env.REPORT_PATH }}
+        mkdir -p ${{ env.REPORT_PATH }}/assets
+
+    - name: "🔍 Execute Strategic Analysis"
+      run: |
+        python .github/scripts/fusion_analyzer.py
+      env:
+        EVE_ROOT: ${{ env.EVE_PATH }}
+        REPORT_DIR: ${{ env.REPORT_PATH }}
+
+    - name: "📈 Generate Progress Visualizations"
+      run: |
+        python .github/scripts/progress_visualizer.py
+      env:
+        REPORT_DIR: ${{ env.REPORT_PATH }}
+
+    - name: "📋 Archive Reports"
+      uses: actions/upload-artifact@v3
+      with:
+        name: fusion-progress-report-${{ github.run_number }}
+        path: |
+          ${{ env.REPORT_PATH }}/
+          !${{ env.REPORT_PATH }}/**/*.pyc
+
+    - name: "📤 Commit Progress Report"
+      run: |
+        git config --global user.name 'Le Stratège Bot'
+        git config --global user.email 'strategist@agi-project.dev'
+
+        # Ajouter le rapport généré
+        git add ${{ env.REPORT_PATH }}/FUSION_PROGRESS_REPORT.md
+        git add ${{ env.REPORT_PATH }}/assets/
+
+        # Commit avec timestamp
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+        git commit -m "🔍 Rapport stratégique EVE - $TIMESTAMP" || echo "Aucun changement détecté"
+
+        # Push uniquement si on est sur la branche principale
+        if [ "${{ github.ref }}" = "refs/heads/main" ] || [ "${{ github.ref }}" = "refs/heads/master" ]; then
+          git push
+        fi
+
+    - name: "💬 Create Issue for Strategic Review"
+      if: always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = '${{ env.REPORT_PATH }}/FUSION_PROGRESS_REPORT.md';
+
+          try {
+            const reportContent = fs.readFileSync(path, 'utf8');
+            const timestamp = new Date().toISOString().split('T')[0];
+
+            const issueBody = `
+          ## 🔍 Rapport Stratégique EVE - ${timestamp}
+
+          **Le Stratège** a terminé son analyse hebdomadaire de l'écosystème EVE.
+
+          ### 📊 Rapport Complet
+          Le rapport détaillé est disponible dans: \`${{ env.REPORT_PATH }}/FUSION_PROGRESS_REPORT.md\`
+
+          ### 🎯 Question Stratégique
+          ${reportContent.split('## 🤔 Question Stratégique')[1] || 'Voir le rapport complet pour la question stratégique.'}
+
+          ### 📈 Artefacts Générés
+          - Rapport de progression: \`FUSION_PROGRESS_REPORT.md\`
+          - Graphiques de conformité: \`assets/compliance_charts.png\`
+          - Carte de complexité: \`assets/complexity_heatmap.png\`
+          - Données brutes: \`assets/fusion_data.json\`
+
+          **Action requise:** Examiner le rapport et décider de la stratégie pour la semaine.
+
+          ---
+          *Généré automatiquement par Le Stratège 🤖*
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔍 Analyse Stratégique EVE - ${timestamp}`,
+              body: issueBody,
+              labels: ['strategy', 'fusion-progress', 'weekly-report']
+            });
+          } catch (error) {
+            console.log('Erreur lors de la création de l\'issue:', error.message);
+          }
+
+  notify_completion:
+    needs: fusion_progress_analysis
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+    - name: "📬 Notification Completion"
+      run: |
+        echo "🎯 Mission accomplie: Analyse stratégique EVE terminée"
+        echo "📊 Rapport disponible dans: ${{ env.REPORT_PATH }}/FUSION_PROGRESS_REPORT.md"
+        echo "🤔 Question stratégique générée pour l'architecte"
+        echo "📈 Visualisations créées pour aide à la décision"
