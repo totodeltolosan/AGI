@@ -1,0 +1,58 @@
+name: '🕵️ Le Débroussailleur (Code Smells)'
+
+on:
+  pull_request:
+    paths:
+      - '**.py'
+
+jobs:
+  detect-and-report-smells:
+    name: 'Analyse Architecturale'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # Pour commenter sur la PR
+
+    steps:
+      - name: 'Checkout du code'
+        uses: actions/checkout@v4
+
+      - name: 'Mise en place de Python'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 'Installation des dépendances'
+        run: pip install radon
+
+      - name: 'Exécution du Débroussailleur v2.0'
+        id: scan
+        run: python3 tools/smell_detector.py
+
+      - name: 'Préparation du rapport pour le commentaire'
+        id: prepare_comment
+        if: success()
+        run: |
+          REPORT_JSON=$(cat code_smells_report.json)
+          SMELL_COUNT=$(echo "$REPORT_JSON" | jq '.summary.total_smells_found')
+          
+          if [ "$SMELL_COUNT" -eq "0" ]; then
+            echo "COMMENT_BODY=### 🕵️ Rapport du Débroussailleur\n\n**Statut : EXCELLENT** ✅\n\nAucune 'mauvaise odeur' architecturale détectée. Excellent travail de conformité !" >> $GITHUB_ENV
+          else
+            COMMENT_BODY="### 🕵️ Rapport du Débroussailleur - Analyse Architecturale\n\n"
+            COMMENT_BODY+="Le Débroussailleur a détecté **$SMELL_COUNT 'mauvaises odeurs'** dans votre code. Celles-ci ne sont pas bloquantes, mais il est recommandé de les corriger pour maintenir la qualité constitutionnelle.\n\n"
+            COMMENT_BODY+="--- \n\n"
+            COMMENT_BODY+="#### 🔥 Top 5 des Problèmes Détectés\n\n"
+            
+            TABLE_CONTENT=$(echo "$REPORT_JSON" | jq -r '.smells[:5][] | "**\(.smell_type)** in `\(.file_path)` (Ligne \(.line_number)):\n> \(.message)\n\n"')
+            COMMENT_BODY+="$TABLE_CONTENT"
+            
+            echo "COMMENT_BODY<<EOF" >> $GITHUB_ENV
+            echo -e "$COMMENT_BODY" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          fi
+
+      - name: 'Publication du rapport en commentaire de la PR'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ env.COMMENT_BODY }}
