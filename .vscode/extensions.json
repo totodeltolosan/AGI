@@ -1,14 +1,23 @@
 {
     "recommendations": [
+        // --- Base Python Essentielle ---
         "ms-python.python",
-        "ms-python.vscode-pylint",
-        "eamodio.gitlens",
-        "github.vscode-pull-request-github",
-        "ms-vscode-remote.remote-ssh",
-        "redhat.vscode-yaml",
+        "ms-python.pylint",
         "ms-python.black-formatter",
-        "ms-vscode.vscode-json",
-        "bradlc.vscode-tailwindcss"
+        "ms-python.isort",
+
+        // --- Intégration GitHub & Collaboration ---
+        "github.vscode-pull-request-github",
+        "github.vscode-github-actions",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+
+        // --- Qualité de Vie & Productivité AGI ---
+        "gruntfuggly.todo-tree",
+        "aaron-bond.better-comments",
+        "redhat.vscode-yaml",
+        "usernamehw.errorlens",
+        "ms-azuretools.vscode-docker"
     ],
     "unwantedRecommendations": []
 }

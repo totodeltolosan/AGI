@@ -1,15 +1,80 @@
 {
-    "github.copilot.enable": {
-        "*": true,
-        "yaml": true,
-        "plaintext": false,
-        "markdown": true,
-        "python": true
+    // =========================================================================
+    // ==  🐍 ENVIRONNEMENT & DÉPENDANCES CONSTITUTIONNELS
+    // =========================================================================
+    // Définit l'interpréteur Python, assurant l'utilisation de l'environnement virtuel.
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+    // =========================================================================
+    // ==  ⚖️ GOUVERNANCE CONSTITUTIONNELLE AUTOMATISÉE (LINTING & FORMATTING)
+    // =========================================================================
+    // Application de la loi de "Simplicité et Maintenabilité Extrêmes" à chaque sauvegarde.
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length=88"
+    ],
+
+    // Nettoyage et organisation des imports à chaque sauvegarde.
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
     },
-    "github.copilot.inlineSuggest.enable": true,
-    "github.copilot.editor.enableAutoCompletions": true,
-    "github.copilot.advanced": {
-        "debug.testOverrideEngine": "codewhisperer",
-        "debug.overrideProxyUrl": ""
-    }
+
+    // Détection en temps réel des violations de style et des erreurs.
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": [
+        "--max-line-length=88",
+        "--disable=C0114,C0115,C0116"
+    ],
+
+    // Application de la "Gouvernance par les Contrats" via le typage statique.
+    "python.linting.mypyEnabled": true,
+    "python.analysis.typeCheckingMode": "basic",
+
+    // =========================================================================
+    // ==  ✍️ QUALITÉ ET LISIBILITÉ DU CODE
+    // =========================================================================
+    "editor.rulers": [88, 120],
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "better-comments.tags": [
+        { "tag": "!", "color": "#FF2D00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": true, "italic": false },
+        { "tag": "?", "color": "#3498DB", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "//", "color": "#474747", "strikethrough": true, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "todo", "color": "#FF8C00", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false },
+        { "tag": "*", "color": "#98C379", "strikethrough": false, "underline": false, "backgroundColor": "transparent", "bold": false, "italic": false }
+    ],
+
+    // =========================================================================
+    // ==  ⚙️ PERFORMANCE DE L'ESPACE DE TRAVAIL
+    // =========================================================================
+    // Exclut les dossiers lourds pour garder VS Code rapide.
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true,
+        "**/.venv/**": true,
+        "**/__pycache__/**": true,
+        "**/backup_*/**": true,
+        "**/*.sqlite*": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true,
+        "**/.venv": true,
+        "**/__pycache__": true,
+        "**/backup_*": true,
+        "**/*.sqlite*": true
+    },
+
+    // =========================================================================
+    // ==  🐙 INTÉGRATION GITHUB SUPÉRIEURE
+    // =========================================================================
+    "gitlens.currentLine.enabled": true,
+    "gitlens.currentLine.format": "  ${author}, ${agoOrDate} • ${message}",
+    "gitlens.codeLens.enabled": true,
+    "terminal.integrated.cwd": "${workspaceFolder}"
 }
