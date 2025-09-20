@@ -1,0 +1,43 @@
+[tool.black]
+line-length = 120
+target-version = ['py39']
+skip-string-normalization = true
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | \.tox
+  | \.pytest_cache
+  | backup_.*
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+skip = ["venv", ".git", "backup_pre_format_*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+exclude = ["venv", ".git", "backup_*"]
+
+[tool.ruff.lint]
+ignore = ["E501", "W503", "E203"]
+
+[tool.mypy]
+python_version = "3.9"
+ignore_missing_imports = true
+no_strict_optional = true
+exclude = ["venv", ".git"]
+
+[tool.pylint.messages_control]
+disable = ["C0114", "C0115", "C0116", "R0903", "R0902", "W0613"]
+
+[tool.pylint.format]
+max-line-length = 120

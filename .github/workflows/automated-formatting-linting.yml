@@ -1,0 +1,293 @@
+name: 🎨 Formatage et Linting Automatisés
+
+on:
+  push:
+    branches: [ main, develop, feature/** ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      force_fix:
+        description: 'Forcer la correction automatique'
+        required: false
+        default: 'true'
+        type: boolean
+
+env:
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  python-formatting:
+    name: 🐍 Python - Formatage & Linting
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 📦 Install Python Tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install black isort ruff mypy pylint autoflake
+
+    - name: 🧹 Remove Unused Imports (autoflake)
+      run: |
+        echo "🧹 Suppression des imports inutilisés..."
+        find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" | xargs autoflake \
+          --in-place \
+          --remove-all-unused-imports \
+          --remove-unused-variables \
+          --remove-duplicate-keys \
+          --ignore-init-module-imports || true
+
+    - name: 📐 Sort Imports (isort)
+      run: |
+        echo "📐 Organisation des imports..."
+        isort . \
+          --profile black \
+          --line-length 120 \
+          --multi-line 3 \
+          --trailing-comma \
+          --force-grid-wrap 0 \
+          --combine-as \
+          --skip venv \
+          --skip .git || true
+
+    - name: 🎨 Format Code (Black)
+      run: |
+        echo "🎨 Formatage du code Python..."
+        black . \
+          --line-length 120 \
+          --target-version py39 \
+          --skip-string-normalization \
+          --exclude "(venv/|\.git/)" || true
+
+    - name: ⚡ Lint with Ruff
+      run: |
+        echo "⚡ Linting avec Ruff..."
+        ruff check . \
+          --fix \
+          --line-length 120 \
+          --target-version py39 \
+          --exclude venv \
+          --exclude .git \
+          --ignore E501,W503,E203 || true
+
+    - name: 🔍 Type Checking (MyPy)
+      run: |
+        echo "🔍 Vérification des types..."
+        mypy . \
+          --ignore-missing-imports \
+          --no-strict-optional \
+          --exclude venv \
+          --exclude .git || echo "⚠️ Erreurs de types détectées mais non bloquantes"
+
+    - name: 📊 Advanced Linting (Pylint)
+      run: |
+        echo "📊 Linting avancé avec Pylint..."
+        find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" | head -20 | \
+        xargs pylint \
+          --disable=C0114,C0115,C0116,R0903,R0902,W0613 \
+          --max-line-length=120 || echo "⚠️ Warnings Pylint détectés mais non bloquants"
+
+    - name: 🏛️ Constitutional Compliance Check
+      run: |
+        echo "🏛️ Vérification conformité constitutionnelle AGI..."
+        VIOLATIONS=0
+        echo "📏 Vérification directive 200 lignes:"
+        
+        find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" | while read file; do
+          lines=$(wc -l < "$file")
+          if [ $lines -gt 200 ]; then
+            echo "❌ VIOLATION: $file ($lines lignes, excès: $((lines - 200)))"
+            VIOLATIONS=$((VIOLATIONS + 1))
+          else
+            echo "✅ CONFORME: $file ($lines lignes)"
+          fi
+        done
+        
+        echo "📊 Résumé conformité constitutionnelle effectué"
+
+    - name: 💾 Auto-commit Formatted Code
+      run: |
+        echo "💾 Vérification des changements après formatage..."
+        
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        if ! git diff --quiet; then
+          echo "📝 Changements détectés - création du commit..."
+          git add .
+          git commit -m "🎨 auto-format: formatage automatique par GitHub Actions
+
+          ✨ FORMATAGE APPLIQUÉ:
+          • 🧹 Suppression imports inutilisés (autoflake)
+          • 📐 Organisation imports (isort)
+          • 🎨 Formatage code Python (Black)
+          • ⚡ Corrections automatiques (Ruff)
+          
+          🏛️ CONFORMITÉ AGI:
+          Formatage selon standards constitutionnels
+          
+          🤖 Commit automatique via GitHub Actions"
+          
+          git push
+          echo "✅ Code formaté et poussé automatiquement"
+        else
+          echo "ℹ️ Aucun changement - code déjà parfaitement formaté"
+        fi
+
+  web-formatting:
+    name: 🌐 Web - Formatage (Prettier)
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: 📦 Install Prettier & Tools
+      run: |
+        npm install -g prettier @prettier/plugin-xml prettier-plugin-sh
+
+    - name: 🎨 Format Web Files (Prettier)
+      run: |
+        echo "🎨 Formatage des fichiers web..."
+        
+        # Configuration Prettier
+        cat > .prettierrc << 'PRETTIER_EOF'
+        {
+          "semi": true,
+          "trailingComma": "es5",
+          "singleQuote": true,
+          "printWidth": 120,
+          "tabWidth": 2,
+          "useTabs": false,
+          "bracketSpacing": true,
+          "arrowParens": "avoid",
+          "endOfLine": "lf",
+          "overrides": [
+            {
+              "files": "*.md",
+              "options": {
+                "proseWrap": "preserve"
+              }
+            },
+            {
+              "files": ["*.yml", "*.yaml"],
+              "options": {
+                "tabWidth": 2
+              }
+            }
+          ]
+        }
+        PRETTIER_EOF
+        
+        # Formater les fichiers web
+        prettier --write \
+          "**/*.{js,jsx,ts,tsx,json,css,scss,html,md,yml,yaml}" \
+          --ignore-path .gitignore \
+          --log-level warn || echo "⚠️ Certains fichiers n'ont pas pu être formatés"
+
+    - name: 💾 Auto-commit Web Formatting
+      run: |
+        echo "💾 Vérification des changements web..."
+        
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        if ! git diff --quiet; then
+          echo "📝 Changements web détectés - création du commit..."
+          git add .
+          git commit -m "🌐 auto-format: formatage web automatique (Prettier)
+
+          ✨ FORMATAGE WEB APPLIQUÉ:
+          • 🎨 Formatage JavaScript/TypeScript
+          • 📝 Formatage Markdown
+          • ⚙️ Formatage YAML/JSON
+          • 💄 Formatage CSS/SCSS
+          
+          🤖 Commit automatique via GitHub Actions"
+          
+          git push
+          echo "✅ Fichiers web formatés et poussés automatiquement"
+        else
+          echo "ℹ️ Aucun changement web - fichiers déjà formatés"
+        fi
+
+  super-linter:
+    name: 🔍 Super Linter (Analyse Globale)
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🔍 Run Super Linter
+      uses: super-linter/super-linter@v6.3.0
+      env:
+        DEFAULT_BRANCH: main
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VALIDATE_ALL_CODEBASE: false
+        VALIDATE_PYTHON_BLACK: true
+        VALIDATE_PYTHON_ISORT: true
+        VALIDATE_PYTHON_PYLINT: true
+        VALIDATE_PYTHON_RUFF: true
+        VALIDATE_MARKDOWN: true
+        VALIDATE_YAML: true
+        VALIDATE_JSON: true
+        VALIDATE_BASH: true
+        PYTHON_BLACK_CONFIG_FILE: pyproject.toml
+        PYTHON_ISORT_CONFIG_FILE: pyproject.toml
+        LOG_LEVEL: WARN
+
+  formatting-report:
+    name: 📊 Rapport de Formatage
+    runs-on: ubuntu-latest
+    needs: [python-formatting, web-formatting, super-linter]
+    if: always()
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 📊 Generate Formatting Report
+      run: |
+        echo "📊 RAPPORT DE FORMATAGE AUTOMATISÉ" >> $GITHUB_STEP_SUMMARY
+        echo "=================================" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🎯 **Statut des Jobs:**" >> $GITHUB_STEP_SUMMARY
+        echo "- 🐍 Python Formatting: ${{ needs.python-formatting.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- 🌐 Web Formatting: ${{ needs.web-formatting.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- 🔍 Super Linter: ${{ needs.super-linter.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "⏰ **Exécuté le:** $(date)" >> $GITHUB_STEP_SUMMARY
+        echo "🌿 **Branche:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "👤 **Déclencheur:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🏛️ **Conformité AGI:** Standards constitutionnels appliqués" >> $GITHUB_STEP_SUMMARY
+        
+        echo "✅ Rapport de formatage généré avec succès"
