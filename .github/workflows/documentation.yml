@@ -2,7 +2,7 @@ name: Auto Documentation
 on:
   push:
     branches: [ main ]
-    paths: ['eve/**/*.py', 'docs/**', '*.md']
+    paths: ["docs-api/**", "eve/**/*.py"]
 
 jobs:
   build-docs:
@@ -22,10 +22,10 @@ jobs:
         
     - name: Initialize docs if needed
       run: |
-        if [ ! -f "docs/conf.py" ]; then
+        if [ ! -f "docs-api/conf.py" ]; then
           echo "📚 Initialisation nouvelle documentation"
-          mkdir -p docs
-          sphinx-quickstart -q -p "AGI-EVE" -a "Toni" --ext-autodoc --ext-viewcode docs/
+          mkdir -p docs-api
+          sphinx-quickstart -q -p "AGI-EVE" -a "Toni" --ext-autodoc --ext-viewcode docs-api/
         else
           echo "📚 Documentation existante détectée"
         fi
@@ -50,4 +50,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/_build/html
+        publish_dir: ./docs-api/_build/html

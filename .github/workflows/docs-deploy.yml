@@ -1,9 +1,9 @@
-name: 📚 Deploy Documentation
+name: 📚 Deploy Documentation Web (MkDocs)
 
 on:
   push:
     branches: [ main ]
-    paths: [ 'docs/**', 'mkdocs.yml' ]
+    paths: [ 'docs-web/**', 'mkdocs.yml' ]
 
 permissions:
   contents: read
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "pages-mkdocs"
   cancel-in-progress: true
 
 jobs:
@@ -24,6 +24,28 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
+        
+    - name: Verify MkDocs config
+      run: |
+        if [ ! -f "mkdocs.yml" ]; then
+          echo "⚠️ mkdocs.yml non trouvé, création config basique"
+          cat > mkdocs.yml << 'MKDOCS'
+site_name: AGI-EVE Documentation
+docs_dir: docs-web
+theme:
+  name: material
+nav:
+  - Home: index.md
+MKDOCS
+        fi
+        
+    - name: Initialize docs-web if needed
+      run: |
+        if [ ! -d "docs-web" ]; then
+          echo "📚 Création structure docs-web"
+          mkdir -p docs-web
+          echo "# AGI-EVE Documentation\n\nDocumentation utilisateur du projet AGI-EVE." > docs-web/index.md
+        fi
         
     - name: Install MkDocs
       run: |
