@@ -1,9 +1,8 @@
-name: "🛡️ Master Constitutional Corrector"
+name: "🛡 Master Constitutional Corrector"
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    # Déclencher sur TOUS les types de modifications, même suppressions
   push:
     branches: [main, master]
   workflow_dispatch:
@@ -11,12 +10,36 @@ on:
 jobs:
   constitutional_check:
     runs-on: ubuntu-latest
-    name: "🛡️ Constitutional Compliance"
-
+    permissions:
+      contents: write
+      pull-requests: write
+    
     steps:
     - uses: actions/checkout@v4
-    - name: "✅ Constitutional Check"
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: "🔍 Detect Constitutional Violations"
+      id: violations
       run: |
-        echo "🛡️ Master Constitutional Corrector - Active"
-        echo "✅ Vérification constitutionnelle: PASSED"
-        echo "🎯 PR autorisée à continuer"
+        echo "Vérification des violations constitutionnelles..."
+        
+        # Vérifier limite 200 lignes
+        violations=$(find . -name "*.py" -not -path "./.git/*" -exec wc -l {} \; | awk '$1 > 200 {print $2 " (" $1 " lignes)"}')
+        
+        if [ ! -z "$violations" ]; then
+          echo "❌ VIOLATIONS DÉTECTÉES:"
+          echo "$violations"
+          echo "violations_found=true" >> $GITHUB_OUTPUT
+          exit 1
+        else
+          echo "✅ Aucune violation constitutionnelle détectée"
+          echo "violations_found=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: "🚫 Block PR on Violations"
+      if: steps.violations.outputs.violations_found == 'true'
+      run: |
+        echo "🚫 PR BLOQUÉE: Violations constitutionnelles détectées"
+        echo "Corrigez les fichiers > 200 lignes avant de continuer"
+        exit 1
