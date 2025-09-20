@@ -1,0 +1,35 @@
+name: PURGE_DEPENDANCES
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 0"
+
+env:
+  PROJECT_ROOT: /home/toni/Documents/Projet AGI
+  QUARANTINE_DIR: /home/toni/Documents/Projet AGI/tools/dependencies_quarantine
+
+jobs:
+  purge-dependances:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dépôt
+        uses: actions/checkout@v4
+      - name: Créer répertoire de quarantaine
+        run: |
+          mkdir -p "$QUARANTINE_DIR"
+      - name: Scanner et déplacer venv / packages tiers
+        run: |
+          TARGETS=("$PROJECT_ROOT/development" "$PROJECT_ROOT/interfaces" "$PROJECT_ROOT/simulation")
+          for dir in "${TARGETS[@]}"; do
+            echo "🔎 Analyse de $dir"
+            find "$dir" -type d \( -name "venv" -o -name ".venv" -o -name "env" -o -name "site-packages" -o -name "__pycache__" \) | while read path; do
+              echo "📦 Déplacement: $path"
+              rsync -a --remove-source-files "$path" "$QUARANTINE_DIR"/
+              rm -rf "$path"
+            done
+          done
+      - name: Liste de contrôle
+        run: |
+          echo "✅ Contenu actuel de la quarantaine :"
+          ls -R "$QUARANTINE_DIR"
