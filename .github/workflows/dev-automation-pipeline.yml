@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Setup Development Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
@@ -200,7 +200,7 @@ jobs:
         fi
         
     - name: Upload Automation Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: development-automation-report
         path: |

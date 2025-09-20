@@ -34,7 +34,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Setup Orchestration Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
@@ -344,7 +344,7 @@ jobs:
         " >> orchestration-plan.md
         
     - name: Upload Orchestration Plan
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: orchestration-plan
         path: |
@@ -366,7 +366,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Setup Workflow Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
@@ -453,7 +453,7 @@ jobs:
         " >> workflow-${{ matrix.workflow }}.log
         
     - name: Upload Workflow Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: workflow-results-${{ matrix.workflow }}
         path: |
@@ -470,7 +470,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Download All Workflow Results
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: ./workflow-results
         
@@ -658,7 +658,7 @@ jobs:
         fi
         
     - name: Upload Final Summary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: orchestration-summary
         path: |
@@ -707,7 +707,7 @@ jobs:
         " >> cleanup-report.md
         
     - name: Upload Cleanup Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cleanup-report
         path: cleanup-report.md

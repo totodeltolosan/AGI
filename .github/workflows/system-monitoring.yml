@@ -1,0 +1,245 @@
+name: 📊 Surveillance Continue du Système
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Exécution toutes les 6 heures
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.9'
+
+jobs:
+  system-health-check:
+    name: 🏥 Vérification Santé Système
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 📦 Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install psutil requests
+
+    - name: 🔍 System Health Analysis
+      id: health_check
+      run: |
+        echo "🏥 Analyse de la santé du système..."
+        
+        # Statistiques du repository
+        echo "📊 STATISTIQUES REPOSITORY:" >> health_report.txt
+        echo "• Nombre de fichiers Python: $(find . -name "*.py" | wc -l)" >> health_report.txt
+        echo "• Nombre de workflows: $(find .github/workflows -name "*.yml" -o -name "*.yaml" 2>/dev/null | wc -l)" >> health_report.txt
+        echo "• Taille totale: $(du -sh . | cut -f1)" >> health_report.txt
+        echo "" >> health_report.txt
+        
+        # Vérification conformité 200 lignes
+        echo "🏛️ CONFORMITÉ CONSTITUTIONNELLE:" >> health_report.txt
+        VIOLATIONS=0
+        TOTAL_FILES=0
+        
+        find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" -not -path "./backup_*/*" | while read file; do
+          lines=$(wc -l < "$file" 2>/dev/null || echo "0")
+          TOTAL_FILES=$((TOTAL_FILES + 1))
+          if [ "$lines" -gt 200 ]; then
+            echo "❌ VIOLATION: $file ($lines lignes)" >> health_report.txt
+            VIOLATIONS=$((VIOLATIONS + 1))
+          fi
+        done
+        
+        TOTAL_FILES=$(find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" -not -path "./backup_*/*" | wc -l)
+        CONFORMANT=$((TOTAL_FILES - VIOLATIONS))
+        CONFORMITY_RATE=$(echo "scale=1; $CONFORMANT * 100 / $TOTAL_FILES" | bc -l 2>/dev/null || echo "0")
+        
+        echo "• Fichiers analysés: $TOTAL_FILES" >> health_report.txt
+        echo "• Fichiers conformes: $CONFORMANT" >> health_report.txt
+        echo "• Taux de conformité: ${CONFORMITY_RATE}%" >> health_report.txt
+        echo "" >> health_report.txt
+        
+        # Vérification des actions obsolètes
+        echo "🔧 VÉRIFICATION WORKFLOWS:" >> health_report.txt
+        DEPRECATED_FOUND=0
+        
+        if [ -d ".github/workflows" ]; then
+          for workflow in .github/workflows/*.yml .github/workflows/*.yaml; do
+            if [ -f "$workflow" ]; then
+              if grep -q "actions/upload-artifact@v3\|actions/checkout@v3\|actions/setup-python@v4" "$workflow"; then
+                echo "⚠️ Actions obsolètes dans: $(basename "$workflow")" >> health_report.txt
+                DEPRECATED_FOUND=1
+              fi
+            fi
+          done
+        fi
+        
+        if [ $DEPRECATED_FOUND -eq 0 ]; then
+          echo "✅ Tous les workflows utilisent des actions à jour" >> health_report.txt
+        fi
+        
+        echo "" >> health_report.txt
+        echo "⏰ Rapport généré le: $(date)" >> health_report.txt
+        
+        # Afficher le rapport
+        cat health_report.txt
+        
+        # Exporter pour les étapes suivantes
+        echo "conformity_rate=${CONFORMITY_RATE}" >> $GITHUB_OUTPUT
+        echo "total_files=${TOTAL_FILES}" >> $GITHUB_OUTPUT
+
+    - name: 📊 Upload Health Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: system-health-report-${{ github.run_number }}
+        path: health_report.txt
+        retention-days: 30
+
+    - name: 🚨 Alert on Low Conformity
+      if: steps.health_check.outputs.conformity_rate < 90
+      run: |
+        echo "🚨 ALERTE: Taux de conformité bas (${{ steps.health_check.outputs.conformity_rate }}%)"
+        echo "Moins de 90% des fichiers respectent la directive 200 lignes"
+        echo "Action recommandée: Refactorisation urgente nécessaire"
+
+  dependency-security-scan:
+    name: 🔒 Scan Sécurité des Dépendances
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 🔍 Security Audit
+      run: |
+        echo "🔒 Audit de sécurité des dépendances..."
+        
+        # Installer les outils de sécurité
+        pip install safety bandit
+        
+        echo "🛡️ AUDIT SÉCURITÉ:" > security_report.txt
+        echo "=================" >> security_report.txt
+        echo "" >> security_report.txt
+        
+        # Scan avec Safety (vulnérabilités dans les dépendances)
+        echo "📦 Scan des dépendances avec Safety:" >> security_report.txt
+        if [ -f "requirements.txt" ]; then
+          safety check -r requirements.txt >> security_report.txt 2>&1 || echo "⚠️ Vulnérabilités détectées dans les dépendances" >> security_report.txt
+        else
+          echo "ℹ️ Aucun fichier requirements.txt trouvé" >> security_report.txt
+        fi
+        
+        echo "" >> security_report.txt
+        
+        # Scan avec Bandit (problèmes de sécurité dans le code)
+        echo "🔍 Scan du code avec Bandit:" >> security_report.txt
+        bandit -r . -f txt -o bandit_output.txt 2>/dev/null || true
+        if [ -f "bandit_output.txt" ]; then
+          cat bandit_output.txt >> security_report.txt
+        fi
+        
+        echo "" >> security_report.txt
+        echo "⏰ Audit généré le: $(date)" >> security_report.txt
+        
+        # Afficher le rapport
+        cat security_report.txt
+
+    - name: 📊 Upload Security Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-audit-report-${{ github.run_number }}
+        path: security_report.txt
+        retention-days: 30
+
+  performance-metrics:
+    name: ⚡ Métriques de Performance
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: ⚡ Performance Analysis
+      run: |
+        echo "⚡ Analyse des métriques de performance..."
+        
+        echo "📈 MÉTRIQUES PERFORMANCE:" > performance_report.txt
+        echo "========================" >> performance_report.txt
+        echo "" >> performance_report.txt
+        
+        # Analyse de la complexité du code
+        pip install radon
+        
+        echo "🧮 Complexité cyclomatique moyenne:" >> performance_report.txt
+        find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" | head -20 | \
+        xargs radon cc -a >> performance_report.txt 2>/dev/null || echo "Analyse non disponible" >> performance_report.txt
+        
+        echo "" >> performance_report.txt
+        
+        # Statistiques générales
+        echo "📊 Statistiques générales:" >> performance_report.txt
+        echo "• Lignes de code Python: $(find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}' || echo '0')" >> performance_report.txt
+        echo "• Fichiers de plus de 100 lignes: $(find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" -exec wc -l {} + | awk '$1 > 100 {count++} END {print count+0}')" >> performance_report.txt
+        echo "• Fichiers de plus de 200 lignes: $(find . -name "*.py" -not -path "./venv/*" -not -path "./.git/*" -exec wc -l {} + | awk '$1 > 200 {count++} END {print count+0}')" >> performance_report.txt
+        
+        echo "" >> performance_report.txt
+        echo "⏰ Métriques générées le: $(date)" >> performance_report.txt
+        
+        # Afficher le rapport
+        cat performance_report.txt
+
+    - name: 📊 Upload Performance Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-metrics-${{ github.run_number }}
+        path: performance_report.txt
+        retention-days: 30
+
+  summary-report:
+    name: 📋 Rapport de Synthèse
+    runs-on: ubuntu-latest
+    needs: [system-health-check, dependency-security-scan, performance-metrics]
+    if: always()
+    
+    steps:
+    - name: 📊 Generate Summary
+      run: |
+        echo "📋 RAPPORT DE SYNTHÈSE - SURVEILLANCE SYSTÈME" >> $GITHUB_STEP_SUMMARY
+        echo "=============================================" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🎯 **Statut des Vérifications:**" >> $GITHUB_STEP_SUMMARY
+        echo "- 🏥 Santé Système: ${{ needs.system-health-check.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- 🔒 Audit Sécurité: ${{ needs.dependency-security-scan.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- ⚡ Métriques Performance: ${{ needs.performance-metrics.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📊 **Métriques Clés:**" >> $GITHUB_STEP_SUMMARY
+        echo "- Conformité constitutionnelle: ${{ needs.system-health-check.outputs.conformity_rate }}%" >> $GITHUB_STEP_SUMMARY
+        echo "- Fichiers analysés: ${{ needs.system-health-check.outputs.total_files }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "⏰ **Exécuté le:** $(date)" >> $GITHUB_STEP_SUMMARY
+        echo "🌿 **Branche:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "👤 **Déclencheur:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🏛️ **Conformité AGI:** Surveillance continue selon standards constitutionnels" >> $GITHUB_STEP_SUMMARY
+        
+        echo "✅ Rapport de synthèse généré avec succès"

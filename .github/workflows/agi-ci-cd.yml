@@ -23,7 +23,7 @@ jobs:
         fetch-depth: 0
         
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         
@@ -51,7 +51,7 @@ jobs:
         safety check || echo "Dependency check completed"
         
     - name: Upload quality reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: quality-reports
         path: |
@@ -71,7 +71,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         
@@ -114,7 +114,7 @@ jobs:
         done > conformite_$(date +%Y%m%d).csv
         
     - name: Upload conformity report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: conformity-report
         path: conformite_*.csv

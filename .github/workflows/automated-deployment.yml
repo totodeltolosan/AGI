@@ -32,7 +32,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Setup Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
@@ -208,7 +208,7 @@ jobs:
         " >> deployment-check.md
         
     - name: Upload Deployment Check
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: deployment-check
         path: |
@@ -226,7 +226,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Setup Deployment Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         
@@ -332,7 +332,7 @@ jobs:
         " >> staging-deployment.log
         
     - name: Upload Staging Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: staging-deployment
         path: |
@@ -545,7 +545,7 @@ jobs:
         echo "Deployment Time: $(date)" >> production-deployment.log
         
     - name: Upload Production Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: production-deployment
         path: |
