@@ -15,9 +15,11 @@ jobs:
     steps:
       - name: Checkout dépôt
         uses: actions/checkout@v4
+
       - name: Créer répertoire de quarantaine
         run: |
           mkdir -p "$QUARANTINE_DIR"
+
       - name: Scanner et déplacer venv / packages tiers
         run: |
           TARGETS=("$PROJECT_ROOT/development" "$PROJECT_ROOT/interfaces" "$PROJECT_ROOT/simulation")
@@ -29,6 +31,7 @@ jobs:
               rm -rf "$path"
             done
           done
+
       - name: Liste de contrôle
         run: |
           echo "✅ Contenu actuel de la quarantaine :"
