@@ -33,13 +33,60 @@ jobs:
         if [ -d "core" ]; then echo "✅ Dossier core: présent"; else echo "❌ Dossier core: manquant"; fi
         if [ -d "eve" ]; then echo "✅ Dossier eve: présent"; else echo "❌ Dossier eve: manquant"; fi
         
-        # Test import Python basique
+    - name: Python syntax validation
+      run: |
+        echo "🐍 VALIDATION SYNTAXE PYTHON"
+        echo "============================"
+        
+        syntax_errors=0
+        for file in $(find . -name "*.py" -not -path "./.git/*"); do
+          if ! python -m py_compile "$file" 2>/dev/null; then
+            echo "❌ Erreur syntaxe: $file"
+            syntax_errors=$((syntax_errors + 1))
+          fi
+        done
+        
+        if [ $syntax_errors -eq 0 ]; then
+          echo "✅ Tous les fichiers Python ont une syntaxe valide"
+        else
+          echo "❌ $syntax_errors fichiers avec erreurs syntaxe"
+          exit 1
+        fi
+        
+    - name: Constitutional compliance check
+      run: |
+        echo "🏛️ VÉRIFICATION CONFORMITÉ CONSTITUTIONNELLE"
+        echo "=========================================="
+        
+        violations=$(find . -name "*.py" -not -path "./.git/*" -exec wc -l {} \; | awk '$1 > 200 {print $2 " (" $1 " lignes)"}')
+        
+        if [ ! -z "$violations" ]; then
+          echo "❌ Violations limite 200 lignes:"
+          echo "$violations"
+          exit 1
+        else
+          echo "✅ Conformité constitutionnelle respectée"
+        fi
+        
+    - name: Basic functionality test
+      run: |
+        echo "⚙️ TEST FONCTIONNALITÉ BASIQUE"
+        echo "============================="
+        
         python3 -c "
         import sys
         import os
         print('✅ Python fonctionnel')
         print(f'Version: {sys.version}')
         print(f'Path: {sys.path[0]}')
+        
+        # Test imports courants
+        try:
+            import json, pathlib, subprocess
+            print('✅ Modules standards disponibles')
+        except ImportError as e:
+            print(f'❌ Erreur import: {e}')
+            sys.exit(1)
         "
         
-        echo "✅ Basic health check terminé"
+        echo "✅ Basic CI terminé avec succès"
