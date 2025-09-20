@@ -37,10 +37,7 @@ jobs:
           
           # Moteur physique principal
           cat > eve/simulation/universe/core/physics_engine.py << 'PYTHON'
-"""
-Moteur Physique Principal Monde - Simulation universelle
-Conforme aux directives architecturales AGI (<200 lignes)
-"""
+
 
 import numpy as np
 from typing import List, Dict, Any, Tuple, Optional
