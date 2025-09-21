@@ -51,7 +51,7 @@ jobs:
         cat scan_results.txt
     
     - name: 📋 Upload Rapport
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: scan-violations-report
         path: scan_results.txt
