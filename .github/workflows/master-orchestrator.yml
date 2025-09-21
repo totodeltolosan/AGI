@@ -31,7 +31,7 @@ jobs:
       execution_order: ${{ steps.plan.outputs.execution_order }}
       
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Orchestration Environment
       uses: actions/setup-python@v4
@@ -363,7 +363,7 @@ jobs:
       fail-fast: false
       
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Workflow Environment
       uses: actions/setup-python@v4
@@ -467,7 +467,7 @@ jobs:
     if: always()
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Download All Workflow Results
       uses: actions/download-artifact@v3

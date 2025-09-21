@@ -29,7 +29,7 @@ jobs:
       quality_score: ${{ steps.quality_gate.outputs.score }}
       
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Environment
       uses: actions/setup-python@v4
@@ -223,7 +223,7 @@ jobs:
     environment: staging
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Deployment Environment
       uses: actions/setup-python@v4
@@ -352,7 +352,7 @@ jobs:
     environment: production
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Production Deployment Approval
       run: |
