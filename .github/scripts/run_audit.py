@@ -369,3 +369,37 @@ def audit_documentation(report):
 
     # Exporte le taux de couverture global pour les étapes suivantes
     print(f"::set-output name=doc_coverage::{overall_rate:.1f}")
+
+# --- DÉFINITION DU CHEMIN DU SCRIPT ---
+SCRIPT_FILE="/home/toni/Documents/Projet AGI/.github/scripts/run_audit.py"
+
+# --- AJOUTER LE POINT D'ENTRÉE MANQUANT AU SCRIPT ---
+cat >> "$SCRIPT_FILE" << 'EOF'
+
+# --- SCRIPT PRINCIPAL (POINT D'ENTRÉE) ---
+if __name__ == "__main__":
+    # Initialiser le rapport
+    main_report = AuditReport()
+
+    # Exécuter l'audit de la constitution
+    if not audit_constitution_file(main_report):
+        main_report.write()
+        print("::error::Audit de la constitution a échoué. Arrêt du workflow.")
+        sys.exit(1) # Arrêter le script si la constitution est invalide
+
+    # Exécuter les autres audits
+    line_violations = audit_file_length(main_report)
+    total_sec_violations, critical_sec_violations = audit_security(main_report)
+    audit_documentation(main_report)
+
+    # Écrire le rapport final sur le disque
+    main_report.write()
+
+    # Exporter les résultats pour les étapes suivantes du workflow
+    print(f"::set-output name=line_violations::{line_violations}")
+    print(f"::set-output name=critical_security_violations::{critical_sec_violations}")
+
+    print("\n✅ Script d'audit terminé avec succès.")
+EOF
+
+echo "✅ Point d'entrée ajouté à run_audit.py. Le script est maintenant complet."
