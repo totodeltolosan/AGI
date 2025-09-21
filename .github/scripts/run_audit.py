@@ -377,7 +377,6 @@ def audit_documentation(report):
 # --- DÉFINITION DU CHEMIN DU SCRIPT ---
 SCRIPT_FILE = "/home/toni/Documents/Projet AGI/.github/scripts/run_audit.py"
 
-# --- AJOUTER LE POINT D'ENTRÉE MANQUANT AU SCRIPT ---
 
 # --- SCRIPT PRINCIPAL (POINT D'ENTRÉE) ---
 if __name__ == "__main__":
@@ -387,40 +386,26 @@ if __name__ == "__main__":
     # Exécuter l'audit de la constitution
     if not audit_constitution_file(main_report):
         main_report.write()
-        print("::error::Audit de la constitution a échoué. Arrêt du workflow.")
-        sys.exit(1)  # Arrêter le script si la constitution est invalide
-
-    # Exécuter les autres audits
-    audit_file_length(main_report)
-    audit_security(main_report)
-    audit_documentation(main_report)
-
-    # Écrire le rapport final sur le disque
-    main_report.write()
-
-    print("\n✅ Script d'audit terminé avec succès.")
-
-# --- SCRIPT PRINCIPAL (POINT D'ENTRÉE) ---
-if __name__ == "__main__":
-    main_report = AuditReport()
-
-    if not audit_constitution_file(main_report):
-        main_report.write()
         print(
             "::error::Audit de la constitution a échoué. Arrêt du workflow.",
             file=sys.stderr,
         )
         sys.exit(1)
 
+    # Exécuter les autres audits et récupérer leurs résultats
     line_violations = audit_file_length(main_report)
     total_sec_violations, critical_sec_violations = audit_security(main_report)
     audit_documentation(main_report)
 
+    # Écrire le rapport final sur le disque
     main_report.write()
 
     # Exporter les outputs pour les étapes suivantes du workflow
-    with open(os.getenv("GITHUB_OUTPUT"), "a") as f:
-        f.write(f"line_violations={line_violations}\n")
-        f.write(f"critical_security_violations={critical_sec_violations}\n")
+    # Utilise la méthode recommandée par GitHub pour éviter les avertissements de dépréciation.
+    github_output_file = os.getenv("GITHUB_OUTPUT")
+    if github_output_file:
+        with open(github_output_file, "a") as f:
+            f.write(f"line_violations={line_violations}\n")
+            f.write(f"critical_security_violations={critical_sec_violations}\n")
 
     print("\n✅ Script d'audit terminé.")
