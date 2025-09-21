@@ -1,5 +1,5 @@
 # DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🔍 Brain Core System Monitoring
+name:  Brain Core System Monitoring
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -18,7 +18,7 @@ jobs:
     
     - name: Brain Core Architecture Analysis
       run: |
-        echo "🔍 ANALYSE ARCHITECTURE BRAIN CORE" > brain-health.md
+        echo " ANALYSE ARCHITECTURE BRAIN CORE" > brain-health.md
         echo "=================================" >> brain-health.md
         echo "" >> brain-health.md
         
@@ -27,7 +27,7 @@ jobs:
           core_files=$(find eve/cognitive/brain/ -name "*.py" | wc -l)
           total_lines=$(find eve/cognitive/brain/ -name "*.py" -exec wc -l {} + 2>/dev/null | tail -1 | awk '{print $1}' || echo "0")
           
-          echo "## 📊 Métriques Brain Core" >> brain-health.md
+          echo "##  Métriques Brain Core" >> brain-health.md
           echo "- **Modules**: $core_files" >> brain-health.md
           echo "- **Total lignes**: $total_lines" >> brain-health.md
           echo "" >> brain-health.md
@@ -46,14 +46,14 @@ jobs:
           
           # Statut global
           echo "" >> brain-health.md
-          echo "## 🎯 Statut Global" >> brain-health.md
+          echo "##  Statut Global" >> brain-health.md
           if [ $violations -eq 0 ]; then
-            echo "✅ **Brain Core**: Entièrement conforme" >> brain-health.md
+            echo " **Brain Core**: Entièrement conforme" >> brain-health.md
           else
-            echo "⚠️ **Brain Core**: $violations violations - Refactoring requis" >> brain-health.md
+            echo " **Brain Core**: $violations violations - Refactoring requis" >> brain-health.md
           fi
         else
-          echo "❌ **ERREUR**: Dossier eve/cognitive/brain/ introuvable" >> brain-health.md
+          echo " **ERREUR**: Dossier eve/cognitive/brain/ introuvable" >> brain-health.md
         fi
         
     - name: Cognitive Dependencies Check
@@ -66,9 +66,9 @@ jobs:
         
         for import_name in "${critical_imports[@]}"; do
           if find eve/cognitive/ -name "*.py" -exec grep -l "import $import_name\|from $import_name" {} \; | head -1 >/dev/null; then
-            echo "✅ $import_name: Utilisé" >> brain-health.md
+            echo " $import_name: Utilisé" >> brain-health.md
           else
-            echo "⚠️ $import_name: Non détecté" >> brain-health.md
+            echo " $import_name: Non détecté" >> brain-health.md
           fi
         done
         

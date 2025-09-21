@@ -25,14 +25,14 @@ jobs:
         # Analyser fichiers émergence
         if [ -d "eve/simulation/emergence" ]; then
           emergence_files=$(find eve/simulation/emergence/ -name "*.py" | wc -l)
-          echo "## 📊 Systèmes Émergence" >> emergence-report.md
+          echo "##  Systèmes Émergence" >> emergence-report.md
           echo "- **Modules**: $emergence_files" >> emergence-report.md
           
           # Chercher patterns d'émergence dans le code
           emergence_patterns=("emergence" "emergent" "self_organiz" "complex" "adapt")
           
           echo "" >> emergence-report.md
-          echo "## 🔍 Patterns Détectés" >> emergence-report.md
+          echo "##  Patterns Détectés" >> emergence-report.md
           
           for pattern in "${emergence_patterns[@]}"; do
             count=$(find eve/simulation/emergence/ -name "*.py" -exec grep -c "$pattern" {} \; 2>/dev/null | paste -sd+ | bc 2>/dev/null || echo "0")
@@ -40,7 +40,7 @@ jobs:
           done
           
         else
-          echo "⚠️ **Module émergence**: En cours de création" >> emergence-report.md
+          echo " **Module émergence**: En cours de création" >> emergence-report.md
         fi
         
     - name: Complexity Metrics
@@ -92,7 +92,7 @@ jobs:
                 else:
                     print('- **Statut**: 🌱 Système en développement')
             else:
-                print('- **Statut**: ⚠️ Aucun fichier détecté')
+                print('- **Statut**:  Aucun fichier détecté')
                 
         except Exception as e:
             print(f'- **Erreur**: {e}')
@@ -146,9 +146,9 @@ jobs:
         print(f'- **Complexité maximale**: {max_complexity:.2f}')
         
         if max_complexity > initial_complexity * 1.5:
-            print('- **Résultat**: ✅ Auto-organisation détectée')
+            print('- **Résultat**:  Auto-organisation détectée')
         else:
-            print('- **Résultat**: ⚠️ Auto-organisation limitée')
+            print('- **Résultat**:  Auto-organisation limitée')
         
         # Sauvegarder graphique
         plt.figure(figsize=(10, 6))
