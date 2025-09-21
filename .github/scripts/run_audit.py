@@ -1,5 +1,7 @@
 import json
 import os
+import re
+import ast
 from collections import defaultdict
 import sys
 
@@ -21,110 +23,92 @@ class AuditReport:
         with open(self.filename, "a", encoding="utf-8") as f:
             f.write("\n".join(self.content))
 
-    # --- FONCTION D'AUDIT DE LA CONSTITUTION ---
-    def audit_constitution_file(report):
-        report.add_header("📜 Analyse de la Constitution (iaGOD.json)")
-        try:
-            with open("iaGOD.json", "r", encoding="utf-8") as f:
-                constitution = json.load(f)
 
-            laws_count = len(constitution.get("laws", []))
-            principles_count = len(constitution.get("principles", []))
+# --- FONCTION D'AUDIT DE LA CONSTITUTION ---
+def audit_constitution_file(report):
+    report.add_header("📜 Analyse de la Constitution (iaGOD.json)")
+    try:
+        with open("iaGOD.json", "r", encoding="utf-8") as f:
+            constitution = json.load(f)
 
-            report.add_line(f"- ✅ **Lois constitutionnelles** : {laws_count}")
-            report.add_line(f"- ✅ **Principes fondamentaux** : {principles_count}")
+        laws_count = len(constitution.get("laws", []))
+        principles_count = len(constitution.get("principles", []))
 
-            required_laws = [
-                "200_lines_limit",
-                "documentation_required",
-                "security_compliance",
-            ]
-            for law in required_laws:
-                if any(law in str(l) for l in constitution.get("laws", [])):
-                    report.add_line(f"- ✅ **Loi requise** `{law}` : Définie")
-                else:
-                    report.add_line(f"- ⚠️ **Loi requise** `{law}` : Manquante")
-            return True
+        report.add_line(f"- ✅ **Lois constitutionnelles** : {laws_count}")
+        report.add_line(f"- ✅ **Principes fondamentaux** : {principles_count}")
 
-        except FileNotFoundError:
-            report.add_line(
-                "- ❌ **Erreur Critique** : Fichier `iaGOD.json` non trouvé."
-            )
-            return False
-        except json.JSONDecodeError as e:
-            report.add_line(
-                f"- ❌ **Erreur Critique** : Fichier `iaGOD.json` mal formaté. Erreur : {e}"
-            )
-            return False
-        except Exception as e:
-            report.add_line(
-                f"- ❌ **Erreur Critique** : Erreur inattendue lors de la lecture du fichier. Erreur : {e}"
-            )
-            return False
+        required_laws = [
+            "200_lines_limit",
+            "documentation_required",
+            "security_compliance",
+        ]
+        for law in required_laws:
+            if any(law in str(law_item) for law_item in constitution.get("laws", [])):
+                report.add_line(f"- ✅ **Loi requise** `{law}` : Définie")
+            else:
+                report.add_line(f"- ⚠️ **Loi requise** `{law}` : Manquante")
+        return True
 
-    # --- FONCTION D'AUDIT DE LA LONGUEUR DES FICHIERS ---
-    def audit_file_length(report):
-        report.add_header("📏 Audit de la Loi des 200 Lignes")
-        violations = []
+    except FileNotFoundError:
+        report.add_line("- ❌ **Erreur Critique** : Fichier `iaGOD.json` non trouvé.")
+        return False
+    except json.JSONDecodeError as e:
+        report.add_line(
+            f"- ❌ **Erreur Critique** : Fichier `iaGOD.json` mal formaté. Erreur : {e}"
+        )
+        return False
+    except Exception as e:
+        report.add_line(
+            f"- ❌ **Erreur Critique** : Erreur inattendue lors de la lecture du fichier. Erreur : {e}"
+        )
+        return False
 
-        for root, dirs, files in os.walk("."):
-            if ".git" in dirs:
-                dirs.remove(".git")  # Exclure le répertoire .git
 
-            for file in files:
-                if file.endswith(".py"):
-                    filepath = os.path.join(root, file)
-                    try:
-                        with open(
-                            filepath, "r", encoding="utf-8", errors="ignore"
-                        ) as f:
-                            num_lines = len(f.readlines())
-                        if num_lines > 200:
-                            violations.append({"file": filepath, "lines": num_lines})
-                    except IOError:
-                        # Ignorer les fichiers qui ne peuvent pas être lus
-                        pass
+# --- FONCTION D'AUDIT DE LA LONGUEUR DES FICHIERS ---
+def audit_file_length(report):
+    report.add_header("📏 Audit de la Loi des 200 Lignes")
+    violations = []
 
-        total_files = sum(len(files) for _, _, files in os.walk(".") if ".git" not in _)
-        total_py_files = (
-            sum(1 for v in violations)
-            + sum(1 for _, _, files in os.walk(".") for f in files if f.endswith(".py"))
-            - len(violations)
+    for root, dirs, files in os.walk("."):
+        if ".git" in dirs:
+            dirs.remove(".git")  # Exclure le répertoire .git
+
+        for file in files:
+            if file.endswith(".py"):
+                filepath = os.path.join(root, file)
+                try:
+                    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+                        num_lines = len(f.readlines())
+                    if num_lines > 200:
+                        violations.append({"file": filepath, "lines": num_lines})
+                except IOError:
+                    # Ignorer les fichiers qui ne peuvent pas être lus
+                    pass
+
+    total_py_files = (
+        sum(1 for v in violations)
+        + sum(1 for _, _, files in os.walk(".") for f in files if f.endswith(".py"))
+        - len(violations)
+    )
+
+    report.add_line(f"- **Fichiers Python analysés** : {total_py_files}")
+    report.add_line(f"- **Violations détectées** : {len(violations)}")
+
+    if violations:
+        report.add_line("\n| Fichier en Violation | Nombre de Lignes |")
+        report.add_line("|---|---|")
+        for v in sorted(violations, key=lambda x: x["lines"], reverse=True)[
+            :10
+        ]:  # Top 10
+            report.add_line(f"| `{v['file']}` | **{v['lines']}** |")
+    else:
+        report.add_line(
+            "\n- ✅ **Verdict** : Conformité exemplaire. Aucun fichier ne dépasse la limite de 200 lignes."
         )
 
-        report.add_line(f"- **Fichiers Python analysés** : {total_py_files}")
-        report.add_line(f"- **Violations détectées** : {len(violations)}")
+    # Exporte le nombre de violations pour les étapes suivantes
+    print(f"::set-output name=line_violations::{len(violations)}")
 
-        if violations:
-            report.add_line("\n| Fichier en Violation | Nombre de Lignes |")
-            report.add_line("|---|---|")
-            for v in sorted(violations, key=lambda x: x["lines"], reverse=True)[
-                :10
-            ]:  # Top 10
-                report.add_line(f"| `{v['file']}` | **{v['lines']}** |")
-        else:
-            report.add_line(
-                "\n- ✅ **Verdict** : Conformité exemplaire. Aucun fichier ne dépasse la limite de 200 lignes."
-            )
-
-        # Exporte le nombre de violations pour les étapes suivantes
-        print(f"::set-output name=line_violations::{len(violations)}")
-
-
-# --- SCRIPT PRINCIPAL ---
-if __name__ == "__main__":
-    main_report = AuditReport()
-
-    # Exécuter l'audit de la constitution
-    if not audit_constitution_file(main_report):
-        main_report.write()
-        sys.exit(1)  # Arrêter le script si la constitution est invalide
-
-    # Exécuter l'audit de la longueur des fichiers
-    audit_file_length(main_report)
-
-    # Écrire le rapport final
-    main_report.write()
 
 # ==============================================================================
 # FONCTION D'AUDIT DE SÉCURITÉ
@@ -217,6 +201,20 @@ def audit_security(report):
 
         report.add_line("\n### Répartition par Sévérité")
         for severity in ["critical", "high", "medium", "low"]:
+            # --- Génération du rapport de sécurité ---
+            report.add_line(f"- **Fichiers Python analysés** : {files_scanned}")
+            report.add_line(
+                f"- **Violations de sécurité détectées** : {len(violations)}"
+            )
+
+    # Regrouper les violations par sévérité
+    by_severity = defaultdict(list)
+    for v in violations:
+        by_severity[v["severity"]].append(v)
+
+    if violations:
+        report.add_line("\n### Répartition par Sévérité")
+        for severity in ["critical", "high", "medium", "low"]:
             if severity in by_severity:
                 count = len(by_severity[severity])
                 icon = {"critical": "🚨", "high": "🔥", "medium": "⚠️", "low": "➡️"}[
@@ -240,23 +238,28 @@ def audit_security(report):
                 f"| {v['severity'].capitalize()} | `{v['file']}:{v['line']}` | {v['description']} | `{v['code']}` |"
             )
 
-    # Verdict final
+    # Verdict final et exportation des résultats
     report.add_line("\n### Verdict de Sécurité Constitutionnelle")
     critical_violations_count = len(by_severity.get("critical", []))
+
     if critical_violations_count > 0:
+        # Ce bloc est maintenant correctement indenté
         report.add_line(
             f"- 🚨 **NON-CONFORME** : {critical_violations_count} violation(s) critique(s) détectée(s). Correction immédiate requise."
         )
     elif len(violations) == 0:
+        # Ajout d'une condition pour le cas où tout est parfait
         report.add_line(
             "- ✅ **CONFORMITÉ EXCELLENTE** : Aucune violation de sécurité détectée."
         )
     else:
+        # Ajout d'une condition pour les violations non-critiques
         report.add_line(
             "- ⚠️ **CONFORMITÉ PARTIELLE** : Des violations non-critiques ont été détectées. Un audit manuel est recommandé."
         )
 
-    # Exporte le nombre de violations critiques pour les étapes suivantes
+    # Exporte le nombre de violations pour les étapes suivantes du workflow.
+    # Cette section est maintenant en dehors du 'if' et s'exécutera toujours, ce qui est correct.
     print(f"::set-output name=security_violations::{len(violations)}")
     print(
         f"::set-output name=critical_security_violations::{critical_violations_count}"
@@ -370,11 +373,11 @@ def audit_documentation(report):
     # Exporte le taux de couverture global pour les étapes suivantes
     print(f"::set-output name=doc_coverage::{overall_rate:.1f}")
 
+
 # --- DÉFINITION DU CHEMIN DU SCRIPT ---
-SCRIPT_FILE="/home/toni/Documents/Projet AGI/.github/scripts/run_audit.py"
+SCRIPT_FILE = "/home/toni/Documents/Projet AGI/.github/scripts/run_audit.py"
 
 # --- AJOUTER LE POINT D'ENTRÉE MANQUANT AU SCRIPT ---
-cat >> "$SCRIPT_FILE" << 'EOF'
 
 # --- SCRIPT PRINCIPAL (POINT D'ENTRÉE) ---
 if __name__ == "__main__":
@@ -385,21 +388,39 @@ if __name__ == "__main__":
     if not audit_constitution_file(main_report):
         main_report.write()
         print("::error::Audit de la constitution a échoué. Arrêt du workflow.")
-        sys.exit(1) # Arrêter le script si la constitution est invalide
+        sys.exit(1)  # Arrêter le script si la constitution est invalide
 
     # Exécuter les autres audits
-    line_violations = audit_file_length(main_report)
-    total_sec_violations, critical_sec_violations = audit_security(main_report)
+    audit_file_length(main_report)
+    audit_security(main_report)
     audit_documentation(main_report)
 
     # Écrire le rapport final sur le disque
     main_report.write()
 
-    # Exporter les résultats pour les étapes suivantes du workflow
-    print(f"::set-output name=line_violations::{line_violations}")
-    print(f"::set-output name=critical_security_violations::{critical_sec_violations}")
-
     print("\n✅ Script d'audit terminé avec succès.")
-EOF
 
-echo "✅ Point d'entrée ajouté à run_audit.py. Le script est maintenant complet."
+# --- SCRIPT PRINCIPAL (POINT D'ENTRÉE) ---
+if __name__ == "__main__":
+    main_report = AuditReport()
+
+    if not audit_constitution_file(main_report):
+        main_report.write()
+        print(
+            "::error::Audit de la constitution a échoué. Arrêt du workflow.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    line_violations = audit_file_length(main_report)
+    total_sec_violations, critical_sec_violations = audit_security(main_report)
+    audit_documentation(main_report)
+
+    main_report.write()
+
+    # Exporter les outputs pour les étapes suivantes du workflow
+    with open(os.getenv("GITHUB_OUTPUT"), "a") as f:
+        f.write(f"line_violations={line_violations}\n")
+        f.write(f"critical_security_violations={critical_sec_violations}\n")
+
+    print("\n✅ Script d'audit terminé.")
