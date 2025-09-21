@@ -1,0 +1,67 @@
+name: AGI-EVE Quality Pipeline
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  test-modules:
+    name: Test EVE Modules
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [cognitive, simulation, development, interfaces]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pylint black isort mypy
+        
+    - name: Lint module
+      run: |
+        if [ -d "eve/${{ matrix.module }}" ]; then
+          pylint eve/${{ matrix.module }}/ || true
+        fi
+        
+    - name: Test module
+      run: |
+        if [ -d "eve/${{ matrix.module }}" ]; then
+          pytest eve/${{ matrix.module }}/ || true
+        fi
+
+  code-quality:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install tools
+      run: |
+        pip install black isort flake8
+        
+    - name: Check formatting
+      run: black --check --diff .
+      
+    - name: Check imports
+      run: isort --check-only --diff .
+      
+    - name: Lint code
+      run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics

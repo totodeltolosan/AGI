@@ -1,0 +1,172 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
+name: 🌸 Emergence Systems Monitor
+
+on:
+  # Skip sur agi-main car chemins eve/ inexistants
+  push:
+    paths: ['eve/simulation/emergence/**']
+  schedule:
+    - cron: '0 */4 * * *'  # Toutes les 4h
+
+jobs:
+  emergence-monitoring:
+    name: Monitor Emergence Patterns
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Emergence Pattern Analysis
+      run: |
+        echo "🌸 ANALYSE PATTERNS ÉMERGENCE" > emergence-report.md
+        echo "=============================" >> emergence-report.md
+        echo "" >> emergence-report.md
+        
+        # Analyser fichiers émergence
+        if [ -d "eve/simulation/emergence" ]; then
+          emergence_files=$(find eve/simulation/emergence/ -name "*.py" | wc -l)
+          echo "## Systèmes Émergence" >> emergence-report.md
+          echo "- **Modules**: $emergence_files" >> emergence-report.md
+          
+          # Chercher patterns d'émergence dans le code
+          emergence_patterns=("emergence" "emergent" "self_organiz" "complex" "adapt")
+          
+          echo "" >> emergence-report.md
+          echo "## Patterns Détectés" >> emergence-report.md
+          
+          for pattern in "${emergence_patterns[@]}"; do
+            count=$(find eve/simulation/emergence/ -name "*.py" -exec grep -c "$pattern" {} \; 2>/dev/null | paste -sd+ | bc 2>/dev/null || echo "0")
+            echo "- **$pattern**: $count occurrences" >> emergence-report.md
+          done
+          
+        else
+          echo "**Module émergence**: En cours de création" >> emergence-report.md
+        fi
+        
+    - name: Complexity Metrics
+      run: |
+        echo "" >> emergence-report.md
+        echo "## Métriques Complexité" >> emergence-report.md
+        
+        # Calculer métriques de complexité système
+        python -c "
+        import os
+        import numpy as np
+        
+        try:
+            # Métriques basiques de complexité
+            total_files = 0
+            total_lines = 0
+            total_functions = 0
+            
+            for root, dirs, files in os.walk('eve/simulation/'):
+                for file in files:
+                    if file.endswith('.py'):
+                        total_files += 1
+                        filepath = os.path.join(root, file)
+                        try:
+                            with open(filepath, 'r', encoding='utf-8') as f:
+                                lines = f.readlines()
+                                total_lines += len(lines)
+                                total_functions += sum(1 for line in lines if 'def ' in line)
+                        except:
+                            pass
+            
+            # Métriques de complexité
+            if total_files > 0:
+                avg_lines_per_file = total_lines / total_files
+                avg_functions_per_file = total_functions / total_files
+                
+                print(f'- **Fichiers totaux**: {total_files}')
+                print(f'- **Lignes totales**: {total_lines}')
+                print(f'- **Fonctions totales**: {total_functions}')
+                print(f'- **Moy lignes/fichier**: {avg_lines_per_file:.1f}')
+                print(f'- **Moy fonctions/fichier**: {avg_functions_per_file:.1f}')
+                
+                # Indice de complexité émergente
+                complexity_index = (total_files * avg_functions_per_file) / 1000
+                print(f'- **Indice complexité**: {complexity_index:.3f}')
+                
+                if complexity_index > 1.0:
+                    print('- **Statut**:  Complexité émergente détectée')
+                else:
+                    print('- **Statut**: 🌱 Système en développement')
+            else:
+                print('- **Statut**:  Aucun fichier détecté')
+                
+        except Exception as e:
+            print(f'- **Erreur**: {e}')
+        " >> emergence-report.md
+        
+    - name: Self-Organization Test
+      run: |
+        echo "" >> emergence-report.md
+        echo "## Test Auto-Organisation" >> emergence-report.md
+        
+        python -c "
+        import numpy as np
+        import matplotlib
+        matplotlib.use('Agg')  # Backend non-interactif
+        import matplotlib.pyplot as plt
+        
+        print(' Simulation auto-organisation...')
+        
+        # Modèle simple d'auto-organisation (automate cellulaire)
+        size = 50
+        grid = np.random.choice([0, 1], size=(size, size))
+        
+        def apply_rules(grid):
+            new_grid = grid.copy()
+            for i in range(1, size-1):
+                for j in range(1, size-1):
+                    neighbors = np.sum(grid[i-1:i+2, j-1:j+2]) - grid[i, j]
+                    if grid[i, j] == 1:
+                        if neighbors < 2 or neighbors > 3:
+                            new_grid[i, j] = 0
+                    else:
+                        if neighbors == 3:
+                            new_grid[i, j] = 1
+            return new_grid
+        
+        # Évolution sur 100 étapes
+        complexity_scores = []
+        for step in range(100):
+            grid = apply_rules(grid)
+            # Mesure de complexité: entropie locale
+            complexity = -np.sum(grid * np.log(grid + 1e-10) + (1-grid) * np.log(1-grid + 1e-10))
+            complexity_scores.append(complexity)
+        
+        # Analyse émergence
+        initial_complexity = complexity_scores[0]
+        final_complexity = complexity_scores[-1]
+        max_complexity = max(complexity_scores)
+        
+        print(f'- **Complexité initiale**: {initial_complexity:.2f}')
+        print(f'- **Complexité finale**: {final_complexity:.2f}')
+        print(f'- **Complexité maximale**: {max_complexity:.2f}')
+        
+        if max_complexity > initial_complexity * 1.5:
+            print('- **Résultat**:  Auto-organisation détectée')
+        else:
+            print('- **Résultat**:  Auto-organisation limitée')
+        
+        # Sauvegarder graphique
+        plt.figure(figsize=(10, 6))
+        plt.plot(complexity_scores)
+        plt.title('Évolution de la Complexité (Auto-organisation)')
+        plt.xlabel('Étapes')
+        plt.ylabel('Complexité')
+        plt.grid(True)
+        plt.savefig('emergence_complexity.png', dpi=150, bbox_inches='tight')
+        plt.close()
+        
+        print('- **Graphique**: emergence_complexity.png généré')
+        " >> emergence-report.md
+        
+    - name: Upload Emergence Reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: emergence-monitoring-report
+        path: |
+          emergence-report.md
+          emergence_complexity.png

@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🔬 Test Eve System Monitoring
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  Test Eve System Monitoring
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -31,7 +31,7 @@ jobs:
       run: |
         cd eve/development/monitoring/
         
-        echo "🔬 TEST EVE SYSTEM MONITOR"
+        echo "TEST EVE SYSTEM MONITOR"
         python -c "
         try:
             from system_monitor import EveSystemMonitor
@@ -41,24 +41,24 @@ jobs:
             monitor = EveSystemMonitor()
             git_monitor = GitMonitor()
             
-            print('✅ Test Eve SystemMonitor: Initialisation OK')
+            print(' Test Eve SystemMonitor: Initialisation OK')
             
-            # Test monitoring système
+            # Test monitoring systme
             system_stats = monitor.get_system_stats()
-            print(f'✅ Stats système: CPU, RAM, Disk OK')
+            print(f' Stats systme: CPU, RAM, Disk OK')
             
             # Test monitoring Git
             git_stats = git_monitor.get_git_status()
-            print(f'✅ Stats Git: Repository status OK')
+            print(f' Stats Git: Repository status OK')
             
         except Exception as e:
-            print(f'⚠️ Test Eve Monitor: {e}')
+            print(f' Test Eve Monitor: {e}')
             print('Note: Modules Test Eve en migration')
         "
         
     - name: System Resource Monitoring
       run: |
-        echo "📊 MONITORING RESSOURCES SYSTÈME" > monitoring-report.md
+        echo "MONITORING RESSOURCES SYSTME" > monitoring-report.md
         echo "===============================" >> monitoring-report.md
         echo "" >> monitoring-report.md
         
@@ -67,20 +67,20 @@ jobs:
         import time
         import json
         
-        print('## 💻 État Système Actuel')
+        print('##  tat Systme Actuel')
         
         # CPU
         cpu_percent = psutil.cpu_percent(interval=1)
         cpu_count = psutil.cpu_count()
         print(f'- **CPU**: {cpu_percent}% (Cores: {cpu_count})')
         
-        # Mémoire
+        # Mmoire
         memory = psutil.virtual_memory()
-        print(f'- **RAM**: {memory.percent}% utilisé ({memory.used // (1024**3)}GB / {memory.total // (1024**3)}GB)')
+        print(f'- **RAM**: {memory.percent}% utilis ({memory.used // (1024**3)}GB / {memory.total // (1024**3)}GB)')
         
         # Disque
         disk = psutil.disk_usage('/')
-        print(f'- **Disque**: {disk.percent}% utilisé ({disk.used // (1024**3)}GB / {disk.total // (1024**3)}GB)')
+        print(f'- **Disque**: {disk.percent}% utilis ({disk.used // (1024**3)}GB / {disk.total // (1024**3)}GB)')
         
         # Processus
         processes = len(psutil.pids())
@@ -89,10 +89,10 @@ jobs:
         print('')
         
         # Monitoring continu sur 5 minutes
-        print('## 📈 Monitoring Continu (5 min)')
+        print('##  Monitoring Continu (5 min)')
         
         samples = []
-        for i in range(5):  # 5 échantillons sur 1 minute
+        for i in range(5):  # 5 chantillons sur 1 minute
             sample = {
                 'time': time.time(),
                 'cpu': psutil.cpu_percent(),
@@ -100,8 +100,8 @@ jobs:
                 'disk': psutil.disk_usage('/').percent
             }
             samples.append(sample)
-            time.sleep(12)  # 12 secondes entre échantillons
-            print(f'Échantillon {i+1}/5: CPU {sample[\"cpu\"]}%, RAM {sample[\"memory\"]}%')
+            time.sleep(12)  # 12 secondes entre chantillons
+            print(f'chantillon {i+1}/5: CPU {sample[\"cpu\"]}%, RAM {sample[\"memory\"]}%')
         
         # Analyse tendances
         avg_cpu = sum(s['cpu'] for s in samples) / len(samples)
@@ -111,17 +111,17 @@ jobs:
         print(f'- **RAM moyenne**: {avg_memory:.1f}%')
         
         if avg_cpu > 80:
-            print('- **Alerte**: CPU élevé')
+            print('- **Alerte**: CPU lev')
         elif avg_memory > 80:
-            print('- **Alerte**: RAM élevée')
+            print('- **Alerte**: RAM leve')
         else:
-            print('- **Statut**: Système stable')
+            print('- **Statut**: Systme stable')
         " >> monitoring-report.md
         
     - name: Git Repository Monitoring
       run: |
         echo "" >> monitoring-report.md
-        echo "## 📁 Monitoring Repository Git" >> monitoring-report.md
+        echo "##  Monitoring Repository Git" >> monitoring-report.md
         
         # Stats Git
         commits_today=$(git log --since="1 day ago" --oneline | wc -l)
@@ -134,18 +134,18 @@ jobs:
         echo "- **Total commits**: $total_commits" >> monitoring-report.md
         echo "- **Taille repository**: $repo_size" >> monitoring-report.md
         
-        # Vérifier état working directory
+        # Vrifier tat working directory
         if git diff --quiet && git diff --cached --quiet; then
-          echo "- **Working Directory**: ✅ Propre" >> monitoring-report.md
+          echo "- **Working Directory**:  Propre" >> monitoring-report.md
         else
           modified_files=$(git status --porcelain | wc -l)
-          echo "- **Working Directory**: ⚠️ $modified_files fichiers modifiés" >> monitoring-report.md
+          echo "- **Working Directory**:  $modified_files fichiers modifis" >> monitoring-report.md
         fi
         
     - name: Project Health Monitoring
       run: |
         echo "" >> monitoring-report.md
-        echo "## 🏥 Santé Projet AGI-EVE" >> monitoring-report.md
+        echo "## Sant Projet AGI-EVE" >> monitoring-report.md
         
         # Compter fichiers par module
         for module in "core" "eve" "tools"; do
@@ -156,20 +156,20 @@ jobs:
           fi
         done
         
-        # Violations de conformité
+        # Violations de conformit
         if [ -f "conformite_$(date +%Y%m%d).csv" ]; then
           violations=$(grep -c "VIOLATION" "conformite_$(date +%Y%m%d).csv" 2>/dev/null || echo "0")
-          echo "- **Violations conformité**: $violations détectées" >> monitoring-report.md
+          echo "- **Violations conformit**: $violations dtectes" >> monitoring-report.md
         else
-          echo "- **Conformité**: Rapport non généré aujourd'hui" >> monitoring-report.md
+          echo "- **Conformit**: Rapport non gnr aujourd'hui" >> monitoring-report.md
         fi
         
         # Alertes critiques
         critical_files=$(find . -name "*.py" -exec sh -c 'lines=$(wc -l < "$1" 2>/dev/null || echo 0); if [ $lines -gt 1000 ]; then echo "$1: $lines lignes"; fi' _ {} \; | wc -l)
         if [ $critical_files -gt 0 ]; then
-          echo "- **🚨 Alerte**: $critical_files fichiers >1000 lignes" >> monitoring-report.md
+          echo "- ** Alerte**: $critical_files fichiers >1000 lignes" >> monitoring-report.md
         else
-          echo "- **✅ Santé**: Aucun fichier critique détecté" >> monitoring-report.md
+          echo "- ** Sant**: Aucun fichier critique dtect" >> monitoring-report.md
         fi
         
     - name: Upload Monitoring Reports

@@ -1,0 +1,56 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
+name:  ALMA Legacy Compatibility Check
+
+on:
+  # Skip sur agi-main car chemins eve/ inexistants
+  push:
+    paths: ['eve/cognitive/**']
+  workflow_dispatch:
+
+jobs:
+  alma-compatibility:
+    name: ALMA Legacy Systems Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check ALMA Migration Status
+      run: |
+        echo "VÉRIFICATION COMPATIBILITÉ ALMA"
+        
+        # Vérifier si l'ancien cerveau.py existe
+        if [ -f "eve/cognitive/brain/cerveau_legacy.py" ]; then
+          lines=$(wc -l < "eve/cognitive/brain/cerveau_legacy.py")
+          echo "cerveau_legacy.py détecté: $lines lignes"
+          
+          if [ $lines -gt 4000 ]; then
+            echo "URGENT: Fichier legacy trop volumineux ($lines lignes)"
+            echo "Action requise: Split en modules conformes (<200 lignes)"
+          fi
+        fi
+        
+        # Vérifier interfaces Tkinter ALMA
+        if find eve/cognitive/ -name "*.py" -exec grep -l "tkinter" {} \; | head -1; then
+          echo "Interfaces Tkinter ALMA détectées"
+        else
+          echo "Interfaces ALMA manquantes - Migration incomplète"
+        fi
+        
+    - name: Test ALMA Interfaces
+      run: |
+        cd eve/cognitive/
+        # Test virtual display pour Tkinter en CI
+        export DISPLAY=:99
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+        
+        python -c "
+        import tkinter as tk
+        try:
+            root = tk.Tk()
+            root.withdraw()
+            print(' Tkinter Interface: Fonctionnel')
+            root.destroy()
+        except Exception as e:
+            print(f' Tkinter Error: {e}')
+        "

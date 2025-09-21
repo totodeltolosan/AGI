@@ -16,25 +16,25 @@ jobs:
         
     - name: Generate metrics
       run: |
-        echo "=== MÉTRIQUES PROJET AGI-EVE ===" > metrics-report.md
+        echo "=== MTRIQUES PROJET AGI-EVE ===" > metrics-report.md
         echo "" >> metrics-report.md
         
         # Statistiques commits
-        echo "## 📊 Statistiques Commits" >> metrics-report.md
+        echo "## Statistiques Commits" >> metrics-report.md
         echo "- Total commits: $(git rev-list --all --count)" >> metrics-report.md
         echo "- Commits cette semaine: $(git rev-list --since='1 week ago' --count HEAD)" >> metrics-report.md
         echo "- Contributeurs: $(git shortlog -sn | wc -l)" >> metrics-report.md
         echo "" >> metrics-report.md
         
         # Statistiques code
-        echo "## 💻 Statistiques Code" >> metrics-report.md
+        echo "## Statistiques Code" >> metrics-report.md
         echo "- Fichiers Python: $(find . -name '*.py' | wc -l)" >> metrics-report.md
         echo "- Lignes de code: $(find . -name '*.py' -exec wc -l {} + | tail -1 | awk '{print $1}')" >> metrics-report.md
         echo "- Fichiers conformes: $(grep -c CONFORME conformite_*.csv | head -1 | cut -d: -f2)" >> metrics-report.md
         echo "" >> metrics-report.md
         
         # Top contributeurs
-        echo "## 👥 Top Contributeurs" >> metrics-report.md
+        echo "##  Top Contributeurs" >> metrics-report.md
         git shortlog -sn | head -5 >> metrics-report.md
         
     - name: Upload metrics

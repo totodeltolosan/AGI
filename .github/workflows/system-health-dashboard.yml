@@ -1,4 +1,4 @@
-name: 🏥 System Health Dashboard
+name:  System Health Dashboard
 
 on:
   workflow_run:
@@ -41,11 +41,11 @@ jobs:
         
     - name: Comprehensive System Health Analysis
       run: |
-        echo "🏥 DASHBOARD SANTÉ SYSTÈME AGI-EVE" > health-dashboard.md
+        echo "DASHBOARD SANT SYSTME AGI-EVE" > health-dashboard.md
         echo "=================================" >> health-dashboard.md
         echo "" >> health-dashboard.md
         
-        # Analyse santé système complète
+        # Analyse sant systme complte
         python -c "
         import json
         import time
@@ -55,9 +55,9 @@ jobs:
         from pathlib import Path
         
         dashboard_mode = '${{ github.event.inputs.dashboard_mode || \"comprehensive\" }}'
-        print(f'🏥 Génération dashboard santé système - Mode: {dashboard_mode}')
+        print(f' Gnration dashboard sant systme - Mode: {dashboard_mode}')
         
-        # Configuration analyse basée sur mode
+        # Configuration analyse base sur mode
         analysis_depth = {
             'quick': {'duration': 60, 'samples': 6, 'detail_level': 'basic'},
             'standard': {'duration': 300, 'samples': 15, 'detail_level': 'standard'},
@@ -68,7 +68,7 @@ jobs:
         config = analysis_depth.get(dashboard_mode, analysis_depth['comprehensive'])
         print(f'Configuration: {config}')
         
-        # Collecte données santé système
+        # Collecte donnes sant systme
         system_health = {
             'timestamp': datetime.now().isoformat(),
             'dashboard_mode': dashboard_mode,
@@ -83,20 +83,20 @@ jobs:
             'health_score': 0
         }
         
-        print('\\n🔍 Collecte données santé système...')
+        print('\\n Collecte donnes sant systme...')
         
-        # 1. Vue d'ensemble système
+        # 1. Vue d'ensemble systme
         try:
             cpu_samples = []
             memory_samples = []
             
-            # Collecte échantillons système
+            # Collecte chantillons systme
             for i in range(min(config['samples'], 10)):  # Limiter pour performance CI
                 cpu_samples.append(psutil.cpu_percent(interval=1))
                 memory_samples.append(psutil.virtual_memory().percent)
                 
                 if i % 3 == 0:
-                    print(f'  Échantillon {i+1}/{config[\"samples\"]}: CPU {cpu_samples[-1]}%, RAM {memory_samples[-1]}%')
+                    print(f'  chantillon {i+1}/{config[\"samples\"]}: CPU {cpu_samples[-1]}%, RAM {memory_samples[-1]}%')
             
             system_health['system_overview'] = {
                 'cpu_stats': {
@@ -120,12 +120,12 @@ jobs:
                 'boot_time': datetime.fromtimestamp(psutil.boot_time()).isoformat()
             }
             
-            print(f'✅ Système: CPU {system_health[\"system_overview\"][\"cpu_stats\"][\"average\"]:.1f}%, RAM {system_health[\"system_overview\"][\"memory_stats\"][\"average\"]:.1f}%')
+            print(f' Systme: CPU {system_health[\"system_overview\"][\"cpu_stats\"][\"average\"]:.1f}%, RAM {system_health[\"system_overview\"][\"memory_stats\"][\"average\"]:.1f}%')
             
         except Exception as e:
-            print(f'⚠️ System overview: {e}')
+            print(f' System overview: {e}')
         
-        # 2. Santé projet AGI-EVE
+        # 2. Sant projet AGI-EVE
         try:
             # Analyse structure projet
             py_files = list(Path('.').rglob('*.py'))
@@ -176,7 +176,7 @@ jobs:
                     'compliance_rate': ((len(py_files) - violations) / len(py_files)) * 100
                 }
             
-            # Git santé
+            # Git sant
             try:
                 import subprocess
                 
@@ -185,7 +185,7 @@ jobs:
                                       capture_output=True, text=True, timeout=10)
                 uncommitted = len(result.stdout.splitlines()) if result.stdout else 0
                 
-                # Commits récents
+                # Commits rcents
                 result = subprocess.run(['git', 'log', '--since=\"7 days ago\"', '--oneline'], 
                                       capture_output=True, text=True, timeout=10)
                 recent_commits = len(result.stdout.splitlines()) if result.stdout else 0
@@ -197,18 +197,18 @@ jobs:
                 }
                 
             except Exception as e:
-                print(f'⚠️ Git health: {e}')
+                print(f' Git health: {e}')
             
             system_health['project_health'] = project_metrics
             
-            print(f'✅ Projet: {project_metrics[\"file_counts\"][\"python_files\"]} fichiers Python, {project_metrics[\"code_metrics\"].get(\"compliance_rate\", 0):.1f}% conformes')
+            print(f' Projet: {project_metrics[\"file_counts\"][\"python_files\"]} fichiers Python, {project_metrics[\"code_metrics\"].get(\"compliance_rate\", 0):.1f}% conformes')
             
         except Exception as e:
-            print(f'⚠️ Project health: {e}')
+            print(f' Project health: {e}')
         
-        # 3. Métriques qualité consolidées
+        # 3. Mtriques qualit consolides
         try:
-            # Charger rapports qualité existants
+            # Charger rapports qualit existants
             quality_reports = ['quality_assessment.json', 'qa_metrics.json', 'constitutional_violations.csv']
             quality_data = {}
             
@@ -229,9 +229,9 @@ jobs:
                                     'compliance_rate': ((total - violations) / max(total, 1)) * 100 if total > 0 else 100
                                 }
                     except Exception as e:
-                        print(f'⚠️ Lecture {report}: {e}')
+                        print(f' Lecture {report}: {e}')
             
-            # Consolidation métriques qualité
+            # Consolidation mtriques qualit
             quality_score = 100
             compliance_rate = 100
             
@@ -256,10 +256,10 @@ jobs:
                 'last_quality_assessment': datetime.now().isoformat()
             }
             
-            print(f'✅ Qualité: Score {quality_score}/100, Conformité {compliance_rate:.1f}%')
+            print(f' Qualit: Score {quality_score}/100, Conformit {compliance_rate:.1f}%')
             
         except Exception as e:
-            print(f'⚠️ Quality metrics: {e}')
+            print(f' Quality metrics: {e}')
         
         # 4. Indicateurs performance
         try:
@@ -291,7 +291,7 @@ jobs:
             
             total_perf_time = time.time() - start_time
             
-            performance_score = min(100, max(0, 100 - (total_perf_time * 20)))  # Score basé sur temps total
+            performance_score = min(100, max(0, 100 - (total_perf_time * 20)))  # Score bas sur temps total
             
             system_health['performance_indicators'] = {
                 'import_performance_ms': import_time * 1000,
@@ -301,17 +301,17 @@ jobs:
                 'performance_status': 'excellent' if performance_score >= 90 else 'good' if performance_score >= 70 else 'needs_attention'
             }
             
-            print(f'✅ Performance: Score {performance_score:.1f}/100, Status {system_health[\"performance_indicators\"][\"performance_status\"]}')
+            print(f' Performance: Score {performance_score:.1f}/100, Status {system_health[\"performance_indicators\"][\"performance_status\"]}')
             
         except Exception as e:
-            print(f'⚠️ Performance indicators: {e}')
+            print(f' Performance indicators: {e}')
         
-        # 5. Statut sécurité
+        # 5. Statut scurit
         try:
             security_score = 100
             security_issues = []
             
-            # Vérifications sécurité basiques
+            # Vrifications scurit basiques
             # 1. Fichiers sensibles
             sensitive_patterns = ['.env', 'secret', 'password', 'private_key']
             sensitive_files = []
@@ -328,7 +328,7 @@ jobs:
             dangerous_patterns = ['eval(', 'exec(', 'subprocess.call']
             dangerous_code = 0
             
-            for py_file in list(Path('.').rglob('*.py'))[:50]:  # Échantillon
+            for py_file in list(Path('.').rglob('*.py'))[:50]:  # chantillon
                 if '.git' in str(py_file):
                     continue
                 try:
@@ -351,17 +351,17 @@ jobs:
                 'last_security_scan': datetime.now().isoformat()
             }
             
-            print(f'✅ Sécurité: Score {security_score}/100, {len(security_issues)} problèmes')
+            print(f' Scurit: Score {security_score}/100, {len(security_issues)} problmes')
             
         except Exception as e:
-            print(f'⚠️ Security status: {e}')
+            print(f' Security status: {e}')
         
-        # 6. Métriques opérationnelles
+        # 6. Mtriques oprationnelles
         try:
             # Workflows et automation
             workflow_files = list(Path('.github/workflows').glob('*.yml')) if Path('.github/workflows').exists() else []
             
-            # Dernière activité
+            # Dernire activit
             last_commit_time = 'unknown'
             try:
                 result = subprocess.run(['git', 'log', '-1', '--format=%ct'], 
@@ -380,16 +380,16 @@ jobs:
                 'operational_status': 'active' if len(workflow_files) > 0 else 'minimal'
             }
             
-            print(f'✅ Opérationnel: {len(workflow_files)} workflows, Status {system_health[\"operational_metrics\"][\"operational_status\"]}')
+            print(f' Oprationnel: {len(workflow_files)} workflows, Status {system_health[\"operational_metrics\"][\"operational_status\"]}')
             
         except Exception as e:
-            print(f'⚠️ Operational metrics: {e}')
+            print(f' Operational metrics: {e}')
         
         # 7. Consolidation alertes
         alerts = []
         warnings = []
         
-        # Alertes système
+        # Alertes systme
         if system_health['system_overview'].get('cpu_stats', {}).get('max', 0) > 90:
             alerts.append('CPU usage critical (>90%)')
         elif system_health['system_overview'].get('cpu_stats', {}).get('average', 0) > 70:
@@ -407,7 +407,7 @@ jobs:
         elif compliance_rate < 85:
             warnings.append(f'Constitutional compliance needs attention ({compliance_rate:.1f}%)')
         
-        # Alertes sécurité
+        # Alertes scurit
         security_score = system_health['security_status'].get('security_score', 100)
         if security_score < 70:
             alerts.append(f'Security score critical ({security_score}/100)')
@@ -421,14 +421,14 @@ jobs:
             'alert_level': 'critical' if alerts else 'warning' if warnings else 'normal'
         }
         
-        # 8. Score santé global
+        # 8. Score sant global
         scores = [
             system_health['quality_metrics'].get('overall_quality_score', 100),
             system_health['performance_indicators'].get('overall_performance_score', 100),
             system_health['security_status'].get('security_score', 100)
         ]
         
-        # Pénalités système
+        # Pnalits systme
         cpu_avg = system_health['system_overview'].get('cpu_stats', {}).get('average', 0)
         memory_avg = system_health['system_overview'].get('memory_stats', {}).get('average', 0)
         
@@ -446,27 +446,27 @@ jobs:
         overall_health_score = max(0, statistics.mean(scores) - system_penalty)
         system_health['health_score'] = overall_health_score
         
-        print(f'\\n🏥 **Score Santé Global**: {overall_health_score:.1f}/100')
+        print(f'\\n **Score Sant Global**: {overall_health_score:.1f}/100')
         
         # Sauvegarder dashboard complet
         with open('system_health_dashboard.json', 'w') as f:
             json.dump(system_health, f, indent=2)
         
-        print(f'✅ Dashboard santé système généré')
+        print(f' Dashboard sant systme gnr')
         " >> health-dashboard.md
         
     - name: Generate Executive Summary
       run: |
         echo "" >> health-dashboard.md
-        echo "## 📋 Résumé Exécutif" >> health-dashboard.md
+        echo "## Rsum Excutif" >> health-dashboard.md
         echo "" >> health-dashboard.md
         
-        # Génération résumé exécutif
+        # Gnration rsum excutif
         python -c "
         import json
         from datetime import datetime
         
-        print('📋 Génération résumé exécutif...')
+        print(' Gnration rsum excutif...')
         
         # Charger dashboard
         with open('system_health_dashboard.json', 'r') as f:
@@ -475,54 +475,54 @@ jobs:
         health_score = dashboard.get('health_score', 0)
         alerts = dashboard.get('alerts_summary', {})
         
-        print(f'###  État Général du Système AGI-EVE')
+        print(f'###  tat Gnral du Systme AGI-EVE')
         print(f'**Date du rapport**: {datetime.now().strftime(\"%d/%m/%Y %H:%M\")}')
         print('')
         
-        # Classification santé
+        # Classification sant
         if health_score >= 90:
-            status = '🟢 EXCELLENT'
-            recommendation = 'Système en parfait état - Maintenir surveillance'
+            status = ' EXCELLENT'
+            recommendation = 'Systme en parfait tat - Maintenir surveillance'
         elif health_score >= 80:
-            status = '🟢 BON'
-            recommendation = 'Système stable - Surveillance continue'
+            status = ' BON'
+            recommendation = 'Systme stable - Surveillance continue'
         elif health_score >= 70:
-            status = '🟡 CORRECT'
-            recommendation = 'Attention requise - Optimisations ciblées'
+            status = ' CORRECT'
+            recommendation = 'Attention requise - Optimisations cibles'
         elif health_score >= 60:
-            status = '🟠 PRÉOCCUPANT'
+            status = ' PROCCUPANT'
             recommendation = 'Action requise - Investigation approfondie'
         else:
-            status = '🔴 CRITIQUE'
-            recommendation = 'Intervention immédiate - Arrêt possible'
+            status = ' CRITIQUE'
+            recommendation = 'Intervention immdiate - Arrt possible'
         
         print(f'**Statut Global**: {status} ({health_score:.1f}/100)')
         print(f'**Recommandation**: {recommendation}')
         print('')
         
-        # Métriques clés
-        print(f'###  Métriques Clés')
+        # Mtriques cls
+        print(f'###  Mtriques Cls')
         
-        # Système
+        # Systme
         system_stats = dashboard.get('system_overview', {})
         cpu_avg = system_stats.get('cpu_stats', {}).get('average', 0)
         memory_avg = system_stats.get('memory_stats', {}).get('average', 0)
         disk_usage = system_stats.get('disk_stats', {}).get('usage_percent', 0)
         
-        print(f'- **Système**: CPU {cpu_avg:.1f}%, RAM {memory_avg:.1f}%, Disque {disk_usage:.1f}%')
+        print(f'- **Systme**: CPU {cpu_avg:.1f}%, RAM {memory_avg:.1f}%, Disque {disk_usage:.1f}%')
         
         # Projet
         project_health = dashboard.get('project_health', {})
         py_files = project_health.get('file_counts', {}).get('python_files', 0)
         compliance_rate = project_health.get('code_metrics', {}).get('compliance_rate', 0)
         
-        print(f'- **Projet**: {py_files} fichiers Python, {compliance_rate:.1f}% conformité')
+        print(f'- **Projet**: {py_files} fichiers Python, {compliance_rate:.1f}% conformit')
         
-        # Qualité
+        # Qualit
         quality_metrics = dashboard.get('quality_metrics', {})
         quality_score = quality_metrics.get('overall_quality_score', 0)
         
-        print(f'- **Qualité**: Score {quality_score:.1f}/100')
+        print(f'- **Qualit**: Score {quality_score:.1f}/100')
         
         # Performance
         perf_indicators = dashboard.get('performance_indicators', {})
@@ -530,11 +530,11 @@ jobs:
         
         print(f'- **Performance**: Score {perf_score:.1f}/100')
         
-        # Sécurité
+        # Scurit
         security_status = dashboard.get('security_status', {})
         security_score = security_status.get('security_score', 0)
         
-        print(f'- **Sécurité**: Score {security_score:.1f}/100')
+        print(f'- **Scurit**: Score {security_score:.1f}/100')
         
         print('')
         
@@ -543,13 +543,13 @@ jobs:
         warnings = alerts.get('warnings', [])
         
         if critical_alerts:
-            print(f'### 🚨 Alertes Critiques ({len(critical_alerts)})')
+            print(f'###  Alertes Critiques ({len(critical_alerts)})')
             for alert in critical_alerts:
                 print(f'- {alert}')
             print('')
         
         if warnings:
-            print(f'### ⚠️ Avertissements ({len(warnings)})')
+            print(f'###  Avertissements ({len(warnings)})')
             for warning in warnings[:3]:  # Top 3
                 print(f'- {warning}')
             if len(warnings) > 3:
@@ -557,100 +557,100 @@ jobs:
             print('')
         
         if not critical_alerts and not warnings:
-            print(f'### ✅ Aucune Alerte')
-            print('Système fonctionnel sans problème détecté')
+            print(f'###  Aucune Alerte')
+            print('Systme fonctionnel sans problme dtect')
             print('')
         
-        # Actions recommandées
-        print(f'###  Actions Recommandées')
+        # Actions recommandes
+        print(f'###  Actions Recommandes')
         
         actions = []
         
         if critical_alerts:
-            actions.append('**URGENT**: Résoudre alertes critiques immédiatement')
+            actions.append('**URGENT**: Rsoudre alertes critiques immdiatement')
         
         if health_score < 80:
-            actions.append('Audit complet système requis')
+            actions.append('Audit complet systme requis')
         
         if compliance_rate < 80:
-            actions.append('Plan refactoring pour améliorer conformité')
+            actions.append('Plan refactoring pour amliorer conformit')
         
         if cpu_avg > 70 or memory_avg > 70:
-            actions.append('Optimisation ressources système')
+            actions.append('Optimisation ressources systme')
         
         if security_score < 85:
-            actions.append('Renforcement sécurité système')
+            actions.append('Renforcement scurit systme')
         
         if not actions:
             actions.append('Maintenir surveillance continue')
-            actions.append('Optimisations préventives selon calendrier')
+            actions.append('Optimisations prventives selon calendrier')
         
         for i, action in enumerate(actions, 1):
             print(f'{i}. {action}')
         
         print('')
         
-        # Tendance et prévisions
-        print(f'### 📈 Tendance et Prévisions')
+        # Tendance et prvisions
+        print(f'###  Tendance et Prvisions')
         
         if health_score >= 85:
-            print('📈 **Tendance**: Stable et saine')
-            print('🔮 **Prévision**: Maintien performance sur 30 jours')
+            print(' **Tendance**: Stable et saine')
+            print(' **Prvision**: Maintien performance sur 30 jours')
         elif health_score >= 70:
             print(' **Tendance**: Stable avec surveillance')
-            print('🔮 **Prévision**: Dégradation possible sans action')
+            print(' **Prvision**: Dgradation possible sans action')
         else:
-            print('📉 **Tendance**: Dégradation détectée')
-            print('🔮 **Prévision**: Intervention requise sous 7 jours')
+            print(' **Tendance**: Dgradation dtecte')
+            print(' **Prvision**: Intervention requise sous 7 jours')
         
         print('')
         print('---')
-        print('*Rapport généré automatiquement par le système de monitoring AGI-EVE*')
+        print('*Rapport gnr automatiquement par le systme de monitoring AGI-EVE*')
         " >> health-dashboard.md
         
     - name: Generate Visual Dashboard
       run: |
         echo "" >> health-dashboard.md
-        echo "##  Dashboard Visuel" >> health-dashboard.md
+        echo "## Dashboard Visuel" >> health-dashboard.md
         echo "" >> health-dashboard.md
         
-        # Génération éléments visuels dashboard
+        # Gnration lments visuels dashboard
         python -c "
         import json
         from datetime import datetime
         
-        print(' Génération dashboard visuel...')
+        print(' Gnration dashboard visuel...')
         
-        # Charger données dashboard
+        # Charger donnes dashboard
         with open('system_health_dashboard.json', 'r') as f:
             dashboard = json.load(f)
         
-        # Générer ASCII charts
+        # Gnrer ASCII charts
         def create_ascii_bar(value, max_value=100, width=20):
             filled = int((value / max_value) * width)
-            bar = '█' * filled + '░' * (width - filled)
+            bar = '' * filled + '' * (width - filled)
             return f'[{bar}] {value:.1f}%'
         
         def get_status_icon(value):
             if value >= 90:
-                return '🟢'
+                return ''
             elif value >= 70:
-                return '🟡'
+                return ''
             elif value >= 50:
-                return '🟠'
+                return ''
             else:
-                return '🔴'
+                return ''
         
-        print('### 📈 Indicateurs Principaux')
+        print('###  Indicateurs Principaux')
         print('')
         
         # Scores principaux
         scores = {
-            'Santé Globale': dashboard.get('health_score', 0),
-            'Qualité Code': dashboard.get('quality_metrics', {}).get('overall_quality_score', 0),
+            'Sant Globale': dashboard.get('health_score', 0),
+            'Qualit Code': dashboard.get('quality_metrics', {}).get('overall_quality_score', 0),
             'Performance': dashboard.get('performance_indicators', {}).get('overall_performance_score', 0),
-            'Sécurité': dashboard.get('security_status', {}).get('security_score', 0),
-            'Conformité': dashboard.get('quality_metrics', {}).get('constitutional_compliance_rate', 0)
+            'Scurit': dashboard.get('security_status', {}).get('security_score', 0),
+            'Conformit': dashboard.get('quality_metrics', {}).get('constitutional_compliance_rate', 0)
         }
         
         for name, score in scores.items():
@@ -660,29 +660,29 @@ jobs:
         
         print('')
         
-        # Métriques système temps réel
-        print('### 🖥️ Ressources Système')
+        # Mtriques systme temps rel
+        print('###  Ressources Systme')
         print('')
         
         system_metrics = {
             'CPU': dashboard.get('system_overview', {}).get('cpu_stats', {}).get('average', 0),
-            'Mémoire': dashboard.get('system_overview', {}).get('memory_stats', {}).get('average', 0),
+            'Mmoire': dashboard.get('system_overview', {}).get('memory_stats', {}).get('average', 0),
             'Disque': dashboard.get('system_overview', {}).get('disk_stats', {}).get('usage_percent', 0)
         }
         
         for name, value in system_metrics.items():
-            icon = '🔴' if value > 80 else '🟡' if value > 60 else '🟢'
+            icon = '' if value > 80 else '' if value > 60 else ''
             bar = create_ascii_bar(value)
             print(f'{icon} **{name:10}** {bar}')
         
         print('')
         
         # Statut modules AGI-EVE
-        print('### 🧩 État Modules AGI-EVE')
+        print('###  tat Modules AGI-EVE')
         print('')
         
         modules_status = [
-            ('AGI Core', 95, 'Opérationnel'),
+            ('AGI Core', 95, 'Oprationnel'),
             ('EVE Cognitive', 88, 'Stable'),
             ('EVE Simulation', 82, 'Fonctionnel'),
             ('EVE Development', 90, 'Optimal'),
@@ -695,16 +695,16 @@ jobs:
         
         print('')
         
-        # Timeline des événements
-        print('### ⏰ Timeline Événements Récents')
+        # Timeline des vnements
+        print('###  Timeline vnements Rcents')
         print('')
         
         events = [
-            ('Il y a 5 min', '🔄', 'Monitoring automatique exécuté'),
-            ('Il y a 1h', '✅', 'Tests qualité passés'),
-            ('Il y a 3h', '', 'Rapport performance généré'),
-            ('Il y a 6h', '🔒', 'Scan sécurité complété'),
-            ('Il y a 12h', '🏗️', 'Workflow orchestration terminé')
+            ('Il y a 5 min', '', 'Monitoring automatique excut'),
+            ('Il y a 1h', '', 'Tests qualit passs'),
+            ('Il y a 3h', '', 'Rapport performance gnr'),
+            ('Il y a 6h', '', 'Scan scurit complt'),
+            ('Il y a 12h', '', 'Workflow orchestration termin')
         ]
         
         for time_ago, icon, event in events:
@@ -713,15 +713,15 @@ jobs:
         print('')
         
         # Prochaines actions automatiques
-        print('### 🔮 Prochaines Actions Automatiques')
+        print('###  Prochaines Actions Automatiques')
         print('')
         
         next_actions = [
             ('Dans 2h', '', 'Monitoring continu'),
-            ('Dans 6h', '🔍', 'Analyse qualité approfondie'),
+            ('Dans 6h', '', 'Analyse qualit approfondie'),
             ('Dans 12h', '', 'Orchestration master'),
-            ('Dans 24h', '📈', 'Rapport hebdomadaire'),
-            ('Dans 7j', '🧹', 'Nettoyage automatique')
+            ('Dans 24h', '', 'Rapport hebdomadaire'),
+            ('Dans 7j', '', 'Nettoyage automatique')
         ]
         
         for time_until, icon, action in next_actions:
@@ -731,14 +731,14 @@ jobs:
         
         # Footer dashboard
         print('---')
-        print(f'**Dashboard généré**: {datetime.now().strftime(\"%d/%m/%Y à %H:%M:%S\")}')
-        print(f'**Prochaine mise à jour**: Dans 4 heures')
+        print(f'**Dashboard gnr**: {datetime.now().strftime(\"%d/%m/%Y  %H:%M:%S\")}')
+        print(f'**Prochaine mise  jour**: Dans 4 heures')
         print(f'**Mode dashboard**: {dashboard.get(\"dashboard_mode\", \"standard\")}')
         " >> health-dashboard.md
         
     - name: Create Health Summary Issue
       run: |
-        # Créer issue résumé santé si problèmes détectés
+        # Crer issue rsum sant si problmes dtects
         if [ -f "system_health_dashboard.json" ]; then
           python -c "
           import json
@@ -751,12 +751,12 @@ jobs:
           
           if health_score < 70 or critical_alerts:
               print('Creating health summary issue...')
-              exit(1)  # Déclencher création issue
+              exit(1)  # Dclencher cration issue
           "
           
           if [ $? -eq 1 ]; then
             gh issue create \
-              --title "🏥 HEALTH DASHBOARD - Score: $(python -c "import json; print(int(json.load(open('system_health_dashboard.json'))['health_score']))" | head -1)/100" \
+              --title " HEALTH DASHBOARD - Score: $(python -c "import json; print(int(json.load(open('system_health_dashboard.json'))['health_score']))" | head -1)/100" \
               --body-file health-dashboard.md \
               --label "health,dashboard,monitoring" \
               --assignee "@me" || echo "Issue creation failed"
@@ -765,7 +765,7 @@ jobs:
         
     - name: Update System Status Badge
       run: |
-        # Mise à jour badge statut système
+        # Mise  jour badge statut systme
         if [ -f "system_health_dashboard.json" ]; then
           python -c "
           import json
@@ -775,7 +775,7 @@ jobs:
           
           health_score = int(dashboard.get('health_score', 100))
           
-          # Déterminer couleur badge
+          # Dterminer couleur badge
           if health_score >= 90:
               color = 'brightgreen'
               status = 'excellent'
@@ -817,7 +817,7 @@ jobs:
     steps:
     - name: Send Dashboard Summary
       run: |
-        echo "📢 NOTIFICATION DASHBOARD SANTÉ" > notification-summary.md
+        echo " NOTIFICATION DASHBOARD SANT" > notification-summary.md
         echo "===============================" >> notification-summary.md
         echo "" >> notification-summary.md
         
@@ -825,38 +825,38 @@ jobs:
         python -c "
         from datetime import datetime
         
-        print('📢 Notification dashboard système AGI-EVE...')
+        print(' Notification dashboard systme AGI-EVE...')
         print('')
         
-        print(f'**Dashboard Système AGI-EVE**')
-        print(f'Généré le: {datetime.now().strftime(\"%d/%m/%Y à %H:%M\")}')
+        print(f'**Dashboard Systme AGI-EVE**')
+        print(f'Gnr le: {datetime.now().strftime(\"%d/%m/%Y  %H:%M\")}')
         print('')
         
-        print('✅ **Composants Activés**:')
-        print('- 🏥 Monitoring santé système')
-        print('-  Métriques performance temps réel')
-        print('-  Analyse qualité continue')
-        print('- 🔒 Surveillance sécurité')
+        print(' **Composants Activs**:')
+        print('-  Monitoring sant systme')
+        print('-  Mtriques performance temps rel')
+        print('-  Analyse qualit continue')
+        print('-  Surveillance scurit')
         print('-  Orchestration automatique')
         print('')
         
-        print('🔗 **Accès Dashboard**:')
+        print(' **Accs Dashboard**:')
         print('- Rapports complets disponibles dans artifacts GitHub')
         print('- Monitoring continu toutes les 4 heures')
-        print('- Alertes automatiques si problèmes critiques')
+        print('- Alertes automatiques si problmes critiques')
         print('')
         
-        print('📈 **Prochaines Étapes**:')
+        print(' **Prochaines tapes**:')
         print('1. Surveillance continue automatique')
-        print('2. Optimisations basées sur métriques')
-        print('3. Amélioration continue workflows')
+        print('2. Optimisations bases sur mtriques')
+        print('3. Amlioration continue workflows')
         print('')
         
-        print(' **Configuration Complète**:')
-        print('✅ 25/25 Workflows GitHub Actions déployés')
-        print('✅ Monitoring multi-niveaux actif')
-        print('✅ Dashboard santé opérationnel')
-        print('✅ Système AGI-EVE entièrement automatisé')
+        print(' **Configuration Complte**:')
+        print(' 25/25 Workflows GitHub Actions dploys')
+        print(' Monitoring multi-niveaux actif')
+        print(' Dashboard sant oprationnel')
+        print(' Systme AGI-EVE entirement automatis')
         " >> notification-summary.md
         
     - name: Upload Notification

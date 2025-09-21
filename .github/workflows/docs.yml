@@ -1,4 +1,4 @@
-name: 📚 Documentation
+name:  Documentation
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
         
     - name: Build Documentation
       run: |
-        echo "📚 DOCUMENTATION BUILD"
+        echo " DOCUMENTATION BUILD"
         echo "====================="
         
         # Configuration MKDOCS
@@ -45,7 +45,7 @@ jobs:
         mkdir -p docs
         
         # Create basic documentation
-        echo "Créer la documentation de base"
+        echo "Crer la documentation de base"
         if [ ! -f docs/index.md ]; then
           cat > docs/index.md << 'INDEX'
         # AGI Project Documentation
@@ -57,10 +57,10 @@ jobs:
         INDEX
         fi
         
-        echo "✅ Documentation setup completed"
+        echo "Documentation setup completed"
         
     - name: Test Documentation Build
       run: |
         echo "Testing documentation build..."
         # mkdocs build --strict
-        echo "✅ Documentation validation passed"
+        echo "Documentation validation passed"

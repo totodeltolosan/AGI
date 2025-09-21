@@ -28,25 +28,25 @@ jobs:
         
     - name: Test EVE Logs Manager
       run: |
-        echo " VALIDATION SYSTÈME LOGS EVE" > logs-report.md
+        echo "VALIDATION SYSTME LOGS EVE" > logs-report.md
         echo "==============================" >> logs-report.md
         echo "" >> logs-report.md
         
-        # Analyser système logs EVE
+        # Analyser systme logs EVE
         if [ -d "eve/interfaces/logs" ]; then
-          echo "## 📋 Système Logs EVE" >> logs-report.md
+          echo "## Systme Logs EVE" >> logs-report.md
           
           log_modules=$(find eve/interfaces/logs/ -name "*.py" | wc -l)
-          echo "- **Modules logs**: $log_modules détectés" >> logs-report.md
+          echo "- **Modules logs**: $log_modules dtects" >> logs-report.md
           echo "" >> logs-report.md
           
-          # Chercher gestionnaires logs spécialisés
+          # Chercher gestionnaires logs spcialiss
           log_handlers=("file_handler" "console_handler" "database_handler" "network_handler")
           for handler in "${log_handlers[@]}"; do
             if find eve/interfaces/logs/ -name "*$handler*" -o -name "*${handler}*" | grep -q .; then
-              echo "- ✅ **$handler**: Détecté" >> logs-report.md
+              echo "-  **$handler**: Dtect" >> logs-report.md
             else
-              echo "- ⚠️ **$handler**: Non trouvé" >> logs-report.md
+              echo "-  **$handler**: Non trouv" >> logs-report.md
             fi
           done
           echo "" >> logs-report.md
@@ -54,19 +54,19 @@ jobs:
         
     - name: Advanced Logging System Test
       run: |
-        echo "## 🔧 Test Système Logging Avancé" >> logs-report.md
+        echo "## Test Systme Logging Avanc" >> logs-report.md
         echo "" >> logs-report.md
         
-        # Test système logging complet
+        # Test systme logging complet
         python -c "
         import logging
         import json
         import time
         from datetime import datetime
         
-        print('🔧 Test système logging avancé...')
+        print(' Test systme logging avanc...')
         
-        # Configuration logging structuré
+        # Configuration logging structur
         class StructuredFormatter(logging.Formatter):
             def format(self, record):
                 log_entry = {
@@ -102,15 +102,15 @@ jobs:
             logger.addHandler(console_handler)
             logger.addHandler(file_handler)
         
-        # Test logs structurés
-        loggers['agi.core'].info('Système AGI initialisé', extra={'version': '1.0', 'mode': 'production'})
-        loggers['eve.cognitive'].debug('Module cognitif activé', extra={'brain_status': 'active'})
-        loggers['eve.simulation'].warning('Simulation charge élevée', extra={'cpu_usage': 85})
+        # Test logs structurs
+        loggers['agi.core'].info('Systme AGI initialis', extra={'version': '1.0', 'mode': 'production'})
+        loggers['eve.cognitive'].debug('Module cognitif activ', extra={'brain_status': 'active'})
+        loggers['eve.simulation'].warning('Simulation charge leve', extra={'cpu_usage': 85})
         loggers['eve.development'].error('Erreur validation code', extra={'file': 'test.py', 'line': 42})
         
-        print('✅ Logging structuré: 4 loggers configurés')
-        print('✅ Handlers: Console + File')
-        print('✅ Format: JSON structuré')
+        print(' Logging structur: 4 loggers configurs')
+        print(' Handlers: Console + File')
+        print(' Format: JSON structur')
         
         # Test performance logging
         start_time = time.time()
@@ -119,28 +119,28 @@ jobs:
         end_time = time.time()
         
         performance = 1000 / (end_time - start_time)
-        print(f'✅ Performance: {performance:.0f} logs/sec')
+        print(f' Performance: {performance:.0f} logs/sec')
         
         if performance > 500:
-            print('✅ Performance logging: Excellente')
+            print(' Performance logging: Excellente')
         else:
-            print('⚠️ Performance logging: À optimiser')
+            print(' Performance logging:  optimiser')
         " >> logs-report.md
         
     - name: Log Analysis and Monitoring
       run: |
         echo "" >> logs-report.md
-        echo "## 📈 Analyse et Monitoring Logs" >> logs-report.md
+        echo "## Analyse et Monitoring Logs" >> logs-report.md
         echo "" >> logs-report.md
         
-        # Analyser logs système
+        # Analyser logs systme
         python -c "
         import re
         import json
         from collections import Counter, defaultdict
         from datetime import datetime
         
-        print('📈 Analyse logs système...')
+        print(' Analyse logs systme...')
         
         # Lire et analyser logs existants
         log_stats = {
@@ -176,14 +176,14 @@ jobs:
                         pass  # Ignorer lignes non-JSON
                         
         except FileNotFoundError:
-            print('⚠️ Fichier log non trouvé - Générer logs d\\'abord')
+            print(' Fichier log non trouv - Gnrer logs d\\'abord')
         
         # Afficher statistiques
-        print(f'- **Total entrées**: {log_stats[\"total_entries\"]}')
+        print(f'- **Total entres**: {log_stats[\"total_entries\"]}')
         
         if log_stats['levels']:
             for level, count in log_stats['levels'].most_common():
-                print(f'- **{level}**: {count} entrées')
+                print(f'- **{level}**: {count} entres')
         
         if log_stats['modules']:
             print('- **Modules les plus actifs**:')
@@ -195,33 +195,33 @@ jobs:
         warning_count = log_stats['levels']['WARNING']
         
         if error_count > 10:
-            print(f'🚨 **ALERTE**: {error_count} erreurs détectées')
+            print(f' **ALERTE**: {error_count} erreurs dtectes')
         elif warning_count > 50:
-            print(f'⚠️ **ATTENTION**: {warning_count} warnings')
+            print(f' **ATTENTION**: {warning_count} warnings')
         else:
-            print('✅ **Logs**: Niveau normal')
+            print(' **Logs**: Niveau normal')
         
         # Recommandations
         total = log_stats['total_entries']
         if total > 10000:
-            print('💡 **Recommandation**: Rotation logs nécessaire')
+            print(' **Recommandation**: Rotation logs ncessaire')
         if error_count / max(total, 1) > 0.1:
-            print('💡 **Recommandation**: Taux d\\'erreur élevé - Investigation requise')
+            print(' **Recommandation**: Taux d\\'erreur lev - Investigation requise')
         " >> logs-report.md
         
     - name: Log Aggregation and Alerting
       run: |
         echo "" >> logs-report.md
-        echo "## 🚨 Agrégation et Alertes Logs" >> logs-report.md
+        echo "## Agrgation et Alertes Logs" >> logs-report.md
         echo "" >> logs-report.md
         
-        # Système d'alertes basé sur logs
+        # Systme d'alertes bas sur logs
         python -c "
         import json
         import re
         from datetime import datetime, timedelta
         
-        print('🚨 Test système alertes logs...')
+        print(' Test systme alertes logs...')
         
         class LogAlertSystem:
             def __init__(self):
@@ -254,10 +254,10 @@ jobs:
                 
                 return self.alerts
         
-        # Test système alertes
+        # Test systme alertes
         alert_system = LogAlertSystem()
         
-        # Logs test pour déclencher alertes
+        # Logs test pour dclencher alertes
         test_logs = [
             'ERROR: Database connection failed',
             'ERROR: Authentication error',
@@ -273,20 +273,20 @@ jobs:
         
         alerts = alert_system.check_alerts(test_logs)
         
-        print(f'✅ Système alertes: {len(alerts)} alertes générées')
+        print(f' Systme alertes: {len(alerts)} alertes gnres')
         
         for alert in alerts:
-            severity_icon = {'low': '🟡', 'medium': '🟠', 'high': '🔴', 'critical': '🚨'}
-            icon = severity_icon.get(alert['severity'], '⚪')
+            severity_icon = {'low': '', 'medium': '', 'high': '', 'critical': ''}
+            icon = severity_icon.get(alert['severity'], '')
             print(f'{icon} **{alert[\"severity\"].upper()}**: {alert[\"rule\"]} - {alert[\"count\"]} occurrences')
         
-        # Test notification système
+        # Test notification systme
         if any(alert['severity'] == 'critical' for alert in alerts):
-            print('🚨 **ALERTE CRITIQUE**: Notification immédiate requise')
+            print(' **ALERTE CRITIQUE**: Notification immdiate requise')
         elif any(alert['severity'] == 'high' for alert in alerts):
-            print('🔴 **ALERTE HAUTE**: Intervention rapide recommandée')
+            print(' **ALERTE HAUTE**: Intervention rapide recommande')
         else:
-            print('✅ **Système stable**: Aucune alerte critique')
+            print(' **Systme stable**: Aucune alerte critique')
         " >> logs-report.md
         
     - name: Upload Logs Management Report

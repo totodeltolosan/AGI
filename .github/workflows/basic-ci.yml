@@ -1,4 +1,4 @@
-name: ✅ Basic CI
+name:  Basic CI
 
 on:
   push:
@@ -23,24 +23,24 @@ jobs:
         
     - name: Basic project health
       run: |
-        echo "🔍 BASIC PROJECT HEALTH CHECK"
+        echo "BASIC PROJECT HEALTH CHECK"
         echo "============================="
         
         # Compter fichiers
         python_files=$(find . -name "*.py" -not -path "./.git/*" | wc -l)
-        echo "📊 Fichiers Python: $python_files"
+        echo "Fichiers Python: $python_files"
         
-        # Vérifier structure
-        if [ -d "core" ]; then echo "✅ Dossier core: présent"; else echo "❌ Dossier core: manquant"; fi
-        if [ -d "eve" ]; then echo "✅ Dossier eve: présent"; else echo "❌ Dossier eve: manquant"; fi
+        # Vrifier structure
+        if [ -d "core" ]; then echo "Dossier core: prsent"; else echo "Dossier core: manquant"; fi
+        if [ -d "eve" ]; then echo "Dossier eve: prsent"; else echo "Dossier eve: manquant"; fi
         
         # Test import Python basique
         python3 -c "
         import sys
         import os
-        print('✅ Python fonctionnel')
+        print(' Python fonctionnel')
         print(f'Version: {sys.version}')
         print(f'Path: {sys.path[0]}')
         "
         
-        echo "✅ Basic health check terminé"
+        echo "Basic health check termin"

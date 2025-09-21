@@ -1,4 +1,4 @@
-name: 🌌 Universe Simulation Engine Validation
+name:  Universe Simulation Engine Validation
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
       run: |
         cd eve/simulation/
         
-        echo "🌌 TEST MOTEUR UNIVERS"
+        echo " TEST MOTEUR UNIVERS"
         python -c "
         try:
             from universe.universe_engine import UniverseEngine
@@ -45,9 +45,9 @@ jobs:
             universe.initialize_simulation(particles=1000)
             physics.simulate_step(dt=0.1)
             
-            print('✅ Universe Engine: Fonctionnel')
+            print(' Universe Engine: Fonctionnel')
         except Exception as e:
-            print(f'❌ Universe Engine Error: {e}')
+            print(f' Universe Engine Error: {e}')
             raise
         "
         
@@ -55,23 +55,23 @@ jobs:
       run: |
         cd eve/simulation/
         
-        echo "🧬 TEST SYSTÈMES ÉVOLUTION"
+        echo " TEST SYSTMES VOLUTION"
         python -c "
         try:
             from evolution.evolution_core import EvolutionEngine
             from evolution.genetic_algorithms import GeneticProcessor
             
-            # Test évolution
+            # Test volution
             evolution = EvolutionEngine()
             genetics = GeneticProcessor()
             
-            # Simulation évolutive
+            # Simulation volutive
             population = evolution.create_population(size=100)
             evolved = genetics.evolve_generation(population)
             
-            print(f'✅ Evolution Engine: Population {len(evolved)} individus')
+            print(f' Evolution Engine: Population {len(evolved)} individus')
         except Exception as e:
-            print(f'❌ Evolution Engine Error: {e}')
+            print(f' Evolution Engine Error: {e}')
             raise
         "
         
@@ -79,7 +79,7 @@ jobs:
       run: |
         cd eve/simulation/
         
-        echo "⚛️ TEST AGENTS PHYSIQUES"
+        echo " TEST AGENTS PHYSIQUES"
         python -c "
         try:
             from physics_agents.particle_agents import ParticleManager
@@ -92,9 +92,9 @@ jobs:
             particles.create_particle_system(count=500)
             stellar.simulate_stellar_formation()
             
-            print('✅ Physics Agents: Simulation OK')
+            print(' Physics Agents: Simulation OK')
         except Exception as e:
-            print(f'❌ Physics Agents Error: {e}')
+            print(f' Physics Agents Error: {e}')
             raise
         "
         
@@ -102,7 +102,7 @@ jobs:
       run: |
         cd eve/simulation/
         
-        echo "📊 TEST PERFORMANCE SIMULATION"
+        echo "TEST PERFORMANCE SIMULATION"
         python -c "
         import time
         import psutil
@@ -125,14 +125,14 @@ jobs:
             end_time = time.time()
             end_memory = psutil.Process().memory_info().rss / 1024 / 1024
             
-            print(f'⏱️ Temps simulation: {end_time - start_time:.2f}s')
-            print(f'💾 Mémoire utilisée: {end_memory - start_memory:.2f}MB')
+            print(f' Temps simulation: {end_time - start_time:.2f}s')
+            print(f' Mmoire utilise: {end_memory - start_memory:.2f}MB')
             
             if end_time - start_time > 60:
-                print('⚠️ WARNING: Simulation lente')
+                print(' WARNING: Simulation lente')
             else:
-                print('✅ Performance simulation: Acceptable')
+                print(' Performance simulation: Acceptable')
                 
         except Exception as e:
-            print(f'❌ Performance Test Error: {e}')
+            print(f' Performance Test Error: {e}')
         "

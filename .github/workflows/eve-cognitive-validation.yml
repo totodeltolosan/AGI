@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🧠 EVE Cognitive Intelligence Validation
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  EVE Cognitive Intelligence Validation
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -30,11 +30,11 @@ jobs:
         
     - name: Validate Brain Core (cerveau.py refactored)
       run: |
-        echo "🧠 VALIDATION SYSTÈME COGNITIF"
+        echo " VALIDATION SYSTME COGNITIF"
         find eve/cognitive/ -name "*.py" | while read file; do
           lines=$(wc -l < "$file")
           if [ $lines -gt 200 ]; then
-            echo "❌ CRITIQUE: $file ($lines lignes) - Refactoring requis"
+            echo "CRITIQUE: $file ($lines lignes) - Refactoring requis"
             exit 1
           fi
         done
@@ -52,9 +52,9 @@ jobs:
         try:
             from brain_core import CognitiveEngine
             from launcher_interface import ALMAInterface  
-            print('✅ ALMA Integration: OK')
+            print(' ALMA Integration: OK')
         except ImportError as e:
-            print(f'❌ ALMA Integration Failed: {e}')
+            print(f' ALMA Integration Failed: {e}')
             sys.exit(1)
         "
         

@@ -1,4 +1,4 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
 name:  Cognitive Performance Benchmarks
 
 on:
@@ -45,13 +45,13 @@ jobs:
         import psutil
         import gc
         
-        print('🧠 COGNITIVE LOAD TEST')
+        print(' COGNITIVE LOAD TEST')
         start_time = time.time()
         start_memory = psutil.Process().memory_info().rss / 1024 / 1024
         
         # Simuler charge cognitive
         for i in range(1000):
-            # Traitement cognitif simulé
+            # Traitement cognitif simul
             data = [j*i for j in range(100)]
             del data
             if i % 100 == 0:
@@ -60,15 +60,15 @@ jobs:
         end_time = time.time()
         end_memory = psutil.Process().memory_info().rss / 1024 / 1024
         
-        print(f'⏱️ Temps: {end_time - start_time:.2f}s')
-        print(f'💾 Mémoire initiale: {start_memory:.2f}MB')
-        print(f'💾 Mémoire finale: {end_memory:.2f}MB')
-        print(f'📈 Delta mémoire: {end_memory - start_memory:.2f}MB')
+        print(f' Temps: {end_time - start_time:.2f}s')
+        print(f' Mmoire initiale: {start_memory:.2f}MB')
+        print(f' Mmoire finale: {end_memory:.2f}MB')
+        print(f' Delta mmoire: {end_memory - start_memory:.2f}MB')
         
         if end_memory - start_memory > 100:
-            print('⚠️ WARNING: Possible memory leak detected')
+            print(' WARNING: Possible memory leak detected')
         else:
-            print('✅ Memory management: OK')
+            print(' Memory management: OK')
         "
         
     - name: Upload Cognitive Reports

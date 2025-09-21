@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🌱 EVE GENESIS Evolution Validation
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  EVE GENESIS Evolution Validation
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -31,7 +31,7 @@ jobs:
       run: |
         cd eve/simulation/evolution/
         
-        echo "🌱 TEST EVE GENESIS CORE"
+        echo " TEST EVE GENESIS CORE"
         python -c "
         try:
             from evolution_core import EvolutionEngine
@@ -41,87 +41,87 @@ jobs:
             genesis = GenesisManager()
             evolution = EvolutionEngine()
             
-            # Test création système évolutif
+            # Test cration systme volutif
             genesis.initialize_genesis_simulation()
             population = evolution.create_initial_population(1000)
             
-            print(f'✅ EVE GENESIS: Population initiale de {len(population)} créée')
+            print(f' EVE GENESIS: Population initiale de {len(population)} cre')
             
-            # Test évolution sur plusieurs générations
+            # Test volution sur plusieurs gnrations
             for generation in range(10):
                 population = evolution.evolve_generation(population)
                 if generation % 5 == 0:
-                    print(f'Génération {generation}: {len(population)} individus')
+                    print(f'Gnration {generation}: {len(population)} individus')
             
-            print('✅ EVE GENESIS: Évolution multi-génération OK')
+            print(' EVE GENESIS: volution multi-gnration OK')
             
         except Exception as e:
-            print(f'❌ EVE GENESIS Error: {e}')
-            # Ne pas fail le test si modules pas encore migrés
-            print('⚠️ Note: Modules EVE GENESIS en cours de migration')
+            print(f' EVE GENESIS Error: {e}')
+            # Ne pas fail le test si modules pas encore migrs
+            print(' Note: Modules EVE GENESIS en cours de migration')
         "
         
     - name: Emergence Systems Test
       run: |
         cd eve/simulation/evolution/
         
-        echo "🧬 TEST SYSTÈMES ÉMERGENCE"
+        echo " TEST SYSTMES MERGENCE"
         python -c "
         try:
             from emergence_systems import EmergenceEngine
             from biological_systems import BiologySimulator
             
-            # Test systèmes émergents
+            # Test systmes mergents
             emergence = EmergenceEngine()
             biology = BiologySimulator()
             
-            # Simulation émergence biologique
+            # Simulation mergence biologique
             ecosystem = biology.create_ecosystem(species=50)
             evolved_ecosystem = emergence.simulate_emergence(ecosystem, steps=100)
             
-            print('✅ Systèmes Émergence: Simulation OK')
+            print(' Systmes mergence: Simulation OK')
             
         except Exception as e:
-            print(f'⚠️ Emergence Systems: {e}')
-            print('Note: Modules émergence en développement')
+            print(f' Emergence Systems: {e}')
+            print('Note: Modules mergence en dveloppement')
         "
         
     - name: Civilization Evolution Test
       run: |
         cd eve/simulation/evolution/
         
-        echo "🏛️ TEST ÉVOLUTION CIVILISATIONS"
+        echo "TEST VOLUTION CIVILISATIONS"
         python -c "
         import numpy as np
         import time
         
-        print('🏛️ Simulation évolution civilisations...')
+        print(' Simulation volution civilisations...')
         
-        # Simulation basique sans modules spécifiques
+        # Simulation basique sans modules spcifiques
         try:
-            # Paramètres civilisation
+            # Paramtres civilisation
             civilizations = np.random.rand(10, 5)  # 10 civs, 5 attributs
             
-            # Évolution sur 100 étapes
+            # volution sur 100 tapes
             for step in range(100):
-                # Évolution stochastique
+                # volution stochastique
                 civilizations += np.random.normal(0, 0.01, civilizations.shape)
                 civilizations = np.clip(civilizations, 0, 1)
                 
                 if step % 25 == 0:
                     avg_progress = np.mean(civilizations)
-                    print(f'Étape {step}: Progrès moyen {avg_progress:.3f}')
+                    print(f'tape {step}: Progrs moyen {avg_progress:.3f}')
             
             final_progress = np.mean(civilizations)
-            print(f'✅ Évolution Civilisations: Progrès final {final_progress:.3f}')
+            print(f' volution Civilisations: Progrs final {final_progress:.3f}')
             
         except Exception as e:
-            print(f'⚠️ Civilization Evolution: {e}')
+            print(f' Civilization Evolution: {e}')
         "
         
     - name: Performance Evolution Metrics
       run: |
-        echo "📊 MÉTRIQUES PERFORMANCE ÉVOLUTION"
+        echo "MTRIQUES PERFORMANCE VOLUTION"
         python -c "
         import time
         import psutil
@@ -130,18 +130,18 @@ jobs:
         start_time = time.time()
         start_memory = psutil.Process().memory_info().rss / 1024 / 1024
         
-        # Test performance évolution massive
-        print('🧬 Test performance évolution massive...')
+        # Test performance volution massive
+        print(' Test performance volution massive...')
         
-        # Simulation 10000 individus sur 50 générations
+        # Simulation 10000 individus sur 50 gnrations
         population_size = 10000
         generations = 50
         
         # Population initiale
-        population = np.random.rand(population_size, 10)  # 10 gènes par individu
+        population = np.random.rand(population_size, 10)  # 10 gnes par individu
         
         for gen in range(generations):
-            # Sélection (garder 50% meilleurs)
+            # Slection (garder 50% meilleurs)
             fitness = np.sum(population, axis=1)
             sorted_indices = np.argsort(fitness)[::-1]
             survivors = population[sorted_indices[:population_size//2]]
@@ -153,17 +153,17 @@ jobs:
             
             if gen % 10 == 0:
                 avg_fitness = np.mean(fitness)
-                print(f'Génération {gen}: Fitness moyenne {avg_fitness:.3f}')
+                print(f'Gnration {gen}: Fitness moyenne {avg_fitness:.3f}')
         
         end_time = time.time()
         end_memory = psutil.Process().memory_info().rss / 1024 / 1024
         
-        print(f'⏱️ Temps évolution: {end_time - start_time:.2f}s')
-        print(f'💾 Mémoire utilisée: {end_memory - start_memory:.2f}MB')
-        print(f'📊 Performance: {population_size * generations / (end_time - start_time):.0f} ind/gen/sec')
+        print(f' Temps volution: {end_time - start_time:.2f}s')
+        print(f' Mmoire utilise: {end_memory - start_memory:.2f}MB')
+        print(f' Performance: {population_size * generations / (end_time - start_time):.0f} ind/gen/sec')
         
         if end_time - start_time < 30:
-            print('✅ Performance EVE GENESIS: Excellente')
+            print(' Performance EVE GENESIS: Excellente')
         else:
-            print('⚠️ Performance EVE GENESIS: À optimiser')
+            print(' Performance EVE GENESIS:  optimiser')
         "

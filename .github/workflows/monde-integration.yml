@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🌍 Monde Legacy Integration
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  Monde Legacy Integration
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -17,21 +17,21 @@ jobs:
     
     - name: Check Monde Migration Status
       run: |
-        echo "🌍 VÉRIFICATION INTÉGRATION MONDE" > monde-status.md
+        echo " VRIFICATION INTGRATION MONDE" > monde-status.md
         echo "===============================" >> monde-status.md
         echo "" >> monde-status.md
         
-        # Vérifier structure Monde migrée
+        # Vrifier structure Monde migre
         if [ -d "eve/simulation/universe" ]; then
           monde_files=$(find eve/simulation/universe/ -name "*.py" | wc -l)
-          echo "## 📊 Statut Migration Monde" >> monde-status.md
-          echo "- **Fichiers migrés**: $monde_files" >> monde-status.md
+          echo "## Statut Migration Monde" >> monde-status.md
+          echo "- **Fichiers migrs**: $monde_files" >> monde-status.md
           
-          # Vérifier si les 7392 fichiers sont bien là
+          # Vrifier si les 7392 fichiers sont bien l
           if [ $monde_files -gt 1000 ]; then
-            echo "✅ **Migration**: Massive migration detected ($monde_files files)" >> monde-status.md
+            echo "**Migration**: Massive migration detected ($monde_files files)" >> monde-status.md
           else
-            echo "⚠️ **Migration**: Incomplete migration detected ($monde_files files)" >> monde-status.md
+            echo "**Migration**: Incomplete migration detected ($monde_files files)" >> monde-status.md
           fi
           
           # Analyser violations
@@ -43,35 +43,35 @@ jobs:
               violations=$((violations + 1))
               if [ $lines -gt 1000 ]; then
                 large_files=$((large_files + 1))
-                echo "🚨 **CRITIQUE**: \`$file\` ($lines lignes)" >> monde-status.md
+                echo "**CRITIQUE**: \`$file\` ($lines lignes)" >> monde-status.md
               fi
             fi
           done
           
         else
-          echo "❌ **ERREUR**: Dossier eve/simulation/universe/ introuvable" >> monde-status.md
+          echo "**ERREUR**: Dossier eve/simulation/universe/ introuvable" >> monde-status.md
         fi
         
     - name: PyQt6 Dependencies Check
       run: |
         echo "" >> monde-status.md
-        echo "## 🖥️ Interface PyQt6" >> monde-status.md
+        echo "## Interface PyQt6" >> monde-status.md
         
-        # Vérifier imports PyQt6 (utilisé par Monde)
+        # Vrifier imports PyQt6 (utilis par Monde)
         if find eve/simulation/ -name "*.py" -exec grep -l "PyQt6\|QtWidgets" {} \; | head -1 >/dev/null; then
-          echo "✅ **PyQt6**: Interfaces détectées" >> monde-status.md
+          echo "**PyQt6**: Interfaces dtectes" >> monde-status.md
           
           # Compter les interfaces
           qt_files=$(find eve/simulation/ -name "*.py" -exec grep -l "PyQt6\|QtWidgets" {} \; | wc -l)
           echo "- **Fichiers UI**: $qt_files modules" >> monde-status.md
         else
-          echo "⚠️ **PyQt6**: Aucune interface détectée" >> monde-status.md
+          echo "**PyQt6**: Aucune interface dtecte" >> monde-status.md
         fi
         
     - name: Monde Physics Validation
       run: |
         echo "" >> monde-status.md
-        echo "## ⚛️ Validation Physique Monde" >> monde-status.md
+        echo "##  Validation Physique Monde" >> monde-status.md
         
         # Test simulation physique basique
         cd eve/simulation/universe/ 2>/dev/null || cd .
@@ -82,7 +82,7 @@ jobs:
         
         try:
             # Simuler import physique Monde
-            print('🧪 Test simulation physique...')
+            print(' Test simulation physique...')
             
             # Test basique sans vraies classes
             import numpy as np
@@ -93,10 +93,10 @@ jobs:
             dt = 0.01
             particles += velocities * dt
             
-            print('✅ Simulation physique basique: OK')
+            print(' Simulation physique basique: OK')
             
         except Exception as e:
-            print(f'⚠️ Simulation physique: {e}')
+            print(f' Simulation physique: {e}')
         " >> monde-status.md
         
     - name: Upload Monde Status

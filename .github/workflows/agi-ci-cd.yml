@@ -12,7 +12,7 @@ env:
   NODE_VERSION: '18'
 
 jobs:
-  # ==================== ANALYSE QUALITÉ ====================
+  # ==================== ANALYSE QUALIT ====================
   code-quality:
     name: Code Quality Analysis
     runs-on: ubuntu-latest
@@ -94,7 +94,7 @@ jobs:
         flags: unittests
         name: codecov-umbrella
 
-  # ==================== CONFORMITÉ AGI ====================
+  # ==================== CONFORMIT AGI ====================
   conformity-check:
     name: AGI Conformity Analysis
     runs-on: ubuntu-latest
@@ -105,12 +105,12 @@ jobs:
     
     - name: Analyze code conformity
       run: |
-        echo "=== ANALYSE CONFORMITÉ AGI ==="
+        echo "=== ANALYSE CONFORMIT AGI ==="
         find . -name "*.py" -type f | while read file; do
           lines=$(wc -l < "$file")
           excess=$((lines - 200))
           if [ $excess -gt 0 ]; then
-            echo "VIOLATION: $file ($lines lignes, excès: $excess)"
+            echo "VIOLATION: $file ($lines lignes, excs: $excess)"
           else
             echo "CONFORME: $file ($lines lignes)"
           fi
@@ -122,7 +122,7 @@ jobs:
         name: conformity-report
         path: conformite_*.csv
 
-  # ==================== DÉPLOIEMENT ====================
+  # ==================== DPLOIEMENT ====================
   deploy:
     name: Deploy to Environments
     needs: [code-quality, unit-tests, conformity-check]
@@ -135,11 +135,11 @@ jobs:
     
     - name: Deploy to staging
       run: |
-        echo "🚀 Déploiement vers staging..."
-        # Ajoutez vos commandes de déploiement ici
+        echo "Dploiement vers staging..."
+        # Ajoutez vos commandes de dploiement ici
         
     - name: Deploy to production
       if: github.event_name == 'workflow_dispatch'
       run: |
-        echo "🚀 Déploiement vers production..."
-        # Ajoutez vos commandes de déploiement ici
+        echo "Dploiement vers production..."
+        # Ajoutez vos commandes de dploiement ici

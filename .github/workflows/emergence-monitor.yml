@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🌸 Emergence Systems Monitor
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  Emergence Systems Monitor
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -18,21 +18,21 @@ jobs:
     
     - name: Emergence Pattern Analysis
       run: |
-        echo "🌸 ANALYSE PATTERNS ÉMERGENCE" > emergence-report.md
+        echo " ANALYSE PATTERNS MERGENCE" > emergence-report.md
         echo "=============================" >> emergence-report.md
         echo "" >> emergence-report.md
         
-        # Analyser fichiers émergence
+        # Analyser fichiers mergence
         if [ -d "eve/simulation/emergence" ]; then
           emergence_files=$(find eve/simulation/emergence/ -name "*.py" | wc -l)
-          echo "##  Systèmes Émergence" >> emergence-report.md
+          echo "## Systmes mergence" >> emergence-report.md
           echo "- **Modules**: $emergence_files" >> emergence-report.md
           
-          # Chercher patterns d'émergence dans le code
+          # Chercher patterns d'mergence dans le code
           emergence_patterns=("emergence" "emergent" "self_organiz" "complex" "adapt")
           
           echo "" >> emergence-report.md
-          echo "##  Patterns Détectés" >> emergence-report.md
+          echo "## Patterns Dtects" >> emergence-report.md
           
           for pattern in "${emergence_patterns[@]}"; do
             count=$(find eve/simulation/emergence/ -name "*.py" -exec grep -c "$pattern" {} \; 2>/dev/null | paste -sd+ | bc 2>/dev/null || echo "0")
@@ -40,21 +40,21 @@ jobs:
           done
           
         else
-          echo " **Module émergence**: En cours de création" >> emergence-report.md
+          echo "**Module mergence**: En cours de cration" >> emergence-report.md
         fi
         
     - name: Complexity Metrics
       run: |
         echo "" >> emergence-report.md
-        echo "## 📈 Métriques Complexité" >> emergence-report.md
+        echo "## Mtriques Complexit" >> emergence-report.md
         
-        # Calculer métriques de complexité système
+        # Calculer mtriques de complexit systme
         python -c "
         import os
         import numpy as np
         
         try:
-            # Métriques basiques de complexité
+            # Mtriques basiques de complexit
             total_files = 0
             total_lines = 0
             total_functions = 0
@@ -72,7 +72,7 @@ jobs:
                         except:
                             pass
             
-            # Métriques de complexité
+            # Mtriques de complexit
             if total_files > 0:
                 avg_lines_per_file = total_lines / total_files
                 avg_functions_per_file = total_functions / total_files
@@ -83,16 +83,16 @@ jobs:
                 print(f'- **Moy lignes/fichier**: {avg_lines_per_file:.1f}')
                 print(f'- **Moy fonctions/fichier**: {avg_functions_per_file:.1f}')
                 
-                # Indice de complexité émergente
+                # Indice de complexit mergente
                 complexity_index = (total_files * avg_functions_per_file) / 1000
-                print(f'- **Indice complexité**: {complexity_index:.3f}')
+                print(f'- **Indice complexit**: {complexity_index:.3f}')
                 
                 if complexity_index > 1.0:
-                    print('- **Statut**: 🌟 Complexité émergente détectée')
+                    print('- **Statut**:  Complexit mergente dtecte')
                 else:
-                    print('- **Statut**: 🌱 Système en développement')
+                    print('- **Statut**:  Systme en dveloppement')
             else:
-                print('- **Statut**:  Aucun fichier détecté')
+                print('- **Statut**:  Aucun fichier dtect')
                 
         except Exception as e:
             print(f'- **Erreur**: {e}')
@@ -101,7 +101,7 @@ jobs:
     - name: Self-Organization Test
       run: |
         echo "" >> emergence-report.md
-        echo "## 🔄 Test Auto-Organisation" >> emergence-report.md
+        echo "## Test Auto-Organisation" >> emergence-report.md
         
         python -c "
         import numpy as np
@@ -109,9 +109,9 @@ jobs:
         matplotlib.use('Agg')  # Backend non-interactif
         import matplotlib.pyplot as plt
         
-        print('🔄 Simulation auto-organisation...')
+        print(' Simulation auto-organisation...')
         
-        # Modèle simple d'auto-organisation (automate cellulaire)
+        # Modle simple d'auto-organisation (automate cellulaire)
         size = 50
         grid = np.random.choice([0, 1], size=(size, size))
         
@@ -128,39 +128,39 @@ jobs:
                             new_grid[i, j] = 1
             return new_grid
         
-        # Évolution sur 100 étapes
+        # volution sur 100 tapes
         complexity_scores = []
         for step in range(100):
             grid = apply_rules(grid)
-            # Mesure de complexité: entropie locale
+            # Mesure de complexit: entropie locale
             complexity = -np.sum(grid * np.log(grid + 1e-10) + (1-grid) * np.log(1-grid + 1e-10))
             complexity_scores.append(complexity)
         
-        # Analyse émergence
+        # Analyse mergence
         initial_complexity = complexity_scores[0]
         final_complexity = complexity_scores[-1]
         max_complexity = max(complexity_scores)
         
-        print(f'- **Complexité initiale**: {initial_complexity:.2f}')
-        print(f'- **Complexité finale**: {final_complexity:.2f}')
-        print(f'- **Complexité maximale**: {max_complexity:.2f}')
+        print(f'- **Complexit initiale**: {initial_complexity:.2f}')
+        print(f'- **Complexit finale**: {final_complexity:.2f}')
+        print(f'- **Complexit maximale**: {max_complexity:.2f}')
         
         if max_complexity > initial_complexity * 1.5:
-            print('- **Résultat**:  Auto-organisation détectée')
+            print('- **Rsultat**:  Auto-organisation dtecte')
         else:
-            print('- **Résultat**:  Auto-organisation limitée')
+            print('- **Rsultat**:  Auto-organisation limite')
         
         # Sauvegarder graphique
         plt.figure(figsize=(10, 6))
         plt.plot(complexity_scores)
-        plt.title('Évolution de la Complexité (Auto-organisation)')
-        plt.xlabel('Étapes')
-        plt.ylabel('Complexité')
+        plt.title('volution de la Complexit (Auto-organisation)')
+        plt.xlabel('tapes')
+        plt.ylabel('Complexit')
         plt.grid(True)
         plt.savefig('emergence_complexity.png', dpi=150, bbox_inches='tight')
         plt.close()
         
-        print('- **Graphique**: emergence_complexity.png généré')
+        print('- **Graphique**: emergence_complexity.png gnr')
         " >> emergence-report.md
         
     - name: Upload Emergence Reports

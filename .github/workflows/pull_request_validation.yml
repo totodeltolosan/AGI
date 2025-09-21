@@ -1,6 +1,6 @@
 name: AGI Constitutional Audit
 
-# Se déclenche sur chaque Pull Request visant la branche 'main'
+# Se dclenche sur chaque Pull Request visant la branche 'main'
 on:
   pull_request:
     branches: [ main ]
@@ -19,32 +19,32 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
-      - name: 3. Installation des dépendances (sera activé plus tard)
-        run: echo "Étape d'installation des dépendances à venir."
+      - name: 3. Installation des dpendances (sera activ plus tard)
+        run: echo "tape d'installation des dpendances  venir."
         # run: pip install -r requirements.txt
 
-      - name: 4. Exécution de l'Audit Constitutionnel Complet
+      - name: 4. Excution de l'Audit Constitutionnel Complet
         id: audit
         run: |
-          # Exécute l'audit et sauvegarde la sortie dans un fichier
+          # Excute l'audit et sauvegarde la sortie dans un fichier
           python run_agi_audit.py --full --target . > audit_report.txt
-        continue-on-error: true # Important pour que l'étape suivante s'exécute même en cas d'échec
+        continue-on-error: true # Important pour que l'tape suivante s'excute mme en cas d'chec
 
       - name: 5. Publication du Rapport d'Audit dans la Pull Request
-        # Cette étape ne s'exécute que si l'audit a échoué
+        # Cette tape ne s'excute que si l'audit a chou
         if: steps.audit.outcome == 'failure'
         uses: actions/github-script@v6
         with:
           script: |
             const fs = require('fs');
             const report = fs.readFileSync('audit_report.txt', 'utf8');
-            const body = \`**🚨 Audit Constitutionnel Échoué 🚨**
+            const body = \`** Audit Constitutionnel chou **
 
             \`\`\`
             \${report}
             \`\`\`
 
-            *Cette vérification est mandatée par la Loi DEV-TOOL-002 de iaGOD.json.*\`;
+            *Cette vrification est mandate par la Loi DEV-TOOL-002 de iaGOD.json.*\`;
             
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -53,4 +53,4 @@ jobs:
               body: body
             });
             
-            core.setFailed('L'audit constitutionnel a révélé des violations.');
+            core.setFailed('L'audit constitutionnel a rvl des violations.');

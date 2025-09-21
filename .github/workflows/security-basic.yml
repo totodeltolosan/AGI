@@ -1,4 +1,4 @@
-name: 🔒 Security Basic
+name:  Security Basic
 
 on:
   push:
@@ -28,35 +28,35 @@ jobs:
         
     - name: Run security scan
       run: |
-        echo "🔒 SECURITY SCAN AGI-EVE"
+        echo "SECURITY SCAN AGI-EVE"
         echo "========================"
         
         # Bandit scan
-        echo "🔍 Running Bandit security scan..."
+        echo "Running Bandit security scan..."
         if bandit -r . -f txt > bandit_report.txt 2>&1; then
-          echo "✅ Bandit scan completed"
+          echo "Bandit scan completed"
         else
-          echo "⚠️ Bandit found potential issues"
+          echo "Bandit found potential issues"
         fi
         
-        echo "📊 Bandit results:"
+        echo "Bandit results:"
         if [ -f bandit_report.txt ]; then
-          # Afficher résumé
+          # Afficher rsum
           grep -E "(High|Medium|Low)" bandit_report.txt | head -10 || echo "No security issues found"
         fi
         
         # Safety check
         echo ""
-        echo "🔍 Running Safety dependency check..."
+        echo "Running Safety dependency check..."
         if safety check > safety_report.txt 2>&1; then
-          echo "✅ Safety check passed - no known vulnerabilities"
+          echo "Safety check passed - no known vulnerabilities"
         else
-          echo "⚠️ Safety found potential vulnerabilities"
+          echo "Safety found potential vulnerabilities"
           head -10 safety_report.txt || true
         fi
         
         echo ""
-        echo "✅ Security scan completed"
+        echo "Security scan completed"
         
     - name: Upload security reports
       uses: actions/upload-artifact@v4

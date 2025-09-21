@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '0 2 * * 1'  # Tous les lundis à 2h
+    - cron: '0 2 * * 1'  # Tous les lundis  2h
 
 jobs:
   security-scan:

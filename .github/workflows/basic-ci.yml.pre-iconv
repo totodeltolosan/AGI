@@ -1,0 +1,46 @@
+name:  Basic CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  basic-checks:
+    name: Basic Health Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Basic project health
+      run: |
+        echo "BASIC PROJECT HEALTH CHECK"
+        echo "============================="
+        
+        # Compter fichiers
+        python_files=$(find . -name "*.py" -not -path "./.git/*" | wc -l)
+        echo "Fichiers Python: $python_files"
+        
+        # Vérifier structure
+        if [ -d "core" ]; then echo "Dossier core: présent"; else echo "Dossier core: manquant"; fi
+        if [ -d "eve" ]; then echo "Dossier eve: présent"; else echo "Dossier eve: manquant"; fi
+        
+        # Test import Python basique
+        python3 -c "
+        import sys
+        import os
+        print(' Python fonctionnel')
+        print(f'Version: {sys.version}')
+        print(f'Path: {sys.path[0]}')
+        "
+        
+        echo "Basic health check terminé"

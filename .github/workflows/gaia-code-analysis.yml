@@ -1,4 +1,4 @@
-name: 🌍 GAIA Code Analysis
+name:  GAIA Code Analysis
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         
     - name: GAIA Code Analysis
       run: |
-        echo "🌍 GAIA CODE ANALYSIS"
+        echo " GAIA CODE ANALYSIS"
         echo "===================="
         
         # Test code analysis functionality
@@ -61,18 +61,18 @@ jobs:
                 tree = ast.parse(code)
                 functions = [node.name for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)]
                 print(f'Functions found: {functions}')
-                print('✅ GAIA: Analyse de code fonctionnelle')
+                print(' GAIA: Analyse de code fonctionnelle')
             except Exception as e:
                 print(f'Analysis error: {e}')
         else:
-            print('✅ GAIA: Basic analysis completed')
+            print(' GAIA: Basic analysis completed')
         "
         
         # Analyze project structure
         echo "Analyzing project structure..."
         find . -name "*.py" -type f | wc -l | xargs echo "Python files found:"
         
-        echo "✅ GAIA analysis completed"
+        echo "GAIA analysis completed"
         
     - name: Generate Analysis Report
       run: |
@@ -80,7 +80,7 @@ jobs:
         echo "# GAIA Analysis Report" > gaia_report.md
         echo "Date: $(date)" >> gaia_report.md
         echo "Python files analyzed: $(find . -name '*.py' -type f | wc -l)" >> gaia_report.md
-        echo "✅ Analysis report generated"
+        echo "Analysis report generated"
         
     - name: Upload Analysis Report
       uses: actions/upload-artifact@v4

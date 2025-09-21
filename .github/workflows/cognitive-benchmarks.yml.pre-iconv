@@ -1,0 +1,80 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
+name:  Cognitive Performance Benchmarks
+
+on:
+  # Skip sur agi-main car chemins eve/ inexistants
+  push:
+    branches: [main]
+    paths: ['eve/cognitive/**']
+  schedule:
+    - cron: '0 2 * * 1'  # Lundi 2h
+
+jobs:
+  cognitive-benchmarks:
+    name: Cognitive Systems Performance
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python with ML optimizations
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install performance tools
+      run: |
+        pip install pytest-benchmark memory-profiler psutil
+        pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+        
+    - name: Benchmark Cognitive Processing
+      run: |
+        cd eve/cognitive/
+        python -m pytest benchmarks/ --benchmark-json=cognitive-benchmarks.json
+        
+    - name: Memory Usage Analysis
+      run: |
+        cd eve/cognitive/
+        python -m memory_profiler brain_core.py > memory-cognitive.txt
+        
+    - name: Cognitive Load Testing
+      run: |
+        cd eve/cognitive/
+        python -c "
+        import time
+        import psutil
+        import gc
+        
+        print('🧠 COGNITIVE LOAD TEST')
+        start_time = time.time()
+        start_memory = psutil.Process().memory_info().rss / 1024 / 1024
+        
+        # Simuler charge cognitive
+        for i in range(1000):
+            # Traitement cognitif simulé
+            data = [j*i for j in range(100)]
+            del data
+            if i % 100 == 0:
+                gc.collect()
+        
+        end_time = time.time()
+        end_memory = psutil.Process().memory_info().rss / 1024 / 1024
+        
+        print(f'⏱ Temps: {end_time - start_time:.2f}s')
+        print(f' Mémoire initiale: {start_memory:.2f}MB')
+        print(f' Mémoire finale: {end_memory:.2f}MB')
+        print(f' Delta mémoire: {end_memory - start_memory:.2f}MB')
+        
+        if end_memory - start_memory > 100:
+            print(' WARNING: Possible memory leak detected')
+        else:
+            print(' Memory management: OK')
+        "
+        
+    - name: Upload Cognitive Reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: cognitive-performance-reports
+        path: |
+          eve/cognitive/cognitive-benchmarks.json
+          eve/cognitive/memory-cognitive.txt

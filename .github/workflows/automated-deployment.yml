@@ -1,4 +1,4 @@
-name: 🚀 Automated Deployment Pipeline
+name:  Automated Deployment Pipeline
 
 on:
   push:
@@ -40,7 +40,7 @@ jobs:
     - name: Quality Gate Assessment
       id: quality_gate
       run: |
-        echo "🚦 QUALITY GATES PRE-DEPLOYMENT" > deployment-check.md
+        echo " QUALITY GATES PRE-DEPLOYMENT" > deployment-check.md
         echo "================================" >> deployment-check.md
         echo "" >> deployment-check.md
         
@@ -50,7 +50,7 @@ jobs:
         import sys
         from pathlib import Path
         
-        print('🚦 Évaluation quality gates déploiement...')
+        print(' valuation quality gates dploiement...')
         
         quality_gates = {
             'constitutional_compliance': False,
@@ -62,7 +62,7 @@ jobs:
         
         gate_scores = {}
         
-        # Gate 1: Conformité constitutionnelle
+        # Gate 1: Conformit constitutionnelle
         conformity_files = list(Path('.').glob('conformite_*.csv'))
         if conformity_files:
             latest_conformity = max(conformity_files, key=lambda f: f.stat().st_mtime)
@@ -76,18 +76,18 @@ jobs:
                         compliance_rate = ((total - violations) / total) * 100
                         gate_scores['constitutional_compliance'] = compliance_rate
                         
-                        if compliance_rate >= 70:  # Seuil déploiement
+                        if compliance_rate >= 70:  # Seuil dploiement
                             quality_gates['constitutional_compliance'] = True
-                            print(f'✅ Constitutional Compliance: {compliance_rate:.1f}%')
+                            print(f' Constitutional Compliance: {compliance_rate:.1f}%')
                         else:
-                            print(f'❌ Constitutional Compliance: {compliance_rate:.1f}% (< 70%)')
+                            print(f' Constitutional Compliance: {compliance_rate:.1f}% (< 70%)')
             except:
-                print('⚠️ Constitutional Compliance: Impossible de vérifier')
+                print(' Constitutional Compliance: Impossible de vrifier')
         else:
-            print('❌ Constitutional Compliance: Rapport non trouvé')
+            print(' Constitutional Compliance: Rapport non trouv')
         
-        # Gate 2: Sécurité
-        # Vérifier absence de vulnérabilités critiques
+        # Gate 2: Scurit
+        # Vrifier absence de vulnrabilits critiques
         security_passed = True
         py_files = list(Path('.').rglob('*.py'))
         
@@ -98,7 +98,7 @@ jobs:
         ]
         
         critical_issues = 0
-        for py_file in py_files[:50]:  # Échantillon pour performance
+        for py_file in py_files[:50]:  # chantillon pour performance
             if '.git' in str(py_file):
                 continue
             try:
@@ -114,25 +114,25 @@ jobs:
         if critical_issues == 0:
             quality_gates['security_scan_passed'] = True
             gate_scores['security_scan_passed'] = 100
-            print('✅ Security Scan: Aucune vulnérabilité critique')
+            print(' Security Scan: Aucune vulnrabilit critique')
         else:
             gate_scores['security_scan_passed'] = max(0, 100 - critical_issues * 20)
-            print(f'❌ Security Scan: {critical_issues} vulnérabilités critiques')
+            print(f' Security Scan: {critical_issues} vulnrabilits critiques')
         
-        # Gate 3: Couverture tests (estimée)
+        # Gate 3: Couverture tests (estime)
         test_files = list(Path('.').rglob('test_*.py')) + list(Path('.').rglob('*_test.py'))
         if py_files:
             test_ratio = len(test_files) / len(py_files)
             test_coverage = min(test_ratio * 200, 100)  # 1 test pour 2 fichiers = 100%
             gate_scores['test_coverage_adequate'] = test_coverage
             
-            if test_coverage >= 30:  # Seuil minimal déploiement
+            if test_coverage >= 30:  # Seuil minimal dploiement
                 quality_gates['test_coverage_adequate'] = True
-                print(f'✅ Test Coverage: {test_coverage:.1f}%')
+                print(f' Test Coverage: {test_coverage:.1f}%')
             else:
-                print(f'❌ Test Coverage: {test_coverage:.1f}% (< 30%)')
+                print(f' Test Coverage: {test_coverage:.1f}% (< 30%)')
         else:
-            print('❌ Test Coverage: Aucun fichier Python trouvé')
+            print(' Test Coverage: Aucun fichier Python trouv')
         
         # Gate 4: Performance (basique)
         large_files = []
@@ -142,7 +142,7 @@ jobs:
             try:
                 with open(py_file, 'r', encoding='utf-8') as f:
                     lines = len(f.readlines())
-                    if lines > 1000:  # Fichiers très volumineux
+                    if lines > 1000:  # Fichiers trs volumineux
                         large_files.append((str(py_file), lines))
             except:
                 pass
@@ -150,10 +150,10 @@ jobs:
         if len(large_files) <= 5:  # Max 5 gros fichiers acceptables
             quality_gates['performance_acceptable'] = True
             gate_scores['performance_acceptable'] = 100
-            print(f'✅ Performance: {len(large_files)} gros fichiers')
+            print(f' Performance: {len(large_files)} gros fichiers')
         else:
             gate_scores['performance_acceptable'] = max(0, 100 - len(large_files) * 10)
-            print(f'❌ Performance: {len(large_files)} gros fichiers (> 5)')
+            print(f' Performance: {len(large_files)} gros fichiers (> 5)')
         
         # Gate 5: Documentation
         readme_exists = any(Path('.').glob('README*'))
@@ -169,32 +169,32 @@ jobs:
         
         if doc_score >= 60:
             quality_gates['documentation_complete'] = True
-            print(f'✅ Documentation: {doc_score}%')
+            print(f' Documentation: {doc_score}%')
         else:
-            print(f'❌ Documentation: {doc_score}% (< 60%)')
+            print(f' Documentation: {doc_score}% (< 60%)')
         
-        # Résultats gates
+        # Rsultats gates
         passed_gates = sum(quality_gates.values())
         total_gates = len(quality_gates)
         overall_score = (passed_gates / total_gates) * 100
         
-        print(f'\\n📊 Quality Gates: {passed_gates}/{total_gates} passés ({overall_score:.1f}%)')
+        print(f'\\n Quality Gates: {passed_gates}/{total_gates} passs ({overall_score:.1f}%)')
         
-        # Décision déploiement
+        # Dcision dploiement
         force_deploy = os.getenv('FORCE_DEPLOY', 'false').lower() == 'true'
         
         if overall_score >= 80 or force_deploy:
             deploy_approved = 'true'
-            print('✅ DÉPLOIEMENT AUTORISÉ')
+            print(' DPLOIEMENT AUTORIS')
         else:
             deploy_approved = 'false'
-            print('❌ DÉPLOIEMENT BLOQUÉ - Quality gates insuffisants')
+            print(' DPLOIEMENT BLOQU - Quality gates insuffisants')
         
         # Outputs GitHub Actions
         print(f'::set-output name=approved::{deploy_approved}')
         print(f'::set-output name=score::{overall_score:.1f}')
         
-        # Sauvegarder résultats
+        # Sauvegarder rsultats
         import json
         results = {
             'quality_gates': quality_gates,
@@ -239,17 +239,17 @@ jobs:
         
     - name: Prepare Staging Deployment
       run: |
-        echo "🚀 DÉPLOIEMENT STAGING AGI-EVE" > staging-deployment.log
+        echo "DPLOIEMENT STAGING AGI-EVE" > staging-deployment.log
         echo "=============================" >> staging-deployment.log
         echo "" >> staging-deployment.log
         
-        # Préparer environnement staging
+        # Prparer environnement staging
         python -c "
         import os
         import json
         from datetime import datetime
         
-        print('🚀 Préparation déploiement staging...')
+        print(' Prparation dploiement staging...')
         
         # Configuration staging
         staging_config = {
@@ -270,30 +270,30 @@ jobs:
         with open('staging_config.json', 'w') as f:
             json.dump(staging_config, f, indent=2)
         
-        print('✅ Configuration staging préparée')
+        print(' Configuration staging prpare')
         
-        # Simuler déploiement (remplacer par vraie logique déploiement)
-        print('📦 Création images Docker...')
-        print('🔧 Configuration services...')
-        print('🌐 Déploiement réseau...')
-        print('📊 Initialisation monitoring...')
-        print('✅ Déploiement staging terminé')
+        # Simuler dploiement (remplacer par vraie logique dploiement)
+        print(' Cration images Docker...')
+        print(' Configuration services...')
+        print(' Dploiement rseau...')
+        print(' Initialisation monitoring...')
+        print(' Dploiement staging termin')
         " >> staging-deployment.log
         
     - name: Health Check Staging
       run: |
         echo "" >> staging-deployment.log
-        echo "## 🏥 Health Check Staging" >> staging-deployment.log
+        echo "## Health Check Staging" >> staging-deployment.log
         echo "" >> staging-deployment.log
         
-        # Vérifications post-déploiement
+        # Vrifications post-dploiement
         python -c "
         import time
         import json
         
-        print('🏥 Health check staging...')
+        print(' Health check staging...')
         
-        # Simuler vérifications santé services
+        # Simuler vrifications sant services
         services_health = {
             'agi_core': 'healthy',
             'eve_cognitive': 'healthy', 
@@ -313,13 +313,13 @@ jobs:
         
         print('Services Health:')
         for service, status in services_health.items():
-            print(f'  ✅ {service}: {status}')
+            print(f'   {service}: {status}')
         
         print('\\nFunctional Tests:')
         for test, result in tests_results.items():
-            print(f'  ✅ {test}: {result}')
+            print(f'   {test}: {result}')
         
-        # Sauvegarder résultats
+        # Sauvegarder rsultats
         health_report = {
             'timestamp': time.time(),
             'services': services_health,
@@ -330,7 +330,7 @@ jobs:
         with open('staging_health.json', 'w') as f:
             json.dump(health_report, f, indent=2)
         
-        print('\\n✅ Staging déployé et fonctionnel')
+        print('\\n Staging dploy et fonctionnel')
         " >> staging-deployment.log
         
     - name: Upload Staging Results
@@ -359,17 +359,17 @@ jobs:
     
     - name: Production Deployment Approval
       run: |
-        echo "🏭 DÉPLOIEMENT PRODUCTION AGI-EVE" > production-deployment.log
+        echo " DPLOIEMENT PRODUCTION AGI-EVE" > production-deployment.log
         echo "=================================" >> production-deployment.log
         echo "" >> production-deployment.log
         
-        # Vérifications supplémentaires production
+        # Vrifications supplmentaires production
         python -c "
         import os
         
-        print('🏭 Vérifications production supplémentaires...')
+        print(' Vrifications production supplmentaires...')
         
-        # Vérifications critiques production
+        # Vrifications critiques production
         production_checks = {
             'quality_score_check': False,
             'tag_version_check': False,
@@ -382,53 +382,53 @@ jobs:
         quality_score = float('${{ needs.pre-deployment-checks.outputs.quality_score }}')
         if quality_score >= 85:
             production_checks['quality_score_check'] = True
-            print(f'✅ Quality Score: {quality_score}% (≥85%)')
+            print(f' Quality Score: {quality_score}% (85%)')
         else:
-            print(f'❌ Quality Score: {quality_score}% (<85%)')
+            print(f' Quality Score: {quality_score}% (<85%)')
         
         # Version tag si push tag
         github_ref = os.getenv('GITHUB_REF', '')
         if 'refs/tags/v' in github_ref or os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch':
             production_checks['tag_version_check'] = True
-            print('✅ Version Tag: Validé')
+            print(' Version Tag: Valid')
         
-        # Sécurité finale (placeholder)
+        # Scurit finale (placeholder)
         production_checks['security_final_check'] = True
-        print('✅ Security Final Check: Passed')
+        print(' Security Final Check: Passed')
         
         # Backup ready (placeholder)
         production_checks['backup_ready'] = True
-        print('✅ Backup Strategy: Ready')
+        print(' Backup Strategy: Ready')
         
         # Rollback plan (placeholder)
         production_checks['rollback_plan'] = True
-        print('✅ Rollback Plan: Prepared')
+        print(' Rollback Plan: Prepared')
         
         passed_checks = sum(production_checks.values())
         total_checks = len(production_checks)
         
-        print(f'\\n📊 Production Checks: {passed_checks}/{total_checks}')
+        print(f'\\n Production Checks: {passed_checks}/{total_checks}')
         
         if passed_checks == total_checks:
-            print('✅ PRODUCTION DEPLOYMENT APPROVED')
+            print(' PRODUCTION DEPLOYMENT APPROVED')
         else:
-            print('❌ PRODUCTION DEPLOYMENT BLOCKED')
+            print(' PRODUCTION DEPLOYMENT BLOCKED')
             exit(1)
         " >> production-deployment.log
         
     - name: Deploy to Production
       run: |
         echo "" >> production-deployment.log
-        echo "## 🚀 Production Deployment" >> production-deployment.log
+        echo "## Production Deployment" >> production-deployment.log
         echo "" >> production-deployment.log
         
-        # Déploiement production
+        # Dploiement production
         python -c "
         import json
         import time
         from datetime import datetime
         
-        print('🚀 Déploiement production AGI-EVE...')
+        print(' Dploiement production AGI-EVE...')
         
         # Configuration production
         production_config = {
@@ -451,32 +451,32 @@ jobs:
             }
         }
         
-        print('📦 Building production images...')
+        print(' Building production images...')
         time.sleep(2)  # Simuler build
         
-        print('🔧 Configuring production services...')
+        print(' Configuring production services...')
         time.sleep(2)  # Simuler config
         
-        print('🌐 Deploying to production cluster...')
-        time.sleep(3)  # Simuler déploiement
+        print(' Deploying to production cluster...')
+        time.sleep(3)  # Simuler dploiement
         
-        print('📊 Setting up production monitoring...')
+        print(' Setting up production monitoring...')
         time.sleep(1)  # Simuler monitoring
         
-        print('🔒 Applying security policies...')
-        time.sleep(1)  # Simuler sécurité
+        print(' Applying security policies...')
+        time.sleep(1)  # Simuler scurit
         
         # Sauvegarder config production
         with open('production_config.json', 'w') as f:
             json.dump(production_config, f, indent=2)
         
-        print('✅ Production deployment completed successfully')
+        print(' Production deployment completed successfully')
         " >> production-deployment.log
         
     - name: Production Health Check
       run: |
         echo "" >> production-deployment.log
-        echo "## 🏥 Production Health Check" >> production-deployment.log
+        echo "## Production Health Check" >> production-deployment.log
         echo "" >> production-deployment.log
         
         # Health check production complet
@@ -484,9 +484,9 @@ jobs:
         import time
         import json
         
-        print('🏥 Health check production complet...')
+        print(' Health check production complet...')
         
-        # Vérifications production critiques
+        # Vrifications production critiques
         production_health = {
             'services_status': {},
             'performance_metrics': {},
@@ -502,9 +502,9 @@ jobs:
                 'uptime': '100%',
                 'response_time': f'{30 + hash(service) % 20}ms'
             }
-            print(f'✅ {service}: Healthy')
+            print(f' {service}: Healthy')
         
-        # Métriques performance
+        # Mtriques performance
         production_health['performance_metrics'] = {
             'cpu_usage': '35%',
             'memory_usage': '60%',
@@ -513,11 +513,11 @@ jobs:
             'throughput': '1000 req/min'
         }
         
-        print('\\n📊 Performance Metrics:')
+        print('\\n Performance Metrics:')
         for metric, value in production_health['performance_metrics'].items():
-            print(f'  ✅ {metric}: {value}')
+            print(f'   {metric}: {value}')
         
-        # Status sécurité
+        # Status scurit
         production_health['security_status'] = {
             'ssl_certificates': 'valid',
             'firewall_active': True,
@@ -525,24 +525,24 @@ jobs:
             'access_logs': 'monitored'
         }
         
-        print('\\n🔒 Security Status:')
+        print('\\n Security Status:')
         for check, status in production_health['security_status'].items():
-            print(f'  ✅ {check}: {status}')
+            print(f'   {check}: {status}')
         
         # Sauvegarder health report
         with open('production_health.json', 'w') as f:
             json.dump(production_health, f, indent=2)
         
-        print('\\n🎉 PRODUCTION DÉPLOYÉ AVEC SUCCÈS!')
-        print('📊 Monitoring: Actif')
-        print('🔒 Sécurité: Renforcée')
-        print('⚡ Performance: Optimale')
+        print('\\n PRODUCTION DPLOY AVEC SUCCS!')
+        print(' Monitoring: Actif')
+        print(' Scurit: Renforce')
+        print(' Performance: Optimale')
         " >> production-deployment.log
         
     - name: Notify Deployment Success
       run: |
-        # Notification succès déploiement
-        echo "📢 NOTIFICATION DÉPLOIEMENT RÉUSSI" >> production-deployment.log
+        # Notification succs dploiement
+        echo " NOTIFICATION DPLOIEMENT RUSSI" >> production-deployment.log
         echo "Version: ${{ github.ref_name }}" >> production-deployment.log
         echo "Quality Score: ${{ needs.pre-deployment-checks.outputs.quality_score }}%" >> production-deployment.log
         echo "Deployment Time: $(date)" >> production-deployment.log

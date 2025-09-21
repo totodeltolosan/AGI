@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🔗 Cognitive Systems Integration Tests
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  Cognitive Systems Integration Tests
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -36,7 +36,7 @@ jobs:
       run: |
         cd eve/cognitive/
         
-        echo "🔗 TEST INTÉGRATION: ${{ matrix.cognitive-module }}"
+        echo " TEST INTGRATION: ${{ matrix.cognitive-module }}"
         
         case "${{ matrix.cognitive-module }}" in
           "brain")
@@ -44,9 +44,9 @@ jobs:
             try:
                 from brain.brain_core import CognitiveEngine
                 engine = CognitiveEngine()
-                print('✅ Brain Core: Intégration OK')
+                print(' Brain Core: Intgration OK')
             except Exception as e:
-                print(f'❌ Brain Core: {e}')
+                print(f' Brain Core: {e}')
                 raise
             "
             ;;
@@ -55,9 +55,9 @@ jobs:
             try:
                 from agents.cognitive_agents import AgentManager
                 manager = AgentManager()
-                print('✅ Cognitive Agents: Intégration OK')
+                print(' Cognitive Agents: Intgration OK')
             except Exception as e:
-                print(f'❌ Cognitive Agents: {e}')
+                print(f' Cognitive Agents: {e}')
                 raise
             "
             ;;
@@ -68,9 +68,9 @@ jobs:
             try:
                 from interfaces.launcher_interface import ALMAInterface
                 interface = ALMAInterface()
-                print('✅ ALMA Interface: Intégration OK')
+                print(' ALMA Interface: Intgration OK')
             except Exception as e:
-                print(f'❌ ALMA Interface: {e}')
+                print(f' ALMA Interface: {e}')
                 raise
             "
             ;;
@@ -79,9 +79,9 @@ jobs:
             try:
                 from launchers.cognitive_launcher import CognitiveLauncher
                 launcher = CognitiveLauncher()
-                print('✅ Cognitive Launcher: Intégration OK')
+                print(' Cognitive Launcher: Intgration OK')
             except Exception as e:
-                print(f'❌ Cognitive Launcher: {e}')
+                print(f' Cognitive Launcher: {e}')
                 raise
             "
             ;;
@@ -91,7 +91,7 @@ jobs:
       run: |
         cd eve/cognitive/
         python -c "
-        print('🔗 TEST COMMUNICATION INTER-MODULES')
+        print(' TEST COMMUNICATION INTER-MODULES')
         
         # Test communication Brain <-> Agents
         try:
@@ -105,16 +105,16 @@ jobs:
             result = brain.process_agent_request('test_cognitive_task')
             agents.execute_brain_command('cognitive_response')
             
-            print('✅ Brain-Agents Communication: OK')
+            print(' Brain-Agents Communication: OK')
         except Exception as e:
-            print(f'⚠️ Brain-Agents Communication: {e}')
+            print(f' Brain-Agents Communication: {e}')
         
         # Test Interface Integration
         try:
             from interfaces.launcher_interface import ALMAInterface
             interface = ALMAInterface()
             interface.initialize_cognitive_systems()
-            print('✅ Interface Integration: OK')
+            print(' Interface Integration: OK')
         except Exception as e:
-            print(f'⚠️ Interface Integration: {e}')
+            print(f' Interface Integration: {e}')
         "

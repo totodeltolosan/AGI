@@ -1,4 +1,4 @@
-name: 🎯 Quality Assurance
+name:  Quality Assurance
 
 on:
   push:
@@ -33,18 +33,18 @@ jobs:
         
     - name: Code Quality Assessment
       run: |
-        echo "🎯 ASSURANCE QUALITÉ COMPLÈTE AGI-EVE" > qa-report.md
+        echo "ASSURANCE QUALIT COMPLTE AGI-EVE" > qa-report.md
         echo "====================================" >> qa-report.md
         echo "" >> qa-report.md
         
-        # Assessment qualité globale
+        # Assessment qualit globale
         python -c "
         import subprocess
         import json
         import os
         from pathlib import Path
         
-        print('🎯 Assessment qualité code complet...')
+        print(' Assessment qualit code complet...')
         
         qa_metrics = {
             'style_compliance': {},
@@ -55,8 +55,8 @@ jobs:
             'performance': {}
         }
         
-        # 1. Style et conformité
-        print('📝 Analyse style et conformité...')
+        # 1. Style et conformit
+        print(' Analyse style et conformit...')
         
         # Black formatting check
         try:
@@ -95,15 +95,15 @@ jobs:
         except:
             qa_metrics['style_compliance']['flake8'] = {'status': 'ERROR', 'issues': 0}
         
-        # 2. Complexité code
-        print('\\n🔄 Analyse complexité code...')
+        # 2. Complexit code
+        print('\\n Analyse complexit code...')
         
         # Radon complexity
         try:
             result = subprocess.run(['radon', 'cc', '.', '-a', '--total-average'], 
                                   capture_output=True, text=True)
             
-            # Parser sortie radon pour extraire complexité moyenne
+            # Parser sortie radon pour extraire complexit moyenne
             lines = result.stdout.splitlines()
             avg_complexity = 0
             high_complexity_count = 0
@@ -122,13 +122,13 @@ jobs:
                 'high_complexity_functions': high_complexity_count,
                 'status': 'PASS' if avg_complexity < 5 and high_complexity_count < 10 else 'FAIL'
             }
-            print(f'- **Complexité moyenne**: {avg_complexity:.2f}')
+            print(f'- **Complexit moyenne**: {avg_complexity:.2f}')
             print(f'- **Fonctions complexes**: {high_complexity_count}')
         except:
             qa_metrics['code_complexity']['radon'] = {'status': 'ERROR'}
         
-        # 3. Analyse sécurité
-        print('\\n🛡️ Analyse sécurité...')
+        # 3. Analyse scurit
+        print('\\n Analyse scurit...')
         
         # Bandit security scan
         try:
@@ -146,7 +146,7 @@ jobs:
                     'total_issues': len(bandit_data.get('results', [])),
                     'status': 'PASS' if high_severity == 0 else 'FAIL'
                 }
-                print(f'- **Sécurité Bandit**: {high_severity} high, {medium_severity} medium')
+                print(f'- **Scurit Bandit**: {high_severity} high, {medium_severity} medium')
         except:
             qa_metrics['security_issues']['bandit'] = {'status': 'ERROR'}
         
@@ -163,21 +163,21 @@ jobs:
                     'vulnerabilities': vulnerabilities,
                     'status': 'PASS' if vulnerabilities == 0 else 'FAIL'
                 }
-                print(f'- **Vulnérabilités dépendances**: {vulnerabilities}')
+                print(f'- **Vulnrabilits dpendances**: {vulnerabilities}')
         except:
             qa_metrics['security_issues']['safety'] = {'status': 'ERROR'}
         
-        # Sauvegarder métriques QA
+        # Sauvegarder mtriques QA
         with open('qa_metrics.json', 'w') as f:
             json.dump(qa_metrics, f, indent=2)
         
-        print('\\n✅ Métriques QA sauvegardées: qa_metrics.json')
+        print('\\n Mtriques QA sauvegardes: qa_metrics.json')
         " >> qa-report.md
         
     - name: Test Coverage Analysis
       run: |
         echo "" >> qa-report.md
-        echo "## 🧪 Analyse Couverture Tests" >> qa-report.md
+        echo "## Analyse Couverture Tests" >> qa-report.md
         echo "" >> qa-report.md
         
         # Analyse couverture tests
@@ -186,24 +186,24 @@ jobs:
         import os
         from pathlib import Path
         
-        print('🧪 Analyse couverture tests...')
+        print(' Analyse couverture tests...')
         
-        # Découverte tests
+        # Dcouverte tests
         test_files = list(Path('.').rglob('test_*.py')) + list(Path('.').rglob('*_test.py'))
         test_dirs = [d for d in Path('.').rglob('tests') if d.is_dir()]
         
-        print(f'- **Fichiers tests**: {len(test_files)} détectés')
-        print(f'- **Dossiers tests**: {len(test_dirs)} détectés')
+        print(f'- **Fichiers tests**: {len(test_files)} dtects')
+        print(f'- **Dossiers tests**: {len(test_dirs)} dtects')
         
         if test_files or test_dirs:
-            # Exécuter tests avec couverture
+            # Excuter tests avec couverture
             try:
                 result = subprocess.run([
                     'pytest', '--cov=.', '--cov-report=term', '--cov-report=xml',
                     '--cov-report=html', '-v'
                 ], capture_output=True, text=True, timeout=300)
                 
-                # Parser résultats couverture
+                # Parser rsultats couverture
                 coverage_line = ''
                 for line in result.stdout.splitlines():
                     if 'TOTAL' in line and '%' in line:
@@ -224,50 +224,50 @@ jobs:
                     
                     print(f'- **Couverture totale**: {coverage_percent}%')
                     
-                    # Évaluation couverture
+                    # valuation couverture
                     if coverage_percent >= 90:
-                        print('✅ **Couverture excellente**: >90%')
+                        print(' **Couverture excellente**: >90%')
                     elif coverage_percent >= 70:
-                        print('🟢 **Couverture bonne**: 70-90%')
+                        print(' **Couverture bonne**: 70-90%')
                     elif coverage_percent >= 50:
-                        print('🟡 **Couverture moyenne**: 50-70%')
+                        print(' **Couverture moyenne**: 50-70%')
                     else:
-                        print('🔴 **Couverture insuffisante**: <50%')
+                        print(' **Couverture insuffisante**: <50%')
                 else:
-                    print('⚠️ **Couverture**: Impossible de parser résultats')
+                    print(' **Couverture**: Impossible de parser rsultats')
                 
-                # Tests passés/échoués
+                # Tests passs/chous
                 if 'failed' in result.stdout:
-                    print('🔴 **Tests**: Certains tests échouent')
+                    print(' **Tests**: Certains tests chouent')
                 elif 'passed' in result.stdout:
-                    print('✅ **Tests**: Tous les tests passent')
+                    print(' **Tests**: Tous les tests passent')
                 
             except subprocess.TimeoutExpired:
-                print('⏰ **Tests**: Timeout - Tests trop longs')
+                print(' **Tests**: Timeout - Tests trop longs')
             except Exception as e:
-                print(f'❌ **Tests**: Erreur exécution - {e}')
+                print(f' **Tests**: Erreur excution - {e}')
         else:
-            print('⚠️ **Tests**: Aucun test trouvé')
-            print('💡 **Recommandation**: Créer suite de tests complète')
+            print(' **Tests**: Aucun test trouv')
+            print(' **Recommandation**: Crer suite de tests complte')
             print('  - Tests unitaires pour chaque module')
-            print('  - Tests d\\'intégration AGI-EVE')
+            print('  - Tests d\\'intgration AGI-EVE')
             print('  - Tests performance critiques')
         " >> qa-report.md
         
     - name: Documentation Quality Check
       run: |
         echo "" >> qa-report.md
-        echo "## 📚 Qualité Documentation" >> qa-report.md
+        echo "##  Qualit Documentation" >> qa-report.md
         echo "" >> qa-report.md
         
-        # Évaluation qualité documentation
+        # valuation qualit documentation
         python -c "
         import ast
         import os
         import re
         from pathlib import Path
         
-        print('📚 Évaluation qualité documentation...')
+        print(' valuation qualit documentation...')
         
         doc_quality = {
             'readme_quality': 0,
@@ -277,7 +277,7 @@ jobs:
             'examples_provided': 0
         }
         
-        # 1. Qualité README
+        # 1. Qualit README
         readme_files = [f for f in Path('.').glob('README*') if f.is_file()]
         if readme_files:
             readme_path = readme_files[0]
@@ -286,7 +286,7 @@ jobs:
                     readme_content = f.read()
                 
                 readme_score = 0
-                # Critères qualité README
+                # Critres qualit README
                 criteria = [
                     ('Description projet', r'description|overview|about'),
                     ('Installation', r'install|setup|getting started'),
@@ -303,12 +303,12 @@ jobs:
                         readme_score += 1
                 
                 doc_quality['readme_quality'] = (readme_score / len(criteria)) * 100
-                print(f'- **README qualité**: {doc_quality[\"readme_quality\"]:.1f}% ({readme_score}/{len(criteria)} sections)')
+                print(f'- **README qualit**: {doc_quality[\"readme_quality\"]:.1f}% ({readme_score}/{len(criteria)} sections)')
                 
             except Exception as e:
-                print(f'⚠️ **README**: Erreur lecture - {e}')
+                print(f' **README**: Erreur lecture - {e}')
         else:
-            print('❌ **README**: Fichier README manquant')
+            print(' **README**: Fichier README manquant')
         
         # 2. Couverture docstrings
         total_functions = 0
@@ -345,7 +345,7 @@ jobs:
             class_doc_rate = (documented_classes / total_classes) * 100
             print(f'- **Docstrings classes**: {class_doc_rate:.1f}% ({documented_classes}/{total_classes})')
         
-        # 3. Densité commentaires
+        # 3. Densit commentaires
         total_lines = 0
         comment_lines = 0
         
@@ -368,71 +368,71 @@ jobs:
         if total_lines > 0:
             comment_density = (comment_lines / total_lines) * 100
             doc_quality['comment_density'] = comment_density
-            print(f'- **Densité commentaires**: {comment_density:.1f}% ({comment_lines}/{total_lines} lignes)')
+            print(f'- **Densit commentaires**: {comment_density:.1f}% ({comment_lines}/{total_lines} lignes)')
         
         # 4. Documentation API
         api_docs = list(Path('.').rglob('*api*.md')) + list(Path('.').rglob('docs/**/*.md'))
         doc_quality['api_documentation'] = min(len(api_docs) * 25, 100)  # Max 100% avec 4+ docs
-        print(f'- **Documentation API**: {len(api_docs)} fichiers trouvés')
+        print(f'- **Documentation API**: {len(api_docs)} fichiers trouvs')
         
         # 5. Exemples fournis
         example_files = list(Path('.').rglob('example*')) + list(Path('.').rglob('*example*'))
         doc_quality['examples_provided'] = min(len(example_files) * 20, 100)  # Max 100% avec 5+ exemples
-        print(f'- **Fichiers exemples**: {len(example_files)} trouvés')
+        print(f'- **Fichiers exemples**: {len(example_files)} trouvs')
         
         # Score global documentation
         overall_doc_score = sum(doc_quality.values()) / len(doc_quality)
-        print(f'\\n📊 **Score documentation global**: {overall_doc_score:.1f}%')
+        print(f'\\n **Score documentation global**: {overall_doc_score:.1f}%')
         
         # Recommandations documentation
-        print(f'\\n💡 **Recommandations Documentation**')
+        print(f'\\n **Recommandations Documentation**')
         if overall_doc_score >= 80:
-            print('✅ **Documentation excellente**: Maintenir qualité')
+            print(' **Documentation excellente**: Maintenir qualit')
         elif overall_doc_score >= 60:
-            print('🟡 **Documentation correcte**: Améliorations ciblées')
+            print(' **Documentation correcte**: Amliorations cibles')
             if doc_quality['docstring_coverage'] < 70:
                 print('  - Augmenter couverture docstrings')
             if doc_quality['api_documentation'] < 50:
-                print('  - Créer documentation API complète')
+                print('  - Crer documentation API complte')
         else:
-            print('🔴 **Documentation insuffisante**: Amélioration majeure requise')
-            print('  - Créer/améliorer README complet')
+            print(' **Documentation insuffisante**: Amlioration majeure requise')
+            print('  - Crer/amliorer README complet')
             print('  - Documenter toutes fonctions publiques')
             print('  - Ajouter exemples d\\'utilisation')
-            print('  - Créer documentation API')
+            print('  - Crer documentation API')
         " >> qa-report.md
         
     - name: Overall Quality Score
       run: |
         echo "" >> qa-report.md
-        echo "## 🏆 Score Qualité Global" >> qa-report.md
+        echo "##  Score Qualit Global" >> qa-report.md
         echo "" >> qa-report.md
         
-        # Calcul score qualité global
+        # Calcul score qualit global
         python -c "
         import json
         import os
         
-        print('🏆 Calcul score qualité global...')
+        print(' Calcul score qualit global...')
         
-        # Charger métriques QA si disponible
+        # Charger mtriques QA si disponible
         qa_metrics = {}
         if os.path.exists('qa_metrics.json'):
             with open('qa_metrics.json', 'r') as f:
                 qa_metrics = json.load(f)
         
-        # Système de notation pondérée
+        # Systme de notation pondre
         quality_weights = {
-            'style_compliance': 20,      # 20% - Important pour maintenabilité
+            'style_compliance': 20,      # 20% - Important pour maintenabilit
             'code_complexity': 25,       # 25% - Critique pour maintenance
             'security_issues': 30,       # 30% - Essentiel pour production
-            'test_coverage': 15,         # 15% - Important pour fiabilité
+            'test_coverage': 15,         # 15% - Important pour fiabilit
             'documentation': 10          # 10% - Utile pour adoption
         }
         
         quality_scores = {}
         
-        # 1. Score conformité style
+        # 1. Score conformit style
         style_score = 0
         style_metrics = qa_metrics.get('style_compliance', {})
         
@@ -442,14 +442,14 @@ jobs:
         
         quality_scores['style_compliance'] = min(style_score, 100)
         
-        # 2. Score complexité
+        # 2. Score complexit
         complexity_metrics = qa_metrics.get('code_complexity', {})
         radon_data = complexity_metrics.get('radon', {})
         
         if radon_data.get('status') == 'PASS':
             complexity_score = 100
         elif 'average_complexity' in radon_data:
-            # Score basé sur complexité moyenne (idéal: <3, acceptable: <5, mauvais: >10)
+            # Score bas sur complexit moyenne (idal: <3, acceptable: <5, mauvais: >10)
             avg_complexity = radon_data['average_complexity']
             if avg_complexity <= 3:
                 complexity_score = 100
@@ -460,28 +460,28 @@ jobs:
             else:
                 complexity_score = 30
         else:
-            complexity_score = 50  # Score neutre si pas de données
+            complexity_score = 50  # Score neutre si pas de donnes
         
         quality_scores['code_complexity'] = complexity_score
         
-        # 3. Score sécurité
+        # 3. Score scurit
         security_metrics = qa_metrics.get('security_issues', {})
         security_score = 100
         
         bandit_data = security_metrics.get('bandit', {})
         if bandit_data.get('high_severity', 0) > 0:
-            security_score -= bandit_data['high_severity'] * 20  # -20 par vulnérabilité haute
+            security_score -= bandit_data['high_severity'] * 20  # -20 par vulnrabilit haute
         if bandit_data.get('medium_severity', 0) > 0:
-            security_score -= bandit_data['medium_severity'] * 5   # -5 par vulnérabilité moyenne
+            security_score -= bandit_data['medium_severity'] * 5   # -5 par vulnrabilit moyenne
         
         safety_data = security_metrics.get('safety', {})
         if safety_data.get('vulnerabilities', 0) > 0:
-            security_score -= safety_data['vulnerabilities'] * 15  # -15 par vulnérabilité dépendance
+            security_score -= safety_data['vulnerabilities'] * 15  # -15 par vulnrabilit dpendance
         
         quality_scores['security_issues'] = max(security_score, 0)
         
-        # 4. Score tests (simulé - à remplacer par vraie couverture)
-        # Pour demo, on estime basé sur présence fichiers tests
+        # 4. Score tests (simul -  remplacer par vraie couverture)
+        # Pour demo, on estime bas sur prsence fichiers tests
         from pathlib import Path
         test_files = list(Path('.').rglob('test_*.py')) + list(Path('.').rglob('*_test.py'))
         py_files = list(Path('.').rglob('*.py'))
@@ -494,7 +494,7 @@ jobs:
         
         quality_scores['test_coverage'] = test_score
         
-        # 5. Score documentation (calculé précédemment, ici estimé)
+        # 5. Score documentation (calcul prcdemment, ici estim)
         readme_exists = any(Path('.').glob('README*'))
         doc_files = list(Path('.').rglob('*.md'))
         
@@ -505,55 +505,55 @@ jobs:
         
         quality_scores['documentation'] = doc_score
         
-        # Calcul score global pondéré
+        # Calcul score global pondr
         weighted_score = 0
         for category, score in quality_scores.items():
             weight = quality_weights.get(category, 0)
             weighted_score += (score * weight / 100)
         
-        # Affichage détaillé
-        print('### 📊 Scores par Catégorie')
+        # Affichage dtaill
+        print('###  Scores par Catgorie')
         for category, score in quality_scores.items():
             weight = quality_weights[category]
             category_name = category.replace('_', ' ').title()
             
             if score >= 90:
-                status = '✅ EXCELLENT'
+                status = ' EXCELLENT'
             elif score >= 70:
-                status = '🟢 BON'
+                status = ' BON'
             elif score >= 50:
-                status = '🟡 MOYEN'
+                status = ' MOYEN'
             else:
-                status = '🔴 FAIBLE'
+                status = ' FAIBLE'
             
             print(f'- **{category_name}**: {score:.1f}% (Poids: {weight}%) - {status}')
         
-        print(f'\\n🎯 **SCORE QUALITÉ GLOBAL**: {weighted_score:.1f}%')
+        print(f'\\n **SCORE QUALIT GLOBAL**: {weighted_score:.1f}%')
         
-        # Classification qualité
+        # Classification qualit
         if weighted_score >= 90:
             quality_grade = 'A+ (EXCELLENCE)'
-            quality_icon = '🏆'
+            quality_icon = ''
         elif weighted_score >= 80:
-            quality_grade = 'A (TRÈS BON)'
-            quality_icon = '🥇'
+            quality_grade = 'A (TRS BON)'
+            quality_icon = ''
         elif weighted_score >= 70:
             quality_grade = 'B (BON)'
-            quality_icon = '🥈'
+            quality_icon = ''
         elif weighted_score >= 60:
             quality_grade = 'C (ACCEPTABLE)'
-            quality_icon = '🥉'
+            quality_icon = ''
         elif weighted_score >= 50:
             quality_grade = 'D (INSUFFISANT)'
-            quality_icon = '⚠️'
+            quality_icon = ''
         else:
             quality_grade = 'F (CRITIQUE)'
-            quality_icon = '🚨'
+            quality_icon = ''
         
-        print(f'{quality_icon} **GRADE QUALITÉ**: {quality_grade}')
+        print(f'{quality_icon} **GRADE QUALIT**: {quality_grade}')
         
-        # Plan d'amélioration
-        print(f'\\n🎯 **Plan d\\'Amélioration Prioritaire**')
+        # Plan d'amlioration
+        print(f'\\n **Plan d\\'Amlioration Prioritaire**')
         
         # Identifier points faibles
         weak_areas = [(cat, score) for cat, score in quality_scores.items() if score < 70]
@@ -565,12 +565,12 @@ jobs:
                 category_name = category.replace('_', ' ').title()
                 print(f'{i}. **{category_name}** ({score:.1f}%) - Poids: {quality_weights[category]}%')
         else:
-            print('✅ **Excellente qualité** - Maintenir standards actuels')
+            print(' **Excellente qualit** - Maintenir standards actuels')
         
-        # Objectifs chiffrés
+        # Objectifs chiffrs
         if weighted_score < 80:
             target_score = min(weighted_score + 20, 90)
-            print(f'\\n🎯 **Objectif**: Atteindre {target_score:.0f}% dans les 4 semaines')
+            print(f'\\n **Objectif**: Atteindre {target_score:.0f}% dans les 4 semaines')
         
         # Sauvegarder score final
         final_results = {
@@ -583,12 +583,12 @@ jobs:
         with open('quality_assessment.json', 'w') as f:
             json.dump(final_results, f, indent=2)
         
-        print('\\n✅ Assessment qualité sauvegardé: quality_assessment.json')
+        print('\\n Assessment qualit sauvegard: quality_assessment.json')
         " >> qa-report.md
         
     - name: Create Quality Issues
       run: |
-        # Créer issues pour problèmes qualité critiques
+        # Crer issues pour problmes qualit critiques
         if [ -f "quality_assessment.json" ]; then
           python -c "
           import json
@@ -600,12 +600,12 @@ jobs:
           
           if overall_score < 60:
               print('Creating critical quality issue...')
-              exit(1)  # Déclencher création issue
+              exit(1)  # Dclencher cration issue
           "
           
           if [ $? -eq 1 ]; then
             gh issue create \
-              --title "🚨 QUALITÉ CRITIQUE - Score: $(python -c "import json; print(json.load(open('quality_assessment.json'))['overall_score'])" | head -1)%" \
+              --title " QUALIT CRITIQUE - Score: $(python -c "import json; print(json.load(open('quality_assessment.json'))['overall_score'])" | head -1)%" \
               --body-file qa-report.md \
               --label "quality,critical,improvement" \
               --assignee "@me" || echo "Issue creation failed"

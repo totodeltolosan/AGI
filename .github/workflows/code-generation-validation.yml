@@ -1,4 +1,4 @@
-name: 🧬 Code Generation Validation
+name:  Code Generation Validation
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
         
     - name: Test Code Generation
       run: |
-        echo "🧬 CODE GENERATION VALIDATION"
+        echo " CODE GENERATION VALIDATION"
         echo "============================"
         
         # Test data for code generation
@@ -36,7 +36,7 @@ jobs:
         
         # Test the function
         result = process_data('test_data', 'validation')
-        print(f'✅ Code generation test: {result}')
+        print(f' Code generation test: {result}')
         "
         
-        echo "✅ Code generation validation completed"
+        echo "Code generation validation completed"

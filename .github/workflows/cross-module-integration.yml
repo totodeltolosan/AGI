@@ -1,4 +1,4 @@
-name: 🔗 Cross-Module Integration Testing
+name:  Cross-Module Integration Testing
 
 on:
   push:
@@ -44,23 +44,23 @@ jobs:
         # Integration testing
         pip install integration-testing cross-module-testing
         
-    - name: AGI Core ↔ EVE Integration Test
+    - name: AGI Core  EVE Integration Test
       run: |
-        echo "🔗 TEST INTÉGRATION AGI CORE ↔ EVE" > integration-report.md
+        echo " TEST INTGRATION AGI CORE  EVE" > integration-report.md
         echo "===================================" >> integration-report.md
         echo "" >> integration-report.md
         
-        # Test intégration fondamentale
+        # Test intgration fondamentale
         python -c "
         import sys
         import os
         
-        print('🔗 Test intégration fondamentale AGI ↔ EVE...')
+        print(' Test intgration fondamentale AGI  EVE...')
         
-        # Test imports croisés
+        # Test imports croiss
         integration_tests = []
         
-        # Test 1: AGI Core → EVE
+        # Test 1: AGI Core  EVE
         try:
             sys.path.append('core')
             sys.path.append('eve')
@@ -69,78 +69,78 @@ jobs:
             from pathlib import Path
             
             if Path('core').exists() and Path('eve').exists():
-                print('✅ Structure: AGI Core et EVE détectés')
-                integration_tests.append(('Structure', True, 'Modules principaux présents'))
+                print(' Structure: AGI Core et EVE dtects')
+                integration_tests.append(('Structure', True, 'Modules principaux prsents'))
             else:
-                print('❌ Structure: Modules manquants')
+                print(' Structure: Modules manquants')
                 integration_tests.append(('Structure', False, 'Modules AGI/EVE manquants'))
             
             # Test 2: Communication inter-modules
             if Path('core/compliance').exists():
-                print('✅ Compliance: Module audit disponible')
+                print(' Compliance: Module audit disponible')
                 integration_tests.append(('Compliance', True, 'Audit constitutionnel disponible'))
             else:
-                print('⚠️ Compliance: Module audit non trouvé')
+                print(' Compliance: Module audit non trouv')
                 integration_tests.append(('Compliance', False, 'Module audit manquant'))
             
-            # Test 3: EVE modules présents
+            # Test 3: EVE modules prsents
             eve_modules = ['cognitive', 'simulation', 'development', 'interfaces']
             eve_present = []
             
             for module in eve_modules:
                 if Path(f'eve/{module}').exists():
                     eve_present.append(module)
-                    print(f'✅ EVE {module}: Présent')
+                    print(f' EVE {module}: Prsent')
                 else:
-                    print(f'⚠️ EVE {module}: Non trouvé')
+                    print(f' EVE {module}: Non trouv')
             
             eve_integration_score = len(eve_present) / len(eve_modules) * 100
-            integration_tests.append(('EVE Modules', eve_integration_score > 50, f'{len(eve_present)}/{len(eve_modules)} modules présents'))
+            integration_tests.append(('EVE Modules', eve_integration_score > 50, f'{len(eve_present)}/{len(eve_modules)} modules prsents'))
             
-            print(f'Score intégration EVE: {eve_integration_score:.1f}%')
+            print(f'Score intgration EVE: {eve_integration_score:.1f}%')
             
         except Exception as e:
-            print(f'❌ Erreur intégration: {e}')
+            print(f' Erreur intgration: {e}')
             integration_tests.append(('Integration Error', False, str(e)))
         
-        # Résumé tests intégration
+        # Rsum tests intgration
         passed_tests = sum(1 for test in integration_tests if test[1])
         total_tests = len(integration_tests)
         success_rate = (passed_tests / max(total_tests, 1)) * 100
         
-        print(f'\\n📊 Résultats intégration: {passed_tests}/{total_tests} tests passés ({success_rate:.1f}%)')
+        print(f'\\n Rsultats intgration: {passed_tests}/{total_tests} tests passs ({success_rate:.1f}%)')
         
         for test_name, passed, message in integration_tests:
-            status = '✅' if passed else '❌'
+            status = '' if passed else ''
             print(f'{status} **{test_name}**: {message}')
         
         if success_rate >= 80:
-            print('\\n✅ **INTÉGRATION**: Excellente compatibilité AGI-EVE')
+            print('\\n **INTGRATION**: Excellente compatibilit AGI-EVE')
         elif success_rate >= 60:
-            print('\\n🟡 **INTÉGRATION**: Compatibilité partielle - Améliorations possibles')
+            print('\\n **INTGRATION**: Compatibilit partielle - Amliorations possibles')
         else:
-            print('\\n🔴 **INTÉGRATION**: Problèmes de compatibilité détectés')
+            print('\\n **INTGRATION**: Problmes de compatibilit dtects')
         " >> integration-report.md
         
-    - name: EVE Cognitive ↔ Simulation Integration
+    - name: EVE Cognitive  Simulation Integration
       run: |
         echo "" >> integration-report.md
-        echo "## 🧠↔🌌 Intégration EVE Cognitive ↔ Simulation" >> integration-report.md
+        echo "##  Intgration EVE Cognitive  Simulation" >> integration-report.md
         echo "" >> integration-report.md
         
-        # Test intégration Cognitive-Simulation
+        # Test intgration Cognitive-Simulation
         python -c "
         import sys
         from pathlib import Path
         
-        print('🧠↔🌌 Test intégration Cognitive-Simulation...')
+        print(' Test intgration Cognitive-Simulation...')
         
         cognitive_sim_tests = []
         
-        # Test communication Brain → Universe
+        # Test communication Brain  Universe
         try:
             if Path('eve/cognitive').exists() and Path('eve/simulation').exists():
-                print('✅ Modules: Cognitive et Simulation détectés')
+                print(' Modules: Cognitive et Simulation dtects')
                 
                 # Test interface cognitive-simulation
                 class MockBrain:
@@ -167,57 +167,57 @@ jobs:
                 response = universe.process_cognitive_request(request)
                 
                 if response['status'] == 'processed':
-                    print('✅ Communication: Brain → Universe OK')
+                    print(' Communication: Brain  Universe OK')
                     cognitive_sim_tests.append(('Brain-Universe', True, 'Communication bidirectionnelle'))
                 else:
-                    print('❌ Communication: Brain → Universe échec')
-                    cognitive_sim_tests.append(('Brain-Universe', False, 'Communication défaillante'))
+                    print(' Communication: Brain  Universe chec')
+                    cognitive_sim_tests.append(('Brain-Universe', False, 'Communication dfaillante'))
                 
-                # Test données partagées
+                # Test donnes partages
                 shared_data = {
                     'cognitive_influence': brain.cognitive_state['awareness'],
                     'simulation_complexity': len(str(universe.universe_state))
                 }
                 
                 if shared_data['cognitive_influence'] > 0.5:
-                    print('✅ Données: Influence cognitive significative')
-                    cognitive_sim_tests.append(('Data Sharing', True, 'Échange données OK'))
+                    print(' Donnes: Influence cognitive significative')
+                    cognitive_sim_tests.append(('Data Sharing', True, 'change donnes OK'))
                 else:
-                    print('⚠️ Données: Influence cognitive faible')
-                    cognitive_sim_tests.append(('Data Sharing', False, 'Échange données limité'))
+                    print(' Donnes: Influence cognitive faible')
+                    cognitive_sim_tests.append(('Data Sharing', False, 'change donnes limit'))
             
             else:
-                print('❌ Modules: Cognitive ou Simulation manquant')
-                cognitive_sim_tests.append(('Modules', False, 'Modules non détectés'))
+                print(' Modules: Cognitive ou Simulation manquant')
+                cognitive_sim_tests.append(('Modules', False, 'Modules non dtects'))
         
         except Exception as e:
-            print(f'❌ Erreur Cognitive-Simulation: {e}')
+            print(f' Erreur Cognitive-Simulation: {e}')
             cognitive_sim_tests.append(('Integration Error', False, str(e)))
         
-        # Résultats Cognitive-Simulation
+        # Rsultats Cognitive-Simulation
         passed = sum(1 for test in cognitive_sim_tests if test[1])
         total = len(cognitive_sim_tests)
         
         for test_name, success, message in cognitive_sim_tests:
-            status = '✅' if success else '❌'
+            status = '' if success else ''
             print(f'{status} **{test_name}**: {message}')
         
-        print(f'\\n📊 **Cognitive-Simulation**: {passed}/{total} tests passés')
+        print(f'\\n **Cognitive-Simulation**: {passed}/{total} tests passs')
         " >> integration-report.md
         
-    - name: EVE Development ↔ All Modules Integration
+    - name: EVE Development  All Modules Integration
       run: |
         echo "" >> integration-report.md
-        echo "## 🛠️↔🌍 Intégration EVE Development ↔ Tous Modules" >> integration-report.md
+        echo "##  Intgration EVE Development  Tous Modules" >> integration-report.md
         echo "" >> integration-report.md
         
-        # Test intégration Development avec tous modules
+        # Test intgration Development avec tous modules
         python -c "
         import sys
         import os
         from pathlib import Path
         
-        print('🛠️ Test intégration Development avec tous modules...')
+        print(' Test intgration Development avec tous modules...')
         
         dev_integration_tests = []
         
@@ -240,14 +240,14 @@ jobs:
                             except:
                                 pass
                         
-                        print(f'✅ Monitoring {module}: {len(py_files)} fichiers, {total_lines} lignes')
+                        print(f' Monitoring {module}: {len(py_files)} fichiers, {total_lines} lignes')
             
             monitoring_coverage = len(monitored_modules) / len(modules_to_monitor) * 100
-            dev_integration_tests.append(('Monitoring', monitoring_coverage > 75, f'{len(monitored_modules)}/{len(modules_to_monitor)} modules monitorés'))
+            dev_integration_tests.append(('Monitoring', monitoring_coverage > 75, f'{len(monitored_modules)}/{len(modules_to_monitor)} modules monitors'))
             
             # Test analyse de code inter-modules
             if Path('eve/development').exists():
-                print('✅ Development: Module détecté')
+                print(' Development: Module dtect')
                 
                 # Test GAIA analysis sur tous modules
                 class MockGAIA:
@@ -264,51 +264,51 @@ jobs:
                     analysis_results.append((module, result['status'] == 'analyzed'))
                 
                 analyzed_count = sum(1 for _, analyzed in analysis_results if analyzed)
-                dev_integration_tests.append(('GAIA Analysis', analyzed_count > 0, f'{analyzed_count} modules analysés'))
+                dev_integration_tests.append(('GAIA Analysis', analyzed_count > 0, f'{analyzed_count} modules analyss'))
                 
             # Test Git integration avec tous modules
             git_status = os.system('git status >/dev/null 2>&1') == 0
             if git_status:
-                print('✅ Git: Repository détecté')
+                print(' Git: Repository dtect')
                 
                 # Test tracking changes tous modules
                 changed_files = []
                 for module in monitored_modules:
-                    # Simuler détection changements
+                    # Simuler dtection changements
                     if Path(module).exists():
                         changed_files.append(module)
                 
                 dev_integration_tests.append(('Git Integration', git_status, 'Repository Git fonctionnel'))
             
         except Exception as e:
-            print(f'❌ Erreur Development Integration: {e}')
+            print(f' Erreur Development Integration: {e}')
             dev_integration_tests.append(('Integration Error', False, str(e)))
         
-        # Résultats Development Integration
+        # Rsultats Development Integration
         passed = sum(1 for test in dev_integration_tests if test[1])
         total = len(dev_integration_tests)
         
         for test_name, success, message in dev_integration_tests:
-            status = '✅' if success else '❌'
+            status = '' if success else ''
             print(f'{status} **{test_name}**: {message}')
         
-        print(f'\\n📊 **Development Integration**: {passed}/{total} tests passés')
+        print(f'\\n **Development Integration**: {passed}/{total} tests passs')
         " >> integration-report.md
         
     - name: Full System Integration Test
       run: |
         echo "" >> integration-report.md
-        echo "## 🌍 Test Intégration Système Complet" >> integration-report.md
+        echo "##  Test Intgration Systme Complet" >> integration-report.md
         echo "" >> integration-report.md
         
-        # Test d'intégration système complet
+        # Test d'intgration systme complet
         python -c "
         import time
         import sys
         import os
         from pathlib import Path
         
-        print('🌍 Test intégration système AGI-EVE complet...')
+        print(' Test intgration systme AGI-EVE complet...')
         
         start_time = time.time()
         
@@ -317,11 +317,11 @@ jobs:
             ('Initialisation AGI Core', lambda: Path('core').exists()),
             ('Chargement Constitution', lambda: Path('iaGOD.json').exists() or True),  # Optionnel
             ('Activation EVE Cognitive', lambda: Path('eve/cognitive').exists()),
-            ('Démarrage Simulation', lambda: Path('eve/simulation').exists()),
+            ('Dmarrage Simulation', lambda: Path('eve/simulation').exists()),
             ('Lancement Development Tools', lambda: Path('eve/development').exists()),
             ('Interface Utilisateur', lambda: Path('eve/interfaces').exists()),
             ('Audit Constitutionnel', lambda: any(Path('.').glob('conformite_*.csv'))),
-            ('Monitoring Système', lambda: True),  # Toujours possible
+            ('Monitoring Systme', lambda: True),  # Toujours possible
             ('Documentation', lambda: Path('README.md').exists())
         ]
         
@@ -332,52 +332,52 @@ jobs:
             try:
                 if step_function():
                     executed_steps.append(step_name)
-                    print(f'✅ {step_name}: OK')
+                    print(f' {step_name}: OK')
                 else:
                     failed_steps.append(step_name)
-                    print(f'❌ {step_name}: Échec')
+                    print(f' {step_name}: chec')
             except Exception as e:
                 failed_steps.append(f'{step_name} (Error: {e})')
-                print(f'❌ {step_name}: Erreur - {e}')
+                print(f' {step_name}: Erreur - {e}')
         
         end_time = time.time()
         execution_time = end_time - start_time
         
-        # Résultats intégration complète
+        # Rsultats intgration complte
         success_rate = len(executed_steps) / len(workflow_steps) * 100
         
-        print(f'\\n🎯 **Résultats Intégration Complète**')
-        print(f'- **Étapes réussies**: {len(executed_steps)}/{len(workflow_steps)}')
-        print(f'- **Taux de succès**: {success_rate:.1f}%')
-        print(f'- **Temps exécution**: {execution_time:.2f}s')
+        print(f'\\n **Rsultats Intgration Complte**')
+        print(f'- **tapes russies**: {len(executed_steps)}/{len(workflow_steps)}')
+        print(f'- **Taux de succs**: {success_rate:.1f}%')
+        print(f'- **Temps excution**: {execution_time:.2f}s')
         
         if failed_steps:
-            print(f'\\n❌ **Étapes échouées**:')
+            print(f'\\n **tapes choues**:')
             for step in failed_steps:
                 print(f'  - {step}')
         
         # Verdict final
-        print(f'\\n⚖️ **Verdict Intégration Système**')
+        print(f'\\n **Verdict Intgration Systme**')
         if success_rate >= 90:
-            print('✅ **EXCELLENT**: Système parfaitement intégré')
+            print(' **EXCELLENT**: Systme parfaitement intgr')
         elif success_rate >= 75:
-            print('🟢 **BON**: Intégration solide avec améliorations mineures')
+            print(' **BON**: Intgration solide avec amliorations mineures')
         elif success_rate >= 60:
-            print('🟡 **MOYEN**: Intégration partielle - Corrections nécessaires')
+            print(' **MOYEN**: Intgration partielle - Corrections ncessaires')
         else:
-            print('🔴 **CRITIQUE**: Problèmes majeurs d\\'intégration')
+            print(' **CRITIQUE**: Problmes majeurs d\\'intgration')
         
         # Recommandations
-        print(f'\\n💡 **Recommandations**:')
+        print(f'\\n **Recommandations**:')
         if len(failed_steps) == 0:
-            print('- Maintenir l\\'excellence de l\\'intégration')
+            print('- Maintenir l\\'excellence de l\\'intgration')
             print('- Surveiller les performances en continu')
         elif len(failed_steps) <= 2:
-            print('- Corriger les étapes échouées prioritaires')
-            print('- Tests d\\'intégration plus fréquents')
+            print('- Corriger les tapes choues prioritaires')
+            print('- Tests d\\'intgration plus frquents')
         else:
             print('- Audit complet de l\\'architecture')
-            print('- Refactoring des modules problématiques')
+            print('- Refactoring des modules problmatiques')
         " >> integration-report.md
         
     - name: Upload Integration Reports

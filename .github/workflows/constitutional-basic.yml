@@ -1,4 +1,4 @@
-name: 🏛️ Constitutional Basic
+name:  Constitutional Basic
 
 on:
   push:
@@ -22,11 +22,11 @@ jobs:
         
     - name: Constitutional compliance check
       run: |
-        echo "🏛️ CONSTITUTIONAL COMPLIANCE CHECK"
+        echo "CONSTITUTIONAL COMPLIANCE CHECK"
         echo "=================================="
         
-        # Générer rapport conformité basique
-        echo "Fichier,Lignes,Statut,Excès" > conformite_$(date +%Y%m%d).csv
+        # Gnrer rapport conformit basique
+        echo "Fichier,Lignes,Statut,Excs" > conformite_$(date +%Y%m%d).csv
         
         violations=0
         conformes=0
@@ -47,27 +47,27 @@ jobs:
           fi
         done
         
-        # Afficher résumé
+        # Afficher rsum
         total_files=$(wc -l < conformite_$(date +%Y%m%d).csv | awk '{print $1-1}')
         violations=$(grep -c VIOLATION conformite_$(date +%Y%m%d).csv || echo "0")
         conformes=$(grep -c CONFORME conformite_$(date +%Y%m%d).csv || echo "0")
         
-        echo "📊 RÉSUMÉ CONSTITUTIONAL:"
-        echo "   Total fichiers: $total_files"
-        echo "   Conformes: $conformes"
-        echo "   Violations: $violations"
+        echo "RSUM CONSTITUTIONAL:"
+        echo "  Total fichiers: $total_files"
+        echo "  Conformes: $conformes"
+        echo "  Violations: $violations"
         
         if [ $violations -gt 0 ]; then
           compliance_rate=$(( (conformes * 100) / total_files ))
-          echo "   Taux conformité: $compliance_rate%"
+          echo "  Taux conformit: $compliance_rate%"
           
           if [ $compliance_rate -lt 70 ]; then
-            echo "🚨 CONSTITUTIONAL ALERT: Conformité critique ($compliance_rate%)"
+            echo "CONSTITUTIONAL ALERT: Conformit critique ($compliance_rate%)"
           else
-            echo "⚠️ Constitutional warning: Conformité à améliorer ($compliance_rate%)"
+            echo "Constitutional warning: Conformit  amliorer ($compliance_rate%)"
           fi
         else
-          echo "✅ CONSTITUTIONAL EXCELLENCE: 100% conformité"
+          echo "CONSTITUTIONAL EXCELLENCE: 100% conformit"
         fi
         
     - name: Upload constitutional report

@@ -1,4 +1,4 @@
-name: 🌿 Git Integration Advanced
+name:  Git Integration Advanced
 
 on:
   push:
@@ -18,12 +18,12 @@ jobs:
         
     - name: Git Repository Deep Analysis
       run: |
-        echo "🌿 ANALYSE AVANCÉE REPOSITORY GIT" > git-analysis.md
+        echo "ANALYSE AVANCE REPOSITORY GIT" > git-analysis.md
         echo "==================================" >> git-analysis.md
         echo "" >> git-analysis.md
         
-        # Statistiques générales
-        echo "## 📊 Statistiques Repository" >> git-analysis.md
+        # Statistiques gnrales
+        echo "## Statistiques Repository" >> git-analysis.md
         
         total_commits=$(git rev-list --all --count)
         total_branches=$(git branch -a | wc -l)
@@ -33,27 +33,27 @@ jobs:
         echo "- **Total commits**: $total_commits" >> git-analysis.md
         echo "- **Branches**: $total_branches" >> git-analysis.md
         echo "- **Tags**: $total_tags" >> git-analysis.md
-        echo "- **Âge repository**: $repo_age_days jours" >> git-analysis.md
+        echo "- **ge repository**: $repo_age_days jours" >> git-analysis.md
         echo "" >> git-analysis.md
         
         # Analyse des contributeurs
-        echo "## 👥 Analyse Contributeurs" >> git-analysis.md
+        echo "##  Analyse Contributeurs" >> git-analysis.md
         echo "\`\`\`" >> git-analysis.md
         git shortlog -sn | head -10 >> git-analysis.md
         echo "\`\`\`" >> git-analysis.md
         echo "" >> git-analysis.md
         
-        # Activité récente
-        echo "## 📈 Activité Récente" >> git-analysis.md
+        # Activit rcente
+        echo "## Activit Rcente" >> git-analysis.md
         commits_last_week=$(git log --since="1 week ago" --oneline | wc -l)
         commits_last_month=$(git log --since="1 month ago" --oneline | wc -l)
         
-        echo "- **Commits dernière semaine**: $commits_last_week" >> git-analysis.md
+        echo "- **Commits dernire semaine**: $commits_last_week" >> git-analysis.md
         echo "- **Commits dernier mois**: $commits_last_month" >> git-analysis.md
         echo "" >> git-analysis.md
         
-        # Analyse des fichiers les plus modifiés
-        echo "## 📝 Fichiers Les Plus Modifiés" >> git-analysis.md
+        # Analyse des fichiers les plus modifis
+        echo "## Fichiers Les Plus Modifis" >> git-analysis.md
         echo "\`\`\`" >> git-analysis.md
         git log --pretty=format: --name-only | sort | uniq -c | sort -rg | head -10 >> git-analysis.md
         echo "\`\`\`" >> git-analysis.md
@@ -61,12 +61,12 @@ jobs:
     - name: Branch Health Check
       run: |
         echo "" >> git-analysis.md
-        echo "## 🌿 Santé des Branches" >> git-analysis.md
+        echo "## Sant des Branches" >> git-analysis.md
         
         current_branch=$(git branch --show-current)
         echo "- **Branche courante**: $current_branch" >> git-analysis.md
         
-        # Vérifier si on est en avance/retard sur origin
+        # Vrifier si on est en avance/retard sur origin
         if git remote get-url origin >/dev/null 2>&1; then
           ahead=$(git rev-list --count HEAD ^origin/$current_branch 2>/dev/null || echo "0")
           behind=$(git rev-list --count origin/$current_branch ^HEAD 2>/dev/null || echo "0")
@@ -78,17 +78,17 @@ jobs:
             echo "- **Commits en retard**: $behind" >> git-analysis.md
           fi
           if [ $ahead -eq 0 ] && [ $behind -eq 0 ]; then
-            echo "- **Synchronisation**: ✅ À jour avec origin" >> git-analysis.md
+            echo "- **Synchronisation**:   jour avec origin" >> git-analysis.md
           fi
         fi
         
-        # État du working directory
+        # tat du working directory
         if git diff --quiet && git diff --cached --quiet; then
-          echo "- **Working Directory**: ✅ Propre" >> git-analysis.md
+          echo "- **Working Directory**:  Propre" >> git-analysis.md
         else
-          echo "- **Working Directory**: ⚠️ Modifications non commitées" >> git-analysis.md
+          echo "- **Working Directory**:  Modifications non commites" >> git-analysis.md
           echo "" >> git-analysis.md
-          echo "### Fichiers modifiés:" >> git-analysis.md
+          echo "### Fichiers modifis:" >> git-analysis.md
           echo "\`\`\`" >> git-analysis.md
           git status --porcelain >> git-analysis.md
           echo "\`\`\`" >> git-analysis.md
@@ -97,16 +97,16 @@ jobs:
     - name: Git Workflow Optimization
       run: |
         echo "" >> git-analysis.md
-        echo "## ⚡ Optimisations Git" >> git-analysis.md
+        echo "## Optimisations Git" >> git-analysis.md
         
-        # Vérifier configuration Git
+        # Vrifier configuration Git
         echo "### Configuration Git" >> git-analysis.md
-        user_name=$(git config user.name || echo "Non configuré")
-        user_email=$(git config user.email || echo "Non configuré")
+        user_name=$(git config user.name || echo "Non configur")
+        user_email=$(git config user.email || echo "Non configur")
         echo "- **Utilisateur**: $user_name" >> git-analysis.md
         echo "- **Email**: $user_email" >> git-analysis.md
         
-        # Vérifier hooks Git
+        # Vrifier hooks Git
         if [ -d ".git/hooks" ]; then
           hooks_count=$(find .git/hooks -name "*.sh" -o -name "pre-*" -o -name "post-*" | wc -l)
           echo "- **Hooks actifs**: $hooks_count" >> git-analysis.md
@@ -114,56 +114,56 @@ jobs:
         
         # Recommandations
         echo "" >> git-analysis.md
-        echo "### 💡 Recommandations" >> git-analysis.md
+        echo "###  Recommandations" >> git-analysis.md
         
-        # Vérifier taille des commits
+        # Vrifier taille des commits
         large_commits=$(git log --oneline --since="1 month ago" | wc -l)
         if [ $large_commits -gt 100 ]; then
-          echo "- ⚠️ **Commits fréquents**: $large_commits commits ce mois (considérer squash)" >> git-analysis.md
+          echo "-  **Commits frquents**: $large_commits commits ce mois (considrer squash)" >> git-analysis.md
         fi
         
-        # Vérifier taille repository
+        # Vrifier taille repository
         repo_size=$(du -sh .git | cut -f1)
-        echo "- 📦 **Taille .git**: $repo_size" >> git-analysis.md
+        echo "-  **Taille .git**: $repo_size" >> git-analysis.md
         
-        # Vérifier fichiers volumineux
+        # Vrifier fichiers volumineux
         large_files=$(find . -size +10M -not -path "./.git/*" 2>/dev/null | wc -l)
         if [ $large_files -gt 0 ]; then
-          echo "- ⚠️ **Fichiers volumineux**: $large_files fichiers >10MB détectés" >> git-analysis.md
+          echo "-  **Fichiers volumineux**: $large_files fichiers >10MB dtects" >> git-analysis.md
         fi
         
     - name: Automated Git Maintenance
       run: |
         echo "" >> git-analysis.md
-        echo "## 🔧 Maintenance Automatique" >> git-analysis.md
+        echo "## Maintenance Automatique" >> git-analysis.md
         
         # Git garbage collection
-        echo "Exécution git gc..."
+        echo "Excution git gc..."
         git gc --auto
-        echo "- ✅ **Garbage collection**: Exécutée" >> git-analysis.md
+        echo "-  **Garbage collection**: Excute" >> git-analysis.md
         
-        # Vérifier intégrité
+        # Vrifier intgrit
         if git fsck --quiet; then
-          echo "- ✅ **Intégrité repository**: OK" >> git-analysis.md
+          echo "-  **Intgrit repository**: OK" >> git-analysis.md
         else
-          echo "- ❌ **Intégrité repository**: Problèmes détectés" >> git-analysis.md
+          echo "-  **Intgrit repository**: Problmes dtects" >> git-analysis.md
         fi
         
-        # Nettoyer références
+        # Nettoyer rfrences
         git remote prune origin 2>/dev/null || true
-        echo "- ✅ **Nettoyage références**: Effectué" >> git-analysis.md
+        echo "-  **Nettoyage rfrences**: Effectu" >> git-analysis.md
         
     - name: Git Integration with EVE Development
       run: |
         echo "" >> git-analysis.md
-        echo "## 🔗 Intégration EVE Development" >> git-analysis.md
+        echo "##  Intgration EVE Development" >> git-analysis.md
         
-        # Vérifier intégration avec Test Eve
+        # Vrifier intgration avec Test Eve
         if [ -d "eve/development/git_integration" ]; then
           git_tools=$(find eve/development/git_integration/ -name "*.py" | wc -l)
           echo "- **Outils Git EVE**: $git_tools modules" >> git-analysis.md
           
-          # Test intégration
+          # Test intgration
           cd eve/development/git_integration/ 2>/dev/null || cd .
           python -c "
           import os
@@ -174,26 +174,26 @@ jobs:
               sys.path.append('.')
               
               # Simuler import git tools
-              print('- ✅ **Git Tools EVE**: Modules accessibles')
+              print('-  **Git Tools EVE**: Modules accessibles')
               
               # Test monitoring Git
               if os.path.exists('git_monitor.py'):
-                  print('- ✅ **Git Monitor**: Disponible')
+                  print('-  **Git Monitor**: Disponible')
               else:
-                  print('- ⚠️ **Git Monitor**: En développement')
+                  print('-  **Git Monitor**: En dveloppement')
                   
               # Test automation Git
               if os.path.exists('git_automation.py'):
-                  print('- ✅ **Git Automation**: Disponible')
+                  print('-  **Git Automation**: Disponible')
               else:
-                  print('- ⚠️ **Git Automation**: En développement')
+                  print('-  **Git Automation**: En dveloppement')
                   
           except Exception as e:
-              print(f'- ⚠️ **Intégration EVE**: {e}')
+              print(f'-  **Intgration EVE**: {e}')
           " >> ../../../git-analysis.md
           
         else
-          echo "- ⚠️ **EVE Git Integration**: Module non trouvé" >> git-analysis.md
+          echo "-  **EVE Git Integration**: Module non trouv" >> git-analysis.md
         fi
         
     - name: Upload Git Analysis

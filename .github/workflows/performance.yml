@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, develop ]
   schedule:
-    - cron: '0 4 * * *'  # Quotidien à 4h
+    - cron: '0 4 * * *'  # Quotidien  4h
 
 jobs:
   performance-tests:

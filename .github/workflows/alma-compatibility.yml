@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🔄 ALMA Legacy Compatibility Check
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  ALMA Legacy Compatibility Check
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -17,24 +17,24 @@ jobs:
     
     - name: Check ALMA Migration Status
       run: |
-        echo "🔄 VÉRIFICATION COMPATIBILITÉ ALMA"
+        echo "VRIFICATION COMPATIBILIT ALMA"
         
-        # Vérifier si l'ancien cerveau.py existe
+        # Vrifier si l'ancien cerveau.py existe
         if [ -f "eve/cognitive/brain/cerveau_legacy.py" ]; then
           lines=$(wc -l < "eve/cognitive/brain/cerveau_legacy.py")
-          echo "⚠️ cerveau_legacy.py détecté: $lines lignes"
+          echo "cerveau_legacy.py dtect: $lines lignes"
           
           if [ $lines -gt 4000 ]; then
-            echo "🚨 URGENT: Fichier legacy trop volumineux ($lines lignes)"
+            echo "URGENT: Fichier legacy trop volumineux ($lines lignes)"
             echo "Action requise: Split en modules conformes (<200 lignes)"
           fi
         fi
         
-        # Vérifier interfaces Tkinter ALMA
+        # Vrifier interfaces Tkinter ALMA
         if find eve/cognitive/ -name "*.py" -exec grep -l "tkinter" {} \; | head -1; then
-          echo "✅ Interfaces Tkinter ALMA détectées"
+          echo "Interfaces Tkinter ALMA dtectes"
         else
-          echo "⚠️ Interfaces ALMA manquantes - Migration incomplète"
+          echo "Interfaces ALMA manquantes - Migration incomplte"
         fi
         
     - name: Test ALMA Interfaces
@@ -49,8 +49,8 @@ jobs:
         try:
             root = tk.Tk()
             root.withdraw()
-            print('✅ Tkinter Interface: Fonctionnel')
+            print(' Tkinter Interface: Fonctionnel')
             root.destroy()
         except Exception as e:
-            print(f'❌ Tkinter Error: {e}')
+            print(f' Tkinter Error: {e}')
         "

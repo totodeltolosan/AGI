@@ -1,0 +1,33 @@
+name: Auto Documentation
+on:
+  push:
+    branches: [ main ]
+    paths: ['eve/**/*.py', 'docs/**']
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install sphinx sphinx-rtd-theme
+        
+    - name: Build documentation
+      run: |
+        mkdir -p docs
+        sphinx-quickstart -q -p "AGI-EVE" -a "Toni" --ext-autodoc docs/
+        sphinx-build -b html docs/ docs/_build/
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_build

@@ -1,4 +1,4 @@
-name: 📦 Package Release
+name:  Package Release
 
 on:
   release:

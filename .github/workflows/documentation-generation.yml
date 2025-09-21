@@ -1,4 +1,4 @@
-name: 📖 Documentation Generation
+name:  Documentation Generation
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
         
     - name: Generate Project Documentation
       run: |
-        echo "📖 DOCUMENTATION GENERATION"
+        echo " DOCUMENTATION GENERATION"
         echo "============================"
         
         # Create documentation structure
@@ -30,13 +30,13 @@ jobs:
         echo "" >> generated_docs/structure.md
         echo "```" >> generated_docs/structure.md
         echo "AGI-EVE/" >> generated_docs/structure.md
-        echo "├── core/                     # Noyau AGI" >> generated_docs/structure.md
-        echo "│   ├── compliance/           # Audit constitutionnel" >> generated_docs/structure.md
-        echo "│   └── tools/               # Outils projet" >> generated_docs/structure.md
-        echo "├── eve/                     # Écosystème EVE" >> generated_docs/structure.md
-        echo "│   ├── cognitive/           # Intelligence cognitive" >> generated_docs/structure.md
-        echo "│   └── interfaces/          # Interfaces utilisateur" >> generated_docs/structure.md
-        echo "└── docs/                    # Documentation" >> generated_docs/structure.md
+        echo " core/                     # Noyau AGI" >> generated_docs/structure.md
+        echo "    compliance/           # Audit constitutionnel" >> generated_docs/structure.md
+        echo "    tools/               # Outils projet" >> generated_docs/structure.md
+        echo " eve/                     # cosystme EVE" >> generated_docs/structure.md
+        echo "    cognitive/           # Intelligence cognitive" >> generated_docs/structure.md
+        echo "    interfaces/          # Interfaces utilisateur" >> generated_docs/structure.md
+        echo " docs/                    # Documentation" >> generated_docs/structure.md
         echo "```" >> generated_docs/structure.md
         
         # Generate module documentation
@@ -45,7 +45,7 @@ jobs:
           echo "Documenting: $file"
         done
         
-        echo "✅ Documentation generation completed"
+        echo "Documentation generation completed"
         
     - name: Upload Generated Documentation
       uses: actions/upload-artifact@v4

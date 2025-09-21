@@ -1,49 +1,49 @@
-name: 🤖 Robot Commit Notifier
+name:  Robot Commit Notifier
 
 on:
   push:
     branches:
-      - main # Ou la branche principale où le robot commite
+      - main # Ou la branche principale o le robot commite
 
 jobs:
   notify:
-    name: 📧 Send Commit Summary
+    name:  Send Commit Summary
     runs-on: ubuntu-latest
-    # Condition : Ne s'exécute que si le commiteur est le robot
+    # Condition : Ne s'excute que si le commiteur est le robot
     if: github.event.head_commit.author.name == 'Constitutional Auto-Corrector'
 
     steps:
-      - name: 💌 Send Email Notification
+      - name:  Send Email Notification
         uses: dawidd6/action-send-mail@v4
         with:
           server_address: smtp.gmail.com # Exemple pour Gmail
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: '📊 [AGI-EVE] Rapport de Correction Constitutionnelle par le Robot'
+          subject: ' [AGI-EVE] Rapport de Correction Constitutionnelle par le Robot'
           body: |
             Bonjour Architecte,
 
             Le **Master Constitutional Auto-Corrector** vient d'appliquer une correction sur le projet AGI-EVE.
 
-            <h3>📝 Détails du Commit :</h3>
+            <h3> Dtails du Commit :</h3>
             <ul>
               <li><b>ID du Commit :</b> <code>${{ github.sha }}</code></li>
               <li><b>Auteur :</b> ${{ github.event.head_commit.author.name }}</li>
               <li><b>Message :</b> <pre>${{ github.event.head_commit.message }}</pre></li>
             </ul>
 
-            <h3>📂 Fichiers Modifiés :</h3>
+            <h3> Fichiers Modifis :</h3>
             <pre>
             ${{ join(github.event.head_commit.modified, '\n') }}
             </pre>
 
-            <p>Vous pouvez voir les changements détaillés ici :</p>
+            <p>Vous pouvez voir les changements dtaills ici :</p>
             <a href="${{ github.event.head_commit.url }}">Voir le Commit sur GitHub</a>
 
             <hr>
-            <i>Rapport généré automatiquement par le système de surveillance AGI.</i>
+            <i>Rapport gnr automatiquement par le systme de surveillance AGI.</i>
           from: AGINotifier <${{ secrets.MAIL_USERNAME }}>
-          # IMPORTANT: Remplacez l'email ci-dessous par le vôtre
+          # IMPORTANT: Remplacez l'email ci-dessous par le vtre
           to: catalanotoni@gmail.com
           secure: true

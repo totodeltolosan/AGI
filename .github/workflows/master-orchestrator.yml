@@ -1,4 +1,4 @@
-name: 🎭 Master Orchestrator
+name:  Master Orchestrator
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '0 6 * * *'  # Quotidien 6h - Orchestration complète
+    - cron: '0 6 * * *'  # Quotidien 6h - Orchestration complte
   workflow_dispatch:
     inputs:
       orchestration_mode:
@@ -41,7 +41,7 @@ jobs:
     - name: Create Master Orchestration Plan
       id: plan
       run: |
-        echo "🎭 ORCHESTRATION MASTER AGI-EVE" > orchestration-plan.md
+        echo "ORCHESTRATION MASTER AGI-EVE" > orchestration-plan.md
         echo "===============================" >> orchestration-plan.md
         echo "" >> orchestration-plan.md
         
@@ -52,7 +52,7 @@ jobs:
         from datetime import datetime
         from pathlib import Path
         
-        print('🎭 Création plan orchestration master...')
+        print(' Cration plan orchestration master...')
         
         # Configuration workflows disponibles
         workflows_registry = {
@@ -133,7 +133,7 @@ jobs:
         
         print(f'Mode orchestration: {orchestration_mode}')
         
-        # Planification basée sur mode
+        # Planification base sur mode
         if orchestration_mode == 'security_focus':
             priority_workflows = [
                 'constitutional_governance',
@@ -164,7 +164,7 @@ jobs:
         else:  # full mode
             priority_workflows = list(workflows_registry.keys())
         
-        # Trier par priorité et dépendances
+        # Trier par priorit et dpendances
         def resolve_dependencies(workflows, registry):
             resolved = []
             remaining = workflows[:]
@@ -179,7 +179,7 @@ jobs:
                         progress = True
                 
                 if not progress:
-                    # Dépendances circulaires ou manquantes, ajouter restants
+                    # Dpendances circulaires ou manquantes, ajouter restants
                     resolved.extend(remaining)
                     break
             
@@ -200,11 +200,11 @@ jobs:
             'workflow_details': {w: workflows_registry[w] for w in execution_order}
         }
         
-        print(f'Plan orchestration créé:')
+        print(f'Plan orchestration cr:')
         print(f'  - Mode: {orchestration_mode}')
         print(f'  - Workflows: {len(execution_order)}')
-        print(f'  - Durée estimée: {total_time} minutes')
-        print(f'  - Ordre exécution: {execution_order}')
+        print(f'  - Dure estime: {total_time} minutes')
+        print(f'  - Ordre excution: {execution_order}')
         
         # Sauvegarder plan
         with open('orchestration_plan.json', 'w') as f:
@@ -222,17 +222,17 @@ jobs:
     - name: System State Assessment
       run: |
         echo "" >> orchestration-plan.md
-        echo "## 🔍 Assessment État Système" >> orchestration-plan.md
+        echo "## Assessment tat Systme" >> orchestration-plan.md
         echo "" >> orchestration-plan.md
         
-        # Évaluation état système avant orchestration
+        # valuation tat systme avant orchestration
         python -c "
         import os
         import psutil
         import time
         from pathlib import Path
         
-        print('🔍 Assessment état système AGI-EVE...')
+        print(' Assessment tat systme AGI-EVE...')
         
         system_state = {
             'timestamp': time.time(),
@@ -242,7 +242,7 @@ jobs:
             'system_health': {}
         }
         
-        # État repository
+        # tat repository
         try:
             import subprocess
             
@@ -263,12 +263,12 @@ jobs:
                                        capture_output=True, text=True).stdout.strip()
             }
             
-            print(f'Repository: {uncommitted_files} fichiers non commités, branche {system_state[\"repository_status\"][\"branch\"]}')
+            print(f'Repository: {uncommitted_files} fichiers non commits, branche {system_state[\"repository_status\"][\"branch\"]}')
             
         except Exception as e:
-            print(f'⚠️ Git status: {e}')
+            print(f' Git status: {e}')
         
-        # Métriques code
+        # Mtriques code
         py_files = list(Path('.').rglob('*.py'))
         if py_files:
             total_lines = 0
@@ -295,7 +295,7 @@ jobs:
             
             print(f'Code: {len(py_files)} fichiers Python, {total_lines} lignes, {large_files} gros fichiers')
         
-        # Changements récents
+        # Changements rcents
         recent_changes = {
             'core_changes': len(list(Path('core').rglob('*.py'))) if Path('core').exists() else 0,
             'eve_changes': len(list(Path('eve').rglob('*.py'))) if Path('eve').exists() else 0,
@@ -305,42 +305,42 @@ jobs:
         system_state['recent_changes'] = recent_changes
         print(f'Modules: core({recent_changes[\"core_changes\"]}), eve({recent_changes[\"eve_changes\"]}), tools({recent_changes[\"tools_changes\"]})')
         
-        # Santé système
+        # Sant systme
         system_state['system_health'] = {
             'cpu_percent': psutil.cpu_percent(interval=1),
             'memory_percent': psutil.virtual_memory().percent,
             'disk_percent': psutil.disk_usage('/').percent
         }
         
-        print(f'Système: CPU {system_state[\"system_health\"][\"cpu_percent\"]}%, RAM {system_state[\"system_health\"][\"memory_percent\"]}%, Disk {system_state[\"system_health\"][\"disk_percent\"]}%')
+        print(f'Systme: CPU {system_state[\"system_health\"][\"cpu_percent\"]}%, RAM {system_state[\"system_health\"][\"memory_percent\"]}%, Disk {system_state[\"system_health\"][\"disk_percent\"]}%')
         
         # Recommandations orchestration
-        print(f'\\n💡 Recommandations orchestration:')
+        print(f'\\n Recommandations orchestration:')
         
-        # Recommandations basées sur état
+        # Recommandations bases sur tat
         if system_state['code_metrics'].get('large_files', 0) > 10:
-            print('- 🔴 PRIORITÉ: Refactoring fichiers volumineux')
-            print('- Recommandé: Mode performance_focus')
+            print('-  PRIORIT: Refactoring fichiers volumineux')
+            print('- Recommand: Mode performance_focus')
         
         if system_state['repository_status'].get('uncommitted_files', 0) > 5:
-            print('- ⚠️ ATTENTION: Nombreux fichiers non commités')
-            print('- Recommandé: Commit avant orchestration')
+            print('-  ATTENTION: Nombreux fichiers non commits')
+            print('- Recommand: Commit avant orchestration')
         
         if system_state['system_health']['memory_percent'] > 80:
-            print('- ⚠️ ATTENTION: Utilisation mémoire élevée')
-            print('- Recommandé: Mode léger ou redémarrage')
+            print('-  ATTENTION: Utilisation mmoire leve')
+            print('- Recommand: Mode lger ou redmarrage')
         
         if (system_state['recent_changes']['core_changes'] > 20 or 
             system_state['recent_changes']['eve_changes'] > 50):
-            print('- 🟡 INFO: Changements significatifs détectés')
-            print('- Recommandé: Tests intégration approfondis')
+            print('-  INFO: Changements significatifs dtects')
+            print('- Recommand: Tests intgration approfondis')
         
-        # Sauvegarder état système
+        # Sauvegarder tat systme
         import json
         with open('system_state.json', 'w') as f:
             json.dump(system_state, f, indent=2)
         
-        print('\\n✅ Assessment système terminé')
+        print('\\n Assessment systme termin')
         " >> orchestration-plan.md
         
     - name: Upload Orchestration Plan
@@ -359,7 +359,7 @@ jobs:
     strategy:
       matrix:
         workflow: ${{ fromJson(needs.orchestration-planning.outputs.priority_workflows) }}
-      max-parallel: 3  # Exécution parallèle contrôlée
+      max-parallel: 3  # Excution parallle contrle
       fail-fast: false
       
     steps:
@@ -372,20 +372,20 @@ jobs:
         
     - name: Execute Workflow Simulation
       run: |
-        echo "🎭 EXÉCUTION WORKFLOW: ${{ matrix.workflow }}" > workflow-${{ matrix.workflow }}.log
+        echo "EXCUTION WORKFLOW: ${{ matrix.workflow }}" > workflow-${{ matrix.workflow }}.log
         echo "================================================" >> workflow-${{ matrix.workflow }}.log
         echo "" >> workflow-${{ matrix.workflow }}.log
         
-        # Simulation exécution workflow
+        # Simulation excution workflow
         python -c "
         import time
         import json
         import random
         
         workflow_name = '${{ matrix.workflow }}'
-        print(f'🎭 Exécution workflow: {workflow_name}')
+        print(f' Excution workflow: {workflow_name}')
         
-        # Simuler exécution workflow
+        # Simuler excution workflow
         workflow_results = {
             'workflow': workflow_name,
             'start_time': time.time(),
@@ -395,39 +395,39 @@ jobs:
             'logs': []
         }
         
-        # Simuler étapes workflow
+        # Simuler tapes workflow
         steps = [
             'Initialisation environnement',
-            'Vérifications prérequis', 
-            'Exécution analyse principale',
-            'Génération rapports',
+            'Vrifications prrequis', 
+            'Excution analyse principale',
+            'Gnration rapports',
             'Nettoyage et sauvegarde'
         ]
         
         for i, step in enumerate(steps, 1):
-            print(f'  Étape {i}/5: {step}')
+            print(f'  tape {i}/5: {step}')
             workflow_results['logs'].append(f'[{time.time()}] {step}')
             
-            # Simuler temps exécution
+            # Simuler temps excution
             execution_time = random.uniform(1, 3)
-            time.sleep(execution_time / 10)  # Accéléré pour demo
+            time.sleep(execution_time / 10)  # Acclr pour demo
             
             workflow_results['steps_completed'] = i
             
-            # Simuler succès/échec occasionnel
-            if random.random() < 0.05:  # 5% chance échec
+            # Simuler succs/chec occasionnel
+            if random.random() < 0.05:  # 5% chance chec
                 workflow_results['status'] = 'failed'
-                workflow_results['error'] = f'Erreur simulée à l\\'étape {i}'
-                print(f'❌ ÉCHEC: {workflow_results[\"error\"]}')
+                workflow_results['error'] = f'Erreur simule  l\\'tape {i}'
+                print(f' CHEC: {workflow_results[\"error\"]}')
                 break
         else:
             workflow_results['status'] = 'completed'
-            print('✅ Workflow terminé avec succès')
+            print(' Workflow termin avec succs')
         
         workflow_results['end_time'] = time.time()
         workflow_results['duration'] = workflow_results['end_time'] - workflow_results['start_time']
         
-        # Résultats spécifiques par workflow
+        # Rsultats spcifiques par workflow
         if workflow_name == 'constitutional_governance':
             workflow_results['specific_results'] = {
                 'violations_found': random.randint(0, 5),
@@ -444,11 +444,11 @@ jobs:
                 'issues_found': random.randint(0, 8)
             }
         
-        # Sauvegarder résultats
+        # Sauvegarder rsultats
         with open(f'workflow_{workflow_name}_results.json', 'w') as f:
             json.dump(workflow_results, f, indent=2)
         
-        print(f'Durée: {workflow_results[\"duration\"]:.2f}s')
+        print(f'Dure: {workflow_results[\"duration\"]:.2f}s')
         print(f'Status: {workflow_results[\"status\"]}')
         " >> workflow-${{ matrix.workflow }}.log
         
@@ -476,20 +476,20 @@ jobs:
         
     - name: Generate Master Summary
       run: |
-        echo "🎭 RAPPORT ORCHESTRATION MASTER AGI-EVE" > orchestration-summary.md
+        echo "RAPPORT ORCHESTRATION MASTER AGI-EVE" > orchestration-summary.md
         echo "=======================================" >> orchestration-summary.md
         echo "" >> orchestration-summary.md
         
-        # Génération rapport summary complet
+        # Gnration rapport summary complet
         python -c "
         import json
         import os
         from pathlib import Path
         from datetime import datetime
         
-        print('🎭 Génération rapport orchestration master...')
+        print(' Gnration rapport orchestration master...')
         
-        # Collecter résultats tous workflows
+        # Collecter rsultats tous workflows
         workflow_results = {}
         results_dir = Path('./workflow-results')
         
@@ -504,7 +504,7 @@ jobs:
                                     workflow_name = result.get('workflow', 'unknown')
                                     workflow_results[workflow_name] = result
                             except Exception as e:
-                                print(f'⚠️ Erreur lecture {json_file}: {e}')
+                                print(f' Erreur lecture {json_file}: {e}')
         
         # Analyse globale orchestration
         total_workflows = len(workflow_results)
@@ -514,36 +514,36 @@ jobs:
         
         success_rate = (successful_workflows / max(total_workflows, 1)) * 100
         
-        print(f'## 📊 Résultats Orchestration Globaux')
+        print(f'##  Rsultats Orchestration Globaux')
         print(f'- **Date/Heure**: {datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\")}')
         print(f'- **Mode orchestration**: ${{ github.event.inputs.orchestration_mode || \"full\" }}')
-        print(f'- **Workflows exécutés**: {total_workflows}')
-        print(f'- **Succès**: {successful_workflows}')
-        print(f'- **Échecs**: {failed_workflows}')
-        print(f'- **Taux succès**: {success_rate:.1f}%')
-        print(f'- **Durée totale**: {total_duration:.1f}s')
+        print(f'- **Workflows excuts**: {total_workflows}')
+        print(f'- **Succs**: {successful_workflows}')
+        print(f'- **checs**: {failed_workflows}')
+        print(f'- **Taux succs**: {success_rate:.1f}%')
+        print(f'- **Dure totale**: {total_duration:.1f}s')
         print('')
         
-        # Détail par workflow
+        # Dtail par workflow
         if workflow_results:
-            print('## 📋 Détail par Workflow')
+            print('##  Dtail par Workflow')
             for workflow_name, result in sorted(workflow_results.items()):
                 status = result.get('status', 'unknown')
                 duration = result.get('duration', 0)
                 
-                status_icon = {'completed': '✅', 'failed': '❌', 'running': '🔄'}.get(status, '⚪')
+                status_icon = {'completed': '', 'failed': '', 'running': ''}.get(status, '')
                 
                 print(f'### {status_icon} {workflow_name}')
                 print(f'- **Status**: {status}')
-                print(f'- **Durée**: {duration:.2f}s')
-                print(f'- **Étapes**: {result.get(\"steps_completed\", 0)}/{result.get(\"total_steps\", 0)}')
+                print(f'- **Dure**: {duration:.2f}s')
+                print(f'- **tapes**: {result.get(\"steps_completed\", 0)}/{result.get(\"total_steps\", 0)}')
                 
                 if result.get('error'):
                     print(f'- **Erreur**: {result[\"error\"]}')
                 
-                # Résultats spécifiques
+                # Rsultats spcifiques
                 if 'specific_results' in result:
-                    print('- **Résultats spécifiques**:')
+                    print('- **Rsultats spcifiques**:')
                     for key, value in result['specific_results'].items():
                         if isinstance(value, float):
                             print(f'  - {key}: {value:.1f}')
@@ -553,45 +553,45 @@ jobs:
                 print('')
         
         # Analyse tendances et recommandations
-        print('## 🎯 Analyse et Recommandations')
+        print('##  Analyse et Recommandations')
         
         if success_rate >= 90:
-            print('✅ **EXCELLENTE ORCHESTRATION**: Tous workflows fonctionnent parfaitement')
+            print(' **EXCELLENTE ORCHESTRATION**: Tous workflows fonctionnent parfaitement')
             print('- Maintenir la cadence d\\'orchestration actuelle')
             print('- Surveiller performances pour optimisations futures')
         elif success_rate >= 75:
-            print('🟢 **BONNE ORCHESTRATION**: Quelques ajustements mineurs')
-            print('- Investiguer workflows ayant échoué')
-            print('- Optimiser durées d\\'exécution si possible')
+            print(' **BONNE ORCHESTRATION**: Quelques ajustements mineurs')
+            print('- Investiguer workflows ayant chou')
+            print('- Optimiser dures d\\'excution si possible')
         elif success_rate >= 50:
-            print('🟡 **ORCHESTRATION PARTIELLE**: Améliorations nécessaires')
-            print('- Audit approfondi workflows défaillants')
-            print('- Révision dépendances et prérequis')
-            print('- Considérer mode d\\'orchestration plus conservateur')
+            print(' **ORCHESTRATION PARTIELLE**: Amliorations ncessaires')
+            print('- Audit approfondi workflows dfaillants')
+            print('- Rvision dpendances et prrequis')
+            print('- Considrer mode d\\'orchestration plus conservateur')
         else:
-            print('🔴 **ORCHESTRATION CRITIQUE**: Intervention urgente requise')
-            print('- Arrêt orchestration automatique recommandé')
+            print(' **ORCHESTRATION CRITIQUE**: Intervention urgente requise')
+            print('- Arrt orchestration automatique recommand')
             print('- Debug complet infrastructure')
-            print('- Mode emergency_audit immédiat')
+            print('- Mode emergency_audit immdiat')
         
-        # Optimisations suggérées
-        print(f'\\n## ⚡ Optimisations Suggérées')
+        # Optimisations suggres
+        print(f'\\n##  Optimisations Suggres')
         
         if total_duration > 300:  # > 5 minutes
-            print('- 🚀 **Performance**: Durée totale élevée - Parallélisation accrue')
+            print('-  **Performance**: Dure totale leve - Paralllisation accrue')
         
         long_workflows = [name for name, result in workflow_results.items() 
                          if result.get('duration', 0) > 60]
         if long_workflows:
-            print(f'- ⏱️ **Workflows lents**: {long_workflows} - Optimisation requise')
+            print(f'-  **Workflows lents**: {long_workflows} - Optimisation requise')
         
         failed_workflows_list = [name for name, result in workflow_results.items() 
                                if result.get('status') == 'failed']
         if failed_workflows_list:
-            print(f'- 🔧 **Workflows défaillants**: {failed_workflows_list} - Debug prioritaire')
+            print(f'-  **Workflows dfaillants**: {failed_workflows_list} - Debug prioritaire')
         
         # Planification prochaine orchestration
-        print(f'\\n## 📅 Prochaine Orchestration')
+        print(f'\\n##  Prochaine Orchestration')
         
         if success_rate >= 80:
             next_mode = 'full'
@@ -601,10 +601,10 @@ jobs:
             next_frequency = 'bi-quotidienne'
         else:
             next_mode = 'emergency_audit'
-            next_frequency = 'immédiate'
+            next_frequency = 'immdiate'
         
-        print(f'- **Mode recommandé**: {next_mode}')
-        print(f'- **Fréquence**: {next_frequency}')
+        print(f'- **Mode recommand**: {next_mode}')
+        print(f'- **Frquence**: {next_frequency}')
         
         # Sauvegarder rapport complet
         summary_report = {
@@ -627,12 +627,12 @@ jobs:
         with open('orchestration_summary.json', 'w') as f:
             json.dump(summary_report, f, indent=2)
         
-        print(f'\\n✅ Rapport orchestration master complet généré')
+        print(f'\\n Rapport orchestration master complet gnr')
         " >> orchestration-summary.md
         
     - name: Create Orchestration Issues
       run: |
-        # Créer issues pour workflows défaillants
+        # Crer issues pour workflows dfaillants
         if [ -f "orchestration_summary.json" ]; then
           python -c "
           import json
@@ -645,12 +645,12 @@ jobs:
           
           if success_rate < 75:
               print('Creating orchestration issue...')
-              exit(1)  # Déclencher création issue
+              exit(1)  # Dclencher cration issue
           "
           
           if [ $? -eq 1 ]; then
             gh issue create \
-              --title "🎭 ORCHESTRATION DÉFAILLANTE - $(python -c "import json; print(json.load(open('orchestration_summary.json'))['success_rate'])" | head -1)% succès" \
+              --title " ORCHESTRATION DFAILLANTE - $(python -c "import json; print(json.load(open('orchestration_summary.json'))['success_rate'])" | head -1)% succs" \
               --body-file orchestration-summary.md \
               --label "orchestration,critical,automation" \
               --assignee "@me" || echo "Issue creation failed"
@@ -674,7 +674,7 @@ jobs:
     steps:
     - name: Orchestration Cleanup
       run: |
-        echo "🧹 NETTOYAGE POST-ORCHESTRATION" > cleanup-report.md
+        echo " NETTOYAGE POST-ORCHESTRATION" > cleanup-report.md
         echo "==============================" >> cleanup-report.md
         echo "" >> cleanup-report.md
         
@@ -683,27 +683,27 @@ jobs:
         import os
         import time
         
-        print('🧹 Nettoyage post-orchestration...')
+        print(' Nettoyage post-orchestration...')
         
         cleanup_actions = [
             'Nettoyage fichiers temporaires',
             'Compression logs orchestration', 
             'Archivage rapports anciens',
             'Optimisation cache workflows',
-            'Mise à jour métriques performance'
+            'Mise  jour mtriques performance'
         ]
         
         for action in cleanup_actions:
-            print(f'✅ {action}')
+            print(f' {action}')
             time.sleep(0.5)  # Simuler action
         
-        print('\\n📊 Statistiques nettoyage:')
-        print('- Fichiers temporaires supprimés: 15')
-        print('- Logs compressés: 8.5 MB → 1.2 MB')
-        print('- Cache optimisé: +25% performance')
-        print('- Espace libéré: 45 MB')
+        print('\\n Statistiques nettoyage:')
+        print('- Fichiers temporaires supprims: 15')
+        print('- Logs compresss: 8.5 MB  1.2 MB')
+        print('- Cache optimis: +25% performance')
+        print('- Espace libr: 45 MB')
         
-        print('\\n✅ Nettoyage orchestration terminé')
+        print('\\n Nettoyage orchestration termin')
         " >> cleanup-report.md
         
     - name: Upload Cleanup Report

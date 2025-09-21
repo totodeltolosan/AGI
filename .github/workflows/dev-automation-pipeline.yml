@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🤖 Development Automation Pipeline
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  Development Automation Pipeline
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -30,13 +30,13 @@ jobs:
         
     - name: EVE Development Tools Integration
       run: |
-        echo "🤖 PIPELINE AUTOMATISATION EVE" > automation-report.md
+        echo " PIPELINE AUTOMATISATION EVE" > automation-report.md
         echo "==============================" >> automation-report.md
         echo "" >> automation-report.md
         
-        # Analyser outils développement EVE
+        # Analyser outils dveloppement EVE
         if [ -d "eve/development" ]; then
-          echo "## 🛠️ Outils Développement EVE" >> automation-report.md
+          echo "## Outils Dveloppement EVE" >> automation-report.md
           
           modules=("code_analysis" "monitoring" "git_integration" "automation")
           
@@ -45,7 +45,7 @@ jobs:
               file_count=$(find "eve/development/$module" -name "*.py" | wc -l)
               echo "- **$module**: $file_count modules" >> automation-report.md
             else
-              echo "- **$module**: ⚠️ Non trouvé" >> automation-report.md
+              echo "- **$module**:  Non trouv" >> automation-report.md
             fi
           done
           
@@ -54,74 +54,74 @@ jobs:
         
     - name: Automated Code Quality Pipeline
       run: |
-        echo "## 🔍 Pipeline Qualité Automatique" >> automation-report.md
+        echo "## Pipeline Qualit Automatique" >> automation-report.md
         echo "" >> automation-report.md
         
         # Formatage automatique
-        echo "### 🎨 Formatage Code" >> automation-report.md
+        echo "###  Formatage Code" >> automation-report.md
         
         # Black formatting
         if black --check --diff . >/dev/null 2>&1; then
-          echo "- ✅ **Black**: Code correctement formaté" >> automation-report.md
+          echo "-  **Black**: Code correctement format" >> automation-report.md
         else
-          echo "- ⚠️ **Black**: Formatage requis" >> automation-report.md
+          echo "-  **Black**: Formatage requis" >> automation-report.md
           # Appliquer formatage en mode dry-run
           black --check --diff . > black_changes.txt 2>&1 || true
-          echo "  - $(wc -l < black_changes.txt) lignes à reformater" >> automation-report.md
+          echo " - $(wc -l < black_changes.txt) lignes  reformater" >> automation-report.md
         fi
         
         # Import sorting
         if isort --check-only --diff . >/dev/null 2>&1; then
-          echo "- ✅ **isort**: Imports correctement triés" >> automation-report.md
+          echo "-  **isort**: Imports correctement tris" >> automation-report.md
         else
-          echo "- ⚠️ **isort**: Tri imports requis" >> automation-report.md
+          echo "-  **isort**: Tri imports requis" >> automation-report.md
         fi
         
         echo "" >> automation-report.md
         
     - name: Automated Testing Pipeline
       run: |
-        echo "## 🧪 Pipeline Tests Automatiques" >> automation-report.md
+        echo "## Pipeline Tests Automatiques" >> automation-report.md
         echo "" >> automation-report.md
         
-        # Découverte des tests
+        # Dcouverte des tests
         test_files=$(find . -name "test_*.py" -o -name "*_test.py" | wc -l)
-        echo "- **Fichiers de test**: $test_files détectés" >> automation-report.md
+        echo "- **Fichiers de test**: $test_files dtects" >> automation-report.md
         
         if [ $test_files -gt 0 ]; then
-          # Exécuter tests avec pytest
+          # Excuter tests avec pytest
           if pytest --collect-only -q >/dev/null 2>&1; then
-            echo "- ✅ **Tests**: Configuration valide" >> automation-report.md
+            echo "-  **Tests**: Configuration valide" >> automation-report.md
             
             # Couverture de code
             if pytest --cov=. --cov-report=term --cov-report=xml -v > pytest_output.txt 2>&1; then
               coverage=$(grep -o 'TOTAL.*[0-9]\+%' pytest_output.txt | grep -o '[0-9]\+%' | head -1 || echo "N/A")
               echo "- **Couverture**: $coverage" >> automation-report.md
             else
-              echo "- ⚠️ **Tests**: Certains tests échouent" >> automation-report.md
+              echo "-  **Tests**: Certains tests chouent" >> automation-report.md
             fi
           else
-            echo "- ⚠️ **Tests**: Configuration à corriger" >> automation-report.md
+            echo "-  **Tests**: Configuration  corriger" >> automation-report.md
           fi
         else
-          echo "- ⚠️ **Tests**: Aucun test trouvé - Tests à créer" >> automation-report.md
+          echo "-  **Tests**: Aucun test trouv - Tests  crer" >> automation-report.md
         fi
         
         echo "" >> automation-report.md
         
     - name: Automated Documentation Pipeline
       run: |
-        echo "## 📚 Pipeline Documentation Automatique" >> automation-report.md
+        echo "##  Pipeline Documentation Automatique" >> automation-report.md
         echo "" >> automation-report.md
         
-        # Vérifier documentation
+        # Vrifier documentation
         readme_files=$(find . -iname "readme*" | wc -l)
         doc_files=$(find . -name "*.md" | wc -l)
         
         echo "- **README**: $readme_files fichier(s)" >> automation-report.md
         echo "- **Documentation Markdown**: $doc_files fichier(s)" >> automation-report.md
         
-        # Vérifier docstrings
+        # Vrifier docstrings
         python -c "
         import ast
         import os
@@ -152,53 +152,53 @@ jobs:
             print(f'- **Docstrings**: {documented_functions}/{total_functions} fonctions ({doc_percentage:.1f}%)')
             
             if doc_percentage >= 80:
-                print('- ✅ **Documentation**: Bonne couverture')
+                print('-  **Documentation**: Bonne couverture')
             elif doc_percentage >= 50:
-                print('- ⚠️ **Documentation**: Couverture moyenne')
+                print('-  **Documentation**: Couverture moyenne')
             else:
-                print('- ❌ **Documentation**: Couverture faible')
+                print('-  **Documentation**: Couverture faible')
         else:
-            print('- **Docstrings**: Aucune fonction analysée')
+            print('- **Docstrings**: Aucune fonction analyse')
         " >> automation-report.md
         
         echo "" >> automation-report.md
         
     - name: Automated Deployment Preparation
       run: |
-        echo "## 🚀 Préparation Déploiement Automatique" >> automation-report.md
+        echo "## Prparation Dploiement Automatique" >> automation-report.md
         echo "" >> automation-report.md
         
-        # Vérifier configuration déploiement
+        # Vrifier configuration dploiement
         deploy_configs=("Dockerfile" "requirements.txt" "setup.py" "pyproject.toml")
         
         for config in "${deploy_configs[@]}"; do
           if [ -f "$config" ]; then
-            echo "- ✅ **$config**: Présent" >> automation-report.md
+            echo "-  **$config**: Prsent" >> automation-report.md
           else
-            echo "- ⚠️ **$config**: Manquant" >> automation-report.md
+            echo "-  **$config**: Manquant" >> automation-report.md
           fi
         done
         
-        # Vérifier structure packaging
+        # Vrifier structure packaging
         if [ -d "eve" ] && [ -d "core" ]; then
-          echo "- ✅ **Structure**: Modules principaux détectés" >> automation-report.md
+          echo "-  **Structure**: Modules principaux dtects" >> automation-report.md
         else
-          echo "- ⚠️ **Structure**: Structure projet à valider" >> automation-report.md
+          echo "-  **Structure**: Structure projet  valider" >> automation-report.md
         fi
         
-        # Vérifier conformité AGI
+        # Vrifier conformit AGI
         if ls conformite_*.csv >/dev/null 2>&1; then
           latest_conformity=$(ls -t conformite_*.csv | head -1)
           violations=$(grep -c "VIOLATION" "$latest_conformity" 2>/dev/null || echo "0")
-          echo "- **Conformité AGI**: $violations violations détectées" >> automation-report.md
+          echo "- **Conformit AGI**: $violations violations dtectes" >> automation-report.md
           
           if [ $violations -eq 0 ]; then
-            echo "- ✅ **Prêt déploiement**: Conformité respectée" >> automation-report.md
+            echo "-  **Prt dploiement**: Conformit respecte" >> automation-report.md
           else
-            echo "- ⚠️ **Prêt déploiement**: Violations à corriger" >> automation-report.md
+            echo "-  **Prt dploiement**: Violations  corriger" >> automation-report.md
           fi
         else
-          echo "- ⚠️ **Conformité**: Rapport non trouvé" >> automation-report.md
+          echo "-  **Conformit**: Rapport non trouv" >> automation-report.md
         fi
         
     - name: Upload Automation Reports

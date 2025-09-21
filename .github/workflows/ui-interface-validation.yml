@@ -1,5 +1,5 @@
-# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 🎮 UI Interface Validation
+# DSACTIV SUR AGI-MAIN - Workflow spcifique EVE
+name:  UI Interface Validation
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants
@@ -32,7 +32,7 @@ jobs:
         
     - name: Test EVE Interface Components
       run: |
-        echo "🎮 VALIDATION INTERFACES EVE" > ui-report.md
+        echo "VALIDATION INTERFACES EVE" > ui-report.md
         echo "============================" >> ui-report.md
         echo "" >> ui-report.md
         
@@ -42,7 +42,7 @@ jobs:
         
         # Analyser interfaces EVE
         if [ -d "eve/interfaces" ]; then
-          echo "## 🖥️ Interfaces Détectées" >> ui-report.md
+          echo "## Interfaces Dtectes" >> ui-report.md
           
           ui_modules=("ui" "logs" "documentation" "apis")
           
@@ -51,7 +51,7 @@ jobs:
               file_count=$(find "eve/interfaces/$module" -name "*.py" | wc -l)
               echo "- **$module**: $file_count modules" >> ui-report.md
             else
-              echo "- **$module**: ⚠️ Non trouvé" >> ui-report.md
+              echo "- **$module**:  Non trouv" >> ui-report.md
             fi
           done
           echo "" >> ui-report.md
@@ -60,7 +60,7 @@ jobs:
     - name: Tkinter Interface Testing
       run: |
         echo "" >> ui-report.md
-        echo "## 🖼️ Test Interfaces Tkinter" >> ui-report.md
+        echo "##  Test Interfaces Tkinter" >> ui-report.md
         echo "" >> ui-report.md
         
         export DISPLAY=:99
@@ -69,7 +69,7 @@ jobs:
         import tkinter as tk
         import sys
         
-        print('🖼️ Test interfaces Tkinter...')
+        print(' Test interfaces Tkinter...')
         
         try:
             root = tk.Tk()
@@ -84,13 +84,13 @@ jobs:
             
             root.update()
             
-            print('✅ Tkinter: Interface basique OK')
+            print(' Tkinter: Interface basique OK')
             
             root.destroy()
-            print('✅ Cleanup: Interface fermée proprement')
+            print(' Cleanup: Interface ferme proprement')
             
         except Exception as e:
-            print(f'❌ Erreur Tkinter: {e}')
+            print(f' Erreur Tkinter: {e}')
             sys.exit(1)
         " >> ui-report.md
         
