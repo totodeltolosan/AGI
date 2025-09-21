@@ -10,8 +10,8 @@ Rôle Fondamental (Conforme iaGOD.json) :
 from utils.agi_logger import AGILogger
 
 class AGIReportParser:
-    """TODO: Add docstring."""
-        """TODO: Add docstring."""
+    """Parser pour rapports AGI constitutionnels"""
+    
     def __init__(self, agi_md_path: str, logger=None):
         self.agi_md_path = agi_md_path
         self.logger = logger if logger else AGILogger('INFO')
