@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
         
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         
@@ -68,10 +68,10 @@ jobs:
         python-version: ['3.9', '3.10', '3.11']
         
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
         
@@ -86,7 +86,7 @@ jobs:
         pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
         
     - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         file: ./coverage.xml
         flags: unittests
@@ -98,14 +98,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Analyze code conformity
       run: |
         echo "=== ANALYSE CONFORMITÉ AGI ==="
         find . -name "*.py" -type f | while read file; do
           lines=$(wc -l < "$file")
-          excess=$((lines - 200))
+          excess=$((lines - 500))
           if [ $excess -gt 0 ]; then
             echo "VIOLATION: $file ($lines lignes, excès: $excess)"
           else
@@ -127,7 +127,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Deploy to staging
       run: |

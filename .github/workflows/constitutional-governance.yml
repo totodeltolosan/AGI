@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Constitutional Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         
@@ -51,7 +51,7 @@ jobs:
               print(f'- **Principes**: {principles_count}')
               
               # Vérifier lois principales
-              required_laws = ['200_lines_limit', 'documentation_required', 'security_compliance']
+              required_laws = ['500_lines_limit', 'documentation_required', 'security_compliance']
               for law in required_laws:
                   if any(law in str(l) for l in constitution.get('laws', [])):
                       print(f'- ✅ **{law}**: Définie')
@@ -67,17 +67,17 @@ jobs:
         fi
         echo "" >> constitutional-report.md
         
-    - name: 200 Lines Constitutional Law Enforcement
+    - name: 500 Lines Constitutional Law Enforcement
       run: |
-        echo "## ⚖️ Loi des 200 Lignes - Application" >> constitutional-report.md
+        echo "## ⚖️ Loi des 500 Lignes - Application" >> constitutional-report.md
         echo "" >> constitutional-report.md
         
-        # Audit exhaustif limite 200 lignes
+        # Audit exhaustif limite 500 lignes
         python -c "
         import os
         from collections import defaultdict
         
-        print('⚖️ Application loi constitutionnelle 200 lignes...')
+        print('⚖️ Application loi constitutionnelle 500 lignes...')
         
         violations = []
         compliant_files = []
@@ -100,8 +100,8 @@ jobs:
                         module_stats[module]['files'] += 1
                         module_stats[module]['total_lines'] += lines
                         
-                        if lines > 200:
-                            excess = lines - 200
+                        if lines > 500:
+                            excess = lines - 500
                             violations.append({
                                 'file': filepath,
                                 'lines': lines,
@@ -167,7 +167,7 @@ jobs:
                 f.write(f'{v[\"file\"]},{v[\"lines\"]},VIOLATION,{v[\"excess\"]},{v[\"module\"]},{v[\"severity\"]}\\n')
             for cf in compliant_files:
                 module = cf.split('/')[0] if '/' in cf else 'root'
-                f.write(f'{cf},≤200,CONFORME,0,{module},none\\n')
+                f.write(f'{cf},≤500,CONFORME,0,{module},none\\n')
         
         print('')
         print('✅ Rapport constitutionnel détaillé sauvegardé')

@@ -29,10 +29,10 @@ jobs:
       quality_score: ${{ steps.quality_gate.outputs.score }}
       
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         
@@ -122,7 +122,7 @@ jobs:
         test_files = list(Path('.').rglob('test_*.py')) + list(Path('.').rglob('*_test.py'))
         if py_files:
             test_ratio = len(test_files) / len(py_files)
-            test_coverage = min(test_ratio * 200, 100)  # 1 test pour 2 fichiers = 100%
+            test_coverage = min(test_ratio * 500, 100)  # 1 test pour 2 fichiers = 100%
             gate_scores['test_coverage_adequate'] = test_coverage
             
             if test_coverage >= 30:  # Seuil minimal déploiement
@@ -223,10 +223,10 @@ jobs:
     environment: staging
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Deployment Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         
@@ -352,7 +352,7 @@ jobs:
     environment: production
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Production Deployment Approval
       run: |

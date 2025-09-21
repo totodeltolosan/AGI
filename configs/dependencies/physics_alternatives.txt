@@ -1,0 +1,7 @@
+# Alternatives à physics-engine pour les simulations physiques
+pymunk>=6.2.0          # Moteur physique 2D basé sur Chipmunk
+pygame>=2.1.0          # Pour les simulations et interfaces graphiques  
+Box2D>=2.3.10          # Moteur physique 2D
+numpy>=1.21.0          # Calculs mathématiques
+scipy>=1.7.0           # Calculs scientifiques avancés
+bullet3>=3.2.4         # Moteur physique 3D (PyBullet)

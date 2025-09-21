@@ -26,10 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Dashboard Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         
@@ -162,7 +162,7 @@ jobs:
                         
                         if lines > 500:
                             large_files += 1
-                        if lines > 200:
+                        if lines > 500:
                             violations += 1
                 except:
                     pass

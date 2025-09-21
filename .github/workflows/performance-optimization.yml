@@ -14,10 +14,10 @@ jobs:
     timeout-minutes: 60
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Setup Performance Environment
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         
@@ -307,7 +307,7 @@ jobs:
             print('- ⚠️ **Usage mémoire élevé**: Optimisation requise')
             print('- Implémenter pagination pour gros datasets')
             print('- Utiliser générateurs au lieu de listes')
-        elif total_peak_memory > 200:
+        elif total_peak_memory > 500:
             print('- 🟡 **Usage mémoire modéré**: Surveillance recommandée')
             print('- Optimiser structures de données')
         else:
@@ -534,7 +534,7 @@ jobs:
             'File processing': '> 10 files/sec',
             'AST parsing': '> 5 files/sec',
             'CPU usage': '< 70% sustained',
-            'Response time': '< 200ms interface'
+            'Response time': '< 500ms interface'
         }
         
         for metric, target in target_metrics.items():

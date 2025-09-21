@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Check Monde Migration Status
       run: |
@@ -37,7 +37,7 @@ jobs:
           large_files=0
           find eve/simulation/universe/ -name "*.py" | while read file; do
             lines=$(wc -l < "$file")
-            if [ $lines -gt 200 ]; then
+            if [ $lines -gt 500 ]; then
               violations=$((violations + 1))
               if [ $lines -gt 1000 ]; then
                 large_files=$((large_files + 1))

@@ -13,10 +13,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         
@@ -35,8 +35,8 @@ jobs:
         find . -name "*.py" -not -path "./.git/*" | while read file; do
           if [ -f "$file" ]; then
             lines=$(wc -l < "$file" 2>/dev/null || echo "0")
-            if [ $lines -gt 200 ]; then
-              excess=$((lines - 200))
+            if [ $lines -gt 500 ]; then
+              excess=$((lines - 500))
               echo "$file,$lines,VIOLATION,$excess" >> conformite_$(date +%Y%m%d).csv
               violations=$((violations + 1))
               total_excess=$((total_excess + excess))

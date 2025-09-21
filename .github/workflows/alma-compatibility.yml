@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Check ALMA Migration Status
       run: |
@@ -24,7 +24,7 @@ jobs:
           
           if [ $lines -gt 4000 ]; then
             echo "🚨 URGENT: Fichier legacy trop volumineux ($lines lignes)"
-            echo "Action requise: Split en modules conformes (<200 lignes)"
+            echo "Action requise: Split en modules conformes (<500 lignes)"
           fi
         fi
         
