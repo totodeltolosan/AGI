@@ -17,8 +17,7 @@ jobs:
         run: |
           echo "Surveillance continue systeme" > monitoring-report.md
           echo "Date: $(date)" >> monitoring-report.md
-          echo "Branche: main" >> monitoring-report.md
-          echo "Status: Operational" >> monitoring-report.md
+          echo "Status: OK" >> monitoring-report.md
       
       - name: Upload Report
         uses: actions/upload-artifact@v4
