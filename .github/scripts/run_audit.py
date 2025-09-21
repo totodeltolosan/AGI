@@ -394,7 +394,7 @@ if __name__ == "__main__":
 
     # Exécuter les autres audits et récupérer leurs résultats
     line_violations = audit_file_length(main_report)
-    total_sec_violations, critical_sec_violations = audit_security(main_report)
+    total_sec_violations, critical_sec_violations = audit_security(main_report) or (0, 0)
     audit_documentation(main_report)
 
     # Écrire le rapport final sur le disque
