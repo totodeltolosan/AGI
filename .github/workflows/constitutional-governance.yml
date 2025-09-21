@@ -1,405 +1,91 @@
-name:  Constitutional Governance
+# ==============================================================================
+# WORKFLOW D'AUDIT CONSTITUTIONNEL POUR LE PROJET AGI
+# ------------------------------------------------------------------------------
+# Ce workflow exécute une série d'audits (structure, sécurité, documentation)
+# sur la branche principale, génère un rapport détaillé, et crée des issues
+# pour les violations critiques.
+# ==============================================================================
 
+name: Constitutional Governance
+
+# ==============================================================================
+# BLOC DE DÉCLENCHEMENT (ON)
+# ==============================================================================
 on:
+  # Déclenche le workflow sur les push et pull requests, mais UNIQUEMENT sur la branche agi-main.
   push:
+    branches:
+      - 'agi-main'
   pull_request:
+    branches:
+      - 'agi-main'
+
+  # Déclenchement planifié (cron) pour un audit régulier.
   schedule:
     - cron: '0 */8 * * *'  # Toutes les 8 heures
+
+  # Permet de lancer manuellement le workflow depuis l'onglet "Actions" de GitHub.
   workflow_dispatch:
 
+# ==============================================================================
+# BLOC DE PERMISSIONS
+# ==============================================================================
+permissions:
+  # Permission de LIRE le contenu du dépôt pour le checkout.
+  contents: read
+  # Permission d'ÉCRIRE des issues pour la création d'alertes automatiques.
+  issues: write
+
+# ==============================================================================
+# BLOC D'EXÉCUTION (JOBS)
+# ==============================================================================
 jobs:
-  constitutional-governance:
-    name: AGI Constitutional Compliance
+  audit:
+    name: ⚖️ AGI Constitutional Compliance Audit
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 15
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Constitutional Environment
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install Constitutional Tools
-      run: |
-        
-    - name: Constitutional Audit Full System
-      run: |
-        echo "AUDIT CONSTITUTIONNEL COMPLET AGI-EVE" > constitutional-report.md
-        echo "=========================================" >> constitutional-report.md
-        echo "" >> constitutional-report.md
-        
-        # Load iaGOD.json if exists
-        if [ -f "iaGOD.json" ]; then
-          echo "##  Constitution iaGOD.json" >> constitutional-report.md
-          echo "-  **Constitution**: Dtecte" >> constitutional-report.md
-          
-          # Parse constitution
-    python -c "
-    import json
-    try:
-  with open('iaGOD.json', 'r', encoding='utf-8') as f:
-      constitution = json.load(f)
-  
-  laws_count = len(constitution.get('laws', []))
-  principles_count = len(constitution.get('principles', []))
-  
-  print(f'- **Lois constitutionnelles**: {laws_count}')
-  print(f'- **Principes**: {principles_count}')
-  
-  # Vrifier lois principales
-  required_laws = ['200_lines_limit', 'documentation_required', 'security_compliance']
-  for law in required_laws:
-      if any(law in str(l) for l in constitution.get('laws', [])):
-          print(f'-  **{law}**: Dfinie')
-      else:
-          print(f'-  **{law}**:  dfinir')
-  
-    except Exception as e:
-  print(f'-  **Erreur constitution**: {e}')
-    " >> constitutional-report.md
-          
-        else
-          echo "-  **Constitution**: iaGOD.json non trouv" >> constitutional-report.md
-        fi
-        echo "" >> constitutional-report.md
-        
-    - name: 200 Lines Constitutional Law Enforcement
-      run: |
-        echo "##  Loi des 200 Lignes - Application" >> constitutional-report.md
-        echo "" >> constitutional-report.md
-        
-        # Audit exhaustif limite 200 lignes
-  python -c "
-  import os
-  from collections import defaultdict
-  
-  print(' Application loi constitutionnelle 200 lignes...')
-  
-  violations = []
-  compliant_files = []
-  module_stats = defaultdict(lambda: {'files': 0, 'violations': 0, 'total_lines': 0})
-  
-  # Parcourir tous fichiers Python
-  for root, dirs, files in os.walk('.'):
-if '.git' in root:
-    continue
-    
-for file in files:
-    if file.endswith('.py'):
-        filepath = os.path.join(root, file)
-        module = root.split('/')[0] if '/' in root else 'root'
-        
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                lines = len(f.readlines())
-            
-            module_stats[module]['files'] += 1
-            module_stats[module]['total_lines'] += lines
-            
-            if lines > 200:
-                excess = lines - 200
-                violations.append({
-                    'file': filepath,
-                    'lines': lines,
-                    'excess': excess,
-                    'module': module,
-                    'severity': 'critical' if lines > 500 else 'high' if lines > 300 else 'medium'
-                })
-                module_stats[module]['violations'] += 1
-            else:
-                compliant_files.append(filepath)
-        except:
-            pass
-  
-  # Statistiques globales
-  total_files = sum(stats['files'] for stats in module_stats.values())
-  total_violations = len(violations)
-  compliance_rate = ((total_files - total_violations) / max(total_files, 1)) * 100
-  
-  print(f'- **Total fichiers**: {total_files}')
-  print(f'- **Fichiers conformes**: {len(compliant_files)}')
-  print(f'- **Violations**: {total_violations}')
-  print(f'- **Taux conformit**: {compliance_rate:.1f}%')
-  print('')
-  
-  # Par module
-  print('### Conformit par Module')
-  for module, stats in sorted(module_stats.items()):
-if stats['files'] > 0:
-    module_compliance = ((stats['files'] - stats['violations']) / stats['files']) * 100
-    avg_lines = stats['total_lines'] / stats['files']
-    print(f'- **{module}**: {module_compliance:.1f}% conforme ({stats[\"violations\"]}/{stats[\"files\"]} violations, {avg_lines:.0f} lignes/fichier)')
-  
-  print('')
-  
-  # Violations critiques
-  critical_violations = [v for v in violations if v['severity'] == 'critical']
-  if critical_violations:
-print('###  Violations Critiques (>500 lignes)')
-for v in critical_violations[:10]:  # Top 10
-    print(f'- **{v[\"file\"]}**: {v[\"lines\"]} lignes (excs: {v[\"excess\"]})')
-  
-  # Recommandations constitutionnelles
-  print('')
-  print('###  Recommandations Constitutionnelles')
-  
-  if compliance_rate < 50:
-print('-  **URGENCE CONSTITUTIONNELLE**: Taux conformit critique')
-print('- **Action**: Refactoring massif immdiat requis')
-  elif compliance_rate < 70:
-print('-  **ATTENTION CONSTITUTIONNELLE**: Conformit insuffisante')
-print('- **Action**: Plan refactoring sur 2 semaines')
-  elif compliance_rate < 90:
-print('-  **AMLIORATION REQUISE**: Bonne base mais perfectible')
-print('- **Action**: Refactoring cibl des gros fichiers')
-  else:
-print('-  **EXCELLENCE CONSTITUTIONNELLE**: Conformit exemplaire')
-print('- **Action**: Maintenir standards levs')
-  
-  # Sauvegarder rapport dtaill
-  with open('constitutional_violations.csv', 'w') as f:
-f.write('Fichier,Lignes,Statut,Excs,Module,Svrit\\n')
-for v in violations:
-    f.write(f'{v[\"file\"]},{v[\"lines\"]},VIOLATION,{v[\"excess\"]},{v[\"module\"]},{v[\"severity\"]}\\n')
-for cf in compliant_files:
-    module = cf.split('/')[0] if '/' in cf else 'root'
-    f.write(f'{cf},200,CONFORME,0,{module},none\\n')
-  
-  print('')
-  print(' Rapport constitutionnel dtaill sauvegard')
-  " >> constitutional-report.md
-        
-    - name: Security Constitutional Law
-      run: |
-        echo "" >> constitutional-report.md
-        echo "##  Loi Constitutionnelle Scurit" >> constitutional-report.md
-        echo "" >> constitutional-report.md
-        
-        # Audit scurit constitutionnelle
-  python -c "
-  import re
-  import os
-  
-  print(' Audit scurit constitutionnelle...')
-  
-  security_violations = []
-  security_compliant = []
-  
-  # Rgles scurit constitutionnelles
-  security_rules = [
-{'pattern': r'eval\\s*\\(', 'severity': 'critical', 'description': 'Usage eval() interdit'},
-{'pattern': r'exec\\s*\\(', 'severity': 'critical', 'description': 'Usage exec() interdit'},
-{'pattern': r'__import__\\s*\\(', 'severity': 'high', 'description': 'Import dynamique non contrl'},
-{'pattern': r'subprocess\\.call\\s*\\(.*shell=True', 'severity': 'critical', 'description': 'Shell injection possible'},
-{'pattern': r'open\\s*\\([^)]*[\"\\']w[\"\\']', 'severity': 'medium', 'description': 'criture fichier non contrle'},
-{'pattern': r'pickle\\.loads?\\s*\\(', 'severity': 'high', 'description': 'Dsrialisation pickle dangereuse'},
-{'pattern': r'input\\s*\\(.*\\$', 'severity': 'medium', 'description': 'Input utilisateur non valid'}
-  ]
-  
-  # Scanner tous fichiers Python
-  total_files_scanned = 0
-  for root, dirs, files in os.walk('.'):
-if '.git' in root:
-    continue
-    
-for file in files:
-    if file.endswith('.py'):
-        filepath = os.path.join(root, file)
-        total_files_scanned += 1
-        
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            file_violations = []
-            for rule in security_rules:
-                matches = list(re.finditer(rule['pattern'], content, re.IGNORECASE))
-                for match in matches:
-                    line_num = content[:match.start()].count('\\n') + 1
-                    file_violations.append({
-                        'file': filepath,
-                        'line': line_num,
-                        'rule': rule['description'],
-                        'severity': rule['severity'],
-                        'code': match.group()
-                    })
-            
-            if file_violations:
-                security_violations.extend(file_violations)
-            else:
-                security_compliant.append(filepath)
-                
-        except:
-            pass
-  
-  # Statistiques scurit
-  total_violations = len(security_violations)
-  security_compliance_rate = (len(security_compliant) / max(total_files_scanned, 1)) * 100
-  
-  print(f'- **Fichiers scanns**: {total_files_scanned}')
-  print(f'- **Conformes scurit**: {len(security_compliant)}')
-  print(f'- **Violations scurit**: {total_violations}')
-  print(f'- **Taux conformit scurit**: {security_compliance_rate:.1f}%')
-  print('')
-  
-  # Violations par svrit
-  by_severity = {}
-  for v in security_violations:
-severity = v['severity']
-if severity not in by_severity:
-    by_severity[severity] = []
-by_severity[severity].append(v)
-  
-  if by_severity:
-print('### Violations par Svrit')
-for severity in ['critical', 'high', 'medium', 'low']:
-    if severity in by_severity:
-        count = len(by_severity[severity])
-        icon = {'critical': '', 'high': '', 'medium': '', 'low': ''}[severity]
-        print(f'- {icon} **{severity.title()}**: {count} violations')
-  
-  # Violations critiques dtail
-  critical_violations = [v for v in security_violations if v['severity'] == 'critical']
-  if critical_violations:
-print('')
-print('###  Violations Critiques Scurit')
-for v in critical_violations[:5]:  # Top 5
-    print(f'- **{v[\"file\"]}:{v[\"line\"]}**: {v[\"rule\"]}')
-  
-  # Verdict scurit constitutionnelle
-  print('')
-  print('###  Verdict Scurit Constitutionnelle')
-  
-  if critical_violations:
-print('-  **NON-CONFORME**: Violations critiques dtectes')
-print('- **Action**: Correction immdiate requise')
-  elif len(by_severity.get('high', [])) > 5:
-print('-  **ATTENTION**: Violations haute svrit')
-print('- **Action**: Audit scurit approfondi')
-  elif security_compliance_rate >= 95:
-print('-  **CONFORME**: Excellente scurit constitutionnelle')
-  else:
-print('-  **ACCEPTABLE**: Scurit constitutionnelle correcte')
-  " >> constitutional-report.md
-        
-    - name: Documentation Constitutional Law
-      run: |
-        echo "" >> constitutional-report.md
-        echo "##  Loi Constitutionnelle Documentation" >> constitutional-report.md
-        echo "" >> constitutional-report.md
-        
-        # Audit documentation constitutionnelle
-  python -c "
-  import ast
-  import os
-  
-  print(' Audit documentation constitutionnelle...')
-  
-  doc_stats = {
-'total_modules': 0,
-'documented_modules': 0,
-'total_classes': 0,
-'documented_classes': 0,
-'total_functions': 0,
-'documented_functions': 0,
-'missing_docs': []
-  }
-  
-  # Scanner documentation
-  for root, dirs, files in os.walk('.'):
-if '.git' in root:
-    continue
-    
-for file in files:
-    if file.endswith('.py') and not file.startswith('__'):
-        filepath = os.path.join(root, file)
-        
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                tree = ast.parse(f.read())
-            
-            doc_stats['total_modules'] += 1
-            
-            # Module docstring
-            module_doc = ast.get_docstring(tree)
-            if module_doc:
-                doc_stats['documented_modules'] += 1
-            else:
-                doc_stats['missing_docs'].append(f'{filepath}: Module sans docstring')
-            
-            # Classes et fonctions
-            for node in ast.walk(tree):
-                if isinstance(node, ast.ClassDef):
-                    doc_stats['total_classes'] += 1
-                    if ast.get_docstring(node):
-                        doc_stats['documented_classes'] += 1
-                    else:
-                        doc_stats['missing_docs'].append(f'{filepath}: Classe {node.name} sans docstring')
-                
-                elif isinstance(node, ast.FunctionDef) and not node.name.startswith('_'):
-                    doc_stats['total_functions'] += 1
-                    if ast.get_docstring(node):
-                        doc_stats['documented_functions'] += 1
-                    else:
-                        doc_stats['missing_docs'].append(f'{filepath}: Fonction {node.name} sans docstring')
-        except:
-            pass
-  
-  # Calculs conformit documentation
-  module_doc_rate = (doc_stats['documented_modules'] / max(doc_stats['total_modules'], 1)) * 100
-  class_doc_rate = (doc_stats['documented_classes'] / max(doc_stats['total_classes'], 1)) * 100
-  function_doc_rate = (doc_stats['documented_functions'] / max(doc_stats['total_functions'], 1)) * 100
-  overall_doc_rate = ((doc_stats['documented_modules'] + doc_stats['documented_classes'] + doc_stats['documented_functions']) / 
-               max(doc_stats['total_modules'] + doc_stats['total_classes'] + doc_stats['total_functions'], 1)) * 100
-  
-  print(f'- **Modules**: {module_doc_rate:.1f}% documents ({doc_stats[\"documented_modules\"]}/{doc_stats[\"total_modules\"]})')
-  print(f'- **Classes**: {class_doc_rate:.1f}% documentes ({doc_stats[\"documented_classes\"]}/{doc_stats[\"total_classes\"]})')
-  print(f'- **Fonctions**: {function_doc_rate:.1f}% documentes ({doc_stats[\"documented_functions\"]}/{doc_stats[\"total_functions\"]})')
-  print(f'- **Global**: {overall_doc_rate:.1f}% documentation')
-  print('')
-  
-  # Verdict documentation constitutionnelle
-  print('###  Verdict Documentation Constitutionnelle')
-  
-  if overall_doc_rate >= 90:
-print('-  **EXCELLENCE DOCUMENTAIRE**: Conformit exemplaire')
-  elif overall_doc_rate >= 70:
-print('-  **BONNE DOCUMENTATION**: Conformit satisfaisante')
-  elif overall_doc_rate >= 50:
-print('-  **DOCUMENTATION MOYENNE**: Amlioration requise')
-  else:
-print('-  **DOCUMENTATION INSUFFISANTE**: Non-conformit constitutionnelle')
-print('- **Action**: Documentation massive requise')
-  
-  # Modules prioritaires  documenter
-  priority_missing = [doc for doc in doc_stats['missing_docs'] if any(keyword in doc for keyword in ['core/', 'brain', 'engine', 'main'])]
-  if priority_missing:
-print('')
-print('###  Priorits Documentation')
-for missing in priority_missing[:5]:
-    print(f'- {missing}')
-  " >> constitutional-report.md
-        
-    - name: Create Constitutional Issues
-      run: |
-        # Crer issues pour violations constitutionnelles critiques
-        if [ -f "constitutional_violations.csv" ]; then
-          critical_count=$(grep "critical" constitutional_violations.csv | wc -l)
-          
-          if [ $critical_count -gt 0 ]; then
-            gh issue create \
-              --title " VIOLATION CONSTITUTIONNELLE CRITIQUE - $critical_count fichiers" \
-              --body-file constitutional-report.md \
-              --label "constitutional,critical,urgent" \
-              --assignee "@me" || echo "Issue creation failed"
-          fi
-        fi
-        
-    - name: Upload Constitutional Reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: constitutional-governance-report
-        path: |
-          constitutional-report.md
-          constitutional_violations.csv
+      # Étape 1: Récupérer le code source du dépôt.
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      # Étape 2: Mettre en place l'environnement Python.
+      - name: 🐍 Setup Python Environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # Étape 3: Exécuter le script d'audit principal.
+      # Ce script externe contient toute la logique d'audit pour la propreté et la maintenance.
+      - name: 🔬 Execute Constitutional Audit Script
+        id: audit_step # ID essentiel pour récupérer les outputs du script
+        run: |
+          python .github/scripts/run_audit.py
+
+      # Étape 4: Créer une issue en cas de violations critiques ou d'échec.
+      - name: 📬 Create Constitutional Issue if Needed
+        # S'exécute si une étape a échoué OU si nos audits ont trouvé des violations.
+        if: failure() || steps.audit_step.outputs.critical_security_violations > 0 || steps.audit_step.outputs.line_violations > 0
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Récupérer les outputs de l'étape de script pour un titre dynamique
+          CRITICAL_VIOLATIONS=${{ steps.audit_step.outputs.critical_security_violations }}
+          LINE_VIOLATIONS=${{ steps.audit_step.outputs.line_violations }}
+
+          gh issue create \
+            --title "🚨 Audit Constitutionnel : $CRITICAL_VIOLATIONS violations critiques et $LINE_VIOLATIONS violations de longueur" \
+            --body-file constitutional-report.md \
+            --label "audit,critical-violation,needs-triage" \
+            --assignee "@me" || echo "La création de l'issue a échoué."
+
+      # Étape 5: Sauvegarder les rapports générés comme artefacts.
+      - name: 📤 Upload Constitutional Reports
+        # S'exécute toujours pour garantir que nous ayons les rapports, même en cas d'échec.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: constitutional-governance-report
+          path: constitutional-report.md
