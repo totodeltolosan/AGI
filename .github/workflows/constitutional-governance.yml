@@ -2,7 +2,7 @@
 # WORKFLOW D'AUDIT CONSTITUTIONNEL POUR LE PROJET AGI
 # ------------------------------------------------------------------------------
 # Ce workflow exécute une série d'audits (structure, sécurité, documentation)
-# sur la branche principale, applique l'auto-refactor universel, génère un
+# sur la branche principale, applique l'auto-refactor universel, génère un 
 # rapport détaillé, et crée des issues pour les violations critiques.
 # ==============================================================================
 
@@ -74,27 +74,27 @@ jobs:
         run: |
           python .github/scripts/run_audit.py
 
-      # Étape 5: Auto-Refactor Universel (MODE PRODUCTION - CORRECTIONS RÉELLES ACTIVÉES PAR DÉFAUT)
+      # Étape 5: Auto-Refactor Universel (MODE SIMULATION PAR DÉFAUT)
       - name: 🔧 Auto-Refactor Universal Code Violations
         id: refactor_step
         run: |
           echo "🔧 EXÉCUTION AUTO-REFACTOR UNIVERSEL"
           echo "===================================="
-
+          
           # Scan détaillé des violations de longueur de fichier AGI
           echo "📊 Scan violations AGI (limite: 200 lignes)..."
           python agi_project/tools/auto_refactor.py --scan --project-root . --max-lines 200
-
-          # MODE PRODUCTION - CORRECTIONS RÉELLES ACTIVÉES (sécurisé) - Simulation des corrections
+          
+          # MODE SIMULATION (sécurisé) - Simulation des corrections
           echo ""
           echo "🎯 SIMULATION des corrections (dry-run mode)..."
-          # python agi_project/tools/auto_refactor.py --fix --dry-run --project-root . --max-files 15
-
+          python agi_project/tools/auto_refactor.py --fix --dry-run --project-root . --max-files 15
+          
           # MODE PRODUCTION: Décommenter les lignes ci-dessous pour activer les corrections réelles
           # echo ""
           # echo "⚡ MODE PRODUCTION - CORRECTIONS RÉELLES ACTIVÉES"
-          python agi_project/tools/auto_refactor.py --fix --project-root . --max-files 15
-
+          # python agi_project/tools/auto_refactor.py --fix --project-root . --max-files 15
+          
           echo ""
           echo "✅ Auto-refactor universel terminé (mode simulation)"
 
@@ -103,27 +103,27 @@ jobs:
         run: |
           echo "🔍 VALIDATION POST-REFACTOR"
           echo "=========================="
-
+          
           # Vérification syntaxe Python sur tous les fichiers
           echo "🐍 Vérification syntaxe Python..."
           find . -name "*.py" -not -path "./.venv/*" -not -path "./backup_*" \
             -exec python -m py_compile {} \; 2>/dev/null || echo "⚠️ Syntaxe vérifiée avec warnings"
-
+          
           # Nouveau scan pour mesurer l'amélioration
           echo ""
           echo "📈 Nouveau scan post-corrections..."
           python agi_project/tools/auto_refactor.py --scan --project-root . --max-lines 200 > post_refactor_scan.txt
-
+          
           # Comparaison avant/après
           echo ""
           echo "📊 COMPARAISON AVANT/APRÈS:"
           echo "=============================="
           PRE_VIOLATIONS=$(grep -c "VIOLATION" pre_refactor_scan.txt 2>/dev/null || echo "0")
           POST_VIOLATIONS=$(grep -c "VIOLATION" post_refactor_scan.txt 2>/dev/null || echo "0")
-
+          
           echo "📉 Violations AVANT refactor: $PRE_VIOLATIONS"
           echo "📈 Violations APRÈS refactor: $POST_VIOLATIONS"
-
+          
           if [ "$POST_VIOLATIONS" -lt "$PRE_VIOLATIONS" ]; then
             IMPROVEMENT=$((PRE_VIOLATIONS - POST_VIOLATIONS))
             echo "✅ AMÉLIORATION: -$IMPROVEMENT violations"
@@ -132,28 +132,10 @@ jobs:
           else
             echo "⚠️ ATTENTION: Augmentation détectée"
           fi
-
+          
           echo "✅ Validation post-refactor terminée"
 
-      # Étape 7: Résumé de performance Auto-Refactor
-      - name: 📈 Auto-Refactor Performance Summary
-        run: |
-          echo "📈 RÉSUMÉ PERFORMANCE AUTO-REFACTOR"
-          echo "==================================="
-
-          # Analyser les logs pour extraire les stratégies utilisées
-          echo "🎯 Stratégies appliquées:"
-          grep -E "(Stratégie|Strategy)" post_refactor_scan.txt || echo "Aucune stratégie détectée (mode simulation)"
-
-          echo ""
-          echo "📊 Métriques finales:"
-          echo "- Fichiers analysés: $(find . -name "*.py" -not -path "./.venv/*" -not -path "./backup_*" | wc -l)"
-          echo "- Violations restantes: $(grep -c "VIOLATION" post_refactor_scan.txt 2>/dev/null || echo "0")"
-
-          # Marquer comme réussi pour les étapes suivantes
-          echo "refactor_success=true" >> $GITHUB_OUTPUT
-
-      # Étape 8: Créer une issue en cas de violations critiques ou d'échec.
+      # Étape 7: Créer une issue en cas de violations critiques ou d'échec.
       - name: 📬 Create Constitutional Issue if Needed
         # S'exécute si une étape a échoué OU si nos audits ont trouvé des violations.
         if: failure() || steps.audit_step.outputs.critical_security_violations > 0 || steps.audit_step.outputs.line_violations > 0
@@ -168,14 +150,14 @@ jobs:
 
           # Préparer le corps de l'issue en ajoutant les résultats du refactor
           BODY_CONTENT=$(cat constitutional-report.md)
-
+          
           # Ajouter les résultats de l'auto-refactor
           REFACTOR_SUMMARY=""
           if [ -f "post_refactor_scan.txt" ]; then
             POST_VIOLATIONS=$(grep -c "VIOLATION" post_refactor_scan.txt 2>/dev/null || echo "0")
             REFACTOR_SUMMARY="\n\n## 🔧 Résultats Auto-Refactor\n\nViolations restantes après refactor: **$POST_VIOLATIONS**\n\nMode: Simulation (corrections non appliquées)"
           fi
-
+          
           FULL_BODY="${BODY_CONTENT}${REFACTOR_SUMMARY}\n\n---\n\n🔔 **Notification:** @${COMMIT_AUTHOR}, ce rapport a été généré suite à votre dernier commit."
 
           # Créer l'issue avec les informations de refactor
@@ -184,7 +166,7 @@ jobs:
             --body "$FULL_BODY" \
             --label "audit,critical-violation,needs-triage,auto-refactor" || echo "La création de l'issue a échoué."
 
-      # Étape 9: Sauvegarder les rapports générés comme artefacts.
+      # Étape 8: Sauvegarder les rapports générés comme artefacts.
       - name: 📤 Upload Constitutional Reports
         # S'exécute toujours pour garantir que nous ayons les rapports, même en cas d'échec.
         if: always()
@@ -196,16 +178,4 @@ jobs:
             pre_refactor_scan.txt
             post_refactor_scan.txt
             agi_project/tools/refactor_*.log
-          retention-days: 30
-
-      # Étape 10: Upload rapports Auto-Refactor séparément
-      - name: 📊 Upload Auto-Refactor Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: auto-refactor-analysis
-          path: |
-            pre_refactor_scan.txt
-            post_refactor_scan.txt
-            agi_project/tools/auto_refactor.py
           retention-days: 30
