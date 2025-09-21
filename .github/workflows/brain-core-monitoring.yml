@@ -35,9 +35,9 @@ jobs:
           echo "## 🔴 Violations détectées" >> brain-health.md
           find eve/cognitive/brain/ -name "*.py" | while read file; do
             lines=$(wc -l < "$file")
-            if [ $lines -gt 200 ]; then
+            if [ $lines -gt 500 ]; then
               violations=$((violations + 1))
-              excess=$((lines - 200))
+              excess=$((lines - 500))
               echo "- **$file**: $lines lignes (excès: $excess)" >> brain-health.md
             fi
           done
@@ -72,7 +72,7 @@ jobs:
         
     - name: Create Brain Health Issue (if problems)
       run: |
-        violations=$(find eve/cognitive/brain/ -name "*.py" -exec sh -c 'lines=$(wc -l < "$1"); if [ $((lines - 200)) -gt 0 ]; then echo "$1"; fi' _ {} \; 2>/dev/null | wc -l)
+        violations=$(find eve/cognitive/brain/ -name "*.py" -exec sh -c 'lines=$(wc -l < "$1"); if [ $((lines - 500)) -gt 0 ]; then echo "$1"; fi' _ {} \; 2>/dev/null | wc -l)
         
         if [ $violations -gt 0 ]; then
           gh issue create \

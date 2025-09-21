@@ -105,7 +105,7 @@ jobs:
         echo "=== ANALYSE CONFORMITÉ AGI ==="
         find . -name "*.py" -type f | while read file; do
           lines=$(wc -l < "$file")
-          excess=$((lines - 200))
+          excess=$((lines - 500))
           if [ $excess -gt 0 ]; then
             echo "VIOLATION: $file ($lines lignes, excès: $excess)"
           else

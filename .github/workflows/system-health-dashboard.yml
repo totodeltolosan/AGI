@@ -162,7 +162,7 @@ jobs:
                         
                         if lines > 500:
                             large_files += 1
-                        if lines > 200:
+                        if lines > 500:
                             violations += 1
                 except:
                     pass

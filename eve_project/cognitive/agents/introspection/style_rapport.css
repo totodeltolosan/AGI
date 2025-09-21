@@ -1,0 +1,21 @@
+
+    :root { --bg-color: #1c1e22; --primary-color: #282c34; --secondary-color: #3498db; --text-color: #abb2bf; --header-color: #ffffff; --border-color: #4b5263; --link-color: #61afef; --ia-summary-bg: #21252b; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 2em; line-height: 1.6; }
+    header { text-align: center; border-bottom: 2px solid var(--secondary-color); padding-bottom: 20px; margin-bottom: 40px; }
+    header h1 { color: var(--header-color); font-size: 3em; margin: 0; }
+    header p { font-size: 1.2em; color: var(--secondary-color); }
+    main { display: grid; grid-template-columns: 400px 1fr; gap: 30px; }
+    #navigation-container { background-color: var(--primary-color); border-radius: 8px; border: 1px solid var(--border-color); height: 85vh; position: sticky; top: 20px; display: flex; flex-direction: column; }
+    #navigation-graph { flex-grow: 1; }
+    #legend { padding: 10px; border-top: 1px solid var(--border-color); }
+    #legend span { display: inline-block; margin-right: 15px; font-size: 0.9em; }
+    .legend-color { width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 5px; border-radius: 50%; }
+    section#contenu { background-color: var(--primary-color); padding: 20px 40px; border-radius: 8px; border: 1px solid var(--border-color); max-height: 85vh; overflow-y: auto; }
+    article { padding-top: 20px; margin-top: -20px; }
+    h2 { color: var(--header-color); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+    code { background-color: var(--bg-color); padding: 3px 6px; border-radius: 4px; font-family: 'Consolas', monospace; }
+    .resume-ia { background-color: var(--ia-summary-bg); border-left: 4px solid var(--secondary-color); padding: 15px; margin: 10px 0; border-radius: 0 5px 5px 0; }
+    .docstring { background-color: #2c3e50; color: #ecf0f1; padding: 10px; border-radius: 5px; font-style: italic; }
+    .separator { height: 2px; background-color: var(--border-color); margin: 40px 0; }
+    

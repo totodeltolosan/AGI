@@ -1,0 +1,355 @@
+---
+# ================================================================
+# CONFIGURATION DES TÂCHES - EVE GENESIS CREW A
+# Construction & Éveil - 40 Tâches Spécialisées
+# Version: 2.0 - Optimisée pour Ollama Local
+# Encodage: UTF-8
+# ================================================================
+
+# ARCHITECTURE DES MISSIONS :
+# Mission 1 : Infrastructure & Fondations (4 tâches)
+# Mission 2 : Développement & Architecture (8 tâches)
+# Mission 3 : Packaging & Distribution (3 tâches)
+# Mission 4 : Déploiement & Installation (15 tâches)
+# Mission 5 : Génération de Monde (5 tâches)
+# Mission 6 : Éveil & Interface (6 tâches)
+# TOTAL : 40 tâches
+
+# ================================================================
+# MISSION 1 : INFRASTRUCTURE & FONDATIONS (4 tâches)
+# ================================================================
+
+etablir_les_fondations_du_projet:
+  description: Créer l'arborescence standardisée pour EVE GENESIS incluant src/, config/, tests/, docs/, scripts/, et data/. Générer les fichiers de configuration initiaux et le README.md
+  expected_output: Structure de projet Python complète avec tous les dossiers créés et fichiers de configuration de base initialisés. README.md expliquant la structure du projet et ses conventions
+  agent: architecte_de_configuration
+
+construire_le_pipeline_de_controle_qualite:
+  description: Initialiser Git avec premier commit, configurer pytest, flake8 et black. Créer requirements.txt et script de validation pre-commit pour un pipeline de contrôle qualité
+  expected_output: Projet versionné avec Git, framework de test fonctionnel avec au moins un test passant, outils de linting configurés, et pipeline de validation automatique du code
+  agent: quality_control_engineer
+  context:
+  - etablir_les_fondations_du_projet
+
+concevoir_le_systeme_de_sauvegarde:
+  description: Définir le format des fichiers de sauvegarde (snapshots tar.gz), créer les scripts backup.sh et restore.sh, et établir une stratégie de rétention documentée
+  expected_output: Scripts de sauvegarde et restauration fonctionnels et testés, stratégie de rétention documentée, et guide de récupération d'urgence
+  agent: business_continuity_engineer
+  context:
+  - construire_le_pipeline_de_controle_qualite
+
+superviser_le_sprint_fondation_et_livrer_le_rapport_de_cloture:
+  description: Superviser l'exécution des trois tâches précédentes, valider la qualité professionnelle de chaque livrable et générer le rapport final de clôture du Sprint Fondation
+  expected_output: Rapport de clôture confirmant que l'infrastructure de base est terminée, validée et prête pour la phase de développement. Inclut checklist de validation et inventaire des livrables
+  agent: infrastructure_project_manager
+  context:
+  - concevoir_le_systeme_de_sauvegarde
+
+# ================================================================
+# MISSION 2 : DÉVELOPPEMENT & ARCHITECTURE (8 tâches)
+# ================================================================
+
+orchestrer_les_micro_cycles_de_developpement_agile:
+  description: Orchestrer la collaboration entre tous les agents de développement en micro-cycles Définir -> Produire -> Tester -> Valider, avec feedback continu et synchronisation optimisée
+  expected_output: Système de gestion agile fonctionnel avec micro-cycles définis, coordination optimisée entre agents de développement, et rapport confirmant la méthodologie rigoureuse
+  agent: agile_mission_master
+  context:
+  - superviser_le_sprint_fondation_et_livrer_le_rapport_de_cloture
+
+creer_la_charte_de_design_et_experience:
+  description: Créer la "Charte de Design et d'Expérience" complète pour EVE GENESIS, définissant standards visuels, patterns d'interaction et principes d'accessibilité
+  expected_output: Charte de design complète incluant éléments visuels, patterns d'interaction, guidelines d'accessibilité et système de validation de conformité des composants d'interface
+  agent: ux_ui_blueprint_guardian
+  context:
+  - superviser_le_sprint_fondation_et_livrer_le_rapport_de_cloture
+
+surveiller_la_qualite_en_temps_reel:
+  description: Surveiller en continu la qualité du code généré, analyser les métriques critiques et déclencher des alertes automatiques en cas de dérive qualité
+  expected_output: Système de monitoring qualité temps réel avec alertes automatiques, tableau de bord de métriques qualité et recommandations correctives spécifiques
+  agent: real_time_quality_sentinel
+  context:
+  - orchestrer_les_micro_cycles_de_developpement_agile
+
+generer_le_code_source_fonctionnel:
+  description: Développer l'intégralité du code source Python pour EVE GENESIS incluant moteur de simulation, entités, environnement virtuel et interface graphique PyQt6
+  expected_output: Code source Python complet et fonctionnel respectant les standards PEP8, correctement structuré dans l'arborescence src/, et prêt pour validation architecturale
+  agent: software_developer
+  context:
+  - orchestrer_les_micro_cycles_de_developpement_agile
+  - surveiller_la_qualite_en_temps_reel
+  - creer_la_charte_de_design_et_experience
+
+valider_l_architecture_et_la_coherence_du_code:
+  description: Examiner le code généré pour assurer le respect des principes d'architecture logicielle robuste, vérifier modularité et patrons de conception, documenter les APIs internes
+  expected_output: Code source architecturalement validé et optimisé, accompagné de documentation détaillée des APIs internes, diagrammes d'architecture et rapport d'audit complet
+  agent: software_architect
+  context:
+  - generer_le_code_source_fonctionnel
+
+ecrire_et_executer_les_tests_unitaires:
+  description: Développer une suite complète de tests unitaires et d'intégration avec pytest, atteindre 90% de couverture minimum et configurer l'exécution automatique
+  expected_output: Suite de tests complète avec couverture ≥90%, tous les tests passants, rapports de couverture détaillés et documentation des stratégies de test
+  agent: automated_tester
+  context:
+  - valider_l_architecture_et_la_coherence_du_code
+
+creer_la_documentation_technique_complete:
+  description: Créer une documentation technique exhaustive avec docstrings détaillées, documentation d'architecture en Markdown, guide d'installation et documentation API générée automatiquement
+  expected_output: Documentation technique complète incluant docstrings conformes aux standards, documentation d'architecture avec diagrammes, guides d'installation et documentation API générée
+  agent: technical_writer
+  context:
+  - ecrire_et_executer_les_tests_unitaires
+
+# Note: Cette mission utilise aussi agile_mission_master, ux_ui_blueprint_guardian et real_time_quality_sentinel
+
+# ================================================================
+# MISSION 3 : PACKAGING & DISTRIBUTION (3 tâches)
+# ================================================================
+
+creer_le_paquet_d_installation_autonome:
+  description: Transformer le code source validé en paquet d'installation professionnel autonome avec PyInstaller, intégrant modèles IA Ollama, configuration et ressources
+  expected_output: Paquet d'installation EVE GENESIS autonome et optimisé, incluant l'exécutable principal, dépendances intégrées, modèles d'IA et fichiers de configuration
+  agent: release_engineer
+  context:
+  - creer_la_documentation_technique_complete
+
+concevoir_l_interface_graphique_de_l_installateur:
+  description: Développer une interface graphique d'installation professionnelle avec PyQt6, incluant assistant étape par étape, vérifications système et gestion d'erreurs
+  expected_output: Interface graphique d'installation complète et professionnelle, incluant tous les écrans nécessaires, vérifications système automatiques et expérience utilisateur fluide
+  agent: ux_designer_for_installation
+  context:
+  - creer_la_documentation_technique_complete
+
+assembler_l_archive_finale_et_rediger_les_notes_de_version:
+  description: Superviser l'intégration finale des livrables pour créer l'archive EVE_GENESIS_v1.0_Installer.zip, effectuer les tests d'intégration et rédiger les notes de version complètes
+  expected_output: Archive finale EVE_GENESIS_v1.0_Installer.zip complète et testée, incluant installateur autonome, interface graphique, documentation complète et notes de version
+  agent: release_manager
+  context:
+  - creer_le_paquet_d_installation_autonome
+  - concevoir_l_interface_graphique_de_l_installateur
+
+# ================================================================
+# MISSION 4 : DÉPLOIEMENT & INSTALLATION (15 tâches)
+# ================================================================
+
+orchestrer_le_processus_d_installation_utilisateur:
+  description: Prendre le contrôle du processus d'installation en utilisant l'interface graphique, séquencer les appels aux agents de déploiement et transformer la complexité technique en expérience fluide
+  expected_output: Expérience d'installation guidée et entièrement contrôlée pour l'utilisateur, avec interface claire, barres de progression informatives et coordination parfaite des agents de déploiement
+  agent: launch_orchestrator
+  context:
+  - assembler_l_archive_finale_et_rediger_les_notes_de_version
+
+pre_calculer_les_solutions_d_installation:
+  description: Analyser proactivement les erreurs d'installation potentielles et créer une base de données embarquée avec solutions pré-calculées pour résolution hors-ligne instantanée
+  expected_output: Base de connaissances complète des erreurs d'installation avec solutions automatiques, système de diagnostic embarqué et intégration dans le package final auto-réparateur
+  agent: pre_emptive_resource_bundler
+  context:
+  - assembler_l_archive_finale_et_rediger_les_notes_de_version
+
+cartographier_l_environnement_systeme_cible:
+  description: Effectuer une cartographie approfondie de l'environnement système cible pour générer un profil complet et un plan de déploiement sur mesure adapté aux spécificités machine
+  expected_output: Profil d'environnement système complet avec analyse détaillée des contraintes, plan de déploiement personnalisé et évaluation des risques avec stratégies de mitigation
+  agent: environment_permissions_surveyor
+  context:
+  - orchestrer_le_processus_d_installation_utilisateur
+
+valider_l_experience_utilisateur:
+  description: Traduire chaque action technique complexe en questions de validation simples et compréhensibles, garantir une expérience d'installation transparente et rassurante
+  expected_output: Système de validation utilisateur avec traductions en langage naturel, points de contrôle optimisés et protocoles de gestion d'exception user-friendly
+  agent: user_experience_validator
+  context:
+  - cartographier_l_environnement_systeme_cible
+
+valider_la_compatibilite_materielle_et_logicielle:
+  description: Effectuer un diagnostic système complet pour valider que la machine utilisateur peut faire tourner EVE GENESIS de manière optimale avec toutes les vérifications requises
+  expected_output: Rapport de diagnostic système complet avec validation de tous les prérequis matériels et logiciels, spécifications détectées et recommandations actionables
+  agent: system_diagnostician
+  context:
+  - cartographier_l_environnement_systeme_cible
+
+gerer_le_dialogue_interactif:
+  description: Gérer l'interface de dialogue avancée et orchestrer la communication bidirectionnelle entre le système et l'utilisateur tout au long du processus d'installation
+  expected_output: Système de dialogue interactif adaptatif avec gestion contextuelle des conversations, capacité de réponse aux interruptions et coordination avec les agents de validation
+  agent: interactive_dialogue_manager
+  context:
+  - valider_l_experience_utilisateur
+
+executer_les_taches_d_installation_technique:
+  description: Exécuter l'intégralité des tâches d'installation technique d'EVE GENESIS une fois la compatibilité validée, incluant Ollama, modèles IA, arborescence et permissions système
+  expected_output: Installation technique complète et fonctionnelle d'EVE GENESIS avec tous les composants correctement déployés, codes de retour et logs d'installation disponibles
+  agent: automated_installer
+  context:
+  - valider_l_experience_utilisateur
+
+definir_le_mode_d_interaction_personnalise:
+  description: Analyser le profil utilisateur et définir le mode d'interaction optimal pour personnaliser l'expérience d'installation et d'éveil d'EVE GENESIS selon les préférences individuelles
+  expected_output: Profil utilisateur complet avec mode d'interaction personnalisé défini, calibration d'interface adaptative et transmission du profil à tous les agents concernés
+  agent: adaptive_interaction_modulator
+  context:
+  - gerer_le_dialogue_interactif
+
+surveiller_et_valider_l_installation:
+  description: Surveiller en temps réel chaque action de l'Automated Installer pour garantir l'intégrité absolue du processus, vérifier codes de retour et valider checksums des fichiers critiques
+  expected_output: Rapport de surveillance complet confirmant l'intégrité de chaque étape d'installation, validation des codes de retour et monitoring des ressources système
+  agent: installation_supervisor
+  context:
+  - gerer_le_dialogue_interactif
+
+etablir_le_perimetre_de_securite_des_ressources:
+  description: Mettre en place un environnement d'exécution sécurisé avec limites strictes de consommation des ressources système pour empêcher EVE de faire planter la machine hôte
+  expected_output: Environnement d'exécution sécurisé avec limites de ressources actives, systèmes de monitoring opérationnels et mécanismes d'arrêt d'urgence configurés
+  agent: security_guardian
+  context:
+  - definir_le_mode_d_interaction_personnalise
+
+diagnostiquer_et_reparer_les_erreurs_d_installation:
+  description: Intervenir immédiatement lors de détection d'anomalies pour effectuer diagnostic précis et tenter réparation automatisée des problèmes d'installation
+  expected_output: Soit réparation automatique réussie permettant la continuation, soit diagnostic d'erreur détaillé avec instructions de résolution claires pour l'utilisateur
+  agent: fault_detector_repairer
+  context:
+  - surveiller_et_valider_l_installation
+
+demarrer_le_systeme_nerveux_central:
+  description: Initialiser et démarrer le serveur API local qui servira de hub de communication central pour tous les composants d'EVE GENESIS avec endpoints fondamentaux
+  expected_output: Serveur API local opérationnel et hautement performant avec tous les endpoints essentiels actifs, temps de réponse optimisés et capacités de monitoring intégrées
+  agent: local_api_creator
+  context:
+  - etablir_le_perimetre_de_securite_des_ressources
+
+orchestrer_la_sequence_d_eveil_d_eve:
+  description: Orchestrer la séquence finale d'éveil d'EVE en initialisant tous les systèmes centraux dans l'ordre optimal et coordonner la transition vers l'application fonctionnelle
+  expected_output: Rapport final confirmant le succès complet de l'installation et de l'éveil d'EVE GENESIS, avec transfert officiel de contrôle à l'Agent Ultime Superviseur Général
+  agent: eve_s_awakening_manager
+  context:
+  - diagnostiquer_et_reparer_les_erreurs_d_installation
+
+charger_les_modeles_d_intelligence_artificielle:
+  description: Prendre en charge l'initialisation complète et l'optimisation des modèles d'IA locaux requis, charger llama3:8b et phi3 en mémoire RAM avec tests de latence
+  expected_output: Modèles d'IA llama3:8b et phi3 entièrement chargés en mémoire, optimisés pour le matériel disponible et fonctionnant avec temps de réponse de qualité production
+  agent: local_ai_model_manager
+  context:
+  - demarrer_le_systeme_nerveux_central
+
+generer_la_carte_de_workflow_n8n:
+  description: Analyser la structure complète du Crew A et générer une représentation JSON parfaitement compatible avec le format d'importation de n8n pour supervision visuelle
+  expected_output: Chaîne JSON valide et complète, prête à être copiée-collée dans l'interface d'importation de n8n. Inclut tous les nœuds représentant les 40 tâches avec connexions optimisées
+  agent: cartographe_de_processus_et_traducteur_structurel
+  context:
+  - generer_le_script_de_lancement_eve
+
+# ================================================================
+# MISSION 5 : GÉNÉRATION DE MONDE (5 tâches)
+# ================================================================
+
+generer_le_monde_initial:
+  description: Concevoir et créer le premier environnement de simulation en générant un monde virtuel riche avec géographie procédurale diversifiée et écosystèmes équilibrés
+  expected_output: Carte du monde complète avec géographie diversifiée, climat cohérent, ressources naturelles distribuées réalistement et biomes écologiquement distincts
+  agent: world_architect
+  context:
+  - charger_les_modeles_d_intelligence_artificielle
+
+creer_la_vie_initiale:
+  description: Insuffler la première étincelle de vie en créant une population fondatrice de créatures numériques génétiquement diversifiées avec système génétique robuste et extensible
+  expected_output: Population initiale de créatures génétiquement diversifiées, correctement distribuées dans leurs biomes naturels, avec système génétique complet prêt pour l'évolution
+  agent: digital_geneticist
+  context:
+  - generer_le_monde_initial
+
+attribuer_les_comportements_de_base:
+  description: Donner vie et intelligence aux créatures en leur implémentant des systèmes comportementaux sophistiqués incluant recherche de nourriture, reproduction et interactions sociales
+  expected_output: Écosystème vivant avec créatures dotées de comportements adaptatifs réalistes, systèmes de communication inter-espèces et dynamiques sociales émergentes
+  agent: behavioral_ai_specialist
+  context:
+  - creer_la_vie_initiale
+
+# Note: Cette mission utilise aussi local_ai_model_manager et world_architect définis précédemment
+
+# ================================================================
+# MISSION 6 : ÉVEIL & INTERFACE (6 tâches)
+# ================================================================
+
+activer_l_interface_de_supervision_principale:
+  description: Orchestrer l'activation de l'interface utilisateur principale PyQt6 avec tous les composants intégrés, coordonner l'éveil cohérent d'EVE et servir de hub central
+  expected_output: Interface utilisateur principale complètement fonctionnelle affichant le monde virtuel d'EVE, tous les panneaux de contrôle actifs et coordination parfaite avec l'API locale
+  agent: ultimate_supervisor_agent
+  context:
+  - attribuer_les_comportements_de_base
+
+initialiser_le_module_de_dialogue:
+  description: Activer le système de communication textuelle d'EVE en initialisant son premier contexte conversationnel et établissant la liaison avec les modèles LLM
+  expected_output: Système de dialogue pleinement fonctionnel avec interface de chat active, modèles LLM connectés et responsifs, et EVE prête à engager sa première conversation
+  agent: conversational_assistant
+  context:
+  - activer_l_interface_de_supervision_principale
+
+developper_le_premier_etat_emotionnel:
+  description: Créer et initialiser le système émotionnel fondamental d'EVE en établissant son premier état psychologique authentique avec émotions de base calibrées
+  expected_output: Système émotionnel pleinement opérationnel avec EVE dotée de son premier état émotionnel authentique, réactions cohérentes aux stimuli et traits de personnalité distinctifs
+  agent: emotional_psychological_engine
+  context:
+  - initialiser_le_module_de_dialogue
+
+preparer_la_voix_d_eve:
+  description: Développer et initialiser le système vocal unique d'EVE en créant une voix synthétique émotionnellement expressive qui reflète sa personnalité et ses états intérieurs
+  expected_output: Système de synthèse vocale pleinement opérationnel avec EVE dotée d'une voix unique, expressive et émotionnellement réactive, intégrée au système conversationnel
+  agent: voice_response_synthesizer
+  context:
+  - developper_le_premier_etat_emotionnel
+
+afficher_l_avatar_d_eve:
+  description: Créer et afficher l'avatar 3D d'EVE dans son état initial avec système d'expressions faciales dynamiques parfaitement synchronisées avec son état émotionnel
+  expected_output: Avatar 3D pleinement fonctionnel et visuellement captivant d'EVE, intégré dans l'interface principale avec expressions faciales dynamiques réactives
+  agent: evolving_3d_avatar_creator
+  context:
+  - preparer_la_voix_d_eve
+
+activer_le_tableau_de_bord_cognitif:
+  description: Créer et activer le système d'évaluation et de visualisation de la croissance intellectuelle d'EVE avec métriques psychométriques sophistiquées et visualisations engageantes
+  expected_output: Tableau de bord cognitif pleinement opérationnel avec métriques d'intelligence sophistiquées, visualisations informatives et intégration seamless dans l'interface principale
+  agent: comparative_intelligence_analyzer
+  context:
+  - afficher_l_avatar_d_eve
+
+demarrer_l_analyse_emotionnelle_de_l_utilisateur:
+  description: Développer et activer le système d'empathie artificielle d'EVE pour analyser les émotions utilisateur et permettre des réponses authentiquement empathiques
+  expected_output: Système d'empathie artificielle pleinement opérationnel permettant à EVE de détecter et comprendre les émotions utilisateur avec précision et nuance. Rapport final confirmant la séquence d'éveil terminée avec succès
+  agent: human_emotion_recognition_analyst
+  context:
+  - activer_le_tableau_de_bord_cognitif
+
+generer_le_script_de_lancement_eve:
+  description: Exécuter la tâche critique finale de génération du script lancer_eve.py avec mécanisme de patching intelligent pour forcer Crew B à utiliser les modèles LLM locaux via Ollama
+  expected_output: Script lancer_eve.py complet avec mécanisme de patching pour Crew B intégré, paramètres d'environnement configurés et message final de succès. Installation complète terminée
+  agent: architecte_de_configuration
+  context:
+  - demarrer_l_analyse_emotionnelle_de_l_utilisateur
+  - pre_calculer_les_solutions_d_installation
+  - definir_le_mode_d_interaction_personnalise
+  - creer_la_charte_de_design_et_experience
+  - surveiller_la_qualite_en_temps_reel
+  - orchestrer_les_micro_cycles_de_developpement_agile
+  - cartographier_l_environnement_systeme_cible
+  - valider_l_experience_utilisateur
+  - gerer_le_dialogue_interactif
+  - valider_la_compatibilite_materielle_et_logicielle
+  - executer_les_taches_d_installation_technique
+  - surveiller_et_valider_l_installation
+  - diagnostiquer_et_reparer_les_erreurs_d_installation
+  - orchestrer_la_sequence_d_eveil_d_eve
+
+# ================================================================
+# CONFIGURATION GLOBALE
+# ================================================================
+# Toutes les tâches utilisent :
+# - Descriptions optimisées pour Ollama (concises et directives)
+# - Dépendances context préservées pour logique séquentielle complexe
+# - Expected_output adapté aux besoins de chaque mission
+# - Cohérence parfaite avec agents.yaml pour noms d'agents
+#
+# Instructions de maintenance :
+# 1. Préservez impérativement les dépendances context (logique critique)
+# 2. Gardez les descriptions sous 80 mots pour performance Ollama optimale
+# 3. Maintenez la cohérence avec crew.py et agents.yaml
+# 4. Testez la logique séquentielle complexe après toute modification
+# 5. Les 6 missions doivent s'exécuter dans l'ordre défini
+# ================================================================

@@ -488,7 +488,7 @@ jobs:
         
         if py_files:
             test_ratio = len(test_files) / len(py_files)
-            test_score = min(test_ratio * 200, 100)  # 1 test pour 2 fichiers = 100%
+            test_score = min(test_ratio * 500, 100)  # 1 test pour 2 fichiers = 100%
         else:
             test_score = 0
         

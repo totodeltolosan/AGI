@@ -1,0 +1,67 @@
+# Cerveau/cerveau_config.yaml (pour le Space Gradio)
+# Configuration simplifiée pour la démo
+
+paths:
+  connaissance_dir_suffix: "Connaissance_Space_Input" # Dossier où Gradio pourrait mettre les fichiers uploadés
+  cerveau_dir_suffix: "Cerveau" # Pour trouver ce config et le schéma
+  log_dir_suffix: "logs_space"
+  improvements_subdir: "ameliorations_proposees_space"
+  active_improvements_dir_suffix: "Connaissance_Space_Output/Amelioree"
+
+logging:
+  log_file_name: "cerveau_space_app.log"
+  emergency_log_file_name: "cerveau_space_emergency.log"
+  module_registry_file_name: "module_registry_space.json" # Non utilisé activement
+  module_registry_lock_file_name: "module_registry_space.lock"
+  rotation:
+    max_bytes: 5242880  # 5MB
+    backup_count: 1
+
+service_params:
+  watchdog_enabled: false
+  file_scan_interval_seconds: 36000 # Très long, pas de scan actif
+  allowed_file_extensions: [".txt", ".md"] # Pour les uploads Gradio
+  max_workers: 1 # Un seul worker pour les appels Gradio
+  file_queue_max_size: 10
+  self_report_interval_seconds: 36000
+  task_timeout_seconds: 120
+  backpressure_active_task_multiplier: 2
+  excluded_dir_parts: ['.venv', 'venv', 'env', '__pycache__', '.git']
+  excluded_dir_prefixes: ['.']
+
+circuit_breaker:
+  threshold: 5
+  timeout_seconds: 600
+
+nlp:
+  use_spacy_if_available: true
+  spacy_model_names: ["fr_core_news_sm"] # Modèle léger pour démarrage rapide du Space
+  spacy_max_text_length: 200000 # Limite plus basse pour les démos
+  use_nltk_if_available: false # Désactiver pour alléger
+  use_rake_if_available: false
+  use_yake_if_available: false
+  use_sklearn_tfidf_if_available: false
+  default_language: "fr"
+
+knowledge_base:
+  use_sqlite_db: true
+  db_name: "../cerveau_knowledge_test.sqlite" # Chemin RELATIF à CERVEAU_DIR pour pointer vers la racine du Space
+  schema_file: "cerveau_kb_schema.sql" # Si vous avez ce fichier, copiez-le aussi dans Cerveau/
+  db_timeout_seconds: 5
+
+pipeline_steps:
+  ComprehensionStep: {enabled: true, priority: 10}
+  AnalysisStep: {enabled: true, priority: 20}
+  StudyStep: {enabled: true, priority: 30} # Pour pouvoir écrire dans la KB de test
+  ImprovementProposalStep: {enabled: false} # Désactivé pour la démo
+  ActiveImprovementStep: {enabled: false}  # Désactivé pour la démo
+
+core_algorithms_config:
+  text_improver:
+    default_language: "fr"
+    summary_ratio: 0.20 # Un peu plus long pour les petits textes
+    # Pas de LanguageTool pour l'instant pour simplifier
+  knowledge_linker:
+    sentence_transformer_model: "paraphrase-multilingual-MiniLM-L12-v2" # Modèle SBERT plus léger
+    min_similarity_for_link: 0.70
+    num_semantic_links_to_propose: 2

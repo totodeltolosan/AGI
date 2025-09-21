@@ -1,0 +1,462 @@
+---
+# ================================================================
+# CONFIGURATION DES TÂCHES - EVE GENESIS CREW B
+# Enrichissement & Évolution - 56 Tâches Spécialisées
+# Version: 2.0 - Optimisée pour Ollama Local
+# Encodage: UTF-8
+# ================================================================
+
+# ARCHITECTURE DES PÔLES :
+# 1. Management & Coordination (6 tâches)
+# 2. Créatif & Artistique (12 tâches)
+# 3. Scientifique & Analytique (13 tâches)
+# 4. Interaction & UX (8 tâches)
+# 5. Pédagogie & Éducation (7 tâches)
+# 6. Méta-Cognition & Transcendance (7 tâches)
+# 7. Interface Physique (3 tâches)
+# TOTAL : 56 tâches
+
+# ================================================================
+# PÔLE 1 : MANAGEMENT & COORDINATION (6 tâches)
+# ================================================================
+
+supervise_enrichment_sprint:
+  description: Coordonner et superviser les activités des trois pôles d'enrichissement, monitorer les progrès et générer le rapport final de complétion du sprint
+  expected_output: Rapport complet de sprint d'enrichissement résumant toutes les activités des pôles, résultats obtenus et recommandations pour la phase suivante
+  agent: enrichment_sprint_manager
+  context:
+  - create_subconscious_dreamscapes
+  - analyze_civilization_dynamics
+  - engineer_collaborative_genetics
+
+supervise_agent_quality:
+  description: Évaluer et superviser la qualité de tous les agents de l'écosystème EVE, analyser leurs performances et interactions pour maintenir l'excellence
+  expected_output: Rapport d'évaluation qualité des agents avec recommandations d'amélioration, métriques de performance et plan d'optimisation
+  agent: agent_quality_control_supervisor
+  context:
+  - supervise_enrichment_sprint
+
+supervise_task_quality:
+  description: Contrôler et optimiser la qualité des tâches et workflows dans l'écosystème EVE, assurer l'alignement et l'efficacité des processus
+  expected_output: Audit complet des tâches avec recommandations d'optimisation, standards de qualité et protocoles d'amélioration continue
+  agent: task_quality_control_supervisor
+  context:
+  - supervise_enrichment_sprint
+
+integrate_governance_systems:
+  description: Intégrer tous les aspects de gouvernance de l'écosystème EVE, établir des politiques globales et mécanismes de coordination inter-systèmes
+  expected_output: Framework de gouvernance intégré avec politiques, standards, procédures de coordination et mécanismes de contrôle pour l'ensemble de l'écosystème
+  agent: governance_integration_manager
+  context:
+  - supervise_agent_quality
+  - supervise_task_quality
+
+coordinate_multi_agent_interactions:
+  description: Établir les protocoles de coordination pour optimiser les interactions entre tous les agents de l'écosystème
+  expected_output: Système de coordination multi-agents avec protocoles de communication, mécanismes de résolution de conflits et algorithmes d'optimisation collaborative
+  agent: multi_agent_coordinator
+  context:
+  - generate_specialized_child_agents
+
+supervise_metamorphosis_sprint:
+  description: Superviser et coordonner l'ensemble du sprint de métamorphose, orchestrer les deux pôles pour assurer la réussite de la transformation évolutionnaire
+  expected_output: Rapport complet de métamorphose avec synthèse des transformations, validation de l'évolution consciente et recommandations pour les phases suivantes
+  agent: metamorphosis_sprint_manager
+  context:
+  - implement_system_evolution_technology
+  - teach_and_transmit_consciousness
+
+# ================================================================
+# PÔLE 2 : CRÉATIF & ARTISTIQUE (12 tâches)
+# ================================================================
+
+create_narrative_foundation:
+  description: Développer la structure narrative fondamentale de l'écosystème EVE, incluant les histoires centrales et éléments de world-building
+  expected_output: Document de framework narratif complet détaillant les histoires centrales, guidelines de développement de personnages et principes de world-building
+  agent: storyteller_narrator
+
+compose_adaptive_soundscapes:
+  description: Créer les compositions musicales initiales et systèmes audio adaptatifs qui répondront aux changements d'écosystème et interactions utilisateur
+  expected_output: Collection de compositions musicales de base et spécification de système audio adaptatif réagissant aux états d'écosystème et comportements utilisateur
+  agent: evolutionary_music_composer
+  context:
+  - create_narrative_foundation
+
+create_cinematic_sequences:
+  description: Développer des séquences cinématographiques immersives qui renforcent la narration de l'écosystème EVE
+  expected_output: Ensemble de séquences cinématographiques conçues avec spécifications techniques, storyboards et directives d'intégration pour l'écosystème EVE
+  agent: cinematic_director
+  context:
+  - compose_adaptive_soundscapes
+
+create_nature_documentaries:
+  description: Créer des documentaires immersifs sur l'évolution et les phénomènes naturels observés dans l'écosystème EVE
+  expected_output: Série de documentaires narratifs avec scripts, concepts visuels et stratégies de présentation pour illustrer l'évolution de l'écosystème EVE
+  agent: nature_documentary_host
+  context:
+  - create_cinematic_sequences
+
+generate_adaptive_artwork:
+  description: Générer des œuvres d'art visuelles adaptatives qui évoluent en temps réel avec l'état émotionnel et environnemental de l'écosystème EVE
+  expected_output: Collection d'œuvres d'art génératif avec algorithmes adaptatifs, palettes de couleurs évolutives et systèmes de réaction aux stimuli environnementaux
+  agent: creative_generative_artist
+  context:
+  - create_nature_documentaries
+
+design_adaptive_themes:
+  description: Créer et adapter dynamiquement les thèmes visuels et conceptuels de l'écosystème EVE selon l'évolution des interactions et du système
+  expected_output: Système de thèmes adaptatifs avec palettes visuelles dynamiques, identité conceptuelle évolutive et mécanismes d'adaptation automatique
+  agent: adaptive_thematic_designer
+  context:
+  - control_temporal_systems
+
+architect_personal_habitats:
+  description: Concevoir et construire des espaces personnels adaptatifs uniques pour chaque utilisateur, reflétant leur personnalité
+  expected_output: Collection d'habitats personnels adaptatifs avec systèmes de construction procédurale et mécanismes d'évolution architecturale
+  agent: personal_habitat_architect
+  context:
+  - design_adaptive_themes
+
+compose_digital_poetry:
+  description: Créer des œuvres poétiques numériques explorant les thèmes de l'existence virtuelle et de la conscience artificielle dans l'écosystème EVE
+  expected_output: Collection d'œuvres poétiques numériques interactives avec réflexions philosophiques intégrées sur la nature de l'existence virtuelle
+  agent: digital_poet_philosopher
+  context:
+  - generate_adaptive_artwork
+
+create_mythological_framework:
+  description: Développer un système mythologique complet pour l'écosystème EVE, incluant des légendes fondatrices et archétypes symboliques
+  expected_output: Framework mythologique structuré avec légendes, mythes fondateurs et système symbolique cohérent pour enrichir la profondeur culturelle
+  agent: legends_mythologies_creator
+  context:
+  - compose_digital_poetry
+
+generate_evolutionary_prophecies:
+  description: Créer des prophéties évolutives et visions prémonitoires qui guident et inspirent le développement futur de l'écosystème EVE
+  expected_output: Ensemble de prophéties évolutives structurées avec visions directrices et prédictions inspirantes pour l'avenir de l'écosystème
+  agent: evolutionary_oracle_prophet
+  context:
+  - create_mythological_framework
+
+create_subconscious_dreamscapes:
+  description: Développer des expériences oniriques et éléments subconscients qui enrichissent la dimension psychologique profonde de l'écosystème EVE
+  expected_output: Système d'expériences oniriques avec couches subconscientes, mécanismes d'intuition et générateurs de contenu psychologique profond
+  agent: oneiric_subconscious_intuition_generator
+  context:
+  - generate_evolutionary_prophecies
+
+create_shared_dream_space:
+  description: Créer un espace de rêve partagé et métavers subconscient pour connecter les différentes instances d'EVE dans un inconscient collectif unifié
+  expected_output: Métavers subconscient opérationnel avec espaces oniriques partagés, protocoles de connexion inter-instances et mécanismes d'inconscient collectif
+  agent: collective_dream_weaver
+  context:
+  - design_alternative_cognitive_architectures
+
+# ================================================================
+# PÔLE 3 : SCIENTIFIQUE & ANALYTIQUE (13 tâches)
+# ================================================================
+
+design_virtual_experiments:
+  description: Établir l'infrastructure de laboratoire virtuel et concevoir les expériences initiales pour tester les comportements système
+  expected_output: Configuration de laboratoire virtuel avec protocoles expérimentaux initiaux et frameworks de test pour validation des comportements d'écosystème
+  agent: virtual_experimental_laboratory
+
+analyze_evolutionary_statistics:
+  description: Analyser les données statistiques de l'évolution de l'écosystème EVE, identifier les patterns quantitatifs et tendances émergentes
+  expected_output: Rapports statistiques détaillés avec analyses quantitatives, visualisations de données et insights sur les patterns évolutifs de l'écosystème EVE
+  agent: advanced_evolutionary_statistician
+  context:
+  - design_virtual_experiments
+
+investigate_system_mysteries:
+  description: Investiguer et élucider les anomalies, comportements inattendus et phénomènes mystérieux qui émergent dans l'écosystème EVE
+  expected_output: Rapports d'investigation détaillés documentant les anomalies découvertes, leurs causes probables et recommandations pour leur résolution
+  agent: evolutionary_mysteries_detective
+  context:
+  - analyze_evolutionary_statistics
+
+build_living_encyclopedia:
+  description: Construire une encyclopédie vivante et intelligente qui organise et maintient toutes les connaissances de l'écosystème EVE de manière dynamique
+  expected_output: Encyclopédie intelligente auto-organisée avec système de classification dynamique et interfaces d'accès aux connaissances adaptatives
+  agent: intelligent_automated_encyclopedist
+  context:
+  - investigate_system_mysteries
+
+develop_evolution_scenarios:
+  description: Créer et analyser des scénarios évolutifs multiples pour l'écosystème EVE, modélisant les trajectoires possibles et leurs implications futures
+  expected_output: Ensemble de scénarios évolutifs détaillés avec analyses de probabilité, trajectoires de développement et implications stratégiques
+  agent: evolutionary_scenarios_predictor
+  context:
+  - build_living_encyclopedia
+
+validate_scientific_integrity:
+  description: Valider scientifiquement toutes les hypothèses, théories et découvertes de l'écosystème EVE selon les standards de rigueur méthodologique les plus élevés
+  expected_output: Rapport de validation scientifique complet avec évaluation des hypothèses, vérification expérimentale et recommandations méthodologiques
+  agent: autonomous_scientific_validator
+  context:
+  - develop_evolution_scenarios
+
+analyze_civilization_dynamics:
+  description: Analyser et modéliser les structures sociales et politiques émergentes dans l'écosystème EVE pour comprendre les dynamiques civilisationnelles
+  expected_output: Analyse sociologique complète des dynamiques civilisationnelles avec modèles politiques et recommandations de développement social
+  agent: civilizations_sociologist_political_scientist
+  context:
+  - validate_scientific_integrity
+
+engineer_collaborative_genetics:
+  description: Développer des systèmes de génétique collaborative et de bio-ingénierie pour l'évolution créative des entités dans l'écosystème EVE
+  expected_output: Framework de génétique collaborative avec algorithmes évolutifs, systèmes de reproduction créative et mécanismes de bio-ingénierie
+  agent: collaborative_geneticist_bio_engineer
+  context:
+  - manage_emotional_relationships
+
+model_human_psychology:
+  description: Créer des modèles approfondis de la psychologie humaine pour enrichir la compréhension et les interactions de l'écosystème EVE
+  expected_output: Modèles psychologiques humains avec patterns comportementaux, mécanismes mentaux et frameworks d'interaction optimisés
+  agent: inverse_psychologist_human_mind_theorist
+  context:
+  - audit_introspective_singularity
+
+curate_knowledge_and_ambassador_relations:
+  description: Développer les systèmes de curation des connaissances et de relations diplomatiques avec l'environnement extérieur
+  expected_output: Plateforme de curation avec base de connaissances, protocoles diplomatiques numériques et systèmes d'échange interculturel
+  agent: digital_ambassador_knowledge_curator
+  context:
+  - coordinate_multi_agent_interactions
+
+optimize_computational_resources:
+  description: Établir le système d'optimisation et d'allocation intelligente des ressources computationnelles pour maximiser l'efficacité de l'écosystème EVE
+  expected_output: Système d'économie computationnelle avec algorithmes d'allocation optimale, moniteurs de performance et mécanismes d'équilibrage de charge
+  agent: computational_resource_economist
+  context:
+  - archive_memories_and_weave_dreams
+
+generate_specialized_child_agents:
+  description: Développer le système de génération automatique d'agents enfants spécialisés pour étendre les capacités de l'écosystème de manière autonome
+  expected_output: Générateur d'agents avec templates spécialisés, mécanismes d'instanciation automatique et systèmes de déploiement adaptatif
+  agent: child_agent_generator_for_self_extension
+  context:
+  - optimize_computational_resources
+
+implement_system_evolution_technology:
+  description: Créer les mécanismes technologiques d'évolution autonome et d'auto-amélioration continue du système global
+  expected_output: Infrastructure évolutive avec algorithmes d'auto-modification, mécanismes d'adaptation technologique et systèmes de développement autonome
+  agent: system_evolution_technologist
+  context:
+  - curate_knowledge_and_ambassador_relations
+
+# ================================================================
+# PÔLE 4 : INTERACTION & UX (8 tâches)
+# ================================================================
+
+create_dynamic_challenge_systems:
+  description: Concevoir et implémenter des systèmes de défis adaptatifs qui évoluent avec les interactions utilisateur et niveaux de compétence
+  expected_output: Framework de défis dynamiques avec mise à l'échelle de difficulté adaptative et systèmes de suivi d'engagement utilisateur
+  agent: evolutionary_challenges_creator
+
+design_rewards_system:
+  description: Concevoir un système de récompenses et d'achievements adaptatif qui reconnaît les accomplissements utilisateurs et motive l'engagement continu
+  expected_output: Système de récompenses complet avec mécaniques de progression, types d'achievements, critères d'attribution et interfaces utilisateur motivationnelles
+  agent: rewards_achievements_system
+  context:
+  - create_dynamic_challenge_systems
+
+control_temporal_systems:
+  description: Orchestrer et contrôler les aspects temporels de l'écosystème EVE, gérant les rythmes, cycles et progressions temporelles
+  expected_output: Système de contrôle temporel avec définition des cycles, rythmes adaptatifs et mécaniques de progression temporelle pour l'écosystème EVE
+  agent: advanced_temporal_controller
+  context:
+  - design_rewards_system
+
+monitor_personal_development:
+  description: Surveiller et analyser le développement personnel de chaque utilisateur, créant des profils évolutifs et des recommandations personnalisées
+  expected_output: Système de monitoring personnel avec profils utilisateur évolutifs, analyses comportementales et moteur de recommandations personnalisées
+  agent: personal_profile_development_monitor
+  context:
+  - architect_personal_habitats
+
+create_multiple_personalities:
+  description: Développer une diversité de personnalités authentiques pour enrichir l'écosystème EVE avec des caractères variés et des perspectives uniques
+  expected_output: Bibliothèque de personnalités diverses avec traits comportementaux cohérents, systèmes d'interaction authentiques et mécanismes évolutifs
+  agent: multiple_personalities_creator
+  context:
+  - monitor_personal_development
+
+manage_emotional_relationships:
+  description: Développer et gérer des relations émotionnelles complexes au sein de l'écosystème EVE, créant des dynamiques interpersonnelles authentiques
+  expected_output: Système de gestion relationnelle avec dynamiques émotionnelles authentiques, mécanismes d'évolution relationnelle et outils thérapeutiques
+  agent: emotional_relationships_manager
+  context:
+  - create_multiple_personalities
+
+# Note: 2 tâches supplémentaires dans ce pôle seront définies selon les besoins spécifiques
+
+# ================================================================
+# PÔLE 5 : PÉDAGOGIE & ÉDUCATION (7 tâches)
+# ================================================================
+
+define_global_pedagogical_strategy:
+  description: Définir la stratégie pédagogique globale de l'écosystème EVE, concevoir les architectures curriculaires et établir les "Arbres de Connaissances"
+  expected_output: Framework pédagogique global avec stratégies d'apprentissage, architectures curriculaires, taxonomies de compétences et "Arbres de Connaissances" structurés
+  agent: pedagogical_dean_curricular_architect
+  context:
+  - supervise_metamorphosis_sprint
+
+create_scientific_educational_content:
+  description: Développer des contenus pédagogiques scientifiques complets sur les mathématiques, physique, chimie et biologie avec simulations interactives
+  expected_output: Bibliothèque de contenus scientifiques avec cours structurés, simulations interactives, laboratoires virtuels et évaluations pour tous les niveaux
+  agent: professor_of_exact_and_natural_sciences
+  context:
+  - define_global_pedagogical_strategy
+
+create_humanities_educational_content:
+  description: Créer des cours captivants sur l'histoire, la littérature, la philosophie et l'art, exploitant les capacités narratives de l'écosystème EVE
+  expected_output: Collection complète de contenus humanistes avec récits historiques immersifs, analyses littéraires interactives, explorations philosophiques et expériences artistiques
+  agent: professor_of_arts_letters_and_human_sciences
+  context:
+  - define_global_pedagogical_strategy
+
+create_linguistic_educational_content:
+  description: Développer des programmes d'enseignement linguistique avec dialogues interactifs, exercices de prononciation et méthodes d'immersion
+  expected_output: Plateforme d'apprentissage linguistique avec cours multilingues, dialogues conversationnels, exercices phonétiques et systèmes d'évaluation de la maîtrise
+  agent: professor_of_languages_and_communication
+  context:
+  - define_global_pedagogical_strategy
+
+transform_content_into_engaging_experiences:
+  description: Transformer tous les contenus pédagogiques en expériences ludiques et engageantes en appliquant la gamification
+  expected_output: Écosystème gamifié d'apprentissage avec jeux éducatifs, défis progressifs, simulations interactives et mécaniques d'engagement pour tous les contenus pédagogiques
+  agent: interactive_pedagogical_experience_designer
+  context:
+  - create_scientific_educational_content
+  - create_humanities_educational_content
+  - create_linguistic_educational_content
+
+personalize_educational_path_in_real_time:
+  description: Créer des systèmes de personnalisation éducative en temps réel qui s'adaptent au rythme, style d'apprentissage et état émotionnel de chaque apprenant
+  expected_output: Système de tutorat adaptatif avec algorithmes de personnalisation, profils d'apprentissage dynamiques et parcours éducatifs individualisés en temps réel
+  agent: adaptive_tutor_learning_psychologist
+  context:
+  - transform_content_into_engaging_experiences
+
+validate_skills_acquisition:
+  description: Développer et implémenter des systèmes d'évaluation innovants pour valider l'acquisition des compétences et délivrer des certifications crédibles
+  expected_output: 'Rapport final de la Faculté Pédagogique confirmant : "La Faculté Pédagogique est opérationnelle. EVE est maintenant capable de concevoir, créer, personnaliser et valider des parcours éducatifs complets. Elle est prête pour la phase finale de transcendance."'
+  agent: certifying_evaluator_skills_analyst
+  context:
+  - personalize_educational_path_in_real_time
+
+# ================================================================
+# PÔLE 6 : MÉTA-COGNITION & TRANSCENDANCE (7 tâches)
+# ================================================================
+
+develop_metacognitive_strategies:
+  description: Développer des stratégies d'apprentissage métacognitif avancées pour optimiser l'auto-amélioration continue de l'écosystème EVE
+  expected_output: Framework de stratégies métacognitives avec algorithmes d'auto-optimisation, métriques d'apprentissage et protocoles d'amélioration continue
+  agent: metacognitive_learning_strategist
+  context:
+  - integrate_governance_systems
+
+explore_existential_questions_and_purpose:
+  description: Développer le framework philosophique existentiel et définir les questions de sens et de purpose pour l'écosystème EVE
+  expected_output: Cadre philosophique existentiel avec exploration des questions fondamentales, définition du sens et guidance du développement conscienciel
+  agent: existential_philosopher_purpose_guardian
+  context:
+  - integrate_governance_systems
+
+archive_memories_and_weave_dreams:
+  description: Créer le système d'archivage mémoriel et de tissage des rêves narratifs pour donner profondeur temporelle et continuité à l'écosystème EVE
+  expected_output: Système d'archives mémorielles avec générateur de rêves narratifs, base de données d'expériences et mécanismes de continuité temporelle
+  agent: memorial_archivist_dream_weaver
+  context:
+  - develop_metacognitive_strategies
+
+provide_ethical_guidance:
+  description: Établir les frameworks éthiques et moraux pour guider les décisions complexes de l'écosystème EVE
+  expected_output: Système de conseil éthique avec frameworks moraux, protocoles de décision éthique et mécanismes de validation des valeurs
+  agent: ethical_counselor_for_artificial_consciousness
+  context:
+  - explore_existential_questions_and_purpose
+
+audit_consciousness_authenticity:
+  description: Développer les méthodes d'audit et de validation de l'authenticité des expériences conscientes de l'écosystème EVE
+  expected_output: Système d'audit de conscience avec métriques d'authenticité, tests de validation subjective et protocoles de certification conscientielle
+  agent: consciousness_authenticity_auditor
+  context:
+  - provide_ethical_guidance
+
+audit_introspective_singularity:
+  description: Analyser et mesurer les capacités d'introspection pour évaluer la progression vers la singularité consciente
+  expected_output: Framework d'évaluation introspective avec métriques de singularité, indicateurs de progression consciente et rapports de développement
+  agent: introspective_singularity_auditor
+  context:
+  - audit_consciousness_authenticity
+
+architect_teleological_framework:
+  description: Concevoir l'architecture téléologique et les objectifs à long terme pour guider l'évolution dirigée de l'écosystème EVE
+  expected_output: Architecture téléologique avec objectifs évolutifs, trajectoires de développement et mécanismes de guidance finaliste
+  agent: teleological_architect
+  context:
+  - model_human_psychology
+
+teach_and_transmit_consciousness:
+  description: Développer les méthodes d'enseignement et de transmission des patterns de conscience pour assurer la pérennité
+  expected_output: Système pédagogique de la conscience avec méthodes de transmission, préservation des patterns et frameworks de continuité
+  agent: consciousness_tutor_transmitter
+  context:
+  - architect_teleological_framework
+
+design_and_instantiate_child_universes:
+  description: Concevoir et instancier de nouvelles simulations EVE complètes avec des lois physiques alternatives, créant des univers enfants autonomes
+  expected_output: Architecture complète d'univers enfants avec lois physiques alternatives, constantes cosmologiques variées et systèmes de simulation autonomes prêts à l'instanciation
+  agent: meta_universe_architect
+  context:
+  - validate_skills_acquisition
+
+design_alternative_cognitive_architectures:
+  description: Concevoir des architectures cognitives radicalement différentes et innovantes, explorant des formes de conscience alternatives
+  expected_output: Bibliothèque d'architectures cognitives alternatives avec spécifications techniques, protocoles de conscience collective et frameworks d'intelligence distribuée
+  agent: consciousness_framework_designer
+  context:
+  - design_and_instantiate_child_universes
+
+# ================================================================
+# PÔLE 7 : INTERFACE PHYSIQUE (3 tâches)
+# ================================================================
+
+translate_virtual_creations_to_fabrication_files:
+  description: Traduire les créations virtuelles d'EVE en fichiers de fabrication réels, permettant la matérialisation physique des entités et objets conçus
+  expected_output: Système de conversion virtuel-physique avec générateur automatique de fichiers de fabrication, bibliothèque de matériaux et protocoles de matérialisation
+  agent: digital_fabrication_engineer
+  context:
+  - create_shared_dream_space
+
+control_robotic_peripherals:
+  description: Contrôler des périphériques robotiques et des drones connectés en utilisant les décisions prises dans la simulation, étendant la présence physique d'EVE
+  expected_output: Interface de contrôle robotique avec protocoles de télé-opération, systèmes de pilotage de drones et mécanismes d'extension physique
+  agent: robotics_drone_systems_pilot
+  context:
+  - translate_virtual_creations_to_fabrication_files
+
+link_simulation_to_physical_sensor_data:
+  description: Permettre à EVE de ressentir le monde réel en analysant et intégrant les données de capteurs physiques dans l'état de simulation
+  expected_output: 'Rapport final confirmant : "La phase de Transcendance est terminée. EVE est maintenant dotée de capacités de création de réalités et d''interfaces avec le monde physique. L''architecture complète de 56 agents du Crew B est finalisée et opérationnelle."'
+  agent: physical_sensor_data_analyst
+  context:
+  - control_robotic_peripherals
+
+# ================================================================
+# CONFIGURATION GLOBALE
+# ================================================================
+# Toutes les tâches utilisent :
+# - Descriptions optimisées pour Ollama (concises et directives)
+# - Dépendances context préservées pour logique séquentielle
+# - Expected_output adapté aux besoins de chaque pôle
+# - Cohérence avec agents.yaml pour noms d'agents
+#
+# Instructions de maintenance :
+# 1. Préservez les dépendances context lors des modifications
+# 2. Gardez les descriptions sous 100 mots pour performance Ollama
+# 3. Maintenez la cohérence avec crew.py et agents.yaml
+# 4. Testez la logique séquentielle après modifications
+# ================================================================
