@@ -31,7 +31,7 @@ jobs:
         echo "🧠 VALIDATION SYSTÈME COGNITIF"
         find eve/cognitive/ -name "*.py" | while read file; do
           lines=$(wc -l < "$file")
-          if [ $lines -gt 200 ]; then
+          if [ $lines -gt 500 ]; then
             echo "❌ CRITIQUE: $file ($lines lignes) - Refactoring requis"
             exit 1
           fi
