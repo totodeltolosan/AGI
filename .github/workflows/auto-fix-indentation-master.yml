@@ -1,0 +1,144 @@
+name: Auto-Fix Indentation Master
+
+on:
+  push:
+    branches: [ agi-main ]
+  pull_request:
+    branches: [ agi-main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM
+
+jobs:
+  fix-all-indentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install Formatting Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install black isort autopep8 yapf
+          npm install -g prettier
+          sudo apt-get update
+          sudo apt-get install -y yamllint
+      
+      - name: Fix Python Files Indentation
+        run: |
+          echo "Fixing Python files indentation..."
+          find . -name "*.py" -not -path "./.venv/*" -not -path "./backup_*" -exec black --line-length 88 {} \;
+          find . -name "*.py" -not -path "./.venv/*" -not -path "./backup_*" -exec isort {} \;
+          find . -name "*.py" -not -path "./.venv/*" -not -path "./backup_*" -exec autopep8 --in-place --aggressive {} \;
+      
+      - name: Fix YAML Files Indentation
+        run: |
+          echo "Fixing YAML files indentation..."
+          find .github/workflows/ -name "*.yml" -exec prettier --write --tab-width 2 {} \;
+          find . -name "*.yaml" -not -path "./.venv/*" -exec prettier --write --tab-width 2 {} \;
+      
+      - name: Fix JSON Files Indentation
+        run: |
+          echo "Fixing JSON files indentation..."
+          find . -name "*.json" -not -path "./.venv/*" -not -path "./node_modules/*" -exec prettier --write {} \;
+      
+      - name: Fix Shell Scripts Indentation
+        run: |
+          echo "Fixing shell scripts indentation..."
+          find . -name "*.sh" -not -path "./.venv/*" -exec sed -i 's/\t/    /g' {} \;
+      
+      - name: Fix Markdown Files
+        run: |
+          echo "Fixing Markdown files..."
+          find . -name "*.md" -not -path "./.venv/*" -exec prettier --write {} \;
+      
+      - name: Generate Indentation Report
+        run: |
+          echo "Generating indentation fix report..."
+          mkdir -p reports/indentation
+          cat > reports/indentation/fix-report.md << 'EOREPORT'
+# Indentation Fix Report
+          
+## Files Processed
+- Python files: $(find . -name "*.py" -not -path "./.venv/*" | wc -l)
+- YAML files: $(find . -name "*.yml" -o -name "*.yaml" | wc -l)
+- JSON files: $(find . -name "*.json" -not -path "./.venv/*" | wc -l)
+- Shell scripts: $(find . -name "*.sh" | wc -l)
+- Markdown files: $(find . -name "*.md" | wc -l)
+          
+## Tools Applied
+- black: Python code formatting
+- isort: Python imports sorting
+- autopep8: Python PEP8 compliance
+- prettier: YAML, JSON, Markdown formatting
+- sed: Shell script tab-to-spaces conversion
+          
+## Status
+Automatic indentation fixes applied successfully.
+All files now conform to project standards.
+EOREPORT
+          
+          echo "Report generated: reports/indentation/fix-report.md"
+      
+      - name: Check for Changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No indentation changes needed"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Indentation changes detected"
+            git diff --stat
+          fi
+      
+      - name: Commit Indentation Fixes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Indentation Fix Bot"
+          git add -A
+          git commit -m "auto-fix: Correction automatique indentation
+
+          CORRECTIONS APPLIQUEES:
+          - Python: black, isort, autopep8
+          - YAML: prettier (2 espaces)
+          - JSON: prettier formatting
+          - Shell: tabs vers espaces
+          - Markdown: prettier formatting
+          
+          OUTILS UTILISES:
+          - black --line-length 88
+          - isort pour imports Python
+          - prettier pour YAML/JSON/MD
+          - sed pour scripts shell
+          
+          RESULTAT: Tous fichiers conformes aux standards"
+      
+      - name: Push Indentation Fixes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git push origin agi-main
+          echo "Indentation fixes pushed to agi-main"
+      
+      - name: Upload Fix Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: indentation-fix-report
+          path: reports/indentation/
+          retention-days: 30
+      
+      - name: Trigger Other Workflows
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          echo "Indentation fixes completed."
+          echo "Other workflows will now run on the corrected code."

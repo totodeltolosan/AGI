@@ -1,0 +1,27 @@
+name: Workflow Dependency Manager
+
+on:
+  workflow_run:
+    workflows: ["Auto-Fix Indentation Master"]
+    types: [completed]
+    branches: [agi-main]
+
+jobs:
+  trigger-dependent-workflows:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - name: Trigger AGI Validation
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'agi-main-validation.yml',
+              ref: 'agi-main'
+            });
+      
+      - name: Workflow Coordination Complete
+        run: echo "All dependent workflows triggered after indentation fixes"
