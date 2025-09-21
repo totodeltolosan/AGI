@@ -35,29 +35,29 @@ jobs:
           echo "-  **Constitution**: Dtecte" >> constitutional-report.md
           
           # Parse constitution
-          python -c "
-          import json
-          try:
-              with open('iaGOD.json', 'r', encoding='utf-8') as f:
-                  constitution = json.load(f)
-              
-              laws_count = len(constitution.get('laws', []))
-              principles_count = len(constitution.get('principles', []))
-              
-              print(f'- **Lois constitutionnelles**: {laws_count}')
-              print(f'- **Principes**: {principles_count}')
-              
-              # Vrifier lois principales
-              required_laws = ['200_lines_limit', 'documentation_required', 'security_compliance']
-              for law in required_laws:
-                  if any(law in str(l) for l in constitution.get('laws', [])):
-                      print(f'-  **{law}**: Dfinie')
-                  else:
-                      print(f'-  **{law}**:  dfinir')
-              
-          except Exception as e:
-              print(f'-  **Erreur constitution**: {e}')
-          " >> constitutional-report.md
+    python -c "
+    import json
+    try:
+        with open('iaGOD.json', 'r', encoding='utf-8') as f:
+            constitution = json.load(f)
+        
+        laws_count = len(constitution.get('laws', []))
+        principles_count = len(constitution.get('principles', []))
+        
+        print(f'- **Lois constitutionnelles**: {laws_count}')
+        print(f'- **Principes**: {principles_count}')
+        
+        # Vrifier lois principales
+        required_laws = ['200_lines_limit', 'documentation_required', 'security_compliance']
+        for law in required_laws:
+            if any(law in str(l) for l in constitution.get('laws', [])):
+                print(f'-  **{law}**: Dfinie')
+            else:
+                print(f'-  **{law}**:  dfinir')
+        
+    except Exception as e:
+        print(f'-  **Erreur constitution**: {e}')
+    " >> constitutional-report.md
           
         else
           echo "-  **Constitution**: iaGOD.json non trouv" >> constitutional-report.md
@@ -70,105 +70,105 @@ jobs:
         echo "" >> constitutional-report.md
         
         # Audit exhaustif limite 200 lignes
-        python -c "
-        import os
-        from collections import defaultdict
-        
-        print(' Application loi constitutionnelle 200 lignes...')
-        
-        violations = []
-        compliant_files = []
-        module_stats = defaultdict(lambda: {'files': 0, 'violations': 0, 'total_lines': 0})
-        
-        # Parcourir tous fichiers Python
-        for root, dirs, files in os.walk('.'):
-            if '.git' in root:
-                continue
-                
-            for file in files:
-                if file.endswith('.py'):
-                    filepath = os.path.join(root, file)
-                    module = root.split('/')[0] if '/' in root else 'root'
-                    
-                    try:
-                        with open(filepath, 'r', encoding='utf-8') as f:
-                            lines = len(f.readlines())
-                        
-                        module_stats[module]['files'] += 1
-                        module_stats[module]['total_lines'] += lines
-                        
-                        if lines > 200:
-                            excess = lines - 200
-                            violations.append({
-                                'file': filepath,
-                                'lines': lines,
-                                'excess': excess,
-                                'module': module,
-                                'severity': 'critical' if lines > 500 else 'high' if lines > 300 else 'medium'
-                            })
-                            module_stats[module]['violations'] += 1
-                        else:
-                            compliant_files.append(filepath)
-                    except:
-                        pass
-        
-        # Statistiques globales
-        total_files = sum(stats['files'] for stats in module_stats.values())
-        total_violations = len(violations)
-        compliance_rate = ((total_files - total_violations) / max(total_files, 1)) * 100
-        
-        print(f'- **Total fichiers**: {total_files}')
-        print(f'- **Fichiers conformes**: {len(compliant_files)}')
-        print(f'- **Violations**: {total_violations}')
-        print(f'- **Taux conformit**: {compliance_rate:.1f}%')
-        print('')
-        
-        # Par module
-        print('### Conformit par Module')
-        for module, stats in sorted(module_stats.items()):
-            if stats['files'] > 0:
-                module_compliance = ((stats['files'] - stats['violations']) / stats['files']) * 100
-                avg_lines = stats['total_lines'] / stats['files']
-                print(f'- **{module}**: {module_compliance:.1f}% conforme ({stats[\"violations\"]}/{stats[\"files\"]} violations, {avg_lines:.0f} lignes/fichier)')
-        
-        print('')
-        
-        # Violations critiques
-        critical_violations = [v for v in violations if v['severity'] == 'critical']
-        if critical_violations:
-            print('###  Violations Critiques (>500 lignes)')
-            for v in critical_violations[:10]:  # Top 10
-                print(f'- **{v[\"file\"]}**: {v[\"lines\"]} lignes (excs: {v[\"excess\"]})')
-        
-        # Recommandations constitutionnelles
-        print('')
-        print('###  Recommandations Constitutionnelles')
-        
-        if compliance_rate < 50:
-            print('-  **URGENCE CONSTITUTIONNELLE**: Taux conformit critique')
-            print('- **Action**: Refactoring massif immdiat requis')
-        elif compliance_rate < 70:
-            print('-  **ATTENTION CONSTITUTIONNELLE**: Conformit insuffisante')
-            print('- **Action**: Plan refactoring sur 2 semaines')
-        elif compliance_rate < 90:
-            print('-  **AMLIORATION REQUISE**: Bonne base mais perfectible')
-            print('- **Action**: Refactoring cibl des gros fichiers')
-        else:
-            print('-  **EXCELLENCE CONSTITUTIONNELLE**: Conformit exemplaire')
-            print('- **Action**: Maintenir standards levs')
-        
-        # Sauvegarder rapport dtaill
-        with open('constitutional_violations.csv', 'w') as f:
-            f.write('Fichier,Lignes,Statut,Excs,Module,Svrit\\n')
-            for v in violations:
-                f.write(f'{v[\"file\"]},{v[\"lines\"]},VIOLATION,{v[\"excess\"]},{v[\"module\"]},{v[\"severity\"]}\\n')
-            for cf in compliant_files:
-                module = cf.split('/')[0] if '/' in cf else 'root'
-                f.write(f'{cf},200,CONFORME,0,{module},none\\n')
-        
-        print('')
-        print(' Rapport constitutionnel dtaill sauvegard')
-        " >> constitutional-report.md
+  python -c "
+  import os
+  from collections import defaultdict
+  
+  print(' Application loi constitutionnelle 200 lignes...')
+  
+  violations = []
+  compliant_files = []
+  module_stats = defaultdict(lambda: {'files': 0, 'violations': 0, 'total_lines': 0})
+  
+  # Parcourir tous fichiers Python
+  for root, dirs, files in os.walk('.'):
+      if '.git' in root:
+          continue
+          
+      for file in files:
+          if file.endswith('.py'):
+              filepath = os.path.join(root, file)
+              module = root.split('/')[0] if '/' in root else 'root'
+              
+              try:
+                  with open(filepath, 'r', encoding='utf-8') as f:
+                      lines = len(f.readlines())
+                  
+                  module_stats[module]['files'] += 1
+                  module_stats[module]['total_lines'] += lines
+                  
+                  if lines > 200:
+                      excess = lines - 200
+                      violations.append({
+                          'file': filepath,
+                          'lines': lines,
+                          'excess': excess,
+                          'module': module,
+                          'severity': 'critical' if lines > 500 else 'high' if lines > 300 else 'medium'
+                      })
+                      module_stats[module]['violations'] += 1
+                  else:
+                      compliant_files.append(filepath)
+              except:
+                  pass
+  
+  # Statistiques globales
+  total_files = sum(stats['files'] for stats in module_stats.values())
+  total_violations = len(violations)
+  compliance_rate = ((total_files - total_violations) / max(total_files, 1)) * 100
+  
+  print(f'- **Total fichiers**: {total_files}')
+  print(f'- **Fichiers conformes**: {len(compliant_files)}')
+  print(f'- **Violations**: {total_violations}')
+  print(f'- **Taux conformit**: {compliance_rate:.1f}%')
+  print('')
+  
+  # Par module
+  print('### Conformit par Module')
+  for module, stats in sorted(module_stats.items()):
+      if stats['files'] > 0:
+          module_compliance = ((stats['files'] - stats['violations']) / stats['files']) * 100
+          avg_lines = stats['total_lines'] / stats['files']
+          print(f'- **{module}**: {module_compliance:.1f}% conforme ({stats[\"violations\"]}/{stats[\"files\"]} violations, {avg_lines:.0f} lignes/fichier)')
+  
+  print('')
+  
+  # Violations critiques
+  critical_violations = [v for v in violations if v['severity'] == 'critical']
+  if critical_violations:
+      print('###  Violations Critiques (>500 lignes)')
+      for v in critical_violations[:10]:  # Top 10
+          print(f'- **{v[\"file\"]}**: {v[\"lines\"]} lignes (excs: {v[\"excess\"]})')
+  
+  # Recommandations constitutionnelles
+  print('')
+  print('###  Recommandations Constitutionnelles')
+  
+  if compliance_rate < 50:
+      print('-  **URGENCE CONSTITUTIONNELLE**: Taux conformit critique')
+      print('- **Action**: Refactoring massif immdiat requis')
+  elif compliance_rate < 70:
+      print('-  **ATTENTION CONSTITUTIONNELLE**: Conformit insuffisante')
+      print('- **Action**: Plan refactoring sur 2 semaines')
+  elif compliance_rate < 90:
+      print('-  **AMLIORATION REQUISE**: Bonne base mais perfectible')
+      print('- **Action**: Refactoring cibl des gros fichiers')
+  else:
+      print('-  **EXCELLENCE CONSTITUTIONNELLE**: Conformit exemplaire')
+      print('- **Action**: Maintenir standards levs')
+  
+  # Sauvegarder rapport dtaill
+  with open('constitutional_violations.csv', 'w') as f:
+      f.write('Fichier,Lignes,Statut,Excs,Module,Svrit\\n')
+      for v in violations:
+          f.write(f'{v[\"file\"]},{v[\"lines\"]},VIOLATION,{v[\"excess\"]},{v[\"module\"]},{v[\"severity\"]}\\n')
+      for cf in compliant_files:
+          module = cf.split('/')[0] if '/' in cf else 'root'
+          f.write(f'{cf},200,CONFORME,0,{module},none\\n')
+  
+  print('')
+  print(' Rapport constitutionnel dtaill sauvegard')
+  " >> constitutional-report.md
         
     - name: Security Constitutional Law
       run: |
@@ -177,111 +177,111 @@ jobs:
         echo "" >> constitutional-report.md
         
         # Audit scurit constitutionnelle
-        python -c "
-        import re
-        import os
-        
-        print(' Audit scurit constitutionnelle...')
-        
-        security_violations = []
-        security_compliant = []
-        
-        # Rgles scurit constitutionnelles
-        security_rules = [
-            {'pattern': r'eval\\s*\\(', 'severity': 'critical', 'description': 'Usage eval() interdit'},
-            {'pattern': r'exec\\s*\\(', 'severity': 'critical', 'description': 'Usage exec() interdit'},
-            {'pattern': r'__import__\\s*\\(', 'severity': 'high', 'description': 'Import dynamique non contrl'},
-            {'pattern': r'subprocess\\.call\\s*\\(.*shell=True', 'severity': 'critical', 'description': 'Shell injection possible'},
-            {'pattern': r'open\\s*\\([^)]*[\"\\']w[\"\\']', 'severity': 'medium', 'description': 'criture fichier non contrle'},
-            {'pattern': r'pickle\\.loads?\\s*\\(', 'severity': 'high', 'description': 'Dsrialisation pickle dangereuse'},
-            {'pattern': r'input\\s*\\(.*\\$', 'severity': 'medium', 'description': 'Input utilisateur non valid'}
-        ]
-        
-        # Scanner tous fichiers Python
-        total_files_scanned = 0
-        for root, dirs, files in os.walk('.'):
-            if '.git' in root:
-                continue
-                
-            for file in files:
-                if file.endswith('.py'):
-                    filepath = os.path.join(root, file)
-                    total_files_scanned += 1
-                    
-                    try:
-                        with open(filepath, 'r', encoding='utf-8') as f:
-                            content = f.read()
-                        
-                        file_violations = []
-                        for rule in security_rules:
-                            matches = list(re.finditer(rule['pattern'], content, re.IGNORECASE))
-                            for match in matches:
-                                line_num = content[:match.start()].count('\\n') + 1
-                                file_violations.append({
-                                    'file': filepath,
-                                    'line': line_num,
-                                    'rule': rule['description'],
-                                    'severity': rule['severity'],
-                                    'code': match.group()
-                                })
-                        
-                        if file_violations:
-                            security_violations.extend(file_violations)
-                        else:
-                            security_compliant.append(filepath)
-                            
-                    except:
-                        pass
-        
-        # Statistiques scurit
-        total_violations = len(security_violations)
-        security_compliance_rate = (len(security_compliant) / max(total_files_scanned, 1)) * 100
-        
-        print(f'- **Fichiers scanns**: {total_files_scanned}')
-        print(f'- **Conformes scurit**: {len(security_compliant)}')
-        print(f'- **Violations scurit**: {total_violations}')
-        print(f'- **Taux conformit scurit**: {security_compliance_rate:.1f}%')
-        print('')
-        
-        # Violations par svrit
-        by_severity = {}
-        for v in security_violations:
-            severity = v['severity']
-            if severity not in by_severity:
-                by_severity[severity] = []
-            by_severity[severity].append(v)
-        
-        if by_severity:
-            print('### Violations par Svrit')
-            for severity in ['critical', 'high', 'medium', 'low']:
-                if severity in by_severity:
-                    count = len(by_severity[severity])
-                    icon = {'critical': '', 'high': '', 'medium': '', 'low': ''}[severity]
-                    print(f'- {icon} **{severity.title()}**: {count} violations')
-        
-        # Violations critiques dtail
-        critical_violations = [v for v in security_violations if v['severity'] == 'critical']
-        if critical_violations:
-            print('')
-            print('###  Violations Critiques Scurit')
-            for v in critical_violations[:5]:  # Top 5
-                print(f'- **{v[\"file\"]}:{v[\"line\"]}**: {v[\"rule\"]}')
-        
-        # Verdict scurit constitutionnelle
-        print('')
-        print('###  Verdict Scurit Constitutionnelle')
-        
-        if critical_violations:
-            print('-  **NON-CONFORME**: Violations critiques dtectes')
-            print('- **Action**: Correction immdiate requise')
-        elif len(by_severity.get('high', [])) > 5:
-            print('-  **ATTENTION**: Violations haute svrit')
-            print('- **Action**: Audit scurit approfondi')
-        elif security_compliance_rate >= 95:
-            print('-  **CONFORME**: Excellente scurit constitutionnelle')
-        else:
-            print('-  **ACCEPTABLE**: Scurit constitutionnelle correcte')
-        " >> constitutional-report.md
+  python -c "
+  import re
+  import os
+  
+  print(' Audit scurit constitutionnelle...')
+  
+  security_violations = []
+  security_compliant = []
+  
+  # Rgles scurit constitutionnelles
+  security_rules = [
+      {'pattern': r'eval\\s*\\(', 'severity': 'critical', 'description': 'Usage eval() interdit'},
+      {'pattern': r'exec\\s*\\(', 'severity': 'critical', 'description': 'Usage exec() interdit'},
+      {'pattern': r'__import__\\s*\\(', 'severity': 'high', 'description': 'Import dynamique non contrl'},
+      {'pattern': r'subprocess\\.call\\s*\\(.*shell=True', 'severity': 'critical', 'description': 'Shell injection possible'},
+      {'pattern': r'open\\s*\\([^)]*[\"\\']w[\"\\']', 'severity': 'medium', 'description': 'criture fichier non contrle'},
+      {'pattern': r'pickle\\.loads?\\s*\\(', 'severity': 'high', 'description': 'Dsrialisation pickle dangereuse'},
+      {'pattern': r'input\\s*\\(.*\\$', 'severity': 'medium', 'description': 'Input utilisateur non valid'}
+  ]
+  
+  # Scanner tous fichiers Python
+  total_files_scanned = 0
+  for root, dirs, files in os.walk('.'):
+      if '.git' in root:
+          continue
+          
+      for file in files:
+          if file.endswith('.py'):
+              filepath = os.path.join(root, file)
+              total_files_scanned += 1
+              
+              try:
+                  with open(filepath, 'r', encoding='utf-8') as f:
+                      content = f.read()
+                  
+                  file_violations = []
+                  for rule in security_rules:
+                      matches = list(re.finditer(rule['pattern'], content, re.IGNORECASE))
+                      for match in matches:
+                          line_num = content[:match.start()].count('\\n') + 1
+                          file_violations.append({
+                              'file': filepath,
+                              'line': line_num,
+                              'rule': rule['description'],
+                              'severity': rule['severity'],
+                              'code': match.group()
+                          })
+                  
+                  if file_violations:
+                      security_violations.extend(file_violations)
+                  else:
+                      security_compliant.append(filepath)
+                      
+              except:
+                  pass
+  
+  # Statistiques scurit
+  total_violations = len(security_violations)
+  security_compliance_rate = (len(security_compliant) / max(total_files_scanned, 1)) * 100
+  
+  print(f'- **Fichiers scanns**: {total_files_scanned}')
+  print(f'- **Conformes scurit**: {len(security_compliant)}')
+  print(f'- **Violations scurit**: {total_violations}')
+  print(f'- **Taux conformit scurit**: {security_compliance_rate:.1f}%')
+  print('')
+  
+  # Violations par svrit
+  by_severity = {}
+  for v in security_violations:
+      severity = v['severity']
+      if severity not in by_severity:
+          by_severity[severity] = []
+      by_severity[severity].append(v)
+  
+  if by_severity:
+      print('### Violations par Svrit')
+      for severity in ['critical', 'high', 'medium', 'low']:
+          if severity in by_severity:
+              count = len(by_severity[severity])
+              icon = {'critical': '', 'high': '', 'medium': '', 'low': ''}[severity]
+              print(f'- {icon} **{severity.title()}**: {count} violations')
+  
+  # Violations critiques dtail
+  critical_violations = [v for v in security_violations if v['severity'] == 'critical']
+  if critical_violations:
+      print('')
+      print('###  Violations Critiques Scurit')
+      for v in critical_violations[:5]:  # Top 5
+          print(f'- **{v[\"file\"]}:{v[\"line\"]}**: {v[\"rule\"]}')
+  
+  # Verdict scurit constitutionnelle
+  print('')
+  print('###  Verdict Scurit Constitutionnelle')
+  
+  if critical_violations:
+      print('-  **NON-CONFORME**: Violations critiques dtectes')
+      print('- **Action**: Correction immdiate requise')
+  elif len(by_severity.get('high', [])) > 5:
+      print('-  **ATTENTION**: Violations haute svrit')
+      print('- **Action**: Audit scurit approfondi')
+  elif security_compliance_rate >= 95:
+      print('-  **CONFORME**: Excellente scurit constitutionnelle')
+  else:
+      print('-  **ACCEPTABLE**: Scurit constitutionnelle correcte')
+  " >> constitutional-report.md
         
     - name: Documentation Constitutional Law
       run: |
@@ -290,96 +290,96 @@ jobs:
         echo "" >> constitutional-report.md
         
         # Audit documentation constitutionnelle
-        python -c "
-        import ast
-        import os
-        
-        print(' Audit documentation constitutionnelle...')
-        
-        doc_stats = {
-            'total_modules': 0,
-            'documented_modules': 0,
-            'total_classes': 0,
-            'documented_classes': 0,
-            'total_functions': 0,
-            'documented_functions': 0,
-            'missing_docs': []
-        }
-        
-        # Scanner documentation
-        for root, dirs, files in os.walk('.'):
-            if '.git' in root:
-                continue
-                
-            for file in files:
-                if file.endswith('.py') and not file.startswith('__'):
-                    filepath = os.path.join(root, file)
-                    
-                    try:
-                        with open(filepath, 'r', encoding='utf-8') as f:
-                            tree = ast.parse(f.read())
-                        
-                        doc_stats['total_modules'] += 1
-                        
-                        # Module docstring
-                        module_doc = ast.get_docstring(tree)
-                        if module_doc:
-                            doc_stats['documented_modules'] += 1
-                        else:
-                            doc_stats['missing_docs'].append(f'{filepath}: Module sans docstring')
-                        
-                        # Classes et fonctions
-                        for node in ast.walk(tree):
-                            if isinstance(node, ast.ClassDef):
-                                doc_stats['total_classes'] += 1
-                                if ast.get_docstring(node):
-                                    doc_stats['documented_classes'] += 1
-                                else:
-                                    doc_stats['missing_docs'].append(f'{filepath}: Classe {node.name} sans docstring')
-                            
-                            elif isinstance(node, ast.FunctionDef) and not node.name.startswith('_'):
-                                doc_stats['total_functions'] += 1
-                                if ast.get_docstring(node):
-                                    doc_stats['documented_functions'] += 1
-                                else:
-                                    doc_stats['missing_docs'].append(f'{filepath}: Fonction {node.name} sans docstring')
-                    except:
-                        pass
-        
-        # Calculs conformit documentation
-        module_doc_rate = (doc_stats['documented_modules'] / max(doc_stats['total_modules'], 1)) * 100
-        class_doc_rate = (doc_stats['documented_classes'] / max(doc_stats['total_classes'], 1)) * 100
-        function_doc_rate = (doc_stats['documented_functions'] / max(doc_stats['total_functions'], 1)) * 100
-        overall_doc_rate = ((doc_stats['documented_modules'] + doc_stats['documented_classes'] + doc_stats['documented_functions']) / 
-                           max(doc_stats['total_modules'] + doc_stats['total_classes'] + doc_stats['total_functions'], 1)) * 100
-        
-        print(f'- **Modules**: {module_doc_rate:.1f}% documents ({doc_stats[\"documented_modules\"]}/{doc_stats[\"total_modules\"]})')
-        print(f'- **Classes**: {class_doc_rate:.1f}% documentes ({doc_stats[\"documented_classes\"]}/{doc_stats[\"total_classes\"]})')
-        print(f'- **Fonctions**: {function_doc_rate:.1f}% documentes ({doc_stats[\"documented_functions\"]}/{doc_stats[\"total_functions\"]})')
-        print(f'- **Global**: {overall_doc_rate:.1f}% documentation')
-        print('')
-        
-        # Verdict documentation constitutionnelle
-        print('###  Verdict Documentation Constitutionnelle')
-        
-        if overall_doc_rate >= 90:
-            print('-  **EXCELLENCE DOCUMENTAIRE**: Conformit exemplaire')
-        elif overall_doc_rate >= 70:
-            print('-  **BONNE DOCUMENTATION**: Conformit satisfaisante')
-        elif overall_doc_rate >= 50:
-            print('-  **DOCUMENTATION MOYENNE**: Amlioration requise')
-        else:
-            print('-  **DOCUMENTATION INSUFFISANTE**: Non-conformit constitutionnelle')
-            print('- **Action**: Documentation massive requise')
-        
-        # Modules prioritaires  documenter
-        priority_missing = [doc for doc in doc_stats['missing_docs'] if any(keyword in doc for keyword in ['core/', 'brain', 'engine', 'main'])]
-        if priority_missing:
-            print('')
-            print('###  Priorits Documentation')
-            for missing in priority_missing[:5]:
-                print(f'- {missing}')
-        " >> constitutional-report.md
+  python -c "
+  import ast
+  import os
+  
+  print(' Audit documentation constitutionnelle...')
+  
+  doc_stats = {
+      'total_modules': 0,
+      'documented_modules': 0,
+      'total_classes': 0,
+      'documented_classes': 0,
+      'total_functions': 0,
+      'documented_functions': 0,
+      'missing_docs': []
+  }
+  
+  # Scanner documentation
+  for root, dirs, files in os.walk('.'):
+      if '.git' in root:
+          continue
+          
+      for file in files:
+          if file.endswith('.py') and not file.startswith('__'):
+              filepath = os.path.join(root, file)
+              
+              try:
+                  with open(filepath, 'r', encoding='utf-8') as f:
+                      tree = ast.parse(f.read())
+                  
+                  doc_stats['total_modules'] += 1
+                  
+                  # Module docstring
+                  module_doc = ast.get_docstring(tree)
+                  if module_doc:
+                      doc_stats['documented_modules'] += 1
+                  else:
+                      doc_stats['missing_docs'].append(f'{filepath}: Module sans docstring')
+                  
+                  # Classes et fonctions
+                  for node in ast.walk(tree):
+                      if isinstance(node, ast.ClassDef):
+                          doc_stats['total_classes'] += 1
+                          if ast.get_docstring(node):
+                              doc_stats['documented_classes'] += 1
+                          else:
+                              doc_stats['missing_docs'].append(f'{filepath}: Classe {node.name} sans docstring')
+                      
+                      elif isinstance(node, ast.FunctionDef) and not node.name.startswith('_'):
+                          doc_stats['total_functions'] += 1
+                          if ast.get_docstring(node):
+                              doc_stats['documented_functions'] += 1
+                          else:
+                              doc_stats['missing_docs'].append(f'{filepath}: Fonction {node.name} sans docstring')
+              except:
+                  pass
+  
+  # Calculs conformit documentation
+  module_doc_rate = (doc_stats['documented_modules'] / max(doc_stats['total_modules'], 1)) * 100
+  class_doc_rate = (doc_stats['documented_classes'] / max(doc_stats['total_classes'], 1)) * 100
+  function_doc_rate = (doc_stats['documented_functions'] / max(doc_stats['total_functions'], 1)) * 100
+  overall_doc_rate = ((doc_stats['documented_modules'] + doc_stats['documented_classes'] + doc_stats['documented_functions']) / 
+                     max(doc_stats['total_modules'] + doc_stats['total_classes'] + doc_stats['total_functions'], 1)) * 100
+  
+  print(f'- **Modules**: {module_doc_rate:.1f}% documents ({doc_stats[\"documented_modules\"]}/{doc_stats[\"total_modules\"]})')
+  print(f'- **Classes**: {class_doc_rate:.1f}% documentes ({doc_stats[\"documented_classes\"]}/{doc_stats[\"total_classes\"]})')
+  print(f'- **Fonctions**: {function_doc_rate:.1f}% documentes ({doc_stats[\"documented_functions\"]}/{doc_stats[\"total_functions\"]})')
+  print(f'- **Global**: {overall_doc_rate:.1f}% documentation')
+  print('')
+  
+  # Verdict documentation constitutionnelle
+  print('###  Verdict Documentation Constitutionnelle')
+  
+  if overall_doc_rate >= 90:
+      print('-  **EXCELLENCE DOCUMENTAIRE**: Conformit exemplaire')
+  elif overall_doc_rate >= 70:
+      print('-  **BONNE DOCUMENTATION**: Conformit satisfaisante')
+  elif overall_doc_rate >= 50:
+      print('-  **DOCUMENTATION MOYENNE**: Amlioration requise')
+  else:
+      print('-  **DOCUMENTATION INSUFFISANTE**: Non-conformit constitutionnelle')
+      print('- **Action**: Documentation massive requise')
+  
+  # Modules prioritaires  documenter
+  priority_missing = [doc for doc in doc_stats['missing_docs'] if any(keyword in doc for keyword in ['core/', 'brain', 'engine', 'main'])]
+  if priority_missing:
+      print('')
+      print('###  Priorits Documentation')
+      for missing in priority_missing[:5]:
+          print(f'- {missing}')
+  " >> constitutional-report.md
         
     - name: Create Constitutional Issues
       run: |
