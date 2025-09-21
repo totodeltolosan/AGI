@@ -74,7 +74,7 @@ jobs:
         run: |
           python .github/scripts/run_audit.py
 
-      # Étape 5: Auto-Refactor Universel (MODE SIMULATION PAR DÉFAUT)
+      # Étape 5: Auto-Refactor Universel (MODE PRODUCTION - CORRECTIONS RÉELLES ACTIVÉES PAR DÉFAUT)
       - name: 🔧 Auto-Refactor Universal Code Violations
         id: refactor_step
         run: |
@@ -85,15 +85,15 @@ jobs:
           echo "📊 Scan violations AGI (limite: 200 lignes)..."
           python agi_project/tools/auto_refactor.py --scan --project-root . --max-lines 200
 
-          # MODE SIMULATION (sécurisé) - Simulation des corrections
+          # MODE PRODUCTION - CORRECTIONS RÉELLES ACTIVÉES (sécurisé) - Simulation des corrections
           echo ""
           echo "🎯 SIMULATION des corrections (dry-run mode)..."
-          python agi_project/tools/auto_refactor.py --fix --dry-run --project-root . --max-files 15
+          # python agi_project/tools/auto_refactor.py --fix --dry-run --project-root . --max-files 15
 
           # MODE PRODUCTION: Décommenter les lignes ci-dessous pour activer les corrections réelles
           # echo ""
           # echo "⚡ MODE PRODUCTION - CORRECTIONS RÉELLES ACTIVÉES"
-          # python agi_project/tools/auto_refactor.py --fix --project-root . --max-files 15
+          python agi_project/tools/auto_refactor.py --fix --project-root . --max-files 15
 
           echo ""
           echo "✅ Auto-refactor universel terminé (mode simulation)"
