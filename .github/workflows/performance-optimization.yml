@@ -548,7 +548,7 @@ jobs:
         " >> performance-report.md
         
     - name: Upload Performance Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: performance-optimization-report
         path: |

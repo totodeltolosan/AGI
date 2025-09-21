@@ -38,7 +38,7 @@ jobs:
         git shortlog -sn | head -5 >> metrics-report.md
         
     - name: Upload metrics
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: metrics-report
         path: metrics-report.md

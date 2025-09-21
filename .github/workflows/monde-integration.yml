@@ -1,6 +1,8 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
 name: 🌍 Monde Legacy Integration
 
 on:
+  # Skip sur agi-main car chemins eve/ inexistants
   push:
     paths: ['eve/simulation/universe/**']
   workflow_dispatch:
@@ -98,7 +100,7 @@ jobs:
         " >> monde-status.md
         
     - name: Upload Monde Status
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: monde-integration-status
         path: monde-status.md

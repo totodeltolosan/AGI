@@ -47,13 +47,13 @@ jobs:
         pip-audit --format=json --output=pip-audit-results.json || echo "Pip audit completed"
         
     - name: Upload security results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/init@v3
       with:
         sarif_file: semgrep-results.json
       continue-on-error: true
       
     - name: Archive security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: security-reports
         path: |

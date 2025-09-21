@@ -24,7 +24,7 @@ jobs:
     - name: Install Simulation Dependencies
       run: |
         pip install numpy scipy matplotlib pandas
-        pip install physics-engine evolutionary-algorithms
+        pip install pymunk pygame evolutionary-algorithms
         pip install pytest-simulation pytest-performance
         
     - name: Test Universe Engine Core

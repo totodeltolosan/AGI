@@ -613,7 +613,7 @@ jobs:
         fi
         
     - name: Upload QA Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: quality-assurance-report
         path: |

@@ -16,6 +16,7 @@ jobs:
   code-quality:
     name: Code Quality Analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     
     steps:
     - uses: actions/checkout@v4
@@ -51,7 +52,7 @@ jobs:
         safety check || echo "Dependency check completed"
         
     - name: Upload quality reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: quality-reports
         path: |
@@ -62,6 +63,7 @@ jobs:
   unit-tests:
     name: Unit Tests
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -86,7 +88,7 @@ jobs:
         pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
         
     - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
         flags: unittests
@@ -96,6 +98,7 @@ jobs:
   conformity-check:
     name: AGI Conformity Analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     
     steps:
     - uses: actions/checkout@v4
@@ -114,7 +117,7 @@ jobs:
         done > conformite_$(date +%Y%m%d).csv
         
     - name: Upload conformity report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: conformity-report
         path: conformite_*.csv
@@ -124,6 +127,7 @@ jobs:
     name: Deploy to Environments
     needs: [code-quality, unit-tests, conformity-check]
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: github.ref == 'refs/heads/main'
     
     steps:

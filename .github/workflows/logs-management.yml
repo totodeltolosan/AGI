@@ -22,8 +22,8 @@ jobs:
         
     - name: Install Logging Dependencies
       run: |
-        pip install logging-advanced structured-logging
-        pip install elasticsearch-logger prometheus-logging
+        pip install structlog
+        pip install elasticsearch
         pip install log-analysis log-aggregation
         
     - name: Test EVE Logs Manager
@@ -290,7 +290,7 @@ jobs:
         " >> logs-report.md
         
     - name: Upload Logs Management Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: logs-management-report
         path: |

@@ -1,6 +1,8 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
 name: 📊 Cognitive Performance Benchmarks
 
 on:
+  # Skip sur agi-main car chemins eve/ inexistants
   push:
     branches: [main]
     paths: ['eve/cognitive/**']
@@ -70,7 +72,7 @@ jobs:
         "
         
     - name: Upload Cognitive Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cognitive-performance-reports
         path: |

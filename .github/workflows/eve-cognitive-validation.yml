@@ -1,6 +1,8 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
 name: 🧠 EVE Cognitive Intelligence Validation
 
 on:
+  # Skip sur agi-main car chemins eve/ inexistants
   push:
     paths: ['eve/cognitive/**']
   pull_request:
@@ -24,7 +26,7 @@ jobs:
     - name: Install AI/ML dependencies
       run: |
         pip install torch transformers scikit-learn numpy pandas
-        pip install brain-cognitive-toolkit pytest-ai
+        pip install scikit-learn torch pytest
         
     - name: Validate Brain Core (cerveau.py refactored)
       run: |

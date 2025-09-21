@@ -1,6 +1,8 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
 name: 🔍 Brain Core System Monitoring
 
 on:
+  # Skip sur agi-main car chemins eve/ inexistants
   push:
     paths: ['eve/cognitive/brain/**']
   schedule:
@@ -83,7 +85,7 @@ jobs:
         fi
         
     - name: Upload Brain Health Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: brain-health-report
         path: brain-health.md

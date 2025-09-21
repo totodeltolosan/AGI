@@ -37,7 +37,7 @@ jobs:
         python -m cProfile -o cpu-profile.prof core/main.py || echo "CPU profiling completed"
         
     - name: Archive performance results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: performance-reports
         path: |

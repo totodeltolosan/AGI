@@ -1,6 +1,8 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
 name: 🔬 Test Eve System Monitoring
 
 on:
+  # Skip sur agi-main car chemins eve/ inexistants
   push:
     paths: ['eve/development/monitoring/**']
   schedule:
@@ -171,7 +173,7 @@ jobs:
         fi
         
     - name: Upload Monitoring Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-eve-monitoring-report
         path: monitoring-report.md

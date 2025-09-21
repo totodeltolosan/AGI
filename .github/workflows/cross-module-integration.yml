@@ -381,7 +381,7 @@ jobs:
         " >> integration-report.md
         
     - name: Upload Integration Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cross-module-integration-report
         path: integration-report.md

@@ -150,7 +150,7 @@ jobs:
           MONITORING_DEPTH: ${{ github.event.inputs.monitoring_depth || 'standard' }}
           
     - name: Upload Monitoring Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: continuous-monitoring-report
         path: |

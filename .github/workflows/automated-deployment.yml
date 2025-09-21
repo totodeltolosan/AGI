@@ -24,6 +24,7 @@ jobs:
   pre-deployment-checks:
     name: Pre-Deployment Quality Gates
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     outputs:
       deploy_approved: ${{ steps.quality_gate.outputs.approved }}
       quality_score: ${{ steps.quality_gate.outputs.score }}
@@ -208,7 +209,7 @@ jobs:
         " >> deployment-check.md
         
     - name: Upload Deployment Check
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: deployment-check
         path: |
@@ -218,6 +219,7 @@ jobs:
   staging-deployment:
     name: Deploy to Staging
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: pre-deployment-checks
     if: needs.pre-deployment-checks.outputs.deploy_approved == 'true' || github.event.inputs.force_deploy == 'true'
     environment: staging
@@ -332,7 +334,7 @@ jobs:
         " >> staging-deployment.log
         
     - name: Upload Staging Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: staging-deployment
         path: |
@@ -343,6 +345,7 @@ jobs:
   production-deployment:
     name: Deploy to Production
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: [pre-deployment-checks, staging-deployment]
     if: |
       (needs.pre-deployment-checks.outputs.deploy_approved == 'true' && 
@@ -545,7 +548,7 @@ jobs:
         echo "Deployment Time: $(date)" >> production-deployment.log
         
     - name: Upload Production Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: production-deployment
         path: |

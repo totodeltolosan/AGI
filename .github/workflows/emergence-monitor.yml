@@ -1,6 +1,8 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
 name: 🌸 Emergence Systems Monitor
 
 on:
+  # Skip sur agi-main car chemins eve/ inexistants
   push:
     paths: ['eve/simulation/emergence/**']
   schedule:
@@ -162,7 +164,7 @@ jobs:
         " >> emergence-report.md
         
     - name: Upload Emergence Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: emergence-monitoring-report
         path: |

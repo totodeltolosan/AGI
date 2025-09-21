@@ -801,7 +801,7 @@ jobs:
         fi
         
     - name: Upload Final Dashboard
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: system-health-dashboard
         path: |
@@ -860,7 +860,7 @@ jobs:
         " >> notification-summary.md
         
     - name: Upload Notification
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dashboard-notification
         path: notification-summary.md

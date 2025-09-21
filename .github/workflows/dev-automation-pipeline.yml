@@ -1,6 +1,8 @@
+# DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
 name: 🤖 Development Automation Pipeline
 
 on:
+  # Skip sur agi-main car chemins eve/ inexistants
   push:
     paths: ['eve/development/**']
   pull_request:
@@ -200,7 +202,7 @@ jobs:
         fi
         
     - name: Upload Automation Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: development-automation-report
         path: |

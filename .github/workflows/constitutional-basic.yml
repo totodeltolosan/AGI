@@ -71,7 +71,7 @@ jobs:
         fi
         
     - name: Upload constitutional report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: constitutional-report
         path: conformite_*.csv
