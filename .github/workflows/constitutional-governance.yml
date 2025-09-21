@@ -64,22 +64,28 @@ jobs:
         run: |
           python .github/scripts/run_audit.py
 
-      # Étape 4: Créer une issue en cas de violations critiques ou d'échec.
+# Étape 4: Créer une issue en cas de violations critiques ou d'échec.
       - name: 📬 Create Constitutional Issue if Needed
         # S'exécute si une étape a échoué OU si nos audits ont trouvé des violations.
         if: failure() || steps.audit_step.outputs.critical_security_violations > 0 || steps.audit_step.outputs.line_violations > 0
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # On récupère l'auteur du commit qui a déclenché le workflow
+          COMMIT_AUTHOR: ${{ github.actor }}
         run: |
           # Récupérer les outputs de l'étape de script pour un titre dynamique
           CRITICAL_VIOLATIONS=${{ steps.audit_step.outputs.critical_security_violations }}
           LINE_VIOLATIONS=${{ steps.audit_step.outputs.line_violations }}
 
+          # Préparer le corps de l'issue en ajoutant une notification
+          BODY_CONTENT=$(cat constitutional-report.md)
+          FULL_BODY="${BODY_CONTENT}\n\n---\n\n🔔 **Notification:** @${COMMIT_AUTHOR}, ce rapport a été généré suite à votre dernier commit."
+
+          # Créer l'issue sans l'assignation directe
           gh issue create \
             --title "🚨 Audit Constitutionnel : $CRITICAL_VIOLATIONS violations critiques et $LINE_VIOLATIONS violations de longueur" \
-            --body-file constitutional-report.md \
-            --label "audit,critical-violation,needs-triage" \
-            --assignee "@me" || echo "La création de l'issue a échoué."
+            --body "$FULL_BODY" \
+            --label "audit,critical-violation,needs-triage" || echo "La création de l'issue a échoué."
 
       # Étape 5: Sauvegarder les rapports générés comme artefacts.
       - name: 📤 Upload Constitutional Reports

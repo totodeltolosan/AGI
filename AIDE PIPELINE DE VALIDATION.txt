@@ -1,0 +1,40 @@
+# --- DÉFINITION DU CHEMIN DU SCRIPT ---
+SCRIPT_FILE="/home/toni/Documents/Projet AGI/.github/scripts/run_audit.py"
+
+echo "==================================================================="
+echo "✅ PIPELINE DE VALIDATION (Version Sûre) POUR : run_audit.py"
+echo "==================================================================="
+
+# --- ÉTAPE 1 : VÉRIFICATION DE LA SYNTAXE PYTHON ---
+echo -e "\n--- 1. Test de la syntaxe Python de base..."
+# On stocke la sortie (y compris les erreurs) dans une variable
+SYNTAX_CHECK_OUTPUT=$(python3 -m py_compile "$SCRIPT_FILE" 2>&1)
+
+# On vérifie si la commande a réussi (code de sortie 0)
+if [ $? -eq 0 ]; then
+    echo "✅ SUCCÈS : La syntaxe Python est valide."
+
+    # --- SI LA SYNTAXE EST BONNE, ON CONTINUE AVEC LE LINTING ---
+    echo -e "\n--- 2. Analyse de style et 'linting' avec flake8..."
+    # On installe les outils silencieusement
+    python3 -m pip install flake8 black &> /dev/null
+
+    # On exécute flake8
+    flake8 --count --show-source --statistics "$SCRIPT_FILE"
+    if [ $? -eq 0 ]; then
+        echo "✅ SUCCÈS : Aucun problème de style ou de 'linting' détecté par flake8."
+    else
+        echo "⚠️ AVERTISSEMENT : flake8 a trouvé des problèmes (listés ci-dessus)."
+    fi
+
+else
+    # --- SI LA SYNTAXE EST FAUSSE, ON AFFICHE L'ERREUR ET ON S'ARRÊTE ---
+    echo "❌ ÉCHEC : Le script contient une ou plusieurs erreurs de syntaxe."
+    echo "------------------- ERREUR DÉTAILLÉE -------------------"
+    echo "$SYNTAX_CHECK_OUTPUT"
+    echo "--------------------------------------------------------"
+fi
+
+echo -e "\n==================================================================="
+echo "✅ VÉRIFICATION TERMINÉE."
+echo "==================================================================="

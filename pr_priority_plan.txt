@@ -1,0 +1,21 @@
+PRIORITÉ 1 - FONDAMENTALES (merger en premier):
+#666 - Agi principal (branche principale AGI)
+#667 - Ève principale (branche principale EVE)
+
+PRIORITÉ 2 - CORRECTIONS CRITIQUES:
+#665 - Correction/workflows v3 à v4 (fix CI/CD)
+#664 - codecov/codecov-action de 3 à 5
+
+PRIORITÉ 3 - OPTIMISATIONS MAJEURES:
+#663 - Optimisation massive EVE (1GB → 5.8MB)
+#659 - Refactorisation constitutionnelle
+
+PRIORITÉ 4 - WORKFLOW IMPROVEMENTS:
+#661 - Ajout workflow PURGE_DEPENDANCES
+
+PRIORITÉ 5 - DEPENDABOT (automatiques):
+#333 - boost/paiement 3→5
+#332 - setup-python 4→6  
+#331 - codecov-action 3→5
+#330 - déploiement-pages 2→4
+#329 - docker/build-push 4→6
