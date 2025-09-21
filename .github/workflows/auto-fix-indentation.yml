@@ -1,0 +1,83 @@
+# Nom du fichier : .github/workflows/auto-fix-indentation.yml
+
+name: Auto-Fix Code Formatting
+
+on:
+  # Se déclenche manuellement ou de manière planifiée
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # Tous les jours à 2h du matin
+  # Se déclenche aussi sur les push, pour vérifier la conformité
+  push:
+    branches: [ agi-main, eve-main ]
+
+# Ajout des permissions nécessaires pour créer une Pull Request
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fix-code-formatting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      # Étape 1: Récupérer le code de la branche
+      - uses: actions/checkout@v4
+        with:
+          # On ne spécifie pas de token ici, les permissions du job suffisent
+          fetch-depth: 0
+
+      # Étape 2: Configurer Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # Étape 3: Installer les outils de formatage
+      - name: Install Formatting Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install black isort
+          # Prettier est utilisé pour YAML et JSON
+          npm install -g prettier
+
+      # Étape 4: Appliquer le formatage sur tous les types de fichiers pertinents
+      - name: Apply Code Formatting
+        run: |
+          echo "Formatting Python files..."
+          # L'option --exclude permet de gérer toutes les exclusions en une seule fois
+          black --line-length 88 --exclude "(\.venv|backup_.*)/" .
+          isort --profile black --skip ".venv" --skip "backup_*" .
+
+          echo "Formatting YAML and JSON files..."
+          prettier --write "**/*.{yml,yaml,json}" --ignore-path .gitignore
+
+      # Étape 5: Créer une Pull Request s'il y a des changements
+      # Cette action gère automatiquement la détection des changements,
+      # la création d'une nouvelle branche, le commit et la création de la PR.
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          # Le token est automatiquement fourni par GitHub
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Configuration du commit
+          commit-message: "style(auto-format): Appliquer le formatage du code"
+          committer: "GitHub Action <action@github.com>"
+          author: "GitHub Action <action@github.com>"
+          # Configuration de la Pull Request
+          title: "🎨 [Auto-Format] Corrections automatiques du style de code"
+          body: |
+            Ce PR a été généré automatiquement par le workflow `auto-fix-indentation`.
+
+            Il contient des corrections de formatage appliquées par les outils suivants :
+            - **Black & Isort** pour les fichiers Python.
+            - **Prettier** pour les fichiers YAML et JSON.
+
+            Veuillez vérifier les changements avant de fusionner.
+          branch: "auto-format/code-style-fixes" # Nom de la branche qui sera créée
+          base: ${{ github.ref_name }} # Cible la branche qui a déclenché le workflow
+          delete-branch: true # Supprime la branche après la fusion de la PR
+          labels: |
+            style
+            automated pr
