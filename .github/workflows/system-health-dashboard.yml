@@ -2,7 +2,7 @@ name: 🏥 System Health Dashboard
 
 on:
   workflow_run:
-    workflows: ["🎭 Master Orchestrator", "📊 Continuous Monitoring", "🎯 Quality Assurance"]
+    workflows: [" Master Orchestrator", " Continuous Monitoring", " Quality Assurance"]
     types: [completed]
   schedule:
     - cron: '0 */4 * * *'  # Toutes les 4 heures
@@ -475,7 +475,7 @@ jobs:
         health_score = dashboard.get('health_score', 0)
         alerts = dashboard.get('alerts_summary', {})
         
-        print(f'### 🎯 État Général du Système AGI-EVE')
+        print(f'###  État Général du Système AGI-EVE')
         print(f'**Date du rapport**: {datetime.now().strftime(\"%d/%m/%Y %H:%M\")}')
         print('')
         
@@ -501,7 +501,7 @@ jobs:
         print('')
         
         # Métriques clés
-        print(f'### 📊 Métriques Clés')
+        print(f'###  Métriques Clés')
         
         # Système
         system_stats = dashboard.get('system_overview', {})
@@ -562,7 +562,7 @@ jobs:
             print('')
         
         # Actions recommandées
-        print(f'### 🎯 Actions Recommandées')
+        print(f'###  Actions Recommandées')
         
         actions = []
         
@@ -597,7 +597,7 @@ jobs:
             print('📈 **Tendance**: Stable et saine')
             print('🔮 **Prévision**: Maintien performance sur 30 jours')
         elif health_score >= 70:
-            print('📊 **Tendance**: Stable avec surveillance')
+            print(' **Tendance**: Stable avec surveillance')
             print('🔮 **Prévision**: Dégradation possible sans action')
         else:
             print('📉 **Tendance**: Dégradation détectée')
@@ -611,7 +611,7 @@ jobs:
     - name: Generate Visual Dashboard
       run: |
         echo "" >> health-dashboard.md
-        echo "## 📊 Dashboard Visuel" >> health-dashboard.md
+        echo "##  Dashboard Visuel" >> health-dashboard.md
         echo "" >> health-dashboard.md
         
         # Génération éléments visuels dashboard
@@ -619,7 +619,7 @@ jobs:
         import json
         from datetime import datetime
         
-        print('📊 Génération dashboard visuel...')
+        print(' Génération dashboard visuel...')
         
         # Charger données dashboard
         with open('system_health_dashboard.json', 'r') as f:
@@ -702,7 +702,7 @@ jobs:
         events = [
             ('Il y a 5 min', '🔄', 'Monitoring automatique exécuté'),
             ('Il y a 1h', '✅', 'Tests qualité passés'),
-            ('Il y a 3h', '📊', 'Rapport performance généré'),
+            ('Il y a 3h', '', 'Rapport performance généré'),
             ('Il y a 6h', '🔒', 'Scan sécurité complété'),
             ('Il y a 12h', '🏗️', 'Workflow orchestration terminé')
         ]
@@ -717,9 +717,9 @@ jobs:
         print('')
         
         next_actions = [
-            ('Dans 2h', '📊', 'Monitoring continu'),
+            ('Dans 2h', '', 'Monitoring continu'),
             ('Dans 6h', '🔍', 'Analyse qualité approfondie'),
-            ('Dans 12h', '🎭', 'Orchestration master'),
+            ('Dans 12h', '', 'Orchestration master'),
             ('Dans 24h', '📈', 'Rapport hebdomadaire'),
             ('Dans 7j', '🧹', 'Nettoyage automatique')
         ]
@@ -834,10 +834,10 @@ jobs:
         
         print('✅ **Composants Activés**:')
         print('- 🏥 Monitoring santé système')
-        print('- 📊 Métriques performance temps réel')
-        print('- 🎯 Analyse qualité continue')
+        print('-  Métriques performance temps réel')
+        print('-  Analyse qualité continue')
         print('- 🔒 Surveillance sécurité')
-        print('- 🎭 Orchestration automatique')
+        print('-  Orchestration automatique')
         print('')
         
         print('🔗 **Accès Dashboard**:')
@@ -852,7 +852,7 @@ jobs:
         print('3. Amélioration continue workflows')
         print('')
         
-        print('🎯 **Configuration Complète**:')
+        print(' **Configuration Complète**:')
         print('✅ 25/25 Workflows GitHub Actions déployés')
         print('✅ Monitoring multi-niveaux actif')
         print('✅ Dashboard santé opérationnel')

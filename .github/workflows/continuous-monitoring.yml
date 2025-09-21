@@ -1,4 +1,4 @@
-name: 📊 Continuous Monitoring
+name:  Continuous Monitoring
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
         
     - name: Continuous System Health Check
       run: |
-        echo "📊 MONITORING CONTINU SYSTÈME AGI-EVE" > monitoring-report.md
+        echo " MONITORING CONTINU SYSTÈME AGI-EVE" > monitoring-report.md
         echo "====================================" >> monitoring-report.md
         echo "" >> monitoring-report.md
         
@@ -51,7 +51,7 @@ jobs:
         from datetime import datetime, timedelta
         from pathlib import Path
         
-        print('📊 Monitoring continu système AGI-EVE...')
+        print(' Monitoring continu système AGI-EVE...')
         
         monitoring_depth = os.getenv('MONITORING_DEPTH', 'standard')
         print(f'Profondeur monitoring: {monitoring_depth}')
@@ -83,7 +83,7 @@ jobs:
             metrics_samples.append(sample)
             
             if len(metrics_samples) % 3 == 0:
-                print(f'📊 Sample {len(metrics_samples)}: CPU {sample[\"cpu_percent\"]}%, RAM {sample[\"memory_percent\"]}%')
+                print(f' Sample {len(metrics_samples)}: CPU {sample[\"cpu_percent\"]}%, RAM {sample[\"memory_percent\"]}%')
             
             time.sleep(sample_interval)
         

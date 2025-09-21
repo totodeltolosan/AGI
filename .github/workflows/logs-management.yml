@@ -1,4 +1,4 @@
-name: 📊 Logs Management System
+name:  Logs Management System
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
         
     - name: Test EVE Logs Manager
       run: |
-        echo "📊 VALIDATION SYSTÈME LOGS EVE" > logs-report.md
+        echo " VALIDATION SYSTÈME LOGS EVE" > logs-report.md
         echo "==============================" >> logs-report.md
         echo "" >> logs-report.md
         

@@ -1,5 +1,5 @@
 # DÉSACTIVÉ SUR AGI-MAIN - Workflow spécifique EVE
-name: 📊 Cognitive Performance Benchmarks
+name:  Cognitive Performance Benchmarks
 
 on:
   # Skip sur agi-main car chemins eve/ inexistants

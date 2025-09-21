@@ -39,7 +39,7 @@ jobs:
         echo "## 📦 Dépendances" >> health-report.md
         if [ -f "requirements.txt" ]; then
           echo "✅ requirements.txt présent" >> health-report.md
-          echo "📊 Nombre de dépendances: $(wc -l < requirements.txt)" >> health-report.md
+          echo " Nombre de dépendances: $(wc -l < requirements.txt)" >> health-report.md
         else
           echo "⚠️ requirements.txt manquant" >> health-report.md
         fi
@@ -53,7 +53,7 @@ jobs:
           total=$(wc -l < "$latest_conformity")
           echo "📄 Dernier rapport: $latest_conformity" >> health-report.md
           echo "🔴 Violations: $violations" >> health-report.md
-          echo "📊 Total fichiers: $total" >> health-report.md
+          echo " Total fichiers: $total" >> health-report.md
         else
           echo "⚠️ Aucun rapport de conformité trouvé" >> health-report.md
         fi
