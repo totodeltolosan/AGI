@@ -38,7 +38,7 @@ jobs:
           echo "- ✅ **Constitution**: Détectée" >> constitutional-report.md
 
           # Parse constitution
-          python -c "
+          python3 << "EOF"
 import json
 try:
     with open('iaGOD.json', 'r', encoding='utf-8') as f:
