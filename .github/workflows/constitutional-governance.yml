@@ -39,28 +39,28 @@ jobs:
 
           # Parse constitution
           python -c "
-          import json
-          try:
-              with open('iaGOD.json', 'r', encoding='utf-8') as f:
-                  constitution = json.load(f)
+import json
+try:
+    with open('iaGOD.json', 'r', encoding='utf-8') as f:
+        constitution = json.load(f)
 
-              laws_count = len(constitution.get('laws', []))
-              principles_count = len(constitution.get('principles', []))
+    laws_count = len(constitution.get('laws', []))
+    principles_count = len(constitution.get('principles', []))
 
-              print(f'- **Lois constitutionnelles**: {laws_count}')
-              print(f'- **Principes**: {principles_count}')
+    print(f'- **Lois constitutionnelles**: {laws_count}')
+    print(f'- **Principes**: {principles_count}')
 
-              # Vérifier lois principales
-              required_laws = ['200_lines_limit', 'documentation_required', 'security_compliance']
-              for law in required_laws:
-                  if any(law in str(l) for l in constitution.get('laws', [])):
-                      print(f'- ✅ **{law}**: Définie')
-                  else:
-                      print(f'- ⚠️ **{law}**: À définir')
+    # Vérifier lois principales
+    required_laws = ['200_lines_limit', 'documentation_required', 'security_compliance']
+    for law in required_laws:
+        if any(law in str(l) for l in constitution.get('laws', [])):
+            print(f'- ✅ **{law}**: Définie')
+        else:
+            print(f'- ⚠️ **{law}**: À définir')
 
-          except Exception as e:
-              print(f'- ❌ **Erreur constitution**: {e}')
-          " >> constitutional-report.md
+except Exception as e:
+    print(f'- ❌ **Erreur constitution**: {e}')
+" >> constitutional-report.md
 
         else
           echo "- ⚠️ **Constitution**: iaGOD.json non trouvé" >> constitutional-report.md
