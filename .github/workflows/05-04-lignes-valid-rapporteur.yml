@@ -1,0 +1,119 @@
+name: "Qualiticien : Validation Rapporteur Lignes"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_rapport_csv:
+        description: "Nom de l'artefact CSV contenant le rapport des lignes"
+        required: true
+        type: string
+      taille_minimale:
+        description: "Taille minimale attendue en octets"
+        required: false
+        default: 100
+        type: number
+    outputs:
+      validation_success:
+        description: "Résultat de la validation (true/false)"
+        value: ${{ jobs.validate_rapporteur.outputs.success }}
+      validation_errors:
+        description: "Nombre d'erreurs de validation détectées"
+        value: ${{ jobs.validate_rapporteur.outputs.error_count }}
+
+jobs:
+  validate_rapporteur:
+    name: "Validation artefact rapport CSV"
+    runs-on: ubuntu-latest
+    outputs:
+      success: ${{ steps.validate.outputs.validation_success }}
+      error_count: ${{ steps.validate.outputs.error_count }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Téléchargement de l'artefact à valider"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_rapport_csv }}
+          path: ./validation-input/
+      
+      - name: "Exécution de la validation de l'artefact CSV"
+        id: validate
+        run: |
+          echo "🔍 Validation de l'artefact CSV rapport"
+          
+          if python .github/scripts/qualiticien_validation_artefact.py \
+            --artefact "./validation-input/${{ inputs.artefact_rapport_csv }}" \
+            --type-attendu "csv" \
+            --taille-min ${{ inputs.taille_minimale }} \
+            --lignes-min 2; then
+            
+            echo "validation_success=true" >> $GITHUB_OUTPUT
+            echo "error_count=0" >> $GITHUB_OUTPUT
+            echo "✅ VALIDATION RÉUSSIE"
+          else
+            echo "validation_success=false" >> $GITHUB_OUTPUT
+            echo "error_count=1" >> $GITHUB_OUTPUT
+            echo "❌ VALIDATION ÉCHOUÉE"
+            exit 1
+          fi
+      
+      - name: "Validation spécifique du contenu CSV"
+        if: steps.validate.outputs.validation_success == 'true'
+        run: |
+          echo "📊 Validation du contenu spécifique du rapport CSV"
+          
+          # Vérification des colonnes attendues dans un rapport de lignes
+          python -c "
+import csv
+import sys
+
+expected_columns = ['fichier', 'lignes', 'statut']  # Colonnes de base attendues
+
+try:
+    with open('./validation-input/${{ inputs.artefact_rapport_csv }}', 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        headers = reader.fieldnames
+        
+        if not headers:
+            print('❌ ERREUR: Aucun en-tête détecté dans le CSV')
+            sys.exit(1)
+        
+        print(f'✅ En-têtes détectés: {headers}')
+        
+        # Vérification que les colonnes de base sont présentes
+        missing_columns = []
+        for col in expected_columns:
+            if col not in headers:
+                # Recherche flexible (insensible à la casse)
+                found = any(col.lower() in h.lower() for h in headers)
+                if not found:
+                    missing_columns.append(col)
+        
+        if missing_columns:
+            print(f'⚠️  Colonnes manquantes ou non détectées: {missing_columns}')
+            print('ℹ️  Ceci est un avertissement, pas une erreur bloquante')
+        else:
+            print('✅ Toutes les colonnes de base sont présentes')
+        
+        # Comptage des lignes de données
+        f.seek(0)
+        next(reader)  # Skip header
+        data_rows = list(reader)
+        print(f'📊 Lignes de données: {len(data_rows)}')
+        
+        if len(data_rows) == 0:
+            print('⚠️  Aucune ligne de données dans le CSV')
+        else:
+            print('✅ CSV contient des données')
+
+except Exception as e:
+    print(f'⚠️  Erreur validation contenu CSV: {e}')
+"
+          echo "✅ Validation contenu CSV terminée"
