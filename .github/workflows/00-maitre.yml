@@ -1,0 +1,62 @@
+# ==============================================================================
+# NIVEAU 0 : WORKFLOW MAÎTRE (DIVIN)
+# ==============================================================================
+# Rôle : Permet au créateur de contourner manuellement les lois constitutionnelles
+#        pour une Pull Request spécifique.
+# Déclencheur : Uniquement manuel (workflow_dispatch).
+# ==============================================================================
+
+name: "👑 Maître Contrôle (Divin)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: "Numéro de la Pull Request à approuver"
+        required: true
+        type: string
+      raison:
+        description: "Raison de l'utilisation du droit de véto"
+        required: true
+        type: string
+      loi_a_ignorer:
+        description: "Quelle loi constitutionnelle ignorer ?"
+        required: true
+        type: choice
+        options:
+          - Toutes
+          - Lignes
+          - Sécurité
+          - Documentation
+        default: 'Toutes'
+
+jobs:
+  veto-manuel:
+    name: "Veto Manuel du Maître"
+    runs-on: ubuntu-latest
+
+    # Permissions nécessaires pour interagir avec la Pull Request
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: "Affichage des paramètres du veto"
+        run: |
+          echo "Application du droit de véto sur la PR #${{ github.event.inputs.pull_request_number }}"
+          echo "Raison : ${{ github.event.inputs.raison }}"
+          echo "Loi(s) ignorée(s) : ${{ github.event.inputs.loi_a_ignorer }}"
+
+      - name: "Approbation forcée de la Pull Request"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.inputs.pull_request_number }}
+          RAISON: ${{ github.event.inputs.raison }}
+          LOI: ${{ github.event.inputs.loi_a_ignorer }}
+        run: |
+          gh pr review $PR_NUMBER \
+            --approve \
+            --body "✅ **VETO APPLIQUÉ PAR LE MAÎTRE**
+
+          **Raison :** $RAISON
+          **Loi(s) ignorée(s) :** $LOI"
