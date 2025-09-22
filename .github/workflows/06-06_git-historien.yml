@@ -1,0 +1,267 @@
+name: "Travailleur : Git Historien"
+
+on:
+  workflow_call:
+    inputs:
+      chemin_fichier_ou_dossier:
+        description: "Chemin vers le fichier ou dossier à analyser"
+        required: true
+        type: string
+      format_sortie:
+        description: "Format de la date retournée (timestamp/iso/human)"
+        required: false
+        default: "iso"
+        type: string
+      operation:
+        description: "Type d'opération (last_commit/first_commit/all_commits)"
+        required: false
+        default: "last_commit"
+        type: string
+      generer_artefact:
+        description: "Générer un artefact JSON avec les détails complets"
+        required: false
+        default: true
+        type: boolean
+    outputs:
+      date_commit:
+        description: "Date du commit (format selon format_sortie)"
+        value: ${{ jobs.git_history.outputs.date_output }}
+      commit_hash:
+        description: "Hash du commit principal trouvé"
+        value: ${{ jobs.git_history.outputs.commit_hash }}
+      commit_author:
+        description: "Auteur du commit principal"
+        value: ${{ jobs.git_history.outputs.commit_author }}
+      total_commits:
+        description: "Nombre total de commits trouvés"
+        value: ${{ jobs.git_history.outputs.total_commits }}
+
+jobs:
+  git_history:
+    name: "Analyse historique Git"
+    runs-on: ubuntu-latest
+    outputs:
+      date_output: ${{ steps.git_analyze.outputs.date_output }}
+      commit_hash: ${{ steps.git_analyze.outputs.commit_hash }}
+      commit_author: ${{ steps.git_analyze.outputs.commit_author }}
+      total_commits: ${{ steps.git_analyze.outputs.total_commits }}
+    
+    steps:
+      - name: "Checkout du code avec historique complet"
+        uses: actions/checkout@v4
+        with:
+          # Récupérer l'historique complet pour l'analyse Git
+          fetch-depth: 0
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Installation des dépendances Python"
+        run: |
+          python -m pip install --upgrade pip
+          # Utilise seulement la stdlib Python
+      
+      - name: "Validation des paramètres d'entrée"
+        run: |
+          echo "🔍 Validation des paramètres Git :"
+          
+          # Validation du chemin
+          if [ -z "${{ inputs.chemin_fichier_ou_dossier }}" ]; then
+            echo "❌ ERREUR: Chemin requis"
+            exit 1
+          fi
+          
+          if [ ! -e "${{ inputs.chemin_fichier_ou_dossier }}" ]; then
+            echo "❌ ERREUR: Chemin introuvable : ${{ inputs.chemin_fichier_ou_dossier }}"
+            echo "📁 Contenu du répertoire actuel :"
+            ls -la
+            exit 1
+          fi
+          echo "✅ Chemin validé : ${{ inputs.chemin_fichier_ou_dossier }}"
+          
+          # Validation du format de sortie
+          case "${{ inputs.format_sortie }}" in
+            timestamp|iso|human)
+              echo "✅ Format sortie : ${{ inputs.format_sortie }}"
+              ;;
+            *)
+              echo "❌ ERREUR: Format sortie invalide : ${{ inputs.format_sortie }}"
+              echo "Valeurs acceptées: timestamp, iso, human"
+              exit 1
+              ;;
+          esac
+          
+          # Validation de l'opération
+          case "${{ inputs.operation }}" in
+            last_commit|first_commit|all_commits)
+              echo "✅ Opération : ${{ inputs.operation }}"
+              ;;
+            *)
+              echo "❌ ERREUR: Opération invalide : ${{ inputs.operation }}"
+              echo "Valeurs acceptées: last_commit, first_commit, all_commits"
+              exit 1
+              ;;
+          esac
+      
+      - name: "Vérification de l'environnement Git"
+        run: |
+          echo "📊 État de l'environnement Git :"
+          echo "   • Version Git : $(git --version)"
+          echo "   • Repository : $(git rev-parse --show-toplevel 2>/dev/null || echo 'Non disponible')"
+          echo "   • Branche actuelle : $(git branch --show-current 2>/dev/null || echo 'Non disponible')"
+          echo "   • Dernier commit global : $(git log -1 --format='%h - %s' 2>/dev/null || echo 'Non disponible')"
+          
+          # Vérifier l'historique pour le chemin spécifique
+          echo "🔍 Vérification de l'historique pour : ${{ inputs.chemin_fichier_ou_dossier }}"
+          commit_count=$(git log --oneline -- "${{ inputs.chemin_fichier_ou_dossier }}" | wc -l)
+          echo "   • Commits trouvés : $commit_count"
+          
+          if [ "$commit_count" -eq 0 ]; then
+            echo "⚠️  Aucun commit trouvé pour ce chemin"
+            echo "   • Le fichier/dossier peut être nouveau ou non suivi par Git"
+            echo "   • Statut Git du chemin :"
+            git status --porcelain "${{ inputs.chemin_fichier_ou_dossier }}" || echo "     Non dans le statut Git"
+          fi
+      
+      - name: "Exécution de l'historien Git"
+        id: git_analyze
+        run: |
+          artefact_name="git-historique-$(date +%Y%m%d-%H%M%S).json"
+          
+          python .github/scripts/travailleur_git_historien.py \
+            --chemin-fichier-ou-dossier "${{ inputs.chemin_fichier_ou_dossier }}" \
+            --format-sortie "${{ inputs.format_sortie }}" \
+            --operation "${{ inputs.operation }}" \
+            --sortie "$artefact_name"
+          
+          # Extraction des informations pour les outputs
+          if [ -f "$artefact_name" ]; then
+            echo "artefact_file=$artefact_name" >> $GITHUB_OUTPUT
+            
+            # Parse des résultats JSON pour extraire les informations clés
+            python -c "
+import json
+import sys
+try:
+    with open('$artefact_name', 'r') as f:
+        data = json.load(f)
+    
+    git_history = data.get('git_history')
+    if git_history:
+        if git_history['type'] in ['last_commit', 'first_commit']:
+            print(f'date_output={data[\"formatted_output\"]}')
+            print(f'commit_hash={git_history[\"commit_hash\"][:8]}')
+            print(f'commit_author={git_history[\"author\"]}')
+            print(f'total_commits=1')
+        elif git_history['type'] == 'all_commits':
+            print(f'date_output={data[\"formatted_output\"]}')
+            commits = git_history.get('commits', [])
+            if commits:
+                print(f'commit_hash={commits[0][\"commit_hash\"][:8]}')
+                print(f'commit_author={commits[0][\"author\"]}')
+            else:
+                print('commit_hash=')
+                print('commit_author=')
+            print(f'total_commits={git_history[\"total_commits\"]}')
+    else:
+        print('date_output=')
+        print('commit_hash=')
+        print('commit_author=')
+        print('total_commits=0')
+except Exception as e:
+    print(f'Erreur extraction outputs: {e}', file=sys.stderr)
+    print('date_output=')
+    print('commit_hash=')
+    print('commit_author=')
+    print('total_commits=0')
+" >> $GITHUB_OUTPUT
+          else
+            echo "date_output=" >> $GITHUB_OUTPUT
+            echo "commit_hash=" >> $GITHUB_OUTPUT
+            echo "commit_author=" >> $GITHUB_OUTPUT
+            echo "total_commits=0" >> $GITHUB_OUTPUT
+            echo "artefact_file=" >> $GITHUB_OUTPUT
+            echo "⚠️  Pas d'artefact généré"
+          fi
+      
+      - name: "Upload de l'artefact historique Git"
+        if: inputs.generer_artefact && steps.git_analyze.outputs.artefact_file
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.git_analyze.outputs.artefact_file }}
+          path: ${{ steps.git_analyze.outputs.artefact_file }}
+          retention-days: 30
+      
+      - name: "Rapport d'analyse Git et validation"
+        run: |
+          echo "📊 Résumé de l'analyse Git :"
+          echo "   • Chemin analysé : ${{ inputs.chemin_fichier_ou_dossier }}"
+          echo "   • Opération : ${{ inputs.operation }}"
+          echo "   • Format sortie : ${{ inputs.format_sortie }}"
+          
+          if [ -n "${{ steps.git_analyze.outputs.date_output }}" ]; then
+            echo "   • Date trouvée : ${{ steps.git_analyze.outputs.date_output }}"
+            echo "   • Commit : ${{ steps.git_analyze.outputs.commit_hash }}"
+            echo "   • Auteur : ${{ steps.git_analyze.outputs.commit_author }}"
+            echo "   • Total commits : ${{ steps.git_analyze.outputs.total_commits }}"
+            
+            # Affichage détaillé selon l'opération
+            case "${{ inputs.operation }}" in
+              last_commit)
+                echo "✅ Dernier commit identifié avec succès"
+                ;;
+              first_commit)
+                echo "✅ Premier commit identifié avec succès"
+                ;;
+              all_commits)
+                echo "✅ Historique complet analysé (${{ steps.git_analyze.outputs.total_commits }} commits)"
+                ;;
+            esac
+          else
+            echo "   • Résultat : Aucun historique Git trouvé"
+            echo "⚠️  Le chemin spécifié n'a pas d'historique Git ou n'est pas suivi"
+          fi
+          
+          # Validation de l'artefact si généré
+          if [ -n "${{ steps.git_analyze.outputs.artefact_file }}" ] && [ -f "${{ steps.git_analyze.outputs.artefact_file }}" ]; then
+            echo "📄 Artefact créé : ${{ steps.git_analyze.outputs.artefact_file }}"
+            echo "📊 Taille : $(stat -c%s "${{ steps.git_analyze.outputs.artefact_file }}") octets"
+          fi
+          
+          echo "✅ Analyse Git terminée"
+      
+      - name: "Affichage du résumé dans l'interface"
+        if: always()
+        run: |
+          echo "## 🕰️ Analyse Historique Git" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Chemin analysé :** \`${{ inputs.chemin_fichier_ou_dossier }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Opération :** ${{ inputs.operation }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -n "${{ steps.git_analyze.outputs.date_output }}" ]; then
+            echo "**✅ Résultats :**" >> $GITHUB_STEP_SUMMARY
+            echo "- Date : \`${{ steps.git_analyze.outputs.date_output }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- Commit : \`${{ steps.git_analyze.outputs.commit_hash }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- Auteur : ${{ steps.git_analyze.outputs.commit_author }}" >> $GITHUB_STEP_SUMMARY
+            echo "- Total commits : ${{ steps.git_analyze.outputs.total_commits }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**⚠️ Résultat :** Aucun historique Git trouvé" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Format de sortie :** ${{ inputs.format_sortie }}" >> $GITHUB_STEP_SUMMARY
+      
+      - name: "Debug - Historique détaillé"
+        if: runner.debug == '1'
+        run: |
+          echo "🔍 Historique Git détaillé pour : ${{ inputs.chemin_fichier_ou_dossier }}"
+          git log --oneline -10 -- "${{ inputs.chemin_fichier_ou_dossier }}" || echo "Aucun historique trouvé"
+          
+          if [ -n "${{ steps.git_analyze.outputs.artefact_file }}" ] && [ -f "${{ steps.git_analyze.outputs.artefact_file }}" ]; then
+            echo "🔍 Contenu de l'artefact JSON :"
+            cat "${{ steps.git_analyze.outputs.artefact_file }}"
+          fi
