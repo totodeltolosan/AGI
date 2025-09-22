@@ -75,7 +75,7 @@ exports/
 !iaGOD.json
 
 # Fichiers de documentation (sauf les documents constitutionnels)
-*.md
+!*.md
 # Annuler l'ignorance pour les documents clés
 !README.md
 !AGI.md
