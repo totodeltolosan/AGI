@@ -22,9 +22,9 @@ jobs:
 
     - name: Install Constitutional Tools
       run: |
-        pip install constitutional-analysis compliance-checker
-        pip install governance-tools constitutional-audit
-        pip install policy-validation legal-compliance
+        #         pip install constitutional-analysis compliance-checker
+        #         pip install governance-tools constitutional-audit
+        #         pip install policy-validation legal-compliance
 
     - name: Constitutional Audit Full System
       run: |
