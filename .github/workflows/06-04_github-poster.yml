@@ -1,0 +1,199 @@
+name: "Travailleur : GitHub Poster"
+
+on:
+  workflow_call:
+    inputs:
+      titre:
+        description: "Titre de l'issue à créer"
+        required: true
+        type: string
+      corps:
+        description: "Corps du message de l'issue (Markdown supporté)"
+        required: true
+        type: string
+      labels:
+        description: "JSON array des labels à appliquer (ex: [\"bug\", \"urgent\"])"
+        required: false
+        default: '[]'
+        type: string
+      assignes:
+        description: "JSON array des utilisateurs à assigner (ex: [\"username1\", \"username2\"])"
+        required: false
+        default: '[]'
+        type: string
+      milestone:
+        description: "ID ou nom du milestone à associer (optionnel)"
+        required: false
+        type: string
+    outputs:
+      issue_url:
+        description: "URL de l'issue créée"
+        value: ${{ jobs.create_issue.outputs.url }}
+      issue_number:
+        description: "Numéro de l'issue créée"
+        value: ${{ jobs.create_issue.outputs.number }}
+
+# Permissions nécessaires pour créer des issues
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  create_issue:
+    name: "Création issue GitHub"
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.poster.outputs.issue_url }}
+      number: ${{ steps.poster.outputs.issue_number }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Installation des dépendances Python"
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+      
+      - name: "Configuration GitHub CLI (fallback)"
+        run: |
+          # GitHub CLI est déjà installé sur ubuntu-latest
+          gh --version
+          echo "🔧 GitHub CLI configuré en fallback"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: "Validation des paramètres d'entrée"
+        run: |
+          echo "🔍 Validation des paramètres :"
+          
+          # Validation du titre (non vide)
+          if [ -z "${{ inputs.titre }}" ]; then
+            echo "❌ ERREUR: Titre requis mais vide"
+            exit 1
+          fi
+          echo "✅ Titre : OK ($(echo '${{ inputs.titre }}' | wc -c) caractères)"
+          
+          # Validation du corps (non vide)
+          if [ -z "${{ inputs.corps }}" ]; then
+            echo "❌ ERREUR: Corps requis mais vide"
+            exit 1
+          fi
+          echo "✅ Corps : OK ($(echo '${{ inputs.corps }}' | wc -c) caractères)"
+          
+          # Validation des labels JSON
+          python -c "
+import json
+import sys
+try:
+    labels = json.loads('${{ inputs.labels }}')
+    if not isinstance(labels, list):
+        raise ValueError('Labels doivent être une liste')
+    print(f'✅ Labels : OK ({len(labels)} labels)')
+    for label in labels:
+        print(f'   - {label}')
+except Exception as e:
+    print(f'❌ ERREUR Labels: {e}')
+    sys.exit(1)
+"
+          
+          # Validation des assignés JSON
+          python -c "
+import json
+import sys
+try:
+    assignes = json.loads('${{ inputs.assignes }}')
+    if not isinstance(assignes, list):
+        raise ValueError('Assignés doivent être une liste')
+    print(f'✅ Assignés : OK ({len(assignes)} assignés)')
+    for assigne in assignes:
+        print(f'   - {assigne}')
+except Exception as e:
+    print(f'❌ ERREUR Assignés: {e}')
+    sys.exit(1)
+"
+      
+      - name: "Exécution du poster GitHub"
+        id: poster
+        run: |
+          python .github/scripts/travailleur_github_poster.py \
+            --titre "${{ inputs.titre }}" \
+            --corps "${{ inputs.corps }}" \
+            --labels '${{ inputs.labels }}' \
+            --assignes '${{ inputs.assignes }}' \
+            ${{ inputs.milestone && format('--milestone "{0}"', inputs.milestone) || '' }}
+          
+          echo "🎫 Issue GitHub traitée"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+      
+      - name: "Validation de la création d'issue"
+        run: |
+          if [ -n "${{ steps.poster.outputs.issue_url }}" ]; then
+            echo "📊 Récapitulatif de l'issue créée :"
+            echo "   • Titre : ${{ inputs.titre }}"
+            echo "   • URL : ${{ steps.poster.outputs.issue_url }}"
+            echo "   • Numéro : #${{ steps.poster.outputs.issue_number }}"
+            echo "   • Repository : ${{ github.repository }}"
+            
+            # Vérification que l'URL est accessible
+            if command -v curl >/dev/null; then
+              echo "🔗 Vérification de l'accessibilité de l'URL :"
+              if curl -s -o /dev/null -w "%{http_code}" "${{ steps.poster.outputs.issue_url }}" | grep -q "200"; then
+                echo "✅ Issue accessible publiquement"
+              else
+                echo "⚠️  Issue peut ne pas être immédiatement accessible"
+              fi
+            fi
+            
+            echo "✅ Issue GitHub créée avec succès"
+          else
+            echo "❌ ERREUR: Aucune URL d'issue retournée"
+            exit 1
+          fi
+      
+      - name: "Affichage du résumé dans l'interface"
+        if: always()
+        run: |
+          if [ -n "${{ steps.poster.outputs.issue_url }}" ]; then
+            echo "## 🎫 Issue GitHub Créée avec Succès" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Titre :** ${{ inputs.titre }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**URL :** [${{ steps.poster.outputs.issue_url }}](${{ steps.poster.outputs.issue_url }})" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Numéro :** #${{ steps.poster.outputs.issue_number }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ '${{ inputs.labels }}' != '[]' ]; then
+              echo "**Labels :** ${{ inputs.labels }}" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            if [ '${{ inputs.assignes }}' != '[]' ]; then
+              echo "**Assignés :** ${{ inputs.assignes }}" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            echo "**Créée le :** $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Échec de Création d'Issue" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "La création de l'issue GitHub a échoué. Consultez les logs pour plus de détails." >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: "Debug - Informations environnement GitHub"
+        if: runner.debug == '1'
+        run: |
+          echo "🔍 Variables d'environnement GitHub :"
+          echo "GITHUB_REPOSITORY=${{ github.repository }}"
+          echo "GITHUB_ACTOR=${{ github.actor }}"
+          echo "GITHUB_REF=${{ github.ref }}"
+          echo "GITHUB_EVENT_NAME=${{ github.event_name }}"
+          echo "Permissions issues: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}"
