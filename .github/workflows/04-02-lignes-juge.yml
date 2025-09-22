@@ -1,0 +1,100 @@
+name: "Ouvrier : Juge Lignes"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_resultats_bruts:
+        description: "Artefact JSON des résultats bruts du comptage"
+        required: true
+        type: string
+      limite_lignes:
+        description: "Limite maximale de lignes autorisée par fichier"
+        required: true
+        type: number
+      nom_artefact_sortie:
+        description: "Nom de l'artefact de sortie"
+        required: false
+        default: "resultats-juges.json"
+        type: string
+    outputs:
+      artefact_resultats:
+        description: "Nom de l'artefact contenant les résultats du jugement"
+        value: ${{ jobs.juger_conformite.outputs.artefact_name }}
+      taux_conformite:
+        description: "Taux de conformité global (pourcentage)"
+        value: ${{ jobs.juger_conformite.outputs.taux_conformite }}
+      verdict_global:
+        description: "Verdict global du jugement"
+        value: ${{ jobs.juger_conformite.outputs.verdict }}
+      validation_reussie:
+        description: "Validation du résultat par le Qualiticien"
+        value: ${{ jobs.validation_resultats.outputs.validation_success }}
+
+jobs:
+  juger_conformite:
+    name: "Jugement conformité lignes"
+    runs-on: ubuntu-latest
+    outputs:
+      artefact_name: ${{ steps.judge.outputs.artefact_name }}
+      taux_conformite: ${{ steps.judge.outputs.taux_conformite }}
+      verdict: ${{ steps.judge.outputs.verdict }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Téléchargement des résultats bruts"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_resultats_bruts }}
+          path: ./input/
+      
+      - name: "Exécution du jugement"
+        id: judge
+        run: |
+          python .github/scripts/ouvrier_juge.py \
+            --artefact-resultats-bruts "./input/${{ inputs.artefact_resultats_bruts }}" \
+            --limite-lignes ${{ inputs.limite_lignes }} \
+            --sortie "${{ inputs.nom_artefact_sortie }}"
+          
+          echo "artefact_name=${{ inputs.nom_artefact_sortie }}" >> $GITHUB_OUTPUT
+          
+          # Extraction des métriques
+          python -c "
+import json
+with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:
+    data = json.load(f)
+jugement = data.get('jugement_global', {})
+print(f'taux_conformite={jugement.get(\"taux_conformite\", 0)}')
+print(f'verdict={jugement.get(\"verdict\", \"INCONNU\")}')
+" >> $GITHUB_OUTPUT
+      
+      - name: "Upload artefact jugement"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.nom_artefact_sortie }}
+          path: ${{ inputs.nom_artefact_sortie }}
+          retention-days: 30
+
+  validation_resultats:
+    name: "Validation par Qualiticien"
+    runs-on: ubuntu-latest
+    needs: juger_conformite
+    outputs:
+      validation_success: ${{ steps.validate.outputs.validation_success }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Appel du Qualiticien de validation"
+        id: validate
+        uses: ./.github/workflows/05-02-lignes-valid-juge.yml
+        with:
+          artefact_resultats_juges: ${{ needs.juger_conformite.outputs.artefact_name }}
+          mode_strict: true
