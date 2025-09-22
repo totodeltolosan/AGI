@@ -1,0 +1,87 @@
+name: "Nettoyeur : Formateur Markdown"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_entree_json:
+        description: "Nom de l'artefact JSON à consommer"
+        required: true
+        type: string
+      template_markdown:
+        description: "Template Markdown avec placeholders ({{variable}}, {{#if condition}}, {{#each array}})"
+        required: true
+        type: string
+      nom_fichier_sortie:
+        description: "Nom du fichier Markdown à créer"
+        required: false
+        default: "rapport.md"
+        type: string
+    outputs:
+      markdown_file_path:
+        description: "Chemin vers le fichier Markdown généré"
+        value: ${{ jobs.format_markdown.outputs.md_path }}
+
+jobs:
+  format_markdown:
+    name: "Génération rapport Markdown"
+    runs-on: ubuntu-latest
+    outputs:
+      md_path: ${{ steps.format.outputs.md_path }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Installation des dépendances Python"
+        run: |
+          python -m pip install --upgrade pip
+          # Utilise seulement la stdlib Python
+      
+      - name: "Téléchargement de l'artefact JSON d'entrée"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_entree_json }}
+          path: ./input/
+      
+      - name: "Préparation du template Markdown"
+        run: |
+          echo '${{ inputs.template_markdown }}' > template.md
+          echo "📝 Template préparé"
+      
+      - name: "Exécution du formateur Markdown"
+        id: format
+        run: |
+          python .github/scripts/nettoyeur_format_markdown.py \
+            --artefact-entree-json "./input/${{ inputs.artefact_entree_json }}" \
+            --template-markdown "template.md" \
+            --nom-fichier-sortie "${{ inputs.nom_fichier_sortie }}"
+          
+          echo "md_path=${{ inputs.nom_fichier_sortie }}" >> $GITHUB_OUTPUT
+          echo "✅ Formatage Markdown terminé avec succès"
+      
+      - name: "Upload de l'artefact Markdown"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.nom_fichier_sortie }}
+          path: ${{ inputs.nom_fichier_sortie }}
+          retention-days: 30
+      
+      - name: "Validation et aperçu du rapport"
+        run: |
+          if [ -f "${{ inputs.nom_fichier_sortie }}" ]; then
+            echo "📄 Fichier Markdown créé : ${{ inputs.nom_fichier_sortie }}"
+            echo "📊 Taille : $(stat -c%s "${{ inputs.nom_fichier_sortie }}") octets"
+            echo "📋 Premières lignes du rapport :"
+            echo "--- DÉBUT APERÇU ---"
+            head -10 "${{ inputs.nom_fichier_sortie }}" || true
+            echo "--- FIN APERÇU ---"
+            echo "📈 Total lignes : $(wc -l < "${{ inputs.nom_fichier_sortie }}")"
+          else
+            echo "❌ ERREUR: Fichier Markdown non créé"
+            exit 1
+          fi
