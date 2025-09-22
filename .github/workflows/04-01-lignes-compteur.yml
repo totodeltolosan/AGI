@@ -1,0 +1,253 @@
+name: "Ouvrier : Compteur Lignes"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_liste_fichiers:
+        description: "Nom de l'artefact JSON contenant la liste des fichiers à analyser"
+        required: true
+        type: string
+      inclure_vides:
+        description: "Inclure les lignes vides dans le comptage"
+        required: false
+        default: true
+        type: boolean
+      inclure_commentaires:
+        description: "Inclure les commentaires dans le comptage"
+        required: false
+        default: true
+        type: boolean
+      nom_artefact_sortie:
+        description: "Nom de l'artefact de sortie"
+        required: false
+        default: "resultats-bruts-compteur.json"
+        type: string
+    outputs:
+      artefact_resultats:
+        description: "Nom de l'artefact contenant les résultats du comptage"
+        value: ${{ jobs.compter_lignes.outputs.artefact_name }}
+      total_fichiers_analyses:
+        description: "Nombre de fichiers analysés avec succès"
+        value: ${{ jobs.compter_lignes.outputs.fichiers_analyses }}
+      total_lignes:
+        description: "Nombre total de lignes comptées"
+        value: ${{ jobs.compter_lignes.outputs.lignes_totales }}
+      validation_reussie:
+        description: "Validation du résultat par le Qualiticien (true/false)"
+        value: ${{ jobs.validation_resultats.outputs.validation_success }}
+
+jobs:
+  compter_lignes:
+    name: "Comptage des lignes de code"
+    runs-on: ubuntu-latest
+    outputs:
+      artefact_name: ${{ steps.count.outputs.artefact_name }}
+      fichiers_analyses: ${{ steps.count.outputs.fichiers_analyses }}
+      lignes_totales: ${{ steps.count.outputs.lignes_totales }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Téléchargement de la liste de fichiers"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_liste_fichiers }}
+          path: ./input/
+      
+      - name: "Vérification de la liste de fichiers"
+        run: |
+          echo "📋 Vérification de la liste de fichiers d'entrée"
+          
+          if [ ! -f "./input/${{ inputs.artefact_liste_fichiers }}" ]; then
+            echo "❌ ERREUR: Liste de fichiers introuvable"
+            exit 1
+          fi
+          
+          echo "✅ Liste de fichiers trouvée"
+          
+          # Aperçu de la liste
+          echo "🔍 Aperçu de la liste :"
+          python -c "
+import json
+try:
+    with open('./input/${{ inputs.artefact_liste_fichiers }}', 'r') as f:
+        data = json.load(f)
+    print(f'Total fichiers dans la liste: {data.get(\"total_fichiers\", 0)}')
+    fichiers = data.get('fichiers', [])
+    print('Échantillon:')
+    for i, f in enumerate(fichiers[:5]):
+        print(f'  {i+1}. {f}')
+    if len(fichiers) > 5:
+        print(f'  ... et {len(fichiers) - 5} autres')
+except Exception as e:
+    print(f'Erreur lecture liste: {e}')
+    exit(1)
+"
+      
+      - name: "Exécution du comptage de lignes"
+        id: count
+        run: |
+          echo "📊 Démarrage du comptage de lignes"
+          
+          python .github/scripts/ouvrier_compteur.py \
+            --artefact-liste-fichiers "./input/${{ inputs.artefact_liste_fichiers }}" \
+            --sortie "${{ inputs.nom_artefact_sortie }}" \
+            ${{ inputs.inclure_vides && '--inclure-vides' || '' }} \
+            ${{ inputs.inclure_commentaires && '--inclure-commentaires' || '' }}
+          
+          # Extraction des statistiques pour les outputs
+          if [ -f "${{ inputs.nom_artefact_sortie }}" ]; then
+            echo "artefact_name=${{ inputs.nom_artefact_sortie }}" >> $GITHUB_OUTPUT
+            
+            # Parse des résultats JSON
+            python -c "
+import json
+try:
+    with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:
+        data = json.load(f)
+    stats = data.get('stats_globales', {})
+    print(f'fichiers_analyses={stats.get(\"fichiers_analyses\", 0)}')
+    print(f'lignes_totales={stats.get(\"total_lignes\", 0)}')
+except Exception as e:
+    print('fichiers_analyses=0')
+    print('lignes_totales=0')
+    print(f'Erreur extraction stats: {e}')
+" >> $GITHUB_OUTPUT
+            
+            echo "✅ Comptage terminé avec succès"
+          else
+            echo "❌ ERREUR: Fichier de résultats non créé"
+            exit 1
+          fi
+      
+      - name: "Upload de l'artefact résultats comptage"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.nom_artefact_sortie }}
+          path: ${{ inputs.nom_artefact_sortie }}
+          retention-days: 30
+      
+      - name: "Affichage du résumé de comptage"
+        run: |
+          if [ -f "${{ inputs.nom_artefact_sortie }}" ]; then
+            echo "📊 Résumé du comptage de lignes :"
+            python -c "
+import json
+try:
+    with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:
+        data = json.load(f)
+    
+    stats = data.get('stats_globales', {})
+    params = data.get('parametres', {})
+    
+    print(f'   • Total fichiers : {stats.get(\"total_fichiers\", 0)}')
+    print(f'   • Fichiers analysés : {stats.get(\"fichiers_analyses\", 0)}')
+    print(f'   • Fichiers en erreur : {stats.get(\"fichiers_erreur\", 0)}')
+    print(f'   • Total lignes : {stats.get(\"total_lignes\", 0)}')
+    print(f'   • Lignes de code : {stats.get(\"total_lignes_code\", 0)}')
+    print(f'   • Lignes vides : {stats.get(\"total_lignes_vides\", 0)}')
+    print(f'   • Lignes commentaires : {stats.get(\"total_lignes_commentaires\", 0)}')
+    
+    if 'moyenne_lignes_par_fichier' in stats:
+        print(f'   • Moyenne par fichier : {stats[\"moyenne_lignes_par_fichier\"]}')
+    
+    print(f'   • Inclure vides : {params.get(\"inclure_vides\", True)}')
+    print(f'   • Inclure commentaires : {params.get(\"inclure_commentaires\", True)}')
+    
+    # Affichage des erreurs s'il y en a
+    erreurs = data.get('erreurs', [])
+    if erreurs:
+        print(f'   ⚠️ Erreurs rencontrées : {len([e for e in erreurs if e])}')
+
+except Exception as e:
+    print(f'Erreur affichage résumé: {e}')
+"
+          fi
+
+  validation_resultats:
+    name: "Validation par Qualiticien"
+    runs-on: ubuntu-latest
+    needs: compter_lignes
+    outputs:
+      validation_success: ${{ steps.validate.outputs.validation_success }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Appel du Qualiticien de validation"
+        id: validate
+        uses: ./.github/workflows/05-01-lignes-valid-compteur.yml
+        with:
+          artefact_resultats_bruts: ${{ needs.compter_lignes.outputs.artefact_name }}
+          mode_strict: true
+      
+      - name: "Résumé de la validation"
+        run: |
+          validation_status="${{ steps.validate.outputs.validation_success }}"
+          
+          if [ "$validation_status" = "true" ]; then
+            echo "✅ VALIDATION RÉUSSIE par le Qualiticien"
+            echo "   Les résultats du comptage sont conformes au schéma attendu"
+          else
+            echo "❌ VALIDATION ÉCHOUÉE par le Qualiticien"
+            echo "   Les résultats ne respectent pas la structure requise"
+          fi
+          
+          echo ""
+          echo "📊 Métriques de l'Ouvrier Compteur :"
+          echo "   • Fichiers analysés : ${{ needs.compter_lignes.outputs.fichiers_analyses }}"
+          echo "   • Total lignes : ${{ needs.compter_lignes.outputs.lignes_totales }}"
+          echo "   • Artefact généré : ${{ needs.compter_lignes.outputs.artefact_name }}"
+          echo "   • Validation : $([ "$validation_status" = "true" ] && echo "PASSÉE" || echo "ÉCHOUÉE")"
+
+  rapport_final:
+    name: "Rapport final Ouvrier Compteur"
+    runs-on: ubuntu-latest
+    needs: [compter_lignes, validation_resultats]
+    if: always()
+    
+    steps:
+      - name: "Résumé dans l'interface GitHub Actions"
+        run: |
+          comptage_status="${{ needs.compter_lignes.result }}"
+          validation_status="${{ needs.validation_resultats.outputs.validation_success }}"
+          
+          echo "## 📊 Ouvrier : Compteur de Lignes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artefact d'entrée :** \`${{ inputs.artefact_liste_fichiers }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artefact de sortie :** \`${{ needs.compter_lignes.outputs.artefact_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$comptage_status" = "success" ]; then
+            echo "**✅ COMPTAGE :** Terminé avec succès" >> $GITHUB_STEP_SUMMARY
+            echo "- Fichiers analysés : ${{ needs.compter_lignes.outputs.fichiers_analyses }}" >> $GITHUB_STEP_SUMMARY
+            echo "- Total lignes : ${{ needs.compter_lignes.outputs.lignes_totales }}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "$validation_status" = "true" ]; then
+              echo "**✅ VALIDATION :** Réussie par le Qualiticien" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "L'Ouvrier Compteur a terminé sa tâche avec succès." >> $GITHUB_STEP_SUMMARY
+            else
+              echo "**❌ VALIDATION :** Échouée" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Le comptage s'est bien déroulé, mais la validation a échoué." >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "**❌ COMPTAGE :** Échec" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "L'Ouvrier Compteur n'a pas pu terminer sa tâche." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Paramètres :**" >> $GITHUB_STEP_SUMMARY
+          echo "- Inclure lignes vides : ${{ inputs.inclure_vides }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Inclure commentaires : ${{ inputs.inclure_commentaires }}" >> $GITHUB_STEP_SUMMARY
