@@ -400,7 +400,7 @@ jobs:
         fi
 
     - name: Upload Constitutional Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: constitutional-governance-report
         path: |
