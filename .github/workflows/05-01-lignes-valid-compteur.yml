@@ -1,0 +1,164 @@
+name: "Qualiticien : Validation Compteur Lignes"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_resultats_bruts:
+        description: "Nom de l'artefact JSON contenant les résultats bruts du comptage"
+        required: true
+        type: string
+      mode_strict:
+        description: "Activer le mode de validation strict"
+        required: false
+        default: true
+        type: boolean
+    outputs:
+      validation_success:
+        description: "Résultat de la validation (true/false)"
+        value: ${{ jobs.validate_compteur.outputs.success }}
+      validation_errors:
+        description: "Nombre d'erreurs de validation détectées"
+        value: ${{ jobs.validate_compteur.outputs.error_count }}
+
+jobs:
+  validate_compteur:
+    name: "Validation schéma résultats compteur"
+    runs-on: ubuntu-latest
+    outputs:
+      success: ${{ steps.validate.outputs.validation_success }}
+      error_count: ${{ steps.validate.outputs.error_count }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Téléchargement de l'artefact à valider"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_resultats_bruts }}
+          path: ./validation-input/
+      
+      - name: "Vérification présence artefact"
+        run: |
+          echo "🔍 Vérification de la présence de l'artefact :"
+          if [ -f "./validation-input/${{ inputs.artefact_resultats_bruts }}" ]; then
+            echo "✅ Artefact trouvé : ${{ inputs.artefact_resultats_bruts }}"
+            echo "📊 Taille : $(stat -c%s "./validation-input/${{ inputs.artefact_resultats_bruts }}") octets"
+            
+            # Aperçu du contenu JSON
+            echo "📋 Aperçu du contenu :"
+            head -5 "./validation-input/${{ inputs.artefact_resultats_bruts }}" || true
+          else
+            echo "❌ ERREUR: Artefact introuvable"
+            echo "📁 Contenu du dossier d'entrée :"
+            ls -la ./validation-input/ || echo "Dossier vide"
+            exit 1
+          fi
+      
+      - name: "Exécution de la validation du schéma"
+        id: validate
+        run: |
+          echo "🔍 Validation du schéma 'resultats-bruts-compteur'"
+          
+          # Exécution du script de validation
+          if python .github/scripts/qualiticien_validation_schema.py \
+            --artefact "./validation-input/${{ inputs.artefact_resultats_bruts }}" \
+            --schema-type "resultats-bruts-compteur" \
+            ${{ inputs.mode_strict && '--mode-strict' || '' }}; then
+            
+            echo "validation_success=true" >> $GITHUB_OUTPUT
+            echo "error_count=0" >> $GITHUB_OUTPUT
+            echo "✅ VALIDATION RÉUSSIE"
+            
+          else
+            echo "validation_success=false" >> $GITHUB_OUTPUT
+            echo "error_count=1" >> $GITHUB_OUTPUT
+            echo "❌ VALIDATION ÉCHOUÉE"
+            
+            echo "🔧 Détails des erreurs de validation affichées ci-dessus"
+            exit 1
+          fi
+      
+      - name: "Génération rapport de validation"
+        if: always()
+        run: |
+          validation_status="${{ steps.validate.outputs.validation_success }}"
+          
+          cat << EOF > rapport-validation-compteur.md
+          # Rapport de Validation - Compteur Lignes
+          
+          **Artefact validé :** \`${{ inputs.artefact_resultats_bruts }}\`
+          
+          **Schéma appliqué :** resultats-bruts-compteur
+          
+          **Mode strict :** ${{ inputs.mode_strict }}
+          
+          **Résultat :** $([ "$validation_status" = "true" ] && echo "✅ SUCCÈS" || echo "❌ ÉCHEC")
+          
+          **Timestamp :** $(date '+%Y-%m-%d %H:%M:%S')
+          
+          ---
+          
+          ## Structure attendue
+          
+          Le schéma \`resultats-bruts-compteur\` attend :
+          
+          ### Clés requises :
+          - \`fichiers\` (array) : Liste des fichiers analysés
+          - \`total_fichiers\` (number) : Nombre total de fichiers
+          - \`timestamp\` (string) : Horodatage de l'analyse
+          
+          ### Clés optionnelles :
+          - \`stats_globales\` (object) : Statistiques générales
+          - \`erreurs\` (array) : Erreurs rencontrées
+          
+          ### Validation des éléments imbriqués :
+          - Chaque élément de \`fichiers\` doit contenir :
+            - \`nom\` (string) : Nom du fichier
+            - \`lignes\` (number) : Nombre de lignes
+            - \`chemin\` (string) : Chemin du fichier
+          
+          EOF
+          
+          echo "📄 Rapport de validation généré"
+      
+      - name: "Upload rapport de validation"
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: "rapport-validation-compteur.md"
+          path: "rapport-validation-compteur.md"
+          retention-days: 7
+      
+      - name: "Résumé de validation dans l'interface"
+        if: always()
+        run: |
+          validation_status="${{ steps.validate.outputs.validation_success }}"
+          
+          echo "## 🔍 Validation Qualiticien - Compteur Lignes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Artefact :** \`${{ inputs.artefact_resultats_bruts }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Schéma :** resultats-bruts-compteur" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$validation_status" = "true" ]; then
+            echo "**✅ RÉSULTAT :** Validation réussie" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "L'artefact est conforme au schéma attendu." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**❌ RÉSULTAT :** Validation échouée" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "L'artefact ne respecte pas la structure requise." >> $GITHUB_STEP_SUMMARY
+            echo "Consultez les logs pour plus de détails." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Mode strict :** ${{ inputs.mode_strict }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Horodatage :** $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
