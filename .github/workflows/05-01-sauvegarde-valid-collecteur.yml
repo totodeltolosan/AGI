@@ -1,0 +1,37 @@
+name: "🗄️ Qualiticien Validation Collecteur Sauvegarde"
+
+on:
+  workflow_call:
+    inputs:
+      noms_fichiers_attendus:
+        description: "Liste des noms de fichiers attendus (JSON string)"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-collecteur-sauvegarde.outputs.statut }}
+
+jobs:
+  validation-collecteur-sauvegarde:
+    name: "🔍 Validation Fichiers Collectés"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "🔍 Validation des fichiers collectés"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_fichiers.py \
+            --noms-fichiers-attendus '${{ inputs.noms_fichiers_attendus }}' \
+            --dossier-verification "./rapports"

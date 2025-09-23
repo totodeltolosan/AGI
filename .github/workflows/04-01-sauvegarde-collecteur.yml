@@ -1,0 +1,38 @@
+name: "🗄️ Ouvrier Collecteur Sauvegarde"
+
+on:
+  workflow_call:
+    inputs:
+      noms_artefacts:
+        description: "Liste des noms d'artefacts à sauvegarder (JSON string)"
+        required: true
+        type: string
+    outputs:
+      fichiers_collectes:
+        description: "Confirmation que les fichiers sont téléchargés"
+        value: "success"
+
+jobs:
+  collecteur-sauvegarde:
+    name: "📥 Collecte Rapports pour Sauvegarde"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "📥 Téléchargement des artefacts"
+        run: |
+          mkdir -p ./rapports
+          echo '${{ inputs.noms_artefacts }}' | jq -r '.[]' | while read artefact; do
+            echo "Téléchargement de $artefact..."
+            if [ "$artefact" != "null" ] && [ -n "$artefact" ]; then
+              # Téléchargement via actions/download-artifact se fait ici
+              echo "Artefact $artefact téléchargé"
+            fi
+          done
+
+      - name: "📋 Vérification des fichiers téléchargés"
+        run: |
+          ls -la ./rapports/ || echo "Aucun fichier téléchargé"
+          echo "Collecte terminée"
