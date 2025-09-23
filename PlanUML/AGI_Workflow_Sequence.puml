@@ -1,0 +1,105 @@
+@startuml AGI_Workflow_Sequence
+!theme cerulean
+
+title Flux d'Execution Temporel - Projet AGI
+note top : Sequence d'audit complet avec parallelisation et validation
+
+participant "Developpeur" as Dev
+participant "00-maitre.yml" as Maitre
+participant "01-orchestre.yml" as Orchestre
+participant "iaGOD.json" as Config
+participant "Le Metreur" as Metreur
+participant "Le Gardien" as Gardien
+participant "audit_lignes.py" as CM_Lignes
+participant "Compteur" as Compteur
+participant "Qualiticien" as QC
+participant "Database" as DB
+
+== PHASE 1: DECLENCHEMENT ==
+Dev -> Maitre : Push code / PR
+activate Maitre
+Maitre -> Orchestre : Declenche audit global
+activate Orchestre
+Orchestre -> Config : Lit constitution AGI
+Config -> Orchestre : Retourne parametres audits
+
+== PHASE 2: LANCEMENT PARALLELE DES GENERAUX ==
+note over Orchestre : PARALLELISATION NIVEAU 2\nTous les generaux demarrent simultanement
+
+Orchestre -> Metreur : audit_lignes(limite=500)
+activate Metreur
+Orchestre -> Gardien : audit_securite(rules)
+activate Gardien
+
+== PHASE 3: EXECUTION AUDIT LIGNES ==
+Metreur -> CM_Lignes : Execute contremitre
+activate CM_Lignes
+
+CM_Lignes -> Compteur : Compte fichiers *.py
+activate Compteur
+Compteur -> DB : liste-fichiers.json
+Compteur -> CM_Lignes : resultats-bruts.json
+deactivate Compteur
+
+CM_Lignes -> QC : Valide format
+activate QC
+QC -> QC : Verifie schema JSON
+
+alt Format valide
+    QC -> CM_Lignes : SUCCES
+    deactivate QC
+    CM_Lignes -> DB : resultats-juges.json
+    CM_Lignes -> DB : statistiques.json
+    CM_Lignes -> DB : rapport-lignes.csv
+    CM_Lignes -> Metreur : Rapport final lignes
+else Format invalide
+    QC -> CM_Lignes : ECHEC
+    deactivate QC
+    CM_Lignes -> Metreur : ERREUR VALIDATION
+end
+
+deactivate CM_Lignes
+Metreur -> Orchestre : AUDIT LIGNES TERMINE
+deactivate Metreur
+
+== PHASE 4: EXECUTION AUDIT SECURITE ==
+Gardien -> Gardien : Applique regex securite
+Gardien -> DB : violations-securite.json
+
+alt Violations critiques trouvees
+    Gardien -> Orchestre : VIOLATIONS CRITIQUES
+    note right : SQL Injection detectee\nMots de passe en dur\nFailles XSS
+else Aucune violation
+    Gardien -> Orchestre : SECURITE OK
+end
+
+deactivate Gardien
+
+== PHASE 5: SYNTHESE ET DECISION ==
+note over Orchestre : SYNTHESE GLOBALE\nCollecte tous les rapports\nAnalyse conformite generale
+
+Orchestre -> Orchestre : Analyse conformite globale
+Orchestre -> DB : rapport-global.json
+
+alt Tous audits reussis
+    Orchestre -> Maitre : PROJET CONFORME AGI
+    note over Dev : PR approuvee automatiquement
+else Violations critiques
+    Orchestre -> Maitre : BLOCAGE - VIOLATIONS CRITIQUES
+    Maitre -> Maitre : Cree issues GitHub
+    Maitre -> Dev : PR BLOQUEE + Issues creees
+else Violations mineures
+    Orchestre -> Maitre : AVERTISSEMENTS - AMELIORATION REQUISE
+    Maitre -> Dev : PR avec commentaires d'amelioration
+end
+
+deactivate Orchestre
+deactivate Maitre
+
+== PHASE 6: MONITORING CONTINU ==
+loop Monitoring temps reel
+    Orchestre -> DB : Mise a jour metriques temps reel
+    note over Orchestre : Tableau de bord actualise\nStatuts: 8/8 generaux actifs\nParallelisation: 43.7%
+end
+
+@enduml

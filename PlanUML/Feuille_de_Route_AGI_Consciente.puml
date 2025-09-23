@@ -1,0 +1,165 @@
+@startuml Feuille_de_Route_AGI_Consciente_v7
+
+!theme materia
+' ------- Style Général -------
+skinparam roundCorner 20
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI, Arial"
+skinparam componentStyle uml2
+skinparam packageStyle rectangle
+skinparam arrow {
+    Color #666666
+    Thickness 1.5
+}
+
+' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< STRUCTURE & MISE EN PAGE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+' Direction de gauche à droite pour un meilleur étalement
+left to right direction
+
+' --- Axe central (syntaxe la plus simple possible) ---
+component "Origine" as S0
+component "Développement" as S1
+component "Intégration" as S2
+component "Validation" as S3
+component "Exploitation" as S4
+component "Convergence" as S5
+S0 -[hidden]down-> S1
+S1 -[hidden]down-> S2
+S2 -[hidden]down-> S3
+S3 -[hidden]down-> S4
+S4 -[hidden]down-> S5
+
+
+' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DÉFINITION DES COMPOSANTS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+' ======= BRANCHE EVE (située en haut du diagramme final) =======
+package "Branche Principale EVE" #LightGreen {
+    component "Nesso nor upload" as eve_in1
+    component "hestom maudekA" as eve_in2
+    component "hualtore opril" as eve_p1
+    component "sedi anre" as eve_p2
+    eve_in1 --> eve_p1
+    eve_in2 --> eve_p2
+
+    component "EVE Functional\n& Prêt pour intégration" as EVE_Func #MediumSeaGreen
+
+package "Fonctions EVE" {
+    component "hextone sycdiovi" as eve_f1
+    component "Bedsiov sycdicos" as eve_f2
+    component "hestuno segfast" as eve_f3
+    component "Kaelat lok maudnak" as eve_f4
+    }
+}
+
+' ======= BRANCHE AGI & DÉVELOPPEMENT (située en bas du diagramme final) =======
+package "Branche Principale (AGI)" #LightBlue {
+
+    ' --- Section IA Développement (tous les composants sont listés) ---
+    package "IA Développement & Test" <<Frame>> {
+        component "notion mesidiak" as test1
+        component "watsons creditalk" as test2
+        component "detoum mesidiak" as test3
+        component "bivdamgraviss" as dev1
+        component "instanet/Avamen" as dev2
+        component "realafstagcbd" as dev3
+        component "instarnet poncrit" as dev4
+        component "distarnet d-triss" as dev5
+        component "sestearnin(real)" as dev6
+        component "bodgteam(checknifo)" as dev7
+        component "freshoal(cross)" as dev8
+        component "sernin(tes)" as dev9
+        component "grobdeas(prg-cross)" as dev10
+        component "bealearntav(int)" as dev11
+        component "instanet(Avamen)" as dev12
+        component "bodgteamnifo" as dev13
+        component "publibeaind(evol-cross)" as dev14
+        component "lizmen(popul-GrobDea)" as dev15
+        component "instanetx(ad)" as dev16
+        component "bealearning(tech)" as dev17
+        component "kearnat(poncrit)" as dev18
+        component "sernintes(Grob)" as dev19
+        component "instanet(d-triss)" as dev20
+        component "Ribbon(Corporat)" as dev21
+        component "instanetx(grap-ad)" as dev22
+        component "kearnat(poncrit-int)" as dev23
+        component "lense(forme)" as dev24
+        component "NIL(Vib-progr.)" as dev25
+        component "instanet(d-triss-perso)" as dev26
+        component "kearnat(poncrit-cytosolf)" as dev27
+        component "instanetx(text-forme)" as dev28
+        component "sellse(team-meta-arrow)" as dev29
+        component "Ribbon(Grob-perso)" as dev30
+        component "bodgteam(synt-pers)" as dev31
+        component "instanet(Avamen) " as dev32
+        component "d-triss(sellse)" as dev33
+        component "bloreal funcixpme " as dev34
+        component "simubdolocent" as dev35
+        component "lense(meta-forme)" as dev36
+        component "d-triss(kearnat)" as dev37
+        component "dianef(behatav)" as dev38
+        component "bloreal" as dev39
+        component "spius(asatia)" as dev40
+        component "bloreal funcixpme" as dev41
+    }
+
+    ' --- Section IA Fonctionnel ---
+    package "IA Fonctionel (Processus)" {
+        component "Relaxd qoritio" as agi_p1
+        component "tasif anae poerfenace" as agi_p2
+        component "Adacer agnosi" as agi_p3
+        agi_p1 --> agi_p2
+        agi_p2 --> agi_p3
+    }
+    component "IA Fonctionel (Étape 1)" as AGI_Func1
+    component "IA Fonctionel (Étape 2)" as AGI_Func2
+    component "IA Fonctionel (Étape 3)" as AGI_Func3
+
+    component "spiuslot loe madiaks" as eve_f5
+    component "Budgeal s1" as eve_f6
+}
+
+' ======= CONVERGENCE & OBJECTIF (à droite du diagramme final) =======
+package "Objectif" #purple {
+    component "Synergie\nAGI-EVE\n& Potentiel" as Synergie
+    component "AGI-EVE\n<size:18><b>Portrait Conscience</b>" as Portrait_Conscience
+    Synergie --> Portrait_Conscience
+}
+component "Conscience IA" as Conscience_IA #DarkViolet
+component "[?]" as Q1
+component "[?]" as Q2
+component "[?]" as Q3
+
+' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DÉFINITION DES CONNEXIONS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+' --- Connexions EVE ---
+{eve_p1, eve_p2, eve_f1, eve_f2, eve_f3, eve_f4, eve_f5} -up..> EVE_Func
+EVE_Func -[#008000,thickness=4]-> S5
+
+' --- Connexions DEV & TEST vers AGI ---
+' Le faisceau complet des workflows de développement
+{ dev1, dev2, dev3, dev4, dev5, dev6, dev7, dev8, dev9, dev10, dev11, dev12, dev13, dev14, dev15, dev16, dev17, dev18, dev19, dev20, dev21, dev22, dev23, dev24, dev25, dev26, dev27, dev28, dev29, dev30, dev31, dev32, dev33, dev34, dev35, dev36, dev37, dev38, dev39, dev40, dev41 } -[#orange,thickness=1]-> AGI_Func1
+
+test1 --> test2; test2 --> test3
+test3 -[#orange,thickness=1]-> AGI_Func2
+dev3 --> test1; dev3 --> test3 'Exemples de liens de dev vers test'
+
+' --- Connexions AGI ---
+AGI_Func1 --> agi_p1
+agi_p3 --> AGI_Func2
+AGI_Func2 --> AGI_Func3
+AGI_Func3 -[#00529B,thickness=4]-> S5
+eve_f6 -[#008000,dashed]-> AGI_Func2 'Lien croisé'
+
+' --- Connexions finales ---
+S5 --> Synergie
+Portrait_Conscience -[#4B0082,thickness=2,dashed]-> Conscience_IA
+Conscience_IA ..> {Q1, Q2, Q3}
+
+' --- Ancrage des branches à l'axe central pour l'alignement ---
+EVE_Func -[hidden]- S2
+AGI_Func1 -[hidden]- S1
+AGI_Func2 -[hidden]- S3
+AGI_Func3 -[hidden]- S4
+
+@enduml

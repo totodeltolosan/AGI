@@ -1,0 +1,270 @@
+@startuml AGI_Project_Architecture
+!define RECTANGLE class
+!define DIAMOND diamond
+!theme aws-orange
+
+title Architecture de Suivi Projet AGI - Vue d'Ensemble Complète
+caption Système hiérarchique à 9 niveaux pour l'audit et le contrôle qualité
+
+skinparam {
+    backgroundColor #f8f9fa
+    componentStyle rectangle
+    packageStyle rectangle
+    classArrowColor #2c3e50
+    classBorderColor #34495e
+    activityBorderColor #e74c3c
+    activityBackgroundColor #ecf0f1
+    activityFontColor #2c3e50
+    sequenceMessageAlign center
+    classFontSize 10
+    packageFontSize 12
+}
+
+' === NIVEAU 0 : CONTRÔLE SUPRÊME ===
+package "NIVEAU 0 - CONTRÔLE SUPRÊME" as N0 {
+    [00-maitre.yml\n(MOI)] as Maitre <<Supreme>>
+    note right of Maitre
+        **Contrôle Manuel**
+        • Ignore violations spécifiques
+        • Déclenche audits ciblés
+        • Override complet du système
+    end note
+}
+
+' === NIVEAU 1 : ORCHESTRATION ===
+package "NIVEAU 1 - ORCHESTRATION" as N1 {
+    [01-orchestre.yml\n(Maître Constitution)] as Orchestre <<Master>>
+    note right of Orchestre
+        **Orchestrateur Principal**
+        • Lit iaGOD.json
+        • Valide constitution
+        • Lance tous les audits
+        • Synthèse finale
+    end note
+}
+
+' === NIVEAU 2 : GÉNÉRAUX DE DIVISION ===
+package "NIVEAU 2 - GÉNÉRAUX DE DIVISION (8)" as N2 {
+    [02-loi-lignes.yml\n(Le Métreur)] as Metreur <<General>>
+    [03-loi-securite.yml\n(Le Gardien)] as Gardien <<General>>
+    [04-loi-documentation.yml\n(L'Archiviste)] as Archiviste <<General>>
+    [05-creation-issues.yml\n(Le Greffier)] as Greffier <<General>>
+    [06-sauvegarde-rapports.yml\n(L'Archiviste Chef)] as ArchivisteChef <<General>>
+    [07-controle-planuml.yml\n(Le Cartographe)] as Cartographe <<General>>
+    [chercheur.yml\n(Le Chercheur)] as Chercheur <<General>>
+    [auditeur-solution.yml\n(L'Auditeur)] as Auditeur <<General>>
+}
+
+' === NIVEAU 3 : CONTREMAÎTRES ===
+package "NIVEAU 3 - CONTREMAÎTRES" as N3 {
+    component "audit_lignes.py" as CM_Lignes <<Foreman>>
+    component "audit_securite.py" as CM_Securite <<Foreman>>
+    component "audit_documentation.py" as CM_Doc <<Foreman>>
+    component "creation_issues.py" as CM_Issues <<Foreman>>
+    component "sauvegarde_rapports.py" as CM_Save <<Foreman>>
+    component "audit_planuml.py" as CM_Plant <<Foreman>>
+    component "chercheur_solution.py" as CM_Search <<Foreman>>
+    component "auditeur_solution.py" as CM_Audit <<Foreman>>
+}
+
+' === NIVEAU 4 : OUVRIERS SPÉCIALISÉS ===
+package "NIVEAU 4 - OUVRIERS SPÉCIALISÉS (26)" as N4 {
+    ' Division Loi Lignes
+    rectangle "Division LIGNES" as DivLignes {
+        [04-01-lignes-compteur.yml] as O_Compteur
+        [04-02-lignes-juge.yml] as O_Juge
+        [04-03-lignes-statisticien.yml] as O_Stats
+        [04-04-lignes-rapporteur.yml] as O_Rapport
+        [04-05-lignes-conseiller.yml] as O_Conseil
+    }
+
+    ' Division Sécurité
+    rectangle "Division SÉCURITÉ" as DivSecu {
+        [04-01-securite-chercheur.yml] as O_SecuSearch
+        [04-02-securite-trieur.yml] as O_SecuTri
+    }
+
+    ' Division Chercheur
+    rectangle "Division CHERCHEUR" as DivSearch {
+        [04-01-chercheur-comm-email.yml] as O_Email
+        [04-02-chercheur-comm-slack.yml] as O_Slack
+        [04-03-chercheur-comm-commentaire.yml] as O_Comment
+        [04-04-chercheur-comm-dispatch.yml] as O_Dispatch
+        [04-05-chercheur-comm-pr.yml] as O_PR
+        [04-06-chercheur-analyse-log.yml] as O_Log
+        [04-07-chercheur-analyse-kb.yml] as O_KB
+        [04-08-chercheur-analyse-simu.yml] as O_Simu
+    }
+
+    ' Division Auditeur
+    rectangle "Division AUDITEUR" as DivAudit {
+        [04-01-auditeur-schema.yml] as O_Schema
+        [04-02-auditeur-securite.yml] as O_AuditSecu
+        [04-03-auditeur-simulation.yml] as O_AuditSimu
+        [04-04-auditeur-cout.yml] as O_Cout
+        [04-05-auditeur-plan.yml] as O_Plan
+    }
+}
+
+' === NIVEAU 5 : QUALITICIENS ===
+package "NIVEAU 5 - QUALITICIENS (26)" as N5 {
+    rectangle "VALIDATION LIGNES" as ValLignes {
+        [05-01-lignes-valid-compteur.yml] as Q_Compteur
+        [05-02-lignes-valid-juge.yml] as Q_Juge
+        [05-03-lignes-valid-statisticien.yml] as Q_Stats
+        [05-04-lignes-valid-rapporteur.yml] as Q_Rapport
+        [05-05-lignes-valid-conseiller.yml] as Q_Conseil
+    }
+
+    rectangle "VALIDATION AUTRES" as ValAutres {
+        [05-01-securite-valid-chercheur.yml] as Q_SecuSearch
+        [05-01-auditeur-valid-schema.yml] as Q_Schema
+        [Autres Qualiticiens...] as Q_Others
+    }
+}
+
+' === NIVEAU 6 : TRAVAILLEURS ===
+package "NIVEAU 6 - TRAVAILLEURS (6)" as N6 {
+    [06-01-scanner-fichiers.yml] as T_Scan
+    [06-02-regex-applicateur.yml] as T_Regex
+    [06-03-extracteur-donnees.yml] as T_Extract
+    [06-04-validateur-json.yml] as T_ValidJSON
+    [06-05-comparateur-versions.yml] as T_Compare
+    [06-06-calculateur-metriques.yml] as T_Calc
+}
+
+' === NIVEAU 7 : NETTOYEURS ===
+package "NIVEAU 7 - NETTOYEURS (3)" as N7 {
+    [07-01-formateur-csv.yml] as C_CSV
+    [07-02-generateur-markdown.yml] as C_MD
+    [07-03-archiveur-zip.yml] as C_ZIP
+}
+
+' === NIVEAU 8 : FOURMIS ===
+package "NIVEAU 8 - FOURMIS (Code Python)" as N8 {
+    component "Logique Python\nFonctions atomiques" as Fourmis <<Code>>
+}
+
+' === ARTEFACTS ET DONNÉES ===
+database "ARTEFACTS" as Artifacts {
+    file "iaGOD.json" as Constitution
+    file "liste-fichiers.json" as ListFiles
+    file "violations-brutes.json" as Violations
+    file "rapport-lignes.csv" as RapportCSV
+    file "recommandations.md" as RecoMD
+    file "plan-implementation.json" as PlanImpl
+}
+
+' === STATUTS ET MÉTRIQUES EN TEMPS RÉEL ===
+rectangle "TABLEAU DE BORD TEMPS RÉEL" as Dashboard {
+    rectangle "MÉTRIQUES GLOBALES" as GlobalMetrics {
+        note as GlobalNote
+            **Statut Global:** ✅ CONFORME
+            **Audits Actifs:** 8/8
+            **Parallélisation:** 43.7%
+            **Violations Critiques:** 2
+            **Dernière Exécution:** 14:32:15
+        end note
+    }
+
+    rectangle "STATUTS PAR DIVISION" as DivStatus {
+        rectangle "📏 LIGNES" as StatusLignes #lightgreen
+        rectangle "🔒 SÉCURITÉ" as StatusSecu #yellow
+        rectangle "📚 DOCS" as StatusDocs #lightgreen
+        rectangle "🔍 RECHERCHE" as StatusSearch #lightblue
+        rectangle "🛡️ AUDIT" as StatusAudit #lightgreen
+    }
+
+    rectangle "ALERTES ACTIVES" as Alerts {
+        note as AlertNote
+            🚨 **ALERTES CRITIQUES**
+            • Violation sécurité: SQL Injection détectée
+            • Documentation manquante: module AI.core
+            • Limite lignes dépassée: 15% des fichiers
+        end note
+    }
+}
+
+' === FLUX DE CONTRÔLE PRINCIPAL ===
+Maitre --> Orchestre : "Déclenche audit complet"
+Orchestre --> Constitution : "Lit configuration"
+Orchestre --> Metreur : "audit_lignes(params)"
+Orchestre --> Gardien : "audit_securite(rules)"
+Orchestre --> Archiviste : "audit_docs(thresholds)"
+Orchestre --> Greffier : "create_issues(violations)"
+Orchestre --> ArchivisteChef : "save_reports(artifacts)"
+Orchestre --> Cartographe : "check_plantuml(path)"
+Orchestre --> Chercheur : "repository_dispatch"
+Orchestre --> Auditeur : "audit_solution(proposal)"
+
+' === FLUX DÉTAILLÉ DIVISION LIGNES ===
+Metreur --> CM_Lignes : "exécute contremaître"
+CM_Lignes --> T_Scan : "scan *.py files"
+T_Scan --> ListFiles : "génère liste"
+CM_Lignes --> O_Compteur : "compte lignes"
+O_Compteur --> Q_Compteur : "validation"
+Q_Compteur --> O_Juge : "si valide"
+O_Juge --> Q_Juge : "validation"
+Q_Juge --> O_Stats : "si valide"
+O_Stats --> Q_Stats : "validation"
+Q_Stats --> O_Rapport : "si valide"
+O_Rapport --> Q_Rapport : "validation"
+Q_Rapport --> O_Conseil : "si valide"
+O_Conseil --> Q_Conseil : "validation finale"
+Q_Conseil --> C_CSV : "formatage final"
+C_CSV --> RapportCSV : "rapport final"
+
+' === FLUX DIVISION SÉCURITÉ ===
+Gardien --> CM_Securite : "exécute contremaître"
+CM_Securite --> O_SecuSearch : "cherche violations"
+O_SecuSearch --> Violations : "violations brutes"
+CM_Securite --> O_SecuTri : "trie par sévérité"
+O_SecuTri --> Q_SecuSearch : "validation"
+
+' === FLUX RECHERCHE ET AUDIT ===
+Chercheur --> CM_Search : "analyse problème"
+CM_Search --> O_Log : "analyse logs"
+CM_Search --> O_KB : "base connaissances"
+CM_Search --> O_Simu : "simulation"
+CM_Search --> O_Email : "communication"
+CM_Search --> O_Slack : "notification"
+CM_Search --> O_Comment : "commentaire PR"
+
+Auditeur --> CM_Audit : "audit solution"
+CM_Audit --> O_Schema : "validation schéma"
+CM_Audit --> O_AuditSecu : "audit sécurité"
+CM_Audit --> O_AuditSimu : "simulation"
+CM_Audit --> O_Cout : "analyse coût"
+CM_Audit --> O_Plan : "plan implémentation"
+O_Plan --> PlanImpl : "plan final"
+
+' === INTERACTIONS AVEC FOURMIS ===
+T_Scan --> Fourmis : "logique scan"
+O_Compteur --> Fourmis : "logique comptage"
+C_CSV --> Fourmis : "logique formatage"
+
+' === FEEDBACK ET MONITORING ===
+Dashboard --> GlobalMetrics : "métriques temps réel"
+StatusLignes --> Dashboard : "statut OK"
+StatusSecu --> Dashboard : "alertes actives"
+Alerts --> Dashboard : "violations critiques"
+
+' === LÉGENDE ===
+legend right
+    **LÉGENDE NIVEAUX**
+    |= Niveau |= Rôle |= Couleur |
+    | 0 | Contrôle Suprême | Rouge |
+    | 1 | Orchestration | Violet |
+    | 2 | Généraux (Parallèle 100%) | Bleu |
+    | 3 | Contremaîtres | Vert |
+    | 4 | Ouvriers (54% Parallèle) | Orange |
+    | 5 | Qualiticiens (0% Parallèle) | Jaune |
+    | 6 | Travailleurs (100% Parallèle) | Cyan |
+    | 7 | Nettoyeurs (100% Parallèle) | Rose |
+    | 8 | Fourmis (Code) | Gris |
+
+    **STATUTS TEMPS RÉEL**
+    ✅ Conforme | ⚠️ Attention | 🚨 Critique
+end legend
+
+@enduml
