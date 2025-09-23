@@ -19,7 +19,6 @@ on:
       force_audit:
         description: 'Forcer audit même sans changements significatifs'
         required: false
-        default: 'false'
         type: boolean
       skip_generals:
         description: 'Généraux à ignorer (csv: metreur,gardien,archiviste,greffier,archiviste_chef,cartographe,chercheur,auditeur)'
@@ -39,7 +38,7 @@ on:
       constitution_override:
         description: 'Ignorer violations constitution (DANGEREUX)'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 env:
@@ -58,7 +57,7 @@ jobs:
   validate_constitution:
     name: "🏛️ Validation Constitution iaGOD.json"
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ fromJSON(env.TIMEOUT_CONSTITUTION) }}
+    timeout-minutes: 5
     outputs:
       constitution_valid: ${{ steps.validate.outputs.constitution_valid }}
       constitution_hash: ${{ steps.validate.outputs.constitution_hash }}
@@ -66,25 +65,25 @@ jobs:
       should_proceed: ${{ steps.validate.outputs.should_proceed }}
       version_constitution: ${{ steps.validate.outputs.version }}
       critical_laws: ${{ steps.validate.outputs.critical_laws }}
-    
+
     steps:
     - name: "📥 Checkout Repository"
       uses: actions/checkout@v4
       with:
         fetch-depth: 2
         token: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: "🐍 Setup Python Optimized"
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
         cache: 'pip'
-    
+
     - name: "📦 Install Constitution Dependencies"
       run: |
         pip install --upgrade pip
         pip install jsonschema==4.19.0 pydantic==2.4.0 rich==13.5.0 typer==0.9.0
-    
+
     - name: "🔒 Vérification Existence Constitution"
       run: |
         if [ ! -f "${{ env.CONSTITUTION_FILE }}" ]; then
@@ -93,7 +92,7 @@ jobs:
           exit 1
         fi
         echo "✅ Constitution trouvée: $(wc -l < ${{ env.CONSTITUTION_FILE }}) lignes"
-    
+
     - name: "🏛️ Validation Rigoureuse Constitution"
       id: validate
       run: |
@@ -106,17 +105,19 @@ jobs:
           --urgency "${{ github.event.inputs.urgency_level }}" \
           --github-context "${{ toJson(github) }}" \
           --verbose
-    
-    - name: "📋 Constitution Status Check"
+
+    - name: "❌ Échec - Constitution Invalide"
+      if: steps.validate.outputs.constitution_valid != 'true'
       run: |
-        if [ "${{ steps.validate.outputs.constitution_valid }}" != "true" ]; then
-          echo "❌ CONSTITUTION INVALIDE - ARRÊT IMMÉDIAT"
-          echo "::error::Constitution ${{ env.CONSTITUTION_FILE }} non conforme"
-          exit 1
-        fi
-        echo "✅ Constitution validée: ${{ steps.validate.outputs.laws_count }} lois"
-        echo "🔐 Hash: ${{ steps.validate.outputs.constitution_hash }}"
-    
+        echo "::error::La constitution '${{ env.CONSTITUTION_FILE }}' n'est pas conforme ou invalide."
+        exit 1
+
+    - name: "✅ Succès - Constitution Validée"
+      if: steps.validate.outputs.constitution_valid == 'true'
+      run: |
+        echo "Constitution validée avec ${{ steps.validate.outputs.laws_count }} lois."
+        echo "Hash de la constitution : ${{ steps.validate.outputs.constitution_hash }}"
+
     - name: "💾 Upload Constitution Artifacts"
       uses: actions/upload-artifact@v4
       with:
@@ -134,14 +135,11 @@ jobs:
   # ========================================
   deploy_generals:
     name: "⚡ Déploiement 8 Généraux en Parallèle"
-    runs-on: ubuntu-latest
     needs: validate_constitution
     if: needs.validate_constitution.outputs.should_proceed == 'true'
-    timeout-minutes: ${{ fromJSON(env.TIMEOUT_GENERAL) }}
-    
     strategy:
       fail-fast: false
-      max-parallel: ${{ fromJSON(env.PARALLEL_LIMIT) }}
+      max-parallel: 8
       matrix:
         general:
           - name: "metreur"
@@ -200,98 +198,21 @@ jobs:
             priority: "HIGH"
             timeout: 20
             script: "auditeur_solution.py"
-    
-    outputs:
-      general_matrix_results: ${{ steps.collect_matrix.outputs.results }}
-    
-    steps:
-    - name: "📥 Checkout Repository"
-      uses: actions/checkout@v4
-    
-    - name: "📦 Download Constitution Validated"
-      uses: actions/download-artifact@v4
-      with:
-        name: constitution-validated-${{ env.AUDIT_ID }}
-        path: ./constitution-artifacts/
-    
-    - name: "🚫 Check Skip General"
-      id: check_skip
-      run: |
-        SKIP_LIST="${{ github.event.inputs.skip_generals }}"
-        GENERAL_NAME="${{ matrix.general.name }}"
-        
-        if [[ -n "$SKIP_LIST" ]] && echo "$SKIP_LIST" | grep -q "$GENERAL_NAME"; then
-          echo "skip=true" >> $GITHUB_OUTPUT
-          echo "⚠️ Général $GENERAL_NAME IGNORÉ par paramètre utilisateur"
-          echo "::warning::Général ${{ matrix.general.title }} ignoré"
-        else
-          echo "skip=false" >> $GITHUB_OUTPUT
-          echo "✅ Général $GENERAL_NAME ACTIVÉ"
-        fi
-    
-    - name: "🎯 Préparation Ordre de Mission"
-      if: steps.check_skip.outputs.skip == 'false'
-      id: prepare_mission
-      run: |
-        echo "🎯 Préparation mission pour ${{ matrix.general.title }}..."
-        python .github/scripts/orchestrateur.py prepare-mission \
-          --general "${{ matrix.general.name }}" \
-          --law-key "${{ matrix.general.law_key }}" \
-          --constitution-file "./constitution-artifacts/constitution-parsed.json" \
-          --urgency "${{ github.event.inputs.urgency_level }}" \
-          --priority "${{ matrix.general.priority }}" \
-          --audit-id "${{ env.AUDIT_ID }}" \
-          --timeout "${{ matrix.general.timeout }}" \
-          --script "${{ matrix.general.script }}"
-    
-    - name: "⚡ EXÉCUTION GÉNÉRAL: ${{ matrix.general.title }}"
-      if: steps.check_skip.outputs.skip == 'false'
-      id: execute_general
-      uses: ./.github/workflows/${{ matrix.general.workflow }}
-      timeout-minutes: ${{ matrix.general.timeout }}
-      with:
-        mission_orders: ${{ steps.prepare_mission.outputs.mission_orders }}
-        audit_id: ${{ env.AUDIT_ID }}
-        urgency_level: ${{ github.event.inputs.urgency_level }}
-        constitution_hash: ${{ needs.validate_constitution.outputs.constitution_hash }}
-        priority: ${{ matrix.general.priority }}
-        orchestrator_version: ${{ env.ORCHESTRATEUR_VERSION }}
-      continue-on-error: true
-    
-    - name: "📊 Collecte Résultats Général"
-      if: always()
-      id: collect_results
-      run: |
-        EXECUTION_STATUS="${{ steps.execute_general.outcome }}"
-        SKIP_STATUS="${{ steps.check_skip.outputs.skip }}"
-        
-        if [ "$SKIP_STATUS" = "true" ]; then
-          STATUS="SKIPPED"
-          VIOLATIONS=0
-          DURATION=0
-        else
-          STATUS="$EXECUTION_STATUS"
-          VIOLATIONS="${{ steps.execute_general.outputs.violations_count || '0' }}"
-          DURATION="${{ steps.execute_general.outputs.execution_duration || '0' }}"
-        fi
-        
-        echo "general_status=$STATUS" >> $GITHUB_OUTPUT
-        echo "general_violations=$VIOLATIONS" >> $GITHUB_OUTPUT
-        echo "general_duration=$DURATION" >> $GITHUB_OUTPUT
-        
-        echo "📊 Résultat ${{ matrix.general.title }}: $STATUS ($VIOLATIONS violations, ${DURATION}s)"
-    
-    - name: "💾 Upload Rapport Général"
-      if: steps.check_skip.outputs.skip == 'false'
-      uses: actions/upload-artifact@v4
-      with:
-        name: rapport-${{ matrix.general.name }}-${{ env.AUDIT_ID }}
-        path: |
-          rapport-${{ matrix.general.name }}.json
-          rapport-${{ matrix.general.name }}.md
-          logs-${{ matrix.general.name }}.txt
-        retention-days: 30
-        if-no-files-found: warn
+
+    uses: ./.github/workflows/${{ matrix.general.workflow }}
+    secrets: inherit
+    with:
+      audit_id: ${{ env.AUDIT_ID }}
+      urgency_level: ${{ github.event.inputs.urgency_level || 'medium' }}
+      constitution_hash: ${{ needs.validate_constitution.outputs.constitution_hash }}
+      orchestrator_version: ${{ env.ORCHESTRATEUR_VERSION }}
+      skip_generals: ${{ github.event.inputs.skip_generals }}
+      # Pass matrix context to the reusable workflow
+      general_name: ${{ matrix.general.name }}
+      law_key: ${{ matrix.general.law_key }}
+      priority: ${{ matrix.general.priority }}
+      timeout: ${{ matrix.general.timeout }}
+      script: ${{ matrix.general.script }}
 
   # =====================================
   # PHASE 3 : SYNTHÈSE GLOBALE RIGOUREUSE
@@ -301,36 +222,36 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate_constitution, deploy_generals]
     if: always() && needs.validate_constitution.outputs.should_proceed == 'true'
-    timeout-minutes: ${{ fromJSON(env.TIMEOUT_SYNTHESIS) }}
-    
+    timeout-minutes: 15
+
     outputs:
       audit_status: ${{ steps.synthesize.outputs.audit_status }}
       total_violations: ${{ steps.synthesize.outputs.total_violations }}
       critical_violations: ${{ steps.synthesize.outputs.critical_violations }}
       recommendation: ${{ steps.synthesize.outputs.recommendation }}
-    
+
     steps:
     - name: "📥 Checkout Repository"
       uses: actions/checkout@v4
-    
+
     - name: "📦 Download All Artifacts"
       uses: actions/download-artifact@v4
       with:
         pattern: "*-${{ env.AUDIT_ID }}"
         path: ./artifacts-collected/
         merge-multiple: true
-    
+
     - name: "🐍 Setup Python for Synthesis"
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
         cache: 'pip'
-    
+
     - name: "📦 Install Synthesis Dependencies"
       run: |
         pip install --upgrade pip
         pip install jsonschema pydantic rich typer jinja2 matplotlib seaborn
-    
+
     - name: "🎯 Synthèse Rigoureuse des 8 Généraux"
       id: synthesize
       run: |
@@ -343,7 +264,7 @@ jobs:
           --generals-count 8 \
           --timeout-exceeded "${{ contains(needs.deploy_generals.result, 'timeout') }}" \
           --verbose
-    
+
     - name: "📊 Génération Tableau de Bord"
       run: |
         python .github/scripts/orchestrateur.py generate-dashboard \
@@ -351,7 +272,7 @@ jobs:
           --audit-id "${{ env.AUDIT_ID }}" \
           --format "html,json,md" \
           --include-charts
-    
+
     - name: "💾 Upload Synthèse Complète"
       uses: actions/upload-artifact@v4
       with:
@@ -364,7 +285,7 @@ jobs:
           historique-violations.csv
         retention-days: 90
         compression-level: 9
-    
+
     - name: "🏁 Statut Final Audit AGI"
       run: |
         echo "🏁 AUDIT AGI TERMINÉ"
@@ -372,11 +293,11 @@ jobs:
         echo "⚠️ Violations Totales: ${{ steps.synthesize.outputs.total_violations }}"
         echo "🚨 Violations Critiques: ${{ steps.synthesize.outputs.critical_violations }}"
         echo "💡 Recommandation: ${{ steps.synthesize.outputs.recommendation }}"
-        
-        if [ "${{ steps.synthesize.outputs.audit_status }}" = "FAILED" ]; then
+
+        if [[ "${{ steps.synthesize.outputs.audit_status }}" == "FAILED" ]]; then
           echo "::error::Audit AGI ÉCHOUÉ - Violations critiques détectées"
           exit 1
-        elif [ "${{ steps.synthesize.outputs.audit_status }}" = "WARNING" ]; then
+        elif [[ "${{ steps.synthesize.outputs.audit_status }}" == "WARNING" ]]; then
           echo "::warning::Audit AGI avec AVERTISSEMENTS"
         else
           echo "::notice::Audit AGI RÉUSSI ✅"
