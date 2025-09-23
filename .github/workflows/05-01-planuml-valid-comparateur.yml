@@ -1,0 +1,43 @@
+name: "📐 Qualiticien Validation Comparateur PlantUML"
+
+on:
+  workflow_call:
+    inputs:
+      resultat-comparaison:
+        description: "Nom de l'artefact contenant le résultat de comparaison"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-comparateur-planuml.outputs.statut }}
+
+jobs:
+  validation-comparateur-planuml:
+    name: "🔍 Validation Résultat Comparaison"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact resultat-comparaison"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.resultat-comparaison }}
+          path: ./temp
+
+      - name: "🔍 Validation du schéma resultat-comparaison"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/resultat-comparaison.json" \
+            --schema-name "resultat-comparaison"
