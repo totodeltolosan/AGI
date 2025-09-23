@@ -8,7 +8,15 @@ on:
       - '*.md'
       - 'docs/**'
       - '.gitignore'
+  pull_request:
+    branches: [ main, develop ]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+      - '.gitignore'
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"  # Audit quotidien 6h UTC
     inputs:
       force_audit:
         description: 'Forcer audit même sans changements significatifs'
@@ -29,13 +37,11 @@ on:
         - medium
         - high
         - critical
-      ignore_constitution:
+      constitution_override:
         description: 'Ignorer violations constitution (DANGEREUX)'
         required: false
         default: false
         type: boolean
-  schedule:
-    - cron: "0 6 * * *"  # Audit quotidien 6h UTC
 
 env:
   CONSTITUTION_FILE: "iaGOD.json"
