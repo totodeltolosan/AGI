@@ -1,0 +1,15 @@
+name: "Test Minimal AGI"
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Test basique"
+        run: |
+          echo "Test démarré"
+          ls -la
+          echo "iaGOD.json existe: $([ -f iaGOD.json ] && echo "OUI" || echo "NON")"
+          python3 --version
+          echo "Test terminé"
