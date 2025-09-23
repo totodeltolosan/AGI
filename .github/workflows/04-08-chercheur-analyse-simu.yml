@@ -1,0 +1,45 @@
+name: "🔍 Ouvrier Analyse Simulation"
+
+on:
+  workflow_call:
+    inputs:
+      donnees_probleme:
+        description: "Données du problème à simuler (JSON string)"
+        required: true
+        type: string
+      patch_a_tester:
+        description: "Patch de solution à tester (JSON string)"
+        required: true
+        type: string
+    outputs:
+      resultat-simulation:
+        description: "Nom de l'artefact contenant le résultat de simulation"
+        value: "resultat-simulation"
+
+jobs:
+  analyse-simu:
+    name: "🧪 Simulation Test Solution"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "🧪 Simulation de la solution"
+        run: |
+          python .github/scripts/ouvrier_analyse_simu.py \
+            --donnees-probleme '${{ inputs.donnees_probleme }}' \
+            --patch-a-tester '${{ inputs.patch_a_tester }}' \
+            --output-json "./temp/resultat-simulation.json"
+
+      - name: "📤 Sauvegarde artefact resultat-simulation"
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultat-simulation
+          path: ./temp/resultat-simulation.json
+          retention-days: 1

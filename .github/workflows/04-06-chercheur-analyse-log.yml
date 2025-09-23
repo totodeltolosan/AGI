@@ -1,0 +1,40 @@
+name: "🔍 Ouvrier Analyse Log"
+
+on:
+  workflow_call:
+    inputs:
+      id_run:
+        description: "ID du run de workflow à analyser"
+        required: true
+        type: string
+    outputs:
+      diagnostic-log:
+        description: "Nom de l'artefact contenant le diagnostic"
+        value: "diagnostic-log"
+
+jobs:
+  analyse-log:
+    name: "📊 Analyse Logs Workflow"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📊 Analyse des logs d'erreur"
+        run: |
+          python .github/scripts/ouvrier_analyse_log.py \
+            --id-run "${{ inputs.id_run }}" \
+            --output-json "./temp/diagnostic-log.json"
+
+      - name: "📤 Sauvegarde artefact diagnostic-log"
+        uses: actions/upload-artifact@v4
+        with:
+          name: diagnostic-log
+          path: ./temp/diagnostic-log.json
+          retention-days: 1
