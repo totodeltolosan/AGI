@@ -1,0 +1,46 @@
+name: "🛡️ Ouvrier Trieur Sécurité"
+
+on:
+  workflow_call:
+    inputs:
+      violations-brutes:
+        description: "Nom de l'artefact contenant les violations détectées"
+        required: true
+        type: string
+    outputs:
+      violations-triees:
+        description: "Nom de l'artefact contenant les violations triées par sévérité"
+        value: "violations-triees"
+
+jobs:
+  trieur-securite:
+    name: "🗂️ Tri des Violations par Sévérité"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact violations-brutes"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.violations-brutes }}
+          path: ./temp
+
+      - name: "🗂️ Tri des violations par sévérité"
+        run: |
+          python .github/scripts/ouvrier_trieur_securite.py \
+            --violations-json "./temp/violations-brutes.json" \
+            --output-json "./temp/violations-triees.json"
+
+      - name: "📤 Sauvegarde artefact violations-triées"
+        uses: actions/upload-artifact@v4
+        with:
+          name: violations-triees
+          path: ./temp/violations-triees.json
+          retention-days: 1
