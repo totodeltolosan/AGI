@@ -1,0 +1,79 @@
+name: "🔍 Ouvrier Auditeur Plan"
+
+on:
+  workflow_call:
+    inputs:
+      validation-schema:
+        description: "Nom de l'artefact de validation schéma"
+        required: true
+        type: string
+      rapport-securite-solution:
+        description: "Nom de l'artefact de rapport sécurité"
+        required: true
+        type: string
+      resultat-simulation-audit:
+        description: "Nom de l'artefact de résultat simulation"
+        required: true
+        type: string
+      analyse-cout-benefice:
+        description: "Nom de l'artefact d'analyse coût/bénéfice"
+        required: true
+        type: string
+    outputs:
+      plan-implementation:
+        description: "Nom de l'artefact contenant le plan d'implémentation"
+        value: "plan-implementation"
+
+jobs:
+  auditeur-plan:
+    name: "📋 Génération Plan Implémentation"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement de tous les rapports d'audit"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.validation-schema }}
+          path: ./temp
+
+      - name: "📥 Téléchargement rapport sécurité"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.rapport-securite-solution }}
+          path: ./temp
+
+      - name: "📥 Téléchargement résultat simulation"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.resultat-simulation-audit }}
+          path: ./temp
+
+      - name: "📥 Téléchargement analyse coût/bénéfice"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.analyse-cout-benefice }}
+          path: ./temp
+
+      - name: "📋 Génération du plan d'implémentation final"
+        run: |
+          python .github/scripts/ouvrier_auditeur_plan.py \
+            --validation-schema "./temp/validation-schema.json" \
+            --rapport-securite "./temp/rapport-securite-solution.json" \
+            --resultat-simulation "./temp/resultat-simulation-audit.json" \
+            --analyse-cout "./temp/analyse-cout-benefice.json" \
+            --output-json "./temp/plan-implementation.json"
+
+      - name: "📤 Sauvegarde artefact plan-implementation"
+        uses: actions/upload-artifact@v4
+        with:
+          name: plan-implementation
+          path: ./temp/plan-implementation.json
+          retention-days: 1

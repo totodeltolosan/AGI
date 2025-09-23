@@ -1,0 +1,45 @@
+name: "🔍 Ouvrier Auditeur Simulation"
+
+on:
+  workflow_call:
+    inputs:
+      proposition_solution:
+        description: "Proposition de solution à simuler (JSON string)"
+        required: true
+        type: string
+      environnement_test:
+        description: "Environnement de test pour la simulation"
+        required: true
+        type: string
+    outputs:
+      resultat-simulation-audit:
+        description: "Nom de l'artefact contenant le résultat de simulation"
+        value: "resultat-simulation-audit"
+
+jobs:
+  auditeur-simulation:
+    name: "🧪 Simulation Audit Solution"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "🧪 Simulation de la solution en bac à sable"
+        run: |
+          python .github/scripts/ouvrier_auditeur_simulation.py \
+            --proposition-solution '${{ inputs.proposition_solution }}' \
+            --environnement-test "${{ inputs.environnement_test }}" \
+            --output-json "./temp/resultat-simulation-audit.json"
+
+      - name: "📤 Sauvegarde artefact resultat-simulation-audit"
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultat-simulation-audit
+          path: ./temp/resultat-simulation-audit.json
+          retention-days: 1
