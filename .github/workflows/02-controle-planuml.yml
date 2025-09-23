@@ -1,0 +1,80 @@
+name: "📐 Général Le Cartographe - Contrôle PlantUML"
+
+on:
+  workflow_call:
+    inputs:
+      chemin_diagramme:
+        description: "Chemin vers le fichier diagramme PlantUML"
+        required: true
+        type: string
+      dossiers_critiques:
+        description: "Liste des dossiers critiques à surveiller (JSON string)"
+        required: true
+        type: string
+    outputs:
+      statut_controle:
+        description: "Statut du contrôle PlantUML (success/warning)"
+        value: ${{ jobs.controle-planuml.outputs.statut }}
+      mise_a_jour_requise:
+        description: "Indique si une mise à jour est requise"
+        value: ${{ jobs.controle-planuml.outputs.mise_a_jour }}
+
+jobs:
+  controle-planuml:
+    name: "📐 Contrôle Synchronisation PlantUML"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.contremaître.outputs.statut }}
+      mise_a_jour: ${{ steps.contremaître.outputs.mise_a_jour }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📐 Exécution du Contremaître Audit PlantUML"
+        id: contremaître
+        run: |
+          echo "🎯 === GÉNÉRAL LE CARTOGRAPHE ==="
+          echo "Diagramme: ${{ inputs.chemin_diagramme }}"
+          echo "Dossiers critiques: ${{ inputs.dossiers_critiques }}"
+          echo ""
+          
+          # Exécution du script Contremaître
+          python .github/scripts/audit_planuml.py \
+            --diagramme "${{ inputs.chemin_diagramme }}" \
+            --dossiers-critiques '${{ inputs.dossiers_critiques }}'
+          
+          # Capture du code de retour
+          exit_code=$?
+          
+          if [ $exit_code -eq 0 ]; then
+            echo "statut=success" >> $GITHUB_OUTPUT
+            echo "mise_a_jour=false" >> $GITHUB_OUTPUT
+            echo "✅ Contrôle PlantUML terminé avec succès"
+          else
+            echo "statut=warning" >> $GITHUB_OUTPUT
+            echo "mise_a_jour=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Mise à jour du diagramme recommandée"
+          fi
+
+      - name: "📊 Publication du résumé de contrôle"
+        if: always()
+        run: |
+          echo "## 📐 Contrôle PlantUML - Résultats" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Diagramme analysé :** ${{ inputs.chemin_diagramme }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Dossiers surveillés :** $(echo '${{ inputs.dossiers_critiques }}' | jq '. | length') dossier(s)" >> $GITHUB_STEP_SUMMARY
+          echo "**Statut final :** ${{ steps.contremaître.outputs.statut }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.contremaître.outputs.statut }}" = "success" ]; then
+            echo "✅ **Diagramme synchronisé** - Aucune mise à jour requise" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Mise à jour recommandée** - Le diagramme semble obsolète" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,0 +1,113 @@
+name: "Nettoyeur : Formateur Statut"
+
+on:
+  workflow_call:
+    inputs:
+      resultat:
+        description: "Résultat du check (true pour succès, false pour échec)"
+        required: true
+        type: boolean
+      message_succes:
+        description: "Message à afficher en cas de succès"
+        required: true
+        type: string
+      message_echec:
+        description: "Message à afficher en cas d'échec"
+        required: true
+        type: string
+      nom_check:
+        description: "Nom du check à créer (ex: 'AGI-Gouvernance/Audit-Lignes')"
+        required: true
+        type: string
+    outputs:
+      check_result:
+        description: "Résultat du check posté (success/failure)"
+        value: ${{ jobs.format_statut.outputs.result }}
+      check_url:
+        description: "URL du check créé (si disponible)"
+        value: ${{ jobs.format_statut.outputs.url }}
+
+# Permissions nécessaires pour créer des checks et statuts
+permissions:
+  checks: write
+  statuses: write
+  contents: read
+
+jobs:
+  format_statut:
+    name: "Création check de statut GitHub"
+    runs-on: ubuntu-latest
+    outputs:
+      result: ${{ steps.format.outputs.check_result }}
+      url: ${{ steps.format.outputs.check_url }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Installation des dépendances Python"
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+      
+      - name: "Configuration GitHub CLI (fallback)"
+        run: |
+          # GitHub CLI est déjà installé sur ubuntu-latest
+          gh --version
+          echo "🔧 GitHub CLI configuré"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: "Exécution du formateur de statut"
+        id: format
+        run: |
+          python .github/scripts/nettoyeur_format_statut.py \
+            --resultat "${{ inputs.resultat }}" \
+            --message-succes "${{ inputs.message_succes }}" \
+            --message-echec "${{ inputs.message_echec }}" \
+            --nom-check "${{ inputs.nom_check }}"
+          
+          # Capture des outputs du script pour les transmettre
+          if [ "${{ inputs.resultat }}" = "true" ]; then
+            echo "check_result=success" >> $GITHUB_OUTPUT
+            echo "✅ Check de statut créé avec succès"
+          else
+            echo "check_result=failure" >> $GITHUB_OUTPUT
+            echo "❌ Check de statut créé (échec signalé)"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+      
+      - name: "Validation de la création du statut"
+        run: |
+          echo "📊 Récapitulatif du check de statut :"
+          echo "   • Nom du check : ${{ inputs.nom_check }}"
+          echo "   • Résultat : ${{ inputs.resultat }}"
+          if [ "${{ inputs.resultat }}" = "true" ]; then
+            echo "   • Message : ${{ inputs.message_succes }}"
+            echo "   • Statut final : ✅ SUCCÈS"
+          else
+            echo "   • Message : ${{ inputs.message_echec }}"
+            echo "   • Statut final : ❌ ÉCHEC"
+          fi
+          echo "   • Commit SHA : ${{ github.sha }}"
+          echo "   • Repository : ${{ github.repository }}"
+          
+          echo "🎯 Check de statut traité avec succès"
+      
+      - name: "Debug - Informations environnement"
+        if: runner.debug == '1'
+        run: |
+          echo "🔍 Variables d'environnement GitHub Actions :"
+          echo "GITHUB_REPOSITORY=${{ github.repository }}"
+          echo "GITHUB_SHA=${{ github.sha }}"
+          echo "GITHUB_REF=${{ github.ref }}"
+          echo "GITHUB_EVENT_NAME=${{ github.event_name }}"
+          echo "GITHUB_ACTOR=${{ github.actor }}"

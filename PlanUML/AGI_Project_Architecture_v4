@@ -1,0 +1,360 @@
+@startuml AGI_Project_Architecture_v4
+' -----------------------------------------------------------------------------
+' Architecture AGI - Version 4
+' - Syntaxe .puml "classique" compatible PlantUML server & VSCode PlantUML
+' - 71 workflows répartis en 9 clusters
+' - Liens cliquables dans les composants uniquement (http://localhost:8000/...)
+' - Flux internes détaillés (flèches entre chaque workflow)
+' -----------------------------------------------------------------------------
+
+title Architecture AGI – Vue d'ensemble détaillée (71 workflows)
+caption Fichier : architecture_agi_v4.puml — Remplacez les URLs localhost par vos chemins réels
+
+' -------------------------
+' Style global
+' -------------------------
+skinparam backgroundColor #0b1220
+skinparam defaultFontColor #e6eef6
+skinparam package {
+  BackgroundColor #111322
+  BorderColor #1f6feb
+}
+skinparam component {
+  BackgroundColor #0f2b3d
+  BorderColor #2aa3ff
+  FontSize 11
+}
+skinparam database {
+  BackgroundColor #2b1b1b
+  BorderColor #ff5555
+}
+skinparam artifact {
+  BackgroundColor #16321a
+  BorderColor #66ff88
+}
+skinparam note {
+  BackgroundColor #fff8e0
+  BorderColor #d79f00
+  FontColor #222222
+}
+skinparam linetype ortho
+skinparam ArrowThickness 1.5
+
+' -------------------------
+' Niveau 0 : Humain suprême
+' -------------------------
+actor "NIVEAU 0\nHumain (MOI)" as L0
+
+' -------------------------
+' Niveau 1 : Orchestration
+' -------------------------
+package "NIVEAU 1 - ORCHESTRATION" as PKG_ORCH {
+  component "01-orchestre.yml\nOrchestrateur\n[[http://localhost:8000/01-orchestre.yml]]" as ORCH
+  artifact "iaGOD.json\n[[http://localhost:8000/Connaissance/iaGOD.json]]" as IA_GOD
+  note right of ORCH
+    Orchestrateur principal :
+    - Lecture / validation de la Constitution (iaGOD.json)
+    - Dispatch des missions vers controllers/clusters
+    - Agrégation et publication des rapports
+  end note
+}
+
+' -------------------------
+' Controllers (coordination par domaine)
+' -------------------------
+package "CONTROLLERS" as PKG_CTRL {
+  component "CTRL_GOV\n(Gouvernance)" as CTRL_GOV
+  component "CTRL_SECU\n(Sécurité)" as CTRL_SECU
+  component "CTRL_DATA\n(Données)" as CTRL_DATA
+  component "CTRL_QUAL\n(Qualité)" as CTRL_QUAL
+  component "CTRL_CICD\n(CI/CD)" as CTRL_CICD
+  component "CTRL_RESEARCH\n(Recherche)" as CTRL_RESEARCH
+  component "CTRL_AUDIT\n(Audit)" as CTRL_AUDIT
+  component "CTRL_ARCHIVE\n(Archivage)" as CTRL_ARCHIVE
+  component "CTRL_MISC\n(Divers)" as CTRL_MISC
+}
+
+' -------------------------
+' Clusters (9 clusters -> 71 workflows)
+' Distribution : 8,8,8,8,8,8,8,8,7 = 71
+' -------------------------
+
+' --- CLUSTER 1 : GOUVERNANCE (8) ---
+package "GOUVERNANCE (8)" as CL_GOV {
+  component "WF01_GOV_policy.yml\n[[http://localhost:8000/workflows/WF01_GOV_policy.yml]]" as WF01
+  component "WF02_GOV_roles.yml\n[[http://localhost:8000/workflows/WF02_GOV_roles.yml]]" as WF02
+  component "WF03_GOV_auditrules.yml\n[[http://localhost:8000/workflows/WF03_GOV_auditrules.yml]]" as WF03
+  component "WF04_GOV_compliance.yml\n[[http://localhost:8000/workflows/WF04_GOV_compliance.yml]]" as WF04
+  component "WF05_GOV_versioning.yml\n[[http://localhost:8000/workflows/WF05_GOV_versioning.yml]]" as WF05
+  component "WF06_GOV_escalation.yml\n[[http://localhost:8000/workflows/WF06_GOV_escalation.yml]]" as WF06
+  component "WF07_GOV_conflicts.yml\n[[http://localhost:8000/workflows/WF07_GOV_conflicts.yml]]" as WF07
+  component "WF08_GOV_metrics.yml\n[[http://localhost:8000/workflows/WF08_GOV_metrics.yml]]" as WF08
+}
+
+' --- CLUSTER 2 : SÉCURITÉ (8) ---
+package "SÉCURITÉ (8)" as CL_SECU {
+  component "WF09_SECU_static_scan.yml\n[[http://localhost:8000/workflows/WF09_SECU_static_scan.yml]]" as WF09
+  component "WF10_SECU_dynamic_scan.yml\n[[http://localhost:8000/workflows/WF10_SECU_dynamic_scan.yml]]" as WF10
+  component "WF11_SECU_fuzz.yml\n[[http://localhost:8000/workflows/WF11_SECU_fuzz.yml]]" as WF11
+  component "WF12_SECU_dependency.yml\n[[http://localhost:8000/workflows/WF12_SECU_dependency.yml]]" as WF12
+  component "WF13_SECU_secret_scan.yml\n[[http://localhost:8000/workflows/WF13_SECU_secret_scan.yml]]" as WF13
+  component "WF14_SECU_runtime.yml\n[[http://localhost:8000/workflows/WF14_SECU_runtime.yml]]" as WF14
+  component "WF15_SECU_policy_enforce.yml\n[[http://localhost:8000/workflows/WF15_SECU_policy_enforce.yml]]" as WF15
+  component "WF16_SECU_incident.yml\n[[http://localhost:8000/workflows/WF16_SECU_incident.yml]]" as WF16
+}
+
+' --- CLUSTER 3 : DONNÉES (8) ---
+package "DONNÉES (8)" as CL_DATA {
+  component "WF17_DATA_ingest.yml\n[[http://localhost:8000/workflows/WF17_DATA_ingest.yml]]" as WF17
+  component "WF18_DATA_clean.yml\n[[http://localhost:8000/workflows/WF18_DATA_clean.yml]]" as WF18
+  component "WF19_DATA_transform.yml\n[[http://localhost:8000/workflows/WF19_DATA_transform.yml]]" as WF19
+  component "WF20_DATA_store.yml\n[[http://localhost:8000/workflows/WF20_DATA_store.yml]]" as WF20
+  component "WF21_DATA_catalog.yml\n[[http://localhost:8000/workflows/WF21_DATA_catalog.yml]]" as WF21
+  component "WF22_DATA_privacy.yml\n[[http://localhost:8000/workflows/WF22_DATA_privacy.yml]]" as WF22
+  component "WF23_DATA_retention.yml\n[[http://localhost:8000/workflows/WF23_DATA_retention.yml]]" as WF23
+  component "WF24_DATA_access.yml\n[[http://localhost:8000/workflows/WF24_DATA_access.yml]]" as WF24
+}
+
+' --- CLUSTER 4 : QUALITÉ (8) ---
+package "QUALITÉ (8)" as CL_QUAL {
+  component "WF25_QUAL_unit_test.yml\n[[http://localhost:8000/workflows/WF25_QUAL_unit_test.yml]]" as WF25
+  component "WF26_QUAL_integration.yml\n[[http://localhost:8000/workflows/WF26_QUAL_integration.yml]]" as WF26
+  component "WF27_QUAL_regression.yml\n[[http://localhost:8000/workflows/WF27_QUAL_regression.yml]]" as WF27
+  component "WF28_QUAL_metrics.yml\n[[http://localhost:8000/workflows/WF28_QUAL_metrics.yml]]" as WF28
+  component "WF29_QUAL_code_style.yml\n[[http://localhost:8000/workflows/WF29_QUAL_code_style.yml]]" as WF29
+  component "WF30_QUAL_performance.yml\n[[http://localhost:8000/workflows/WF30_QUAL_performance.yml]]" as WF30
+  component "WF31_QUAL_smoke.yml\n[[http://localhost:8000/workflows/WF31_QUAL_smoke.yml]]" as WF31
+  component "WF32_QUAL_coverage.yml\n[[http://localhost:8000/workflows/WF32_QUAL_coverage.yml]]" as WF32
+}
+
+' --- CLUSTER 5 : CI/CD (8) ---
+package "CI/CD (8)" as CL_CICD {
+  component "WF33_CICD_build.yml\n[[http://localhost:8000/workflows/WF33_CICD_build.yml]]" as WF33
+  component "WF34_CICD_release.yml\n[[http://localhost:8000/workflows/WF34_CICD_release.yml]]" as WF34
+  component "WF35_CICD_deploy.yml\n[[http://localhost:8000/workflows/WF35_CICD_deploy.yml]]" as WF35
+  component "WF36_CICD_canary.yml\n[[http://localhost:8000/workflows/WF36_CICD_canary.yml]]" as WF36
+  component "WF37_CICD_rollbacks.yml\n[[http://localhost:8000/workflows/WF37_CICD_rollbacks.yml]]" as WF37
+  component "WF38_CICD_images.yml\n[[http://localhost:8000/workflows/WF38_CICD_images.yml]]" as WF38
+  component "WF39_CICD_tests.yml\n[[http://localhost:8000/workflows/WF39_CICD_tests.yml]]" as WF39
+  component "WF40_CICD_notifications.yml\n[[http://localhost:8000/workflows/WF40_CICD_notifications.yml]]" as WF40
+}
+
+' --- CLUSTER 6 : RECHERCHE (8) ---
+package "RECHERCHE (8)" as CL_RES {
+  component "WF41_RES_experiments.yml\n[[http://localhost:8000/workflows/WF41_RES_experiments.yml]]" as WF41
+  component "WF42_RES_hyperparam.yml\n[[http://localhost:8000/workflows/WF42_RES_hyperparam.yml]]" as WF42
+  component "WF43_RES_model_eval.yml\n[[http://localhost:8000/workflows/WF43_RES_model_eval.yml]]" as WF43
+  component "WF44_RES_data_prep.yml\n[[http://localhost:8000/workflows/WF44_RES_data_prep.yml]]" as WF44
+  component "WF45_RES_repro.yml\n[[http://localhost:8000/workflows/WF45_RES_repro.yml]]" as WF45
+  component "WF46_RES_simulation.yml\n[[http://localhost:8000/workflows/WF46_RES_simulation.yml]]" as WF46
+  component "WF47_RES_kb_update.yml\n[[http://localhost:8000/workflows/WF47_RES_kb_update.yml]]" as WF47
+  component "WF48_RES_peer_review.yml\n[[http://localhost:8000/workflows/WF48_RES_peer_review.yml]]" as WF48
+}
+
+' --- CLUSTER 7 : AUDIT (8) ---
+package "AUDIT (8)" as CL_AUDIT {
+  component "WF49_AUDIT_schema.yml\n[[http://localhost:8000/workflows/WF49_AUDIT_schema.yml]]" as WF49
+  component "WF50_AUDIT_security.yml\n[[http://localhost:8000/workflows/WF50_AUDIT_security.yml]]" as WF50
+  component "WF51_AUDIT_simulation.yml\n[[http://localhost:8000/workflows/WF51_AUDIT_simulation.yml]]" as WF51
+  component "WF52_AUDIT_cost.yml\n[[http://localhost:8000/workflows/WF52_AUDIT_cost.yml]]" as WF52
+  component "WF53_AUDIT_plan.yml\n[[http://localhost:8000/workflows/WF53_AUDIT_plan.yml]]" as WF53
+  component "WF54_AUDIT_compliance.yml\n[[http://localhost:8000/workflows/WF54_AUDIT_compliance.yml]]" as WF54
+  component "WF55_AUDIT_risk.yml\n[[http://localhost:8000/workflows/WF55_AUDIT_risk.yml]]" as WF55
+  component "WF56_AUDIT_final.yml\n[[http://localhost:8000/workflows/WF56_AUDIT_final.yml]]" as WF56
+}
+
+' --- CLUSTER 8 : ARCHIVAGE (8) ---
+package "ARCHIVAGE (8)" as CL_ARCH {
+  component "WF57_ARCH_archive.yml\n[[http://localhost:8000/workflows/WF57_ARCH_archive.yml]]" as WF57
+  component "WF58_ARCH_index.yml\n[[http://localhost:8000/workflows/WF58_ARCH_index.yml]]" as WF58
+  component "WF59_ARCH_retention.yml\n[[http://localhost:8000/workflows/WF59_ARCH_retention.yml]]" as WF59
+  component "WF60_ARCH_compress.yml\n[[http://localhost:8000/workflows/WF60_ARCH_compress.yml]]" as WF60
+  component "WF61_ARCH_encrypt.yml\n[[http://localhost:8000/workflows/WF61_ARCH_encrypt.yml]]" as WF61
+  component "WF62_ARCH_migration.yml\n[[http://localhost:8000/workflows/WF62_ARCH_migration.yml]]" as WF62
+  component "WF63_ARCH_version.yml\n[[http://localhost:8000/workflows/WF63_ARCH_version.yml]]" as WF63
+  component "WF64_ARCH_restore.yml\n[[http://localhost:8000/workflows/WF64_ARCH_restore.yml]]" as WF64
+}
+
+' --- CLUSTER 9 : DIVERS (7) ---
+package "DIVERS (7)" as CL_MISC {
+  component "WF65_MISC_monitor.yml\n[[http://localhost:8000/workflows/WF65_MISC_monitor.yml]]" as WF65
+  component "WF66_MISC_alerts.yml\n[[http://localhost:8000/workflows/WF66_MISC_alerts.yml]]" as WF66
+  component "WF67_MISC_ui.yml\n[[http://localhost:8000/workflows/WF67_MISC_ui.yml]]" as WF67
+  component "WF68_MISC_telemetry.yml\n[[http://localhost:8000/workflows/WF68_MISC_telemetry.yml]]" as WF68
+  component "WF69_MISC_cleanup.yml\n[[http://localhost:8000/workflows/WF69_MISC_cleanup.yml]]" as WF69
+  component "WF70_MISC_scheduler.yml\n[[http://localhost:8000/workflows/WF70_MISC_scheduler.yml]]" as WF70
+  component "WF71_MISC_backups.yml\n[[http://localhost:8000/workflows/WF71_MISC_backups.yml]]" as WF71
+}
+
+' -------------------------
+' Artifacts / Data store / Dashboard
+' -------------------------
+database "ARTIFACTS / DATASTORE\n[[http://localhost:8000/artefacts/]]" as DATASTORE
+component "TABLEAU_DE_BORD\n[[http://localhost:8000/dashboard/]]" as DASHBOARD
+
+note left of DATASTORE
+  Central store:
+  - Rapports JSON/CSV
+  - Violations, recommandations
+  - Horodatage & versions
+end note
+
+' -------------------------
+' Flux principaux (orchestration -> controllers -> clusters)
+' -------------------------
+L0 --> ORCH : "0. Déclenchement manuel"
+ORCH --> CTRL_GOV : "Dispatch Gouvernance"
+ORCH --> CTRL_SECU : "Dispatch Sécurité"
+ORCH --> CTRL_DATA : "Dispatch Données"
+ORCH --> CTRL_QUAL : "Dispatch Qualité"
+ORCH --> CTRL_CICD : "Dispatch CI/CD"
+ORCH --> CTRL_RESEARCH : "Dispatch Recherche"
+ORCH --> CTRL_AUDIT : "Dispatch Audit"
+ORCH --> CTRL_ARCHIVE : "Dispatch Archivage"
+ORCH --> CTRL_MISC : "Dispatch Divers"
+
+' controllers -> clusters (chaque controller lance le premier WF du cluster associé)
+CTRL_GOV --> WF01 : "Start"
+CTRL_SECU --> WF09 : "Start"
+CTRL_DATA --> WF17 : "Start"
+CTRL_QUAL --> WF25 : "Start"
+CTRL_CICD --> WF33 : "Start"
+CTRL_RESEARCH --> WF41 : "Start"
+CTRL_AUDIT --> WF49 : "Start"
+CTRL_ARCHIVE --> WF57 : "Start"
+CTRL_MISC --> WF65 : "Start"
+
+' -------------------------
+' Flux internes par cluster (séquentiel, chaque WF -> WF suivant)
+' -------------------------
+
+' CLUSTER 1 : GOUVERNANCE
+WF01 --> WF02 : "validate policy"
+WF02 --> WF03 : "assign roles"
+WF03 --> WF04 : "evaluate rules"
+WF04 --> WF05 : "apply versioning"
+WF05 --> WF06 : "handle escalation"
+WF06 --> WF07 : "resolve conflicts"
+WF07 --> WF08 : "publish metrics"
+WF08 --> DATASTORE : "push governance report"
+WF08 --> DASHBOARD : "publish KPI"
+
+' CLUSTER 2 : SÉCURITÉ
+WF09 --> WF10 : "static -> dynamic"
+WF10 --> WF11 : "fuzz tests"
+WF11 --> WF12 : "dependency analysis"
+WF12 --> WF13 : "secret scan"
+WF13 --> WF14 : "runtime checks"
+WF14 --> WF15 : "policy enforcement"
+WF15 --> WF16 : "incident handling"
+WF16 --> DATASTORE : "push security findings"
+WF16 --> DASHBOARD : "alert"
+
+' CLUSTER 3 : DONNÉES
+WF17 --> WF18 : "ingest -> clean"
+WF18 --> WF19 : "transform"
+WF19 --> WF20 : "store"
+WF20 --> WF21 : "catalog update"
+WF21 --> WF22 : "privacy checks"
+WF22 --> WF23 : "retention policy"
+WF23 --> WF24 : "access control"
+WF24 --> DATASTORE : "push datasets"
+WF24 --> DASHBOARD : "data metrics"
+
+' CLUSTER 4 : QUALITÉ
+WF25 --> WF26 : "unit -> integration"
+WF26 --> WF27 : "integration -> regression"
+WF27 --> WF28 : "collect metrics"
+WF28 --> WF29 : "code style checks"
+WF29 --> WF30 : "performance tests"
+WF30 --> WF31 : "smoke tests"
+WF31 --> WF32 : "coverage analysis"
+WF32 --> DATASTORE : "push test results"
+WF32 --> DASHBOARD : "quality metrics"
+
+' CLUSTER 5 : CI/CD
+WF33 --> WF34 : "build -> release"
+WF34 --> WF35 : "release -> deploy"
+WF35 --> WF36 : "deploy -> canary"
+WF36 --> WF37 : "canary -> rollback decision"
+WF37 --> WF38 : "manage images"
+WF38 --> WF39 : "run pipeline tests"
+WF39 --> WF40 : "notify"
+WF40 --> DATASTORE : "push ci artifacts"
+WF40 --> DASHBOARD : "ci metrics"
+
+' CLUSTER 6 : RECHERCHE
+WF41 --> WF42 : "experiments -> hyperparam"
+WF42 --> WF43 : "eval models"
+WF43 --> WF44 : "data prep for models"
+WF44 --> WF45 : "repro checks"
+WF45 --> WF46 : "simulation runs"
+WF46 --> WF47 : "kb update"
+WF47 --> WF48 : "peer review"
+WF48 --> DATASTORE : "push experiments"
+WF48 --> DASHBOARD : "research metrics"
+
+' CLUSTER 7 : AUDIT
+WF49 --> WF50 : "schema -> security"
+WF50 --> WF51 : "security -> simulation"
+WF51 --> WF52 : "simulation -> cost analysis"
+WF52 --> WF53 : "cost -> plan"
+WF53 --> WF54 : "plan -> compliance"
+WF54 --> WF55 : "compliance -> risk"
+WF55 --> WF56 : "risk -> final report"
+WF56 --> DATASTORE : "push audit report"
+WF56 --> DASHBOARD : "audit KPIs"
+
+' CLUSTER 8 : ARCHIVAGE
+WF57 --> WF58 : "archive -> index"
+WF58 --> WF59 : "index -> retention"
+WF59 --> WF60 : "retention -> compress"
+WF60 --> WF61 : "compress -> encrypt"
+WF61 --> WF62 : "encrypt -> migrate"
+WF62 --> WF63 : "migrate -> version"
+WF63 --> WF64 : "version -> restore tests"
+WF64 --> DATASTORE : "push archives"
+WF64 --> DASHBOARD : "archive metrics"
+
+' CLUSTER 9 : DIVERS
+WF65 --> WF66 : "monitor -> alerts"
+WF66 --> WF67 : "alerts -> ui"
+WF67 --> WF68 : "ui -> telemetry"
+WF68 --> WF69 : "telemetry -> cleanup"
+WF69 --> WF70 : "cleanup -> scheduler"
+WF70 --> WF71 : "scheduler -> backups"
+WF71 --> DATASTORE : "push backups"
+WF71 --> DASHBOARD : "misc metrics"
+
+' -------------------------
+' Exemples de dépendances cross-cluster (sélectifs)
+' -------------------------
+WF16 --> WF09 : "security incident -> re-run security scans"
+WF24 --> WF17 : "data access change -> re-ingest"
+WF32 --> WF33 : "test pass -> trigger build"
+WF48 --> WF43 : "peer review -> model re-eval"
+WF56 --> WF25 : "audit findings -> start tests"
+
+' -------------------------
+' DataStore -> Dashboard
+' -------------------------
+DATASTORE --> DASHBOARD : "feed metrics & alerts"
+
+' -------------------------
+' Légende & précis
+' -------------------------
+legend right
+  **Légende**\n
+  - Chaque composant contient un lien cliquable (http://localhost:8000/...) vers le workflow / dashboard.\n
+  - Les flèches internes montrent la séquence d'exécution au sein de chaque cluster.\n
+  - Remplacez `http://localhost:8000/…` par vos chemins réels ou servez le dossier via `python3 -m http.server 8000`.\n
+endlegend
+
+note bottom
+  Pour tester localement :
+  1) cd /home/toni/Documents/ALMA
+  2) python3 -m http.server 8000
+  3) Ouvrir `architecture_agi_v4.puml` dans VSCode + PlantUML ou envoyer au PlantUML server.
+end note
+
+@enduml

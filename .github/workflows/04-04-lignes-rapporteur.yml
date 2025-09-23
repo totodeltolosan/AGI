@@ -1,0 +1,148 @@
+name: "Ouvrier : Rapporteur Lignes"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_resultats_juges:
+        description: "Artefact JSON des résultats du jugement"
+        required: true
+        type: string
+      artefact_statistiques:
+        description: "Artefact JSON des statistiques"
+        required: true
+        type: string
+      format_detaille:
+        description: "Inclure des colonnes additionnelles dans le rapport"
+        required: false
+        default: false
+        type: boolean
+      nom_artefact_sortie:
+        description: "Nom de l'artefact CSV de sortie"
+        required: false
+        default: "rapport-lignes.csv"
+        type: string
+    outputs:
+      artefact_resultats:
+        description: "Nom de l'artefact contenant le rapport CSV"
+        value: ${{ jobs.generer_rapport.outputs.artefact_name }}
+      total_lignes_rapport:
+        description: "Nombre de lignes dans le rapport"
+        value: ${{ jobs.generer_rapport.outputs.total_lignes }}
+      taux_conformite_rapport:
+        description: "Taux de conformité du rapport"
+        value: ${{ jobs.generer_rapport.outputs.taux_conformite }}
+      validation_reussie:
+        description: "Validation du résultat par le Qualiticien"
+        value: ${{ jobs.validation_resultats.outputs.validation_success }}
+
+jobs:
+  generer_rapport:
+    name: "Génération rapport CSV"
+    runs-on: ubuntu-latest
+    outputs:
+      artefact_name: ${{ steps.report.outputs.artefact_name }}
+      total_lignes: ${{ steps.report.outputs.total_lignes }}
+      taux_conformite: ${{ steps.report.outputs.taux_conformite }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Téléchargement des artefacts sources"
+        run: |
+          # Téléchargement des résultats du jugement
+          mkdir -p ./input/
+        
+        # Jugements
+      - name: "Téléchargement jugements"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_resultats_juges }}
+          path: ./input/jugements/
+      
+        # Statistiques  
+      - name: "Téléchargement statistiques"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_statistiques }}
+          path: ./input/stats/
+      
+      - name: "Vérification des fichiers d'entrée"
+        run: |
+          echo "🔍 Vérification des artefacts d'entrée"
+          
+          if [ ! -f "./input/jugements/${{ inputs.artefact_resultats_juges }}" ]; then
+            echo "❌ Artefact jugements manquant"
+            exit 1
+          fi
+          
+          if [ ! -f "./input/stats/${{ inputs.artefact_statistiques }}" ]; then
+            echo "❌ Artefact statistiques manquant"
+            exit 1
+          fi
+          
+          echo "✅ Tous les artefacts d'entrée sont disponibles"
+      
+      - name: "Exécution du rapporteur"
+        id: report
+        run: |
+          python .github/scripts/ouvrier_rapporteur.py \
+            --artefact-resultats-juges "./input/jugements/${{ inputs.artefact_resultats_juges }}" \
+            --artefact-statistiques "./input/stats/${{ inputs.artefact_statistiques }}" \
+            --sortie "${{ inputs.nom_artefact_sortie }}" \
+            ${{ inputs.format_detaille && '--format-detaille' || '' }}
+          
+          echo "artefact_name=${{ inputs.nom_artefact_sortie }}" >> $GITHUB_OUTPUT
+          
+          # Comptage des lignes du rapport (excluding header and metadata)
+          if [ -f "${{ inputs.nom_artefact_sortie }}" ]; then
+            total_lignes=$(tail -n +3 "${{ inputs.nom_artefact_sortie }}" | wc -l)
+            echo "total_lignes=$total_lignes" >> $GITHUB_OUTPUT
+            
+            # Calcul rapide du taux de conformité depuis le CSV
+            conformes=$(tail -n +3 "${{ inputs.nom_artefact_sortie }}" | cut -d',' -f5 | grep -c "OUI" || echo "0")
+            total_fichiers=$(tail -n +3 "${{ inputs.nom_artefact_sortie }}" | wc -l)
+            
+            if [ "$total_fichiers" -gt 0 ]; then
+              taux_conformite=$(python -c "print(round($conformes / $total_fichiers * 100, 1))")
+            else
+              taux_conformite="0"
+            fi
+            
+            echo "taux_conformite=$taux_conformite" >> $GITHUB_OUTPUT
+            
+            echo "✅ Rapport généré : $total_lignes fichiers analysés"
+          else
+            echo "total_lignes=0" >> $GITHUB_OUTPUT
+            echo "taux_conformite=0" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: "Upload artefact rapport CSV"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.nom_artefact_sortie }}
+          path: ${{ inputs.nom_artefact_sortie }}
+          retention-days: 30
+
+  validation_resultats:
+    name: "Validation par Qualiticien"
+    runs-on: ubuntu-latest
+    needs: generer_rapport
+    outputs:
+      validation_success: ${{ steps.validate.outputs.validation_success }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Appel du Qualiticien de validation"
+        id: validate
+        uses: ./.github/workflows/05-04-lignes-valid-rapporteur.yml
+        with:
+          artefact_rapport_csv: ${{ needs.generer_rapport.outputs.artefact_name }}
+          taille_minimale: 200

@@ -1,0 +1,43 @@
+name: "🔍 Qualiticien Validation Auditeur Schéma"
+
+on:
+  workflow_call:
+    inputs:
+      validation-schema:
+        description: "Nom de l'artefact contenant le rapport de validation"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-auditeur-schema.outputs.statut }}
+
+jobs:
+  validation-auditeur-schema:
+    name: "🔍 Validation Rapport Schéma"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact validation-schema"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.validation-schema }}
+          path: ./temp
+
+      - name: "🔍 Validation du rapport de schéma"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/validation-schema.json" \
+            --schema-name "validation-schema"

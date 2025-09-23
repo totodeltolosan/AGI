@@ -1,0 +1,54 @@
+name: "🎫 Qualiticien Validation Rédacteur Issues"
+
+on:
+  workflow_call:
+    inputs:
+      titre_issue:
+        description: "Nom de l'artefact contenant le titre de l'issue"
+        required: true
+        type: string
+      corps_issue:
+        description: "Nom de l'artefact contenant le corps de l'issue"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-redacteur-issues.outputs.statut }}
+
+jobs:
+  validation-redacteur-issues:
+    name: "✍️ Validation Contenu Issue"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefacts titre et corps"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.titre_issue }}
+          path: ./temp
+
+      - name: "📥 Téléchargement artefact corps_issue"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.corps_issue }}
+          path: ./temp
+
+      - name: "🔍 Validation des artefacts d'issue"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_artefact.py \
+            --artefact-path "./temp/titre_issue.txt" \
+            --artefact-path-2 "./temp/corps_issue.md" \
+            --validation-type "issue-content"

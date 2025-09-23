@@ -1,0 +1,57 @@
+name: "🎫 Ouvrier Rédacteur Issues"
+
+on:
+  workflow_call:
+    inputs:
+      violations-critiques:
+        description: "Nom de l'artefact contenant les violations critiques"
+        required: true
+        type: string
+    outputs:
+      titre_issue:
+        description: "Nom de l'artefact contenant le titre de l'issue"
+        value: "titre_issue"
+      corps_issue:
+        description: "Nom de l'artefact contenant le corps de l'issue"
+        value: "corps_issue"
+
+jobs:
+  redacteur-issues:
+    name: "✍️ Rédaction Contenu Issue"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact violations-critiques"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.violations-critiques }}
+          path: ./temp
+
+      - name: "✍️ Rédaction du titre et corps d'issue"
+        run: |
+          python .github/scripts/ouvrier_redacteur_issues.py \
+            --violations-json "./temp/violations-critiques.json" \
+            --output-titre "./temp/titre_issue.txt" \
+            --output-corps "./temp/corps_issue.md"
+
+      - name: "📤 Sauvegarde artefact titre_issue"
+        uses: actions/upload-artifact@v4
+        with:
+          name: titre_issue
+          path: ./temp/titre_issue.txt
+          retention-days: 1
+
+      - name: "📤 Sauvegarde artefact corps_issue"
+        uses: actions/upload-artifact@v4
+        with:
+          name: corps_issue
+          path: ./temp/corps_issue.md
+          retention-days: 1

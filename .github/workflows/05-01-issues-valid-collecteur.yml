@@ -1,0 +1,43 @@
+name: "🎫 Qualiticien Validation Collecteur Issues"
+
+on:
+  workflow_call:
+    inputs:
+      violations-critiques:
+        description: "Nom de l'artefact contenant les violations critiques"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-collecteur-issues.outputs.statut }}
+
+jobs:
+  validation-collecteur-issues:
+    name: "🔍 Validation Violations Critiques"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact violations-critiques"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.violations-critiques }}
+          path: ./temp
+
+      - name: "🔍 Validation du schéma violations-critiques"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/violations-critiques.json" \
+            --schema-name "violations-critiques"

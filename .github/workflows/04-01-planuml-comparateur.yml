@@ -1,0 +1,45 @@
+name: "📐 Ouvrier Comparateur PlantUML"
+
+on:
+  workflow_call:
+    inputs:
+      date_diagramme:
+        description: "Date de dernière modification du diagramme (timestamp)"
+        required: true
+        type: string
+      date_code:
+        description: "Date de dernière modification du code (timestamp)"
+        required: true
+        type: string
+    outputs:
+      resultat-comparaison:
+        description: "Nom de l'artefact contenant le résultat de comparaison"
+        value: "resultat-comparaison"
+
+jobs:
+  comparateur-planuml:
+    name: "🔍 Comparaison Dates PlantUML"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📐 Comparaison des dates de modification"
+        run: |
+          python .github/scripts/ouvrier_comparateur_planuml.py \
+            --date-diagramme "${{ inputs.date_diagramme }}" \
+            --date-code "${{ inputs.date_code }}" \
+            --output-json "./temp/resultat-comparaison.json"
+
+      - name: "📤 Sauvegarde artefact resultat-comparaison"
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultat-comparaison
+          path: ./temp/resultat-comparaison.json
+          retention-days: 1

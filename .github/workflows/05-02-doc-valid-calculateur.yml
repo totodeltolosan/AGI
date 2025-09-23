@@ -1,0 +1,43 @@
+name: "📚 Qualiticien Validation Calculateur Documentation"
+
+on:
+  workflow_call:
+    inputs:
+      statistiques-documentation:
+        description: "Nom de l'artefact contenant les statistiques calculées"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-calculateur-doc.outputs.statut }}
+
+jobs:
+  validation-calculateur-doc:
+    name: "📊 Validation Statistiques Documentation"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact statistiques-documentation"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.statistiques-documentation }}
+          path: ./temp
+
+      - name: "🔍 Validation du schéma statistiques-documentation"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/statistiques-documentation.json" \
+            --schema-name "statistiques-documentation"

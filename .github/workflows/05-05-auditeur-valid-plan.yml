@@ -1,0 +1,43 @@
+name: "🔍 Qualiticien Validation Auditeur Plan"
+
+on:
+  workflow_call:
+    inputs:
+      plan-implementation:
+        description: "Nom de l'artefact contenant le plan d'implémentation"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-auditeur-plan.outputs.statut }}
+
+jobs:
+  validation-auditeur-plan:
+    name: "🔍 Validation Plan Implémentation"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact plan-implementation"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.plan-implementation }}
+          path: ./temp
+
+      - name: "🔍 Validation du plan d'implémentation"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/plan-implementation.json" \
+            --schema-name "plan-implementation"

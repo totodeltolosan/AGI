@@ -1,0 +1,40 @@
+name: "🔍 Ouvrier Auditeur Sécurité"
+
+on:
+  workflow_call:
+    inputs:
+      proposition_solution:
+        description: "Proposition de solution à analyser (JSON string)"
+        required: true
+        type: string
+    outputs:
+      rapport-securite-solution:
+        description: "Nom de l'artefact contenant le rapport de sécurité"
+        value: "rapport-securite-solution"
+
+jobs:
+  auditeur-securite:
+    name: "🛡️ Audit Sécurité Solution"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "🛡️ Analyse de sécurité de la solution"
+        run: |
+          python .github/scripts/ouvrier_auditeur_securite.py \
+            --proposition-solution '${{ inputs.proposition_solution }}' \
+            --output-json "./temp/rapport-securite-solution.json"
+
+      - name: "📤 Sauvegarde artefact rapport-securite-solution"
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-securite-solution
+          path: ./temp/rapport-securite-solution.json
+          retention-days: 1

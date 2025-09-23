@@ -1,0 +1,45 @@
+name: "🔍 Ouvrier Communication Artefact"
+
+on:
+  workflow_call:
+    inputs:
+      nom_artefact_cible:
+        description: "Nom de l'artefact de proposition à créer"
+        required: true
+        type: string
+      contenu_solution:
+        description: "Contenu de la solution proposée (JSON string)"
+        required: true
+        type: string
+    outputs:
+      artefact_cree:
+        description: "Nom de l'artefact créé"
+        value: ${{ inputs.nom_artefact_cible }}
+
+jobs:
+  comm-artefact:
+    name: "📝 Création Artefact Proposition"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📝 Création de l'artefact de proposition"
+        run: |
+          python .github/scripts/ouvrier_comm_artefact.py \
+            --nom-artefact "${{ inputs.nom_artefact_cible }}" \
+            --contenu-solution '${{ inputs.contenu_solution }}' \
+            --output-path "./temp/${{ inputs.nom_artefact_cible }}.json"
+
+      - name: "📤 Sauvegarde artefact proposition"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.nom_artefact_cible }}
+          path: ./temp/${{ inputs.nom_artefact_cible }}.json
+          retention-days: 1

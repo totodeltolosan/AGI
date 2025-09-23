@@ -1,0 +1,51 @@
+name: "📚 Ouvrier Calculateur Documentation"
+
+on:
+  workflow_call:
+    inputs:
+      faits-documentation:
+        description: "Nom de l'artefact contenant les faits extraits"
+        required: true
+        type: string
+      seuils_documentation:
+        description: "Seuils de couverture documentation (JSON string)"
+        required: true
+        type: string
+    outputs:
+      statistiques-documentation:
+        description: "Nom de l'artefact contenant les statistiques calculées"
+        value: "statistiques-documentation"
+
+jobs:
+  calculateur-documentation:
+    name: "📊 Calcul Statistiques Documentation"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact faits-documentation"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.faits-documentation }}
+          path: ./temp
+
+      - name: "📊 Calcul des statistiques de couverture"
+        run: |
+          python .github/scripts/ouvrier_calculateur_doc.py \
+            --faits-json "./temp/faits-documentation.json" \
+            --seuils-documentation '${{ inputs.seuils_documentation }}' \
+            --output-json "./temp/statistiques-documentation.json"
+
+      - name: "📤 Sauvegarde artefact statistiques-documentation"
+        uses: actions/upload-artifact@v4
+        with:
+          name: statistiques-documentation
+          path: ./temp/statistiques-documentation.json
+          retention-days: 1

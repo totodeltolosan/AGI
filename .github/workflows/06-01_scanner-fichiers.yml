@@ -1,0 +1,120 @@
+name: "Travailleur : Scanner Fichiers"
+
+on:
+  workflow_call:
+    inputs:
+      pattern:
+        description: "Pattern de fichiers à chercher (ex: *.py, *.js, **/*.md)"
+        required: true
+        type: string
+      chemin_racine:
+        description: "Chemin racine où commencer la recherche"
+        required: true
+        type: string
+      exclusions:
+        description: "JSON array des patterns à exclure (ex: [\"test_*\", \"*.tmp\", \".git/*\"])"
+        required: false
+        default: '[]'
+        type: string
+      nom_artefact:
+        description: "Nom de l'artefact JSON de sortie"
+        required: false
+        default: "liste-fichiers.json"
+        type: string
+    outputs:
+      fichiers_trouves:
+        description: "Nombre de fichiers trouvés"
+        value: ${{ jobs.scan_fichiers.outputs.count }}
+      artefact_path:
+        description: "Chemin vers l'artefact généré"
+        value: ${{ jobs.scan_fichiers.outputs.artifact_path }}
+
+jobs:
+  scan_fichiers:
+    name: "Scan récursif de fichiers"
+    runs-on: ubuntu-latest
+    outputs:
+      count: ${{ steps.scan.outputs.file_count }}
+      artifact_path: ${{ steps.scan.outputs.artifact_path }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Installation des dépendances Python"
+        run: |
+          python -m pip install --upgrade pip
+          # Utilise seulement la stdlib Python
+      
+      - name: "Validation du chemin racine"
+        run: |
+          if [ ! -d "${{ inputs.chemin_racine }}" ]; then
+            echo "❌ ERREUR: Chemin racine introuvable : ${{ inputs.chemin_racine }}"
+            echo "📁 Contenu du répertoire actuel :"
+            ls -la
+            exit 1
+          fi
+          echo "✅ Chemin racine validé : ${{ inputs.chemin_racine }}"
+      
+      - name: "Exécution du scanner de fichiers"
+        id: scan
+        run: |
+          python .github/scripts/travailleur_scan_fichiers.py \
+            --pattern "${{ inputs.pattern }}" \
+            --chemin-racine "${{ inputs.chemin_racine }}" \
+            --exclusions '${{ inputs.exclusions }}' \
+            --sortie "${{ inputs.nom_artefact }}"
+          
+          # Extraction du nombre de fichiers trouvés pour les outputs
+          if [ -f "${{ inputs.nom_artefact }}" ]; then
+            count=$(python -c "import json; data=json.load(open('${{ inputs.nom_artefact }}')); print(data.get('total_fichiers', 0))")
+            echo "file_count=$count" >> $GITHUB_OUTPUT
+            echo "artifact_path=${{ inputs.nom_artefact }}" >> $GITHUB_OUTPUT
+            echo "📊 $count fichiers trouvés et indexés"
+          else
+            echo "file_count=0" >> $GITHUB_OUTPUT
+            echo "❌ ERREUR: Artefact de sortie non créé"
+            exit 1
+          fi
+      
+      - name: "Upload de l'artefact liste de fichiers"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.nom_artefact }}
+          path: ${{ inputs.nom_artefact }}
+          retention-days: 30
+      
+      - name: "Rapport de scan et validation"
+        run: |
+          if [ -f "${{ inputs.nom_artefact }}" ]; then
+            echo "📄 Artefact créé : ${{ inputs.nom_artefact }}"
+            echo "📊 Taille : $(stat -c%s "${{ inputs.nom_artefact }}") octets"
+            
+            # Affichage d'un résumé du scan
+            echo "🔍 Résumé du scan :"
+            python -c "
+import json
+with open('${{ inputs.nom_artefact }}', 'r') as f:
+    data = json.load(f)
+print(f'   • Pattern : {data[\"pattern\"]}')
+print(f'   • Racine : {data[\"chemin_racine\"]}')
+print(f'   • Exclusions : {len(data[\"exclusions\"])} règles')
+print(f'   • Total fichiers : {data[\"total_fichiers\"]}')
+if data['fichiers']:
+    print('   • Échantillon :')
+    for f in data['fichiers'][:3]:
+        print(f'     - {f}')
+    if len(data['fichiers']) > 3:
+        print(f'     ... et {len(data[\"fichiers\"]) - 3} autres')
+"
+          else
+            echo "❌ ERREUR: Fichier de sortie non trouvé"
+            exit 1
+          fi
+          
+          echo "✅ Scanner de fichiers terminé avec succès"

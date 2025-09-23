@@ -1,0 +1,198 @@
+@startuml AGI_Project_Architecture_Interactive
+' ------------------------------
+' Architecture AGI interactive (version corrigée)
+' - Liens cliquables dans les composants seulement
+' - Alias simples et valides
+' - Compatible VSCode PlantUML / PlantUML server standard
+' ------------------------------
+
+title Architecture de Suivi Projet AGI - Vue d'Ensemble (Interactive)
+' (Cliquer sur les composants ouvre le fichier / dashboard si le viewer le permet)
+
+' --- Style global ---
+skinparam backgroundColor #f7f9fb
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam dpi 140
+skinparam defaultFontName "DejaVu Sans"
+skinparam noteBackgroundColor #fffbe6
+skinparam noteBorderColor #d4a017
+skinparam ArrowColor #2c3e50
+skinparam sequenceMessageAlign center
+
+' --- NIVEAUX (packages) ---
+package "NIVEAU 0 - CONTRÔLE SUPRÊME" as N0 #e74c3c {
+    component "00-maitre.yml\n(MOI)\n[[file:///home/toni/Documents/ALMA/00-maitre.yml]]" as Maitre
+    note right of Maitre
+        CONTRÔLE MANUEL
+        - Override total
+        - Déclenche audits ciblés
+        - Peut ignorer violations spécifiques
+    end note
+}
+
+package "NIVEAU 1 - ORCHESTRATION" as N1 #8e44ad {
+    component "01-orchestre.yml\n(Orchestrateur)\n[[http://localhost:8000/dashboards/N1_orchestre.html]]" as Orchestre
+    artifact "iaGOD.json\n[[http://localhost:8000/Connaissance/iaGOD.json]]" as iaGOD
+    note right of Orchestre
+        Orchestrateur principal :
+        - Lit iaGOD.json
+        - Lance les audits
+        - Produit la synthèse finale
+    end note
+}
+
+package "NIVEAU 2 - GÉNÉRAUX DE DIVISION" as N2 #3498db {
+    component "02-loi-lignes.yml\n(Le_Métreur)\n[[http://localhost:8000/02-loi-lignes.yml]]" as Metreur
+    component "03-loi-securite.yml\n(Le_Gardien)\n[[http://localhost:8000/03-loi-securite.yml]]" as Gardien
+    component "04-loi-documentation.yml\n(Archiviste)\n[[http://localhost:8000/04-loi-documentation.yml]]" as Archiviste
+    component "05-creation-issues.yml\n(Greffier)\n[[http://localhost:8000/05-creation-issues.yml]]" as Greffier
+    component "06-sauvegarde-rapports.yml\n(ArchivisteChef)\n[[http://localhost:8000/06-sauvegarde-rapports.yml]]" as ArchivisteChef
+    component "07-controle-planuml.yml\n(Cartographe)\n[[http://localhost:8000/07-controle-planuml.yml]]" as Cartographe
+    component "chercheur.yml\n(Chercheur)\n[[http://localhost:8000/chercheur.yml]]" as Chercheur
+    component "auditeur-solution.yml\n(Auditeur)\n[[http://localhost:8000/auditeur-solution.yml]]" as Auditeur
+}
+
+package "NIVEAU 3 - CONTREMAÎTRES" as N3 #2ecc71 {
+    component "audit_lignes.py\n[[file:///home/toni/Desktop/Scriptatravailler/audit_lignes.py]]" as CM_Lignes
+    component "audit_securite.py\n[[file:///home/toni/Desktop/Scriptatravailler/audit_securite.py]]" as CM_Securite
+    component "audit_documentation.py\n[[file:///home/toni/Desktop/Scriptatravailler/audit_documentation.py]]" as CM_Doc
+    component "creation_issues.py\n[[file:///home/toni/Desktop/Scriptatravailler/creation_issues.py]]" as CM_Issues
+    component "sauvegarde_rapports.py\n[[file:///home/toni/Desktop/Scriptatravailler/sauvegarde_rapports.py]]" as CM_Save
+    component "chercheur_solution.py\n[[file:///home/toni/Desktop/Scriptatravailler/chercheur_solution.py]]" as CM_Search
+    component "auditeur_solution.py\n[[file:///home/toni/Desktop/Scriptatravailler/auditeur_solution.py]]" as CM_Audit
+}
+
+package "NIVEAU 4 - OUVRIERS SPÉCIALISÉS" as N4 #f39c12 {
+    rectangle "Division_LIGNES" as DivLignes {
+        component "04-01_lignes_compteur.yml\n[[http://localhost:8000/04-01_lignes_compteur.yml]]" as O_Compteur
+        component "04-02_lignes_juge.yml\n[[http://localhost:8000/04-02_lignes_juge.yml]]" as O_Juge
+        component "04-03_lignes_statisticien.yml\n[[http://localhost:8000/04-03_lignes_statisticien.yml]]" as O_Stats
+        component "04-04_lignes_rapporteur.yml\n[[http://localhost:8000/04-04_lignes_rapporteur.yml]]" as O_Rapport
+        component "04-05_lignes_conseiller.yml\n[[http://localhost:8000/04-05_lignes_conseiller.yml]]" as O_Conseil
+    }
+    rectangle "Division_SECURITE" as DivSecu {
+        component "04-01_securite_chercheur.yml\n[[http://localhost:8000/04-01_securite_chercheur.yml]]" as O_SecuSearch
+        component "04-02_securite_trieur.yml\n[[http://localhost:8000/04-02_securite_trieur.yml]]" as O_SecuTri
+    }
+    rectangle "Division_CHERCHEUR" as DivSearch {
+        component "04-01_chercheur_comm_email.yml\n[[http://localhost:8000/04-01_chercheur_comm_email.yml]]" as O_Email
+        component "04-02_chercheur_comm_slack.yml\n[[http://localhost:8000/04-02_chercheur_comm_slack.yml]]" as O_Slack
+        component "04-03_chercheur_comm_commentaire.yml\n[[http://localhost:8000/04-03_chercheur_comm_commentaire.yml]]" as O_Comment
+        component "04-04_chercheur_comm_dispatch.yml\n[[http://localhost:8000/04-04_chercheur_comm_dispatch.yml]]" as O_Dispatch
+        component "04-05_chercheur_comm_pr.yml\n[[http://localhost:8000/04-05_chercheur_comm_pr.yml]]" as O_PR
+        component "04-06_chercheur_analyse_log.yml\n[[http://localhost:8000/04-06_chercheur_analyse_log.yml]]" as O_Log
+        component "04-07_chercheur_analyse_kb.yml\n[[http://localhost:8000/04-07_chercheur_analyse_kb.yml]]" as O_KB
+        component "04-08_chercheur_analyse_simu.yml\n[[http://localhost:8000/04-08_chercheur_analyse_simu.yml]]" as O_Simu
+    }
+    rectangle "Division_AUDITEUR" as DivAudit {
+        component "04-01_auditeur_schema.yml\n[[http://localhost:8000/04-01_auditeur_schema.yml]]" as O_Schema
+        component "04-02_auditeur_securite.yml\n[[http://localhost:8000/04-02_auditeur_securite.yml]]" as O_AuditSecu
+        component "04-03_auditeur_simulation.yml\n[[http://localhost:8000/04-03_auditeur_simulation.yml]]" as O_AuditSimu
+        component "04-04_auditeur_cout.yml\n[[http://localhost:8000/04-04_auditeur_cout.yml]]" as O_Cout
+        component "04-05_auditeur_plan.yml\n[[http://localhost:8000/04-05_auditeur_plan.yml]]" as O_Plan
+    }
+}
+
+package "NIVEAU 5 - QUALITICIENS" as N5 #f1c40f {
+    rectangle "VALIDATION_LIGNES" {
+        component "05-01_lignes_valid_compteur.yml\n[[http://localhost:8000/05-01_lignes_valid_compteur.yml]]" as Q_Compteur
+        component "05-02_lignes_valid_juge.yml\n[[http://localhost:8000/05-02_lignes_valid_juge.yml]]" as Q_Juge
+        component "05-03_lignes_valid_statisticien.yml\n[[http://localhost:8000/05-03_lignes_valid_statisticien.yml]]" as Q_Stats
+        component "05-04_lignes_valid_rapporteur.yml\n[[http://localhost:8000/05-04_lignes_valid_rapporteur.yml]]" as Q_Rapport
+        component "05-05_lignes_valid_conseiller.yml\n[[http://localhost:8000/05-05_lignes_valid_conseiller.yml]]" as Q_Conseil
+    }
+    rectangle "VALIDATION_SECURITE" {
+        component "05-01_securite_valid_chercheur.yml\n[[http://localhost:8000/05-01_securite_valid_chercheur.yml]]" as Q_SecuSearch
+    }
+}
+
+package "NIVEAU 6 - TRAVAILLEURS" as N6 #1abc9c {
+    component "06-01_scanner_fichiers.yml\n[[http://localhost:8000/06-01_scanner_fichiers.yml]]" as T_Scan
+    component "06-02_regex_applicateur.yml\n[[http://localhost:8000/06-02_regex_applicateur.yml]]" as T_Regex
+    component "06-03_extracteur_donnees.yml\n[[http://localhost:8000/06-03_extracteur_donnees.yml]]" as T_Extract
+    component "06-04_validateur_json.yml\n[[http://localhost:8000/06-04_validateur_json.yml]]" as T_ValidJSON
+}
+
+package "NIVEAU 7 - NETTOYEURS" as N7 #fd79a8 {
+    component "07-01_formateur_csv.yml\n[[http://localhost:8000/07-01_formateur_csv.yml]]" as C_CSV
+    component "07-02_generateur_markdown.yml\n[[http://localhost:8000/07-02_generateur_markdown.yml]]" as C_MD
+    component "07-03_archiveur_zip.yml\n[[http://localhost:8000/07-03_archiveur_zip.yml]]" as C_ZIP
+}
+
+package "NIVEAU 8 - FOURMIS (CODE)" as N8 #95a5a6 {
+    component "Logique Python\nFonctions atomiques\n[[file:///home/toni/Desktop/Scriptatravailler/]]" as Fourmis
+}
+
+' --- ARTEFACTS centraux (cliquer pour ouvrir) ---
+artifact "iaGOD.json\n[[http://localhost:8000/Connaissance/iaGOD.json]]" as F_Constitution
+artifact "liste-fichiers.json\n[[http://localhost:8000/liste-fichiers.json]]" as F_ListFiles
+artifact "violations-brutes.json\n[[http://localhost:8000/violations-brutes.json]]" as F_Violations
+artifact "rapport-lignes.csv\n[[http://localhost:8000/rapport-lignes.csv]]" as F_ReportCSV
+artifact "recommandations.md\n[[http://localhost:8000/recommandations.md]]" as F_Reco
+
+' --- TABLEAU DE BORD (cliquer pour ouvrir) ---
+component "TABLEAU_DE_BORD\n[[http://localhost:8000/dashboard/dashboard.html]]" as Dashboard
+note top of Dashboard
+    STATUS: ✅ CONFORME
+    Audits actifs: 8/8 | Parallélisation: 43%
+    Violations critiques: 2 | Dernière exécution: 14:32:15
+end note
+
+' --- FLUX PRINCIPAUX (labels courts et explicites) ---
+Maitre --> Orchestre : "déclenche audit"
+Orchestre --> iaGOD : "lecture config"
+Orchestre --> Metreur : "audit_lignes(params)"
+Orchestre --> Gardien : "audit_securite(rules)"
+Orchestre --> Archiviste : "audit_docs(thresholds)"
+Orchestre --> Greffier : "create_issues(violations)"
+Orchestre --> ArchivisteChef : "save_reports(artifacts)"
+Orchestre --> Cartographe : "check_planuml(path)"
+Orchestre --> Chercheur : "repository_dispatch"
+Orchestre --> Auditeur : "audit_solution(proposal)"
+
+' --- Flux détaillé division LIGNES ---
+Metreur --> CM_Lignes : "exécute contremaître"
+CM_Lignes --> T_Scan : "scan *.py"
+T_Scan --> F_ListFiles : "génère liste"
+CM_Lignes --> O_Compteur : "compte lignes"
+O_Compteur --> Q_Compteur : "contrôle"
+Q_Compteur --> O_Juge : "si valide"
+O_Juge --> Q_Juge : "contrôle"
+Q_Juge --> O_Stats : "si valide"
+O_Stats --> Q_Stats : "contrôle"
+Q_Stats --> O_Rapport : "si valide"
+O_Rapport --> Q_Rapport : "contrôle"
+Q_Rapport --> O_Conseil : "si valide"
+O_Conseil --> Q_Conseil : "validation finale"
+Q_Conseil --> C_CSV : "formatage final"
+C_CSV --> F_ReportCSV : "rapport final"
+C_CSV --> Dashboard : "push rapport"
+
+' --- Flux sécurité / auditeur / chercheur (extraits) ---
+CM_Securite --> O_SecuSearch : "cherche violations"
+O_SecuSearch --> F_Violations : "enregistre violations"
+CM_Search --> O_Log : "analyse logs"
+CM_Audit --> O_Plan : "produit plan"
+O_Plan --> F_Reco : "enregistre recommandations"
+
+' --- Interactions atomiques ---
+T_Scan --> Fourmis : "logique atomique"
+O_Compteur --> Fourmis : "compte atomique"
+
+' --- Légende ---
+legend right
+  |= Niveau |= Rôle |= Couleur |
+  | 0 | Contrôle Suprême | Rouge |
+  | 1 | Orchestration | Violet |
+  | 2 | Généraux | Bleu |
+  | 3 | Contremaîtres | Vert |
+  | 4 | Ouvriers | Orange |
+  | 5 | Qualiticiens | Jaune |
+  | 6 | Travailleurs | Cyan |
+  | 7 | Nettoyeurs | Rose |
+  | 8 | Fourmis (Code) | Gris |
+endlegend
+
+@enduml

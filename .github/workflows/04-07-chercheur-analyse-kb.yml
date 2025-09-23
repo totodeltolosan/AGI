@@ -1,0 +1,40 @@
+name: "🔍 Ouvrier Analyse KB"
+
+on:
+  workflow_call:
+    inputs:
+      mots_cles_probleme:
+        description: "Mots-clés du problème à rechercher"
+        required: true
+        type: string
+    outputs:
+      solutions-potentielles:
+        description: "Nom de l'artefact contenant les solutions trouvées"
+        value: "solutions-potentielles"
+
+jobs:
+  analyse-kb:
+    name: "📚 Analyse Base de Connaissance"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📚 Recherche dans la base de connaissance"
+        run: |
+          python .github/scripts/ouvrier_analyse_kb.py \
+            --mots-cles "${{ inputs.mots_cles_probleme }}" \
+            --output-json "./temp/solutions-potentielles.json"
+
+      - name: "📤 Sauvegarde artefact solutions-potentielles"
+        uses: actions/upload-artifact@v4
+        with:
+          name: solutions-potentielles
+          path: ./temp/solutions-potentielles.json
+          retention-days: 1

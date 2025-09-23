@@ -1,0 +1,78 @@
+name: "Nettoyeur : Formateur CSV"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_entree_json:
+        description: "Nom de l'artefact JSON à consommer"
+        required: true
+        type: string
+      nom_fichier_sortie_csv:
+        description: "Nom du fichier CSV à créer"
+        required: true
+        type: string
+      colonnes:
+        description: "JSON string définissant les colonnes à extraire (ex: [\"nom\", \"valeur\", \"stats.total\"])"
+        required: true
+        type: string
+    outputs:
+      csv_file_path:
+        description: "Chemin vers le fichier CSV généré"
+        value: ${{ jobs.format_csv.outputs.csv_path }}
+
+jobs:
+  format_csv:
+    name: "Transformation JSON vers CSV"
+    runs-on: ubuntu-latest
+    outputs:
+      csv_path: ${{ steps.format.outputs.csv_path }}
+    
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+      
+      - name: "Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: "Installation des dépendances Python"
+        run: |
+          python -m pip install --upgrade pip
+          # Aucune dépendance externe nécessaire - utilise seulement la stdlib
+      
+      - name: "Téléchargement de l'artefact JSON d'entrée"
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artefact_entree_json }}
+          path: ./input/
+      
+      - name: "Exécution du formateur CSV"
+        id: format
+        run: |
+          python .github/scripts/nettoyeur_format_csv.py \
+            --artefact-entree-json "./input/${{ inputs.artefact_entree_json }}" \
+            --nom-fichier-sortie-csv "${{ inputs.nom_fichier_sortie_csv }}" \
+            --colonnes '${{ inputs.colonnes }}'
+          
+          echo "csv_path=${{ inputs.nom_fichier_sortie_csv }}" >> $GITHUB_OUTPUT
+          echo "✅ Formatage CSV terminé avec succès"
+      
+      - name: "Upload de l'artefact CSV"
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.nom_fichier_sortie_csv }}
+          path: ${{ inputs.nom_fichier_sortie_csv }}
+          retention-days: 30
+      
+      - name: "Validation post-génération"
+        run: |
+          if [ -f "${{ inputs.nom_fichier_sortie_csv }}" ]; then
+            echo "📊 Fichier CSV créé : ${{ inputs.nom_fichier_sortie_csv }}"
+            echo "📄 Taille : $(stat -c%s "${{ inputs.nom_fichier_sortie_csv }}") octets"
+            echo "📋 Premières lignes :"
+            head -3 "${{ inputs.nom_fichier_sortie_csv }}" || true
+          else
+            echo "❌ ERREUR: Fichier CSV non créé"
+            exit 1
+          fi

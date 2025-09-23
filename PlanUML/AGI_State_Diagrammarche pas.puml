@@ -1,0 +1,155 @@
+@startuml AGI_State_Diagram
+!theme cerulean
+
+title Cycle de Vie et Etats du Projet AGI
+note top : Machine a etats pour le suivi de conformite et la gestion des violations
+
+[*] --> Idle
+
+state Idle {
+    Idle : Systeme en Attente
+    Idle : Tous workflows inactifs
+    Idle : Constitution chargee
+    Idle : Pret pour declenchement
+}
+
+state AuditGlobal {
+    AuditGlobal : Audit en Cours
+    AuditGlobal : 8 generaux actifs
+    AuditGlobal : Parallelisation 43.7%
+    AuditGlobal : Collecte des metriques
+
+    state AuditLignes {
+        AuditLignes : Controle Lignes
+        AuditLignes : Limite 500 lignes
+        AuditLignes : Fichiers *.py
+    }
+
+    state AuditSecurite {
+        AuditSecurite : Controle Securite
+        AuditSecurite : Regex patterns
+        AuditSecurite : Analyse vulnerabilites
+    }
+
+    state AuditDoc {
+        AuditDoc : Controle Documentation
+        AuditDoc : Seuil couverture 80%
+        AuditDoc : Verification README
+    }
+}
+
+state Evaluation {
+    Evaluation : Evaluation Globale
+    Evaluation : Synthese rapports
+    Evaluation : Calcul score conformite
+    Evaluation : Determination actions
+}
+
+state Conforme {
+    Conforme : PROJET CONFORME AGI
+    Conforme : Tous audits reussis
+    Conforme : Score 100%
+    Conforme : PR approuvee automatiquement
+}
+
+state ViolationsMin {
+    ViolationsMin : Ameliorations Requises
+    ViolationsMin : Violations non-critiques
+    ViolationsMin : Score 70-99%
+    ViolationsMin : PR avec avertissements
+
+    state GenReco {
+        GenReco : Generation Recommandations
+        GenReco : Analyse patterns
+        GenReco : Suggestions automatiques
+    }
+}
+
+state ViolationsCrit {
+    ViolationsCrit : BLOCAGE CRITIQUE
+    ViolationsCrit : Violations securite critiques
+    ViolationsCrit : Score < 70%
+    ViolationsCrit : PR bloquee
+
+    state Escalade {
+        Escalade : Intervention Humaine
+        Escalade : Creation issues GitHub
+        Escalade : Notification equipe
+    }
+
+    state RechercheAuto {
+        RechercheAuto : Recherche Solution Auto
+        RechercheAuto : Consultation KB
+        RechercheAuto : Simulation patches
+    }
+}
+
+state CorrectionAuto {
+    CorrectionAuto : Correction Automatique
+    CorrectionAuto : Application patch
+    CorrectionAuto : Tests validation
+    CorrectionAuto : Nouvelle PR generee
+}
+
+state Monitoring {
+    Monitoring : Surveillance Continue
+    Monitoring : Metriques temps reel
+    Monitoring : Alertes proactives
+    Monitoring : Tendances qualite
+}
+
+state Archive {
+    Archive : Archivage Rapports
+    Archive : Sauvegarde zip
+    Archive : Historique audits
+    Archive : Metriques evolution
+}
+
+' Transitions principales
+Idle --> AuditGlobal : Push code / PR creee
+AuditGlobal --> Evaluation : Tous audits termines
+
+Evaluation --> Conforme : Score = 100%
+Evaluation --> ViolationsMin : 70% <= Score < 100%
+Evaluation --> ViolationsCrit : Score < 70%
+
+' Transitions conformite
+Conforme --> Archive : Archivage automatique
+Conforme --> Monitoring : Surveillance continue
+Archive --> Idle : Cycle termine
+
+' Transitions violations mineures
+ViolationsMin --> GenReco : Genere conseils
+GenReco --> Monitoring : Recommandations envoyees
+ViolationsMin --> Archive : Sauvegarde avec avertissements
+
+' Transitions violations critiques
+ViolationsCrit --> Escalade : Aucune solution auto
+ViolationsCrit --> RechercheAuto : Solution potentielle trouvee
+RechercheAuto --> CorrectionAuto : Patch genere
+RechercheAuto --> Escalade : Aucune solution trouvee
+CorrectionAuto --> AuditGlobal : Nouvelle validation
+Escalade --> Idle : Correction manuelle appliquee
+
+' Transitions monitoring
+Monitoring --> AuditGlobal : Declenchement programme
+ViolationsMin --> Idle : Developpeur ignore avertissements
+
+note right of AuditGlobal
+METRIQUES TEMPS REEL
+Workflows actifs: 8/8
+Parallelisation: 43.7%
+Temps moyen audit: 2m 34s
+Taux reussite: 94.2%
+end note
+
+note right of ViolationsCrit
+TYPES VIOLATIONS CRITIQUES
+SQL Injection
+Mots de passe hardcodes
+Failles XSS
+Donnees sensibles exposees
+Depassement limite lignes >50%
+end note
+
+@enduml

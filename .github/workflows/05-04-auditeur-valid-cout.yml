@@ -1,0 +1,43 @@
+name: "🔍 Qualiticien Validation Auditeur Coût"
+
+on:
+  workflow_call:
+    inputs:
+      analyse-cout-benefice:
+        description: "Nom de l'artefact contenant l'analyse coût/bénéfice"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-auditeur-cout.outputs.statut }}
+
+jobs:
+  validation-auditeur-cout:
+    name: "🔍 Validation Rapport Coût/Bénéfice"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact analyse-cout-benefice"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.analyse-cout-benefice }}
+          path: ./temp
+
+      - name: "🔍 Validation du rapport coût/bénéfice"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/analyse-cout-benefice.json" \
+            --schema-name "analyse-cout-benefice"

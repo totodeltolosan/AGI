@@ -1,0 +1,43 @@
+name: "🛡️ Qualiticien Validation Chercheur Sécurité"
+
+on:
+  workflow_call:
+    inputs:
+      violations-brutes:
+        description: "Nom de l'artefact contenant les violations de sécurité brutes"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-chercheur-securite.outputs.statut }}
+
+jobs:
+  validation-chercheur-securite:
+    name: "🔍 Validation Violations Brutes Sécurité"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact violations-brutes"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.violations-brutes }}
+          path: ./temp
+
+      - name: "🔍 Validation du schéma violations-brutes"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/violations-brutes.json" \
+            --schema-name "violations-brutes"

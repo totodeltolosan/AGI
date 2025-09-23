@@ -1,0 +1,45 @@
+name: "🔍 Ouvrier Auditeur Coût"
+
+on:
+  workflow_call:
+    inputs:
+      proposition_solution:
+        description: "Proposition de solution à analyser (JSON string)"
+        required: true
+        type: string
+      metriques_actuelles:
+        description: "Métriques actuelles du système (JSON string)"
+        required: true
+        type: string
+    outputs:
+      analyse-cout-benefice:
+        description: "Nom de l'artefact contenant l'analyse coût/bénéfice"
+        value: "analyse-cout-benefice"
+
+jobs:
+  auditeur-cout:
+    name: "💰 Analyse Coût/Bénéfice Solution"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "💰 Analyse de l'impact coût/bénéfice"
+        run: |
+          python .github/scripts/ouvrier_auditeur_cout.py \
+            --proposition-solution '${{ inputs.proposition_solution }}' \
+            --metriques-actuelles '${{ inputs.metriques_actuelles }}' \
+            --output-json "./temp/analyse-cout-benefice.json"
+
+      - name: "📤 Sauvegarde artefact analyse-cout-benefice"
+        uses: actions/upload-artifact@v4
+        with:
+          name: analyse-cout-benefice
+          path: ./temp/analyse-cout-benefice.json
+          retention-days: 1

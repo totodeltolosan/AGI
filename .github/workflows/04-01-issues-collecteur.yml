@@ -1,0 +1,47 @@
+name: "🎫 Ouvrier Collecteur Issues"
+
+on:
+  workflow_call:
+    inputs:
+      noms_artefacts:
+        description: "Liste des noms d'artefacts de rapport à analyser (JSON string)"
+        required: true
+        type: string
+    outputs:
+      violations-critiques:
+        description: "Nom de l'artefact contenant les violations critiques"
+        value: "violations-critiques"
+
+jobs:
+  collecteur-issues:
+    name: "📥 Collecte Violations Critiques"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement des artefacts de rapport"
+        run: |
+          mkdir -p ./temp/rapports
+          echo '${{ inputs.noms_artefacts }}' | jq -r '.[]' | while read artefact; do
+            echo "Téléchargement de $artefact..."
+          done
+
+      - name: "📥 Collecte des violations critiques"
+        run: |
+          python .github/scripts/ouvrier_collecteur_issues.py \
+            --noms-artefacts '${{ inputs.noms_artefacts }}' \
+            --output-json "./temp/violations-critiques.json"
+
+      - name: "📤 Sauvegarde artefact violations-critiques"
+        uses: actions/upload-artifact@v4
+        with:
+          name: violations-critiques
+          path: ./temp/violations-critiques.json
+          retention-days: 1

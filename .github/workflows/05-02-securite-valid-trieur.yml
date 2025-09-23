@@ -1,0 +1,43 @@
+name: "🛡️ Qualiticien Validation Trieur Sécurité"
+
+on:
+  workflow_call:
+    inputs:
+      violations-triees:
+        description: "Nom de l'artefact contenant les violations triées par sévérité"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-trieur-securite.outputs.statut }}
+
+jobs:
+  validation-trieur-securite:
+    name: "🗂️ Validation Violations Triées Sécurité"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact violations-triées"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.violations-triees }}
+          path: ./temp
+
+      - name: "🔍 Validation du schéma violations-triées"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/violations-triees.json" \
+            --schema-name "violations-triees"

@@ -1,0 +1,43 @@
+name: "🔍 Qualiticien Validation Analyse Simulation"
+
+on:
+  workflow_call:
+    inputs:
+      resultat-simulation:
+        description: "Nom de l'artefact contenant le résultat de simulation"
+        required: true
+        type: string
+    outputs:
+      statut_validation:
+        description: "Statut de la validation (success/failure)"
+        value: ${{ jobs.validation-analyse-simu.outputs.statut }}
+
+jobs:
+  validation-analyse-simu:
+    name: "🔍 Validation Résultat Simulation"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.validation.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact resultat-simulation"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.resultat-simulation }}
+          path: ./temp
+
+      - name: "🔍 Validation du schéma resultat-simulation"
+        id: validation
+        run: |
+          python .github/scripts/qualiticien_validation_schema.py \
+            --artefact-path "./temp/resultat-simulation.json" \
+            --schema-name "resultat-simulation"

@@ -1,0 +1,45 @@
+name: "🔍 Ouvrier Auditeur Schéma"
+
+on:
+  workflow_call:
+    inputs:
+      proposition_solution:
+        description: "Proposition de solution à valider (JSON string)"
+        required: true
+        type: string
+      schema_attendu:
+        description: "Schéma de validation attendu (JSON string)"
+        required: true
+        type: string
+    outputs:
+      validation-schema:
+        description: "Nom de l'artefact contenant le rapport de validation"
+        value: "validation-schema"
+
+jobs:
+  auditeur-schema:
+    name: "📋 Validation Schéma Solution"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📋 Validation du schéma de la solution"
+        run: |
+          python .github/scripts/ouvrier_auditeur_schema.py \
+            --proposition-solution '${{ inputs.proposition_solution }}' \
+            --schema-attendu '${{ inputs.schema_attendu }}' \
+            --output-json "./temp/validation-schema.json"
+
+      - name: "📤 Sauvegarde artefact validation-schema"
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-schema
+          path: ./temp/validation-schema.json
+          retention-days: 1

@@ -1,0 +1,51 @@
+name: "🛡️ Ouvrier Chercheur Sécurité"
+
+on:
+  workflow_call:
+    inputs:
+      liste-fichiers:
+        description: "Nom de l'artefact contenant la liste des fichiers à analyser"
+        required: true
+        type: string
+      regles_securite:
+        description: "Règles de sécurité (JSON string) contenant les patterns et sévérités"
+        required: true
+        type: string
+    outputs:
+      violations-brutes:
+        description: "Nom de l'artefact contenant les violations détectées"
+        value: "violations-brutes"
+
+jobs:
+  chercheur-securite:
+    name: "🔍 Recherche Violations Sécurité"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact liste-fichiers"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.liste-fichiers }}
+          path: ./temp
+
+      - name: "🔍 Recherche des violations de sécurité"
+        run: |
+          python .github/scripts/ouvrier_chercheur_securite.py \
+            --fichiers-json "./temp/liste-fichiers.json" \
+            --regles-securite '${{ inputs.regles_securite }}' \
+            --output-json "./temp/violations-brutes.json"
+
+      - name: "📤 Sauvegarde artefact violations-brutes"
+        uses: actions/upload-artifact@v4
+        with:
+          name: violations-brutes
+          path: ./temp/violations-brutes.json
+          retention-days: 1
