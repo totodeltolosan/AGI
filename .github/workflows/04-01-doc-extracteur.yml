@@ -1,0 +1,46 @@
+name: "📚 Ouvrier Extracteur Documentation"
+
+on:
+  workflow_call:
+    inputs:
+      liste-fichiers:
+        description: "Nom de l'artefact contenant la liste des fichiers à analyser"
+        required: true
+        type: string
+    outputs:
+      faits-documentation:
+        description: "Nom de l'artefact contenant les faits extraits sur la documentation"
+        value: "faits-documentation"
+
+jobs:
+  extracteur-documentation:
+    name: "🔍 Extraction Faits Documentation"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📥 Téléchargement artefact liste-fichiers"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.liste-fichiers }}
+          path: ./temp
+
+      - name: "🔍 Extraction des faits de documentation"
+        run: |
+          python .github/scripts/ouvrier_extracteur_doc.py \
+            --fichiers-json "./temp/liste-fichiers.json" \
+            --output-json "./temp/faits-documentation.json"
+
+      - name: "📤 Sauvegarde artefact faits-documentation"
+        uses: actions/upload-artifact@v4
+        with:
+          name: faits-documentation
+          path: ./temp/faits-documentation.json
+          retention-days: 1
