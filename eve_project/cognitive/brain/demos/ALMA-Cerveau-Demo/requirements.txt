@@ -10,7 +10,7 @@ fr_core_news_sm @ https://github.com/explosion/spacy-models/releases/download/fr
 sentence-transformers==4.1.0
 faiss-cpu==1.11.0 # Gardons faiss-cpu pour les Spaces gratuits
 numpy==2.2.5
-torch==2.7.0
+torch==2.8.0
 # transformers est une dépendance de sentence-transformers, donc sera installé.
 # On peut le lister explicitement si on veut une version spécifique non couverte :
 transformers==4.52.3 # Version de votre ALMA principal
