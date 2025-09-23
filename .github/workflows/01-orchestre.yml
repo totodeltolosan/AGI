@@ -15,6 +15,8 @@ on:
       - 'docs/**'
       - '.gitignore'
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"  # Audit quotidien 6h UTC
     inputs:
       force_audit:
         description: 'Forcer audit même sans changements significatifs'
@@ -157,14 +159,14 @@ jobs:
             timeout: 20
             script: "audit_securite.py"
           - name: "archiviste"
-            workflow: "04-loi-documentation.yml"
+            workflow: "02-loi-documentation.yml"
             title: "📚 L'Archiviste (Audit Documentation)"
             law_key: "documentation"
             priority: "HIGH"
             timeout: 15
             script: "audit_documentation.py"
           - name: "greffier"
-            workflow: "05-creation-issues.yml"
+            workflow: "02-loi-issues.yml"
             title: "⚖️ Le Greffier (Création Issues)"
             law_key: "issues"
             priority: "MEDIUM"
@@ -178,7 +180,7 @@ jobs:
             timeout: 10
             script: "sauvegarde_rapports.py"
           - name: "cartographe"
-            workflow: "07-controle-planuml.yml"
+            workflow: "02-controle-planuml.yml"
             title: "🗺️ Le Cartographe (Contrôle PlantUML)"
             law_key: "planuml"
             priority: "HIGH"

@@ -136,6 +136,12 @@ def main():
         required=True,
         help='Liste des noms d\'artefacts de rapport au format JSON'
     )
+    parser.add_argument(
+        "--audit-id",
+        required=False,
+        default="default",
+        help="Identifiant unique de l\'audit"
+    )
     
     args = parser.parse_args()
     

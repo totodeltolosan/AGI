@@ -213,7 +213,13 @@ def main():
     parser.add_argument(
         '--exclusions',
         required=True,
-        help='Liste des patterns de fichiers à exclure (JSON)'
+        help='Liste des patterns de fichiers à exclure (JSON)
+    parser.add_argument(
+        "--audit-id",
+        required=False,
+        default="default",
+        help="Identifiant unique de l\'audit"
+    )'
     )
     
     args = parser.parse_args()

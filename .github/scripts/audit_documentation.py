@@ -148,6 +148,12 @@ def main():
         required=True,
         help='Seuils de couverture documentation au format JSON'
     )
+    parser.add_argument(
+        "--audit-id",
+        required=False,
+        default="default",
+        help="Identifiant unique de l\'audit"
+    )
     
     args = parser.parse_args()
     
