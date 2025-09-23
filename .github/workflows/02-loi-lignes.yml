@@ -1,0 +1,76 @@
+name: "📏 Général Le Métreur - Loi Lignes"
+
+on:
+  workflow_call:
+    inputs:
+      limite_lignes:
+        description: "Limite maximale de lignes autorisée par fichier"
+        required: true
+        type: string
+      exclusions:
+        description: "Liste des patterns de fichiers à exclure (JSON string)"
+        required: true
+        type: string
+    outputs:
+      statut_audit:
+        description: "Statut de l'audit lignes (success/failure)"
+        value: ${{ jobs.audit-lignes.outputs.statut }}
+      rapport_final:
+        description: "Nom de l'artefact du rapport final"
+        value: "rapport-lignes-final"
+
+jobs:
+  audit-lignes:
+    name: "📏 Audit Complet Loi Lignes"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.contremaître.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "📏 Exécution du Contremaître Audit Lignes"
+        id: contremaître
+        run: |
+          echo "🎯 === GÉNÉRAL LE MÉTREUR ==="
+          echo "Limite de lignes: ${{ inputs.limite_lignes }}"
+          echo "Exclusions: ${{ inputs.exclusions }}"
+          echo ""
+          
+          # Exécution du script Contremaître
+          python .github/scripts/audit_lignes.py \
+            --limite-lignes "${{ inputs.limite_lignes }}" \
+            --exclusions '${{ inputs.exclusions }}'
+          
+          # Capture du code de retour
+          exit_code=$?
+          
+          if [ $exit_code -eq 0 ]; then
+            echo "statut=success" >> $GITHUB_OUTPUT
+            echo "✅ Audit lignes terminé avec succès"
+          else
+            echo "statut=failure" >> $GITHUB_OUTPUT
+            echo "❌ Audit lignes échoué"
+          fi
+
+      - name: "📊 Publication du résumé d'audit"
+        if: always()
+        run: |
+          echo "## 📏 Audit Loi Lignes - Résultats" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Limite configurée :** ${{ inputs.limite_lignes }} lignes" >> $GITHUB_STEP_SUMMARY
+          echo "**Statut final :** ${{ steps.contremaître.outputs.statut }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.contremaître.outputs.statut }}" = "success" ]; then
+            echo "✅ **Audit réussi** - Tous les fichiers respectent la limite" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Audit échoué** - Des violations de limite détectées" >> $GITHUB_STEP_SUMMARY
+          fi

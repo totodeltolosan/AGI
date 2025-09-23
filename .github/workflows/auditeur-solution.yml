@@ -1,0 +1,75 @@
+name: "🔍 Général L'Auditeur de Solution - Audit Solution"
+
+on:
+  workflow_call:
+    inputs:
+      proposition_solution:
+        description: "Proposition de solution à auditer (JSON string)"
+        required: true
+        type: string
+      metriques_actuelles:
+        description: "Métriques actuelles du système (JSON string)"
+        required: true
+        type: string
+    outputs:
+      statut_audit:
+        description: "Statut de l'audit solution (success/failure)"
+        value: ${{ jobs.audit-solution.outputs.statut }}
+      plan_implementation:
+        description: "Nom de l'artefact du plan d'implémentation"
+        value: "plan-implementation"
+
+jobs:
+  audit-solution:
+    name: "🔍 Audit Complet Solution"
+    runs-on: ubuntu-latest
+    
+    outputs:
+      statut: ${{ steps.contremaître.outputs.statut }}
+    
+    steps:
+      - name: "📁 Téléchargement du code source"
+        uses: actions/checkout@v4
+
+      - name: "🐍 Configuration Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: "🔍 Exécution du Contremaître Auditeur Solution"
+        id: contremaître
+        run: |
+          echo "🎯 === GÉNÉRAL L'AUDITEUR DE SOLUTION ==="
+          echo "Solution à auditer: $(echo '${{ inputs.proposition_solution }}' | jq -r '.type // "Non spécifié"')"
+          echo ""
+          
+          # Exécution du script Contremaître
+          python .github/scripts/auditeur_solution.py \
+            --proposition '${{ inputs.proposition_solution }}' \
+            --metriques '${{ inputs.metriques_actuelles }}'
+          
+          # Capture du code de retour
+          exit_code=$?
+          
+          if [ $exit_code -eq 0 ]; then
+            echo "statut=success" >> $GITHUB_OUTPUT
+            echo "✅ Audit solution terminé avec succès"
+          else
+            echo "statut=failure" >> $GITHUB_OUTPUT
+            echo "❌ Audit solution échoué"
+          fi
+
+      - name: "📊 Publication du résumé d'audit"
+        if: always()
+        run: |
+          echo "## 🔍 Audit Solution - Résultats" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Type de solution :** $(echo '${{ inputs.proposition_solution }}' | jq -r '.type // "Non spécifié"')" >> $GITHUB_STEP_SUMMARY
+          echo "**Statut final :** ${{ steps.contremaître.outputs.statut }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.contremaître.outputs.statut }}" = "success" ]; then
+            echo "✅ **Audit réussi** - Plan d'implémentation généré" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Audit échoué** - Solution non conforme aux critères" >> $GITHUB_STEP_SUMMARY
+          fi
