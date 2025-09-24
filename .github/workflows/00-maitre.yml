@@ -1,0 +1,247 @@
+name: "🚨 Maître - Contrôle Humain d'Urgence"
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: "Numéro de la Pull Request à approuver en urgence"
+        required: true
+        type: string
+      raison:
+        description: "Raison détaillée de ce contournement d'urgence"
+        required: true
+        type: string
+      loi_a_ignorer:
+        description: "Quelle validation ignorer ?"
+        required: true
+        type: choice
+        options:
+          - "Toutes - Approbation d'urgence complète"
+          - "Sécurité - Violations de sécurité acceptées"
+          - "Documentation - Couverture insuffisante acceptée"
+          - "Lignes - Limite de lignes dépassée acceptée" 
+          - "Issues - Création d'issues ignorée"
+          - "Sauvegarde - Archivage des rapports ignoré"
+          - "PlantUML - Mise à jour diagramme ignorée"
+      force_merge:
+        description: "Forcer le merge après approbation ?"
+        required: false
+        type: boolean
+        default: false
+
+env:
+  # Variables pour traçabilité maximale
+  EMERGENCY_TIMESTAMP: ${{ github.run_id }}-${{ github.run_number }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  controle_humain_urgence:
+    name: "🚨 Intervention Humaine d'Urgence"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "Checkout pour accès GitHub CLI"
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: "Validation des paramètres d'entrée"
+        run: |
+          echo "🔍 Validation des paramètres d'urgence..."
+          
+          # Validation du numéro de PR
+          if [ -z "${{ inputs.pull_request_number }}" ]; then
+            echo "❌ ERREUR: Numéro de Pull Request requis"
+            exit 1
+          fi
+          
+          # Validation de la raison
+          if [ ${#INPUT_RAISON} -lt 20 ]; then
+            echo "❌ ERREUR: Raison trop courte (minimum 20 caractères)"
+            echo "   Raison actuelle: '${{ inputs.raison }}'"
+            exit 1
+          fi
+          
+          echo "✅ Paramètres validés :"
+          echo "   • Pull Request: #${{ inputs.pull_request_number }}"
+          echo "   • Loi ignorée: ${{ inputs.loi_a_ignorer }}"
+          echo "   • Force merge: ${{ inputs.force_merge }}"
+          echo "   • Longueur raison: ${#INPUT_RAISON} caractères"
+        env:
+          INPUT_RAISON: ${{ inputs.raison }}
+      
+      - name: "Vérification de l'existence de la Pull Request"
+        id: check_pr
+        run: |
+          echo "🔍 Vérification de l'existence de PR #${{ inputs.pull_request_number }}..."
+          
+          # Récupérer les informations de la PR
+          if gh pr view "${{ inputs.pull_request_number }}" --json title,state,author,url > pr_info.json; then
+            echo "✅ Pull Request trouvée"
+            
+            # Extraire les informations
+            PR_TITLE=$(jq -r '.title' pr_info.json)
+            PR_STATE=$(jq -r '.state' pr_info.json) 
+            PR_AUTHOR=$(jq -r '.author.login' pr_info.json)
+            PR_URL=$(jq -r '.url' pr_info.json)
+            
+            echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
+            echo "pr_state=$PR_STATE" >> $GITHUB_OUTPUT
+            echo "pr_author=$PR_AUTHOR" >> $GITHUB_OUTPUT
+            echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+            
+            echo "   • Titre: $PR_TITLE"
+            echo "   • État: $PR_STATE"
+            echo "   • Auteur: $PR_AUTHOR"
+            echo "   • URL: $PR_URL"
+            
+            if [ "$PR_STATE" != "OPEN" ]; then
+              echo "⚠️ ATTENTION: PR dans l'état '$PR_STATE' (pas OPEN)"
+            fi
+          else
+            echo "❌ ERREUR: Pull Request #${{ inputs.pull_request_number }} introuvable"
+            exit 1
+          fi
+      
+      - name: "🚨 APPLICATION DU CONTOURNEMENT D'URGENCE"
+        id: emergency_override
+        run: |
+          echo "🚨 =========================================="
+          echo "🚨 APPLICATION DU CONTOURNEMENT D'URGENCE"
+          echo "🚨 =========================================="
+          
+          # Préparer le message d'urgence
+          URGENCY_MESSAGE=$(cat << 'EOL'
+          🚨 **CONTOURNEMENT D'URGENCE APPLIQUÉ** 🚨
+          
+          **Détails de l'intervention :**
+          - **Timestamp:** ${{ env.EMERGENCY_TIMESTAMP }}
+          - **Acteur:** ${{ github.actor }}
+          - **Run ID:** ${{ github.run_id }}
+          - **Loi ignorée:** ${{ inputs.loi_a_ignorer }}
+          
+          **Raison détaillée :**
+          ${{ inputs.raison }}
+          
+          **⚠️ IMPORTANT :** Cette action contourne les validations automatiques normales.
+          Une review post-merge est recommandée pour s'assurer de la conformité.
+          
+          **Traçabilité :** Cette action est automatiquement loggée et auditée.
+          
+          ---
+          *Workflow d'urgence déclenché par ${{ github.actor }} - ${{ github.run_id }}*
+          EOL
+          )
+          
+          echo "📝 Message d'urgence préparé"
+          
+          # Commenter sur la PR avec justification
+          echo "📝 Ajout du commentaire de traçabilité..."
+          gh pr comment "${{ inputs.pull_request_number }}" --body "$URGENCY_MESSAGE"
+          
+          # Approuver la Pull Request
+          echo "✅ Approbation d'urgence de la PR..."
+          gh pr review "${{ inputs.pull_request_number }}" --approve --body "🚨 APPROBATION D'URGENCE - Voir commentaire détaillé pour justification"
+          
+          # Si force merge demandé
+          if [ "${{ inputs.force_merge }}" = "true" ]; then
+            echo "🔀 Tentative de merge forcé..."
+            if gh pr merge "${{ inputs.pull_request_number }}" --merge --delete-branch; then
+              echo "✅ Merge forcé réussi"
+              echo "merge_status=SUCCESS" >> $GITHUB_OUTPUT
+            else
+              echo "⚠️ Merge forcé échoué (peut nécessiter intervention manuelle)"
+              echo "merge_status=FAILED" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⏸️ Merge forcé non demandé - PR approuvée mais non mergée"
+            echo "merge_status=SKIPPED" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "emergency_applied=true" >> $GITHUB_OUTPUT
+      
+      - name: "📋 Rapport d'urgence et traçabilité"
+        run: |
+          echo "## 🚨 Rapport de Contournement d'Urgence" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Pull Request concernée :** #${{ inputs.pull_request_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Titre :** ${{ steps.check_pr.outputs.pr_title }}" >> $GITHUB_STEP_SUMMARY  
+          echo "**Auteur original :** ${{ steps.check_pr.outputs.pr_author }}" >> $GITHUB_STEP_SUMMARY
+          echo "**URL :** ${{ steps.check_pr.outputs.pr_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**🚨 Action d'urgence effectuée :**" >> $GITHUB_STEP_SUMMARY
+          echo "- Loi ignorée : ${{ inputs.loi_a_ignorer }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Acteur : ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Timestamp : ${{ env.EMERGENCY_TIMESTAMP }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Merge forcé : ${{ inputs.force_merge }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Statut merge : ${{ steps.emergency_override.outputs.merge_status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Justification :**" >> $GITHUB_STEP_SUMMARY
+          echo "${{ inputs.raison }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ **Cette intervention d'urgence est tracée et auditée.**" >> $GITHUB_STEP_SUMMARY
+          
+          # Log pour audit externe
+          echo "🔍 Génération des logs d'audit..."
+          cat > emergency_audit_log.json << EOL
+          {
+            "emergency_override": {
+              "timestamp": "${{ env.EMERGENCY_TIMESTAMP }}",
+              "github_run_id": "${{ github.run_id }}",
+              "actor": "${{ github.actor }}",
+              "pull_request": {
+                "number": "${{ inputs.pull_request_number }}",
+                "title": "${{ steps.check_pr.outputs.pr_title }}",
+                "author": "${{ steps.check_pr.outputs.pr_author }}",
+                "url": "${{ steps.check_pr.outputs.pr_url }}"
+              },
+              "override_details": {
+                "law_ignored": "${{ inputs.loi_a_ignorer }}",
+                "reason": "${{ inputs.raison }}",
+                "force_merge": "${{ inputs.force_merge }}",
+                "merge_status": "${{ steps.emergency_override.outputs.merge_status }}"
+              }
+            }
+          }
+          EOL
+          
+          echo "📄 Log d'audit généré : emergency_audit_log.json"
+          echo "✅ Contournement d'urgence terminé avec traçabilité complète"
+      
+      - name: "📤 Upload du log d'audit"
+        uses: actions/upload-artifact@v3
+        with:
+          name: emergency-audit-log-${{ env.EMERGENCY_TIMESTAMP }}
+          path: emergency_audit_log.json
+          retention-days: 365  # Garder 1 an pour audit
+      
+      - name: "⚠️ Notification post-urgence"
+        run: |
+          echo "⚠️ ============================================="
+          echo "⚠️ CONTOURNEMENT D'URGENCE TERMINÉ"
+          echo "⚠️ ============================================="
+          echo ""
+          echo "✅ Actions effectuées avec succès :"
+          echo "   • Commentaire de traçabilité ajouté"
+          echo "   • Pull Request approuvée en urgence"
+          echo "   • Log d'audit généré et archivé"
+          
+          if [ "${{ inputs.force_merge }}" = "true" ]; then
+            if [ "${{ steps.emergency_override.outputs.merge_status }}" = "SUCCESS" ]; then
+              echo "   • Merge forcé réussi ✅"
+            else
+              echo "   • Merge forcé échoué ⚠️"
+              echo ""
+              echo "🔧 Action manuelle requise :"
+              echo "   Vérifiez manuellement la PR #${{ inputs.pull_request_number }}"
+            fi
+          fi
+          
+          echo ""
+          echo "📋 Recommandations post-urgence :"
+          echo "   1. Vérifiez que la PR mergée fonctionne correctement"
+          echo "   2. Planifiez une review post-merge si nécessaire"
+          echo "   3. Considérez mettre à jour les règles de validation"
+          echo "   4. Le log d'audit est disponible pendant 365 jours"
+          echo ""
+          echo "🔍 Traçabilité : Run ID ${{ github.run_id }}"
