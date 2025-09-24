@@ -1,224 +1,75 @@
-name: "Travailleur : Parser AST Python"
+name: "Travailleur : AST Parser"
 
 on:
   workflow_call:
     inputs:
       contenu_fichier_python:
-        description: "Contenu Python à analyser ou chemin vers fichier .py"
+        description: "Contenu du fichier Python à parser"
         required: true
         type: string
-      niveau_detail:
-        description: "Niveau de détail de l'analyse AST (basic/complet)"
-        required: false
-        default: "complet"
-        type: string
       nom_artefact:
-        description: "Nom de l'artefact JSON de sortie"
+        description: "Nom de l'artefact de sortie"
         required: false
         default: "arbre-syntaxe.json"
         type: string
     outputs:
-      elements_detectes:
-        description: "Nombre total d'éléments AST détectés"
-        value: ${{ jobs.parse_ast.outputs.element_count }}
-      parsing_success:
-        description: "Succès du parsing AST (true/false)"
-        value: ${{ jobs.parse_ast.outputs.success }}
+      nodes_found:
+        description: "Nombre de noeuds AST trouvés"
+        value: ${{ jobs.parse_ast.outputs.count }}
       artefact_path:
-        description: "Chemin vers l'artefact AST généré"
+        description: "Chemin vers l'artefact"
         value: ${{ jobs.parse_ast.outputs.artifact_path }}
 
 jobs:
   parse_ast:
-    name: "Analyse AST Python"
+    name: "Parse AST Python"
     runs-on: ubuntu-latest
     outputs:
-      element_count: ${{ steps.ast.outputs.element_count }}
-      success: ${{ steps.ast.outputs.success }}
-      artifact_path: ${{ steps.ast.outputs.artifact_path }}
+      count: ${{ steps.parse.outputs.node_count }}
+      artifact_path: ${{ steps.parse.outputs.artifact_path }}
     
     steps:
-      - name: "Checkout du code"
+      - name: "Checkout"
         uses: actions/checkout@v4
       
-      - name: "Configuration Python 3.11"
+      - name: "Setup Python"
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
       
-      - name: "Installation des dépendances Python"
+      - name: "Parse AST"
+        id: parse
         run: |
-          python -m pip install --upgrade pip
-          # Utilise seulement la stdlib Python (module ast)
-      
-      - name: "Validation du niveau de détail"
-        run: |
-          if [ "${{ inputs.niveau_detail }}" != "basic" ] && [ "${{ inputs.niveau_detail }}" != "complet" ]; then
-            echo "❌ ERREUR: Niveau de détail invalide : ${{ inputs.niveau_detail }}"
-            echo "Valeurs autorisées: basic, complet"
-            exit 1
-          fi
-          echo "✅ Niveau de détail validé : ${{ inputs.niveau_detail }}"
-      
-      - name: "Préparation du code Python d'entrée"
-        id: prepare_code
-        run: |
-          # Vérifier si c'est un fichier Python existant
-          if [ -f "${{ inputs.contenu_fichier_python }}" ] && [[ "${{ inputs.contenu_fichier_python }}" == *.py ]]; then
-            echo "🐍 Fichier Python détecté : ${{ inputs.contenu_fichier_python }}"
-            echo "📊 Taille : $(stat -c%s "${{ inputs.contenu_fichier_python }}") octets"
-            echo "📋 Lignes : $(wc -l < "${{ inputs.contenu_fichier_python }}")"
-            echo "content_type=file" >> $GITHUB_OUTPUT
-          else
-            echo "📝 Code Python direct ($(echo '${{ inputs.contenu_fichier_python }}' | wc -c) caractères)"
-            echo "content_type=inline" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: "Validation syntaxe Python préliminaire"
-        run: |
-          echo "🔍 Pré-validation de la syntaxe Python :"
-          python -c "
-import ast
-import sys
-try:
-    # Test rapide de parsing
-    contenu = '''${{ inputs.contenu_fichier_python }}'''
-    if '${{ steps.prepare_code.outputs.content_type }}' == 'file':
-        with open('${{ inputs.contenu_fichier_python }}', 'r') as f:
-            contenu = f.read()
-    
-    if contenu.strip():
-        ast.parse(contenu)
-        print('✅ Syntaxe Python valide')
-    else:
-        print('⚠️  Code vide - parsing possible mais aucun élément')
-except SyntaxError as e:
-    print(f'⚠️  Erreur syntaxe détectée (sera traitée par le parser): {e}')
-except Exception as e:
-    print(f'⚠️  Autre erreur (sera traitée par le parser): {e}')
-"
-      
-      - name: "Exécution du parser AST"
-        id: ast
-        run: |
-          python .github/scripts/travailleur_ast_parser.py \
-            --contenu-fichier-python "${{ inputs.contenu_fichier_python }}" \
-            --niveau-detail "${{ inputs.niveau_detail }}" \
-            --sortie "${{ inputs.nom_artefact }}"
+          echo "Parsing AST Python..."
           
-          # Extraction des statistiques pour les outputs
-          if [ -f "${{ inputs.nom_artefact }}" ]; then
-            # Vérifier si le parsing a réussi
-            has_error=$(python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    print('true' if 'erreur' in data else 'false')
-except:
-    print('true')
-")
+          if python .github/scripts/travailleur_ast_parser.py \
+            --contenu "${{ inputs.contenu_fichier_python }}" \
+            --output "${{ inputs.nom_artefact }}"; then
             
-            if [ "$has_error" = "true" ]; then
-              echo "success=false" >> $GITHUB_OUTPUT
-              echo "element_count=0" >> $GITHUB_OUTPUT
-              echo "⚠️  Parsing AST échoué (erreur de syntaxe)"
+            echo "AST parsing réussi"
+            
+            if [ -f "${{ inputs.nom_artefact }}" ]; then
+              node_count=$(jq -r '.nodes | length' "${{ inputs.nom_artefact }}" 2>/dev/null || echo "0")
+              
+              echo "node_count=$node_count" >> $GITHUB_OUTPUT
+              echo "artifact_path=${{ inputs.nom_artefact }}" >> $GITHUB_OUTPUT
+              
+              echo "AST parsé - $node_count noeuds trouvés"
             else
-              count=$(python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    print(data.get('elements_ast', {}).get('total', 0))
-except:
-    print(0)
-")
-              echo "success=true" >> $GITHUB_OUTPUT
-              echo "element_count=$count" >> $GITHUB_OUTPUT
-              echo "🎯 $count éléments AST détectés"
+              echo "ERREUR: Artefact AST non créé"
+              echo "node_count=0" >> $GITHUB_OUTPUT
+              exit 1
             fi
-            
-            echo "artifact_path=${{ inputs.nom_artefact }}" >> $GITHUB_OUTPUT
           else
-            echo "success=false" >> $GITHUB_OUTPUT
-            echo "element_count=0" >> $GITHUB_OUTPUT
-            echo "❌ ERREUR: Artefact AST non créé"
+            echo "ERREUR: Script AST parser a échoué"
+            echo "node_count=0" >> $GITHUB_OUTPUT
             exit 1
           fi
       
-      - name: "Upload de l'artefact AST"
-        uses: actions/upload-artifact@v3
+      - name: "Upload artefact"
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.nom_artefact }}
           path: ${{ inputs.nom_artefact }}
           retention-days: 30
-      
-      - name: "Rapport d'analyse AST et validation"
-        run: |
-          if [ -f "${{ inputs.nom_artefact }}" ]; then
-            echo "📄 Artefact AST créé : ${{ inputs.nom_artefact }}"
-            echo "📊 Taille : $(stat -c%s "${{ inputs.nom_artefact }}") octets"
-            
-            # Affichage d'un résumé de l'analyse AST
-            echo "🐍 Résumé de l'analyse AST Python :"
-            python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    
-    if 'erreur' in data:
-        print(f'   ❌ Erreur: {data[\"erreur\"]}')
-        return
-    
-    stats = data['code_stats']
-    elements = data['elements_ast']
-    
-    print(f'   • Niveau détail : {data[\"niveau_detail\"]}')
-    print(f'   • Code analysé : {stats[\"taille_caracteres\"]} caractères, {stats[\"lignes\"]} lignes')
-    print(f'   • Lignes non vides : {stats[\"lignes_non_vides\"]}')
-    print(f'   • Total éléments AST : {elements[\"total\"]}')
-    
-    if elements['total'] > 0:
-        print('   • Répartition des éléments :')
-        for type_elem, count in elements.items():
-            if type_elem != 'total' and count > 0:
-                print(f'     - {type_elem}: {count}')
-    
-    structure = data['structure']
-    if structure and 'elements' in structure:
-        print(f'   • Éléments de premier niveau : {len(structure[\"elements\"])}')
-        if structure['elements']:
-            print('   • Échantillon :')
-            for elem in structure['elements'][:3]:
-                print(f'     - {elem[\"type\"]}: {elem.get(\"nom\", \"N/A\")} (ligne {elem.get(\"ligne\", \"N/A\")})')
-            if len(structure['elements']) > 3:
-                print(f'     ... et {len(structure[\"elements\"]) - 3} autres')
-                
-except Exception as e:
-    print(f'❌ Erreur lecture résultats AST : {e}')
-"
-          else
-            echo "❌ ERREUR: Fichier de résultats AST non trouvé"
-            exit 1
-          fi
-          
-          if [ "${{ steps.ast.outputs.success }}" = "true" ]; then
-            echo "✅ Analyse AST terminée avec succès"
-          else
-            echo "⚠️  Analyse AST terminée avec des erreurs"
-          fi
-      
-      - name: "Debug - Structure détaillée AST"
-        if: runner.debug == '1'
-        run: |
-          echo "🔍 Structure complète de l'AST :"
-          python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    print(json.dumps(data, indent=2, ensure_ascii=False))
-except Exception as e:
-    print(f'Erreur affichage debug : {e}')
-"

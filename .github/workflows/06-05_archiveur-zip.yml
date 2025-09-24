@@ -4,249 +4,73 @@ on:
   workflow_call:
     inputs:
       nom_archive:
-        description: "Nom de l'archive ZIP à créer (avec ou sans extension .zip)"
+        description: "Nom de l'archive ZIP à créer"
         required: true
         type: string
       fichiers_a_zipper:
-        description: "JSON array des fichiers/dossiers à archiver (support wildcards)"
+        description: "Liste des fichiers à archiver (JSON array)"
         required: true
         type: string
-      compression:
-        description: "Méthode de compression (none/deflate/bzip2/lzma)"
-        required: false
-        default: "deflate"
-        type: string
-      inclure_dossiers_vides:
-        description: "Inclure les dossiers vides dans l'archive"
-        required: false
-        default: false
-        type: boolean
     outputs:
       archive_path:
-        description: "Chemin vers l'archive ZIP créée"
-        value: ${{ jobs.create_zip.outputs.archive_path }}
+        description: "Chemin vers l'archive créée"
+        value: ${{ jobs.create_zip.outputs.path }}
       archive_size:
-        description: "Taille de l'archive créée en octets"
-        value: ${{ jobs.create_zip.outputs.archive_size }}
-      files_count:
-        description: "Nombre de fichiers archivés"
-        value: ${{ jobs.create_zip.outputs.files_count }}
+        description: "Taille de l'archive en bytes"
+        value: ${{ jobs.create_zip.outputs.size }}
 
 jobs:
   create_zip:
     name: "Création archive ZIP"
     runs-on: ubuntu-latest
     outputs:
-      archive_path: ${{ steps.archiver.outputs.archive_path }}
-      archive_size: ${{ steps.archiver.outputs.archive_size }}
-      files_count: ${{ steps.archiver.outputs.files_count }}
+      path: ${{ steps.zip.outputs.archive_path }}
+      size: ${{ steps.zip.outputs.archive_size }}
     
     steps:
-      - name: "Checkout du code"
+      - name: "Checkout"
         uses: actions/checkout@v4
       
-      - name: "Configuration Python 3.11"
+      - name: "Setup Python"
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
       
-      - name: "Installation des dépendances Python"
+      - name: "Créer ZIP"
+        id: zip
         run: |
-          python -m pip install --upgrade pip
-          # Utilise seulement la stdlib Python (zipfile, glob)
-      
-      - name: "Validation des paramètres d'entrée"
-        run: |
-          echo "🔍 Validation des paramètres d'archivage :"
+          echo "Création archive ZIP..."
           
-          # Validation du nom d'archive
-          if [ -z "${{ inputs.nom_archive }}" ]; then
-            echo "❌ ERREUR: Nom d'archive requis"
-            exit 1
-          fi
-          echo "✅ Nom d'archive : ${{ inputs.nom_archive }}"
-          
-          # Validation de la méthode de compression
-          case "${{ inputs.compression }}" in
-            none|deflate|bzip2|lzma)
-              echo "✅ Compression : ${{ inputs.compression }}"
-              ;;
-            *)
-              echo "❌ ERREUR: Méthode de compression invalide : ${{ inputs.compression }}"
-              echo "Valeurs acceptées: none, deflate, bzip2, lzma"
-              exit 1
-              ;;
-          esac
-          
-          # Validation du JSON des fichiers
-          python -c "
-import json
-import sys
-try:
-    fichiers = json.loads('${{ inputs.fichiers_a_zipper }}')
-    if not isinstance(fichiers, list):
-        raise ValueError('Fichiers doivent être une liste')
-    print(f'✅ Fichiers à archiver : {len(fichiers)} éléments')
-    for i, fichier in enumerate(fichiers[:5]):  # Afficher les 5 premiers
-        print(f'   {i+1}. {fichier}')
-    if len(fichiers) > 5:
-        print(f'   ... et {len(fichiers) - 5} autres')
-except Exception as e:
-    print(f'❌ ERREUR Fichiers: {e}')
-    sys.exit(1)
-"
-      
-      - name: "Préparation de l'espace de travail"
-        run: |
-          echo "📁 État du répertoire de travail :"
-          echo "   • Répertoire actuel : $(pwd)"
-          echo "   • Espace disque disponible :"
-          df -h . | tail -1
-          
-          echo "🔍 Vérification de la présence des fichiers à archiver :"
-          python -c "
-import json
-import os
-import glob
-fichiers = json.loads('${{ inputs.fichiers_a_zipper }}')
-existants = 0
-for fichier in fichiers:
-    if '*' in fichier or '?' in fichier:
-        matches = glob.glob(fichier, recursive=True)
-        if matches:
-            print(f'   ✅ {fichier} -> {len(matches)} correspondance(s)')
-            existants += len(matches)
-        else:
-            print(f'   ⚠️  {fichier} -> aucune correspondance')
-    else:
-        if os.path.exists(fichier):
-            print(f'   ✅ {fichier}')
-            existants += 1
-        else:
-            print(f'   ⚠️  {fichier} -> non trouvé')
-print(f'📊 Total éléments existants : {existants}')
-"
-      
-      - name: "Exécution de l'archiveur ZIP"
-        id: archiver
-        run: |
-          python .github/scripts/travailleur_archiveur_zip.py \
+          if python .github/scripts/travailleur_archiveur_zip.py \
             --nom-archive "${{ inputs.nom_archive }}" \
-            --fichiers-a-zipper '${{ inputs.fichiers_a_zipper }}' \
-            --compression "${{ inputs.compression }}" \
-            ${{ inputs.inclure_dossiers_vides && '--inclure-dossiers-vides' || '' }}
-          
-          # Extraction des statistiques pour les outputs
-          archive_name="${{ inputs.nom_archive }}"
-          if [[ ! "$archive_name" == *.zip ]]; then
-            archive_name="${archive_name}.zip"
-          fi
-          
-          if [ -f "$archive_name" ]; then
-            archive_size=$(stat -c%s "$archive_name")
-            echo "archive_path=$archive_name" >> $GITHUB_OUTPUT
-            echo "archive_size=$archive_size" >> $GITHUB_OUTPUT
+            --fichiers '${{ inputs.fichiers_a_zipper }}'; then
             
-            # Compter les fichiers dans l'archive
-            files_count=$(python -c "
-import zipfile
-try:
-    with zipfile.ZipFile('$archive_name', 'r') as zf:
-        print(len([f for f in zf.namelist() if not f.endswith('/')]))
-except:
-    print(0)
-")
-            echo "files_count=$files_count" >> $GITHUB_OUTPUT
-            echo "📦 Archive créée : $archive_name ($archive_size octets, $files_count fichiers)"
-          else
-            echo "archive_path=" >> $GITHUB_OUTPUT
-            echo "archive_size=0" >> $GITHUB_OUTPUT
-            echo "files_count=0" >> $GITHUB_OUTPUT
-            echo "❌ ERREUR: Archive non créée"
-            exit 1
-          fi
-      
-      - name: "Upload de l'artefact archive ZIP"
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.archiver.outputs.archive_path }}
-          path: ${{ steps.archiver.outputs.archive_path }}
-          retention-days: 30
-      
-      - name: "Rapport d'archivage et validation"
-        run: |
-          archive_path="${{ steps.archiver.outputs.archive_path }}"
-          
-          if [ -f "$archive_path" ]; then
-            echo "📄 Archive créée : $archive_path"
-            echo "📊 Statistiques finales :"
-            echo "   • Taille : ${{ steps.archiver.outputs.archive_size }} octets"
-            echo "   • Fichiers : ${{ steps.archiver.outputs.files_count }}"
-            echo "   • Compression : ${{ inputs.compression }}"
+            echo "Archive ZIP créée"
             
-            # Test final de l'intégrité
-            echo "🔍 Test final d'intégrité :"
-            if python -c "
-import zipfile
-import sys
-try:
-    with zipfile.ZipFile('$archive_path', 'r') as zf:
-        bad_file = zf.testzip()
-        if bad_file:
-            print(f'❌ Fichier corrompu: {bad_file}')
-            sys.exit(1)
-        else:
-            print('✅ Archive intègre')
-            files = [f for f in zf.namelist() if not f.endswith('/')]
-            print(f'✅ {len(files)} fichiers archivés')
-            # Afficher quelques fichiers d'exemple
-            for f in files[:3]:
-                info = zf.getinfo(f)
-                print(f'   • {f} ({info.file_size} octets)')
-            if len(files) > 3:
-                print(f'   ... et {len(files) - 3} autres fichiers')
-except Exception as e:
-    print(f'❌ Erreur test intégrité: {e}')
-    sys.exit(1)
-"; then
-              echo "✅ Archive ZIP validée avec succès"
+            if [ -f "${{ inputs.nom_archive }}" ]; then
+              archive_size=$(stat -c%s "${{ inputs.nom_archive }}")
+              
+              echo "archive_path=${{ inputs.nom_archive }}" >> $GITHUB_OUTPUT
+              echo "archive_size=$archive_size" >> $GITHUB_OUTPUT
+              
+              echo "Archive créée - $archive_size bytes"
             else
-              echo "❌ Échec validation de l'archive"
+              echo "ERREUR: Archive non créée"
+              echo "archive_path=" >> $GITHUB_OUTPUT
+              echo "archive_size=0" >> $GITHUB_OUTPUT
               exit 1
             fi
           else
-            echo "❌ ERREUR: Fichier d'archive non trouvé"
+            echo "ERREUR: Script archiveur a échoué"
+            echo "archive_path=" >> $GITHUB_OUTPUT
+            echo "archive_size=0" >> $GITHUB_OUTPUT
             exit 1
           fi
       
-      - name: "Nettoyage de l'espace de travail"
+      - name: "Upload archive"
         if: always()
-        run: |
-          echo "🧹 Nettoyage final :"
-          echo "   • Archive finale : ${{ steps.archiver.outputs.archive_path }}"
-          echo "   • Espace disque après archivage :"
-          df -h . | tail -1
-          
-          # Afficher l'arborescence finale (si pas trop de fichiers)
-          if command -v tree >/dev/null 2>&1; then
-            echo "🌳 Arborescence finale :"
-            tree -L 2 -a || ls -la
-          else
-            echo "📁 Contenu final :"
-            ls -la
-          fi
-      
-      - name: "Debug - Détails de l'archive"
-        if: runner.debug == '1'
-        run: |
-          archive_path="${{ steps.archiver.outputs.archive_path }}"
-          if [ -f "$archive_path" ]; then
-            echo "🔍 Analyse détaillée de l'archive :"
-            python -c "
-import zipfile
-with zipfile.ZipFile('$archive_path', 'r') as zf:
-    print('Contenu complet de l\\'archive :')
-    for info in zf.infolist():
-        print(f'  {info.filename}: {info.file_size} -> {info.compress_size} octets ({info.compress_type})')
-"
-          fi
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.nom_archive }}
+          path: ${{ inputs.nom_archive }}
+          retention-days: 30
