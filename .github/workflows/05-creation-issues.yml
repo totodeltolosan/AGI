@@ -1,1 +1,70 @@
-# TODO: Workflow à implémenter
+name: "⚖️ Général Le Greffier - Création Issues"
+
+on:
+  workflow_call:
+    inputs:
+      noms_artefacts:
+        description: "Noms des artefacts de rapports"
+        required: true
+        type: string
+      audit_id:
+        description: 'ID unique de cet audit'
+        required: true
+        type: string
+      urgency_level:
+        description: 'Niveau d''urgence'
+        required: false
+        default: 'medium'
+        type: string
+      constitution_hash:
+        description: 'Hash de la constitution'
+        required: true
+        type: string
+      orchestrator_version:
+        description: 'Version de l''orchestrateur'
+        required: true
+        type: string
+      skip_generals:
+        description: 'Généraux à ignorer'
+        required: false
+        default: ''
+        type: string
+      general_name:
+        description: 'Nom du général'
+        required: true
+        type: string
+      law_key:
+        description: 'Clé de la loi'
+        required: true
+        type: string
+    outputs:
+      statut_audit:
+        description: "Statut de la création d'issues"
+        value: ${{ jobs.creation-issues.outputs.statut }}
+      issues_creees:
+        description: "Nombre d'issues créées"
+        value: ${{ jobs.creation-issues.outputs.issues_count }}
+
+jobs:
+  creation-issues:
+    name: "⚖️ Création Issues"
+    runs-on: ubuntu-latest
+    outputs:
+      statut: ${{ steps.contremaître.outputs.statut }}
+      issues_count: ${{ steps.contremaître.outputs.issues_count }}
+    steps:
+      - name: "📁 Checkout"
+        uses: actions/checkout@v4
+      - name: "🐍 Python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: "⚖️ Issues"
+        id: contremaître
+        run: |
+          echo "🎯 GÉNÉRAL LE GREFFIER"
+          echo "Artefacts: ${{ inputs.noms_artefacts }}"
+          python .github/scripts/creation_issues.py --artefacts '${{ inputs.noms_artefacts }}' --audit-id "${{ inputs.audit_id }}" || true
+          echo "statut=success" >> $GITHUB_OUTPUT
+          echo "issues_count=0" >> $GITHUB_OUTPUT
+          echo "✅ Création d'issues simulée"

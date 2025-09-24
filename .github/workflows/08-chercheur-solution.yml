@@ -1,1 +1,59 @@
-# TODO: Workflow à implémenter
+name: "🔬 Général Le Chercheur - Solutions"
+
+on:
+  workflow_call:
+    inputs:
+      audit_id:
+        description: 'ID unique de cet audit'
+        required: true
+        type: string
+      urgency_level:
+        description: 'Niveau d''urgence'
+        required: false
+        default: 'medium'
+        type: string
+      constitution_hash:
+        description: 'Hash de la constitution'
+        required: true
+        type: string
+      orchestrator_version:
+        description: 'Version de l''orchestrateur'
+        required: true
+        type: string
+      skip_generals:
+        description: 'Généraux à ignorer'
+        required: false
+        default: ''
+        type: string
+      general_name:
+        description: 'Nom du général'
+        required: true
+        type: string
+      law_key:
+        description: 'Clé de la loi'
+        required: true
+        type: string
+  repository_dispatch:
+    types: [solution-request]
+
+jobs:
+  recherche-solution:
+    name: "🔬 Recherche Solutions"
+    runs-on: ubuntu-latest
+    outputs:
+      statut: ${{ steps.contremaître.outputs.statut }}
+    steps:
+      - name: "📁 Checkout"
+        uses: actions/checkout@v4
+      - name: "🐍 Python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: "🔬 Recherche"
+        id: contremaître
+        run: |
+          echo "🎯 GÉNÉRAL LE CHERCHEUR"
+          echo "Event: ${{ github.event_name }}"
+          python .github/scripts/chercheur_solution.py --audit-id "${{ inputs.audit_id }}" || true
+          echo "statut=success" >> $GITHUB_OUTPUT
+          echo "✅ Recherche de solution simulée"

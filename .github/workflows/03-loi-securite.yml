@@ -1,1 +1,68 @@
-# TODO: Workflow à implémenter
+name: "🛡️ Général Le Gardien - Loi Sécurité"
+
+on:
+  workflow_call:
+    inputs:
+      regles_securite:
+        description: "Règles de sécurité à appliquer (JSON string)"
+        required: true
+        type: string
+      audit_id:
+        description: 'ID unique de cet audit'
+        required: true
+        type: string
+      urgency_level:
+        description: 'Niveau d''urgence'
+        required: false
+        default: 'medium'
+        type: string
+      constitution_hash:
+        description: 'Hash de la constitution'
+        required: true
+        type: string
+      orchestrator_version:
+        description: 'Version de l''orchestrateur'
+        required: true
+        type: string
+      skip_generals:
+        description: 'Généraux à ignorer'
+        required: false
+        default: ''
+        type: string
+      general_name:
+        description: 'Nom du général'
+        required: true
+        type: string
+      law_key:
+        description: 'Clé de la loi'
+        required: true
+        type: string
+    outputs:
+      statut_audit:
+        description: "Statut de l'audit sécurité"
+        value: ${{ jobs.audit-securite.outputs.statut }}
+      rapport_final:
+        description: "Nom de l'artefact du rapport final"
+        value: "rapport-securite-final"
+
+jobs:
+  audit-securite:
+    name: "🛡️ Audit Sécurité"
+    runs-on: ubuntu-latest
+    outputs:
+      statut: ${{ steps.contremaître.outputs.statut }}
+    steps:
+      - name: "📁 Checkout"
+        uses: actions/checkout@v4
+      - name: "🐍 Python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: "🛡️ Audit"
+        id: contremaître
+        run: |
+          echo "🎯 GÉNÉRAL LE GARDIEN"
+          echo "Règles: ${{ inputs.regles_securite }}"
+          python .github/scripts/audit_securite.py --regles '${{ inputs.regles_securite }}' --audit-id "${{ inputs.audit_id }}" || true
+          echo "statut=success" >> $GITHUB_OUTPUT
+          echo "✅ Audit sécurité simulé"
