@@ -1,167 +1,80 @@
-name: "Travailleur : Applicateur Regex"
+name: "Travailleur : Regex Applicateur"
 
 on:
   workflow_call:
     inputs:
       contenu:
-        description: "Contenu textuel à analyser ou chemin vers un fichier"
+        description: "Contenu textuel à analyser"
         required: true
         type: string
       regle_regex:
-        description: "Configuration JSON de la règle regex (pattern, flags, nom, etc.)"
+        description: "Règle regex à appliquer (JSON)"
         required: true
         type: string
       nom_artefact:
-        description: "Nom de l'artefact JSON de sortie"
+        description: "Nom de l'artefact de sortie"
         required: false
         default: "resultats-regex.json"
         type: string
     outputs:
-      correspondances_trouvees:
+      matches_found:
         description: "Nombre de correspondances trouvées"
-        value: ${{ jobs.apply_regex.outputs.match_count }}
+        value: ${{ jobs.apply_regex.outputs.count }}
       artefact_path:
-        description: "Chemin vers l'artefact des résultats"
+        description: "Chemin vers l'artefact"
         value: ${{ jobs.apply_regex.outputs.artifact_path }}
 
 jobs:
   apply_regex:
-    name: "Application expression régulière"
+    name: "Application regex"
     runs-on: ubuntu-latest
     outputs:
-      match_count: ${{ steps.regex.outputs.match_count }}
+      count: ${{ steps.regex.outputs.match_count }}
       artifact_path: ${{ steps.regex.outputs.artifact_path }}
     
     steps:
-      - name: "Checkout du code"
+      - name: "Checkout"
         uses: actions/checkout@v4
       
-      - name: "Configuration Python 3.11"
+      - name: "Setup Python"
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
       
-      - name: "Installation des dépendances Python"
-        run: |
-          python -m pip install --upgrade pip
-          # Utilise seulement la stdlib Python (module re)
-      
-      - name: "Validation de la règle regex"
-        run: |
-          echo "🔍 Validation de la configuration regex :"
-          python -c "
-import json
-import sys
-try:
-    regle = json.loads('${{ inputs.regle_regex }}')
-    print(f'✅ Pattern: {regle.get(\"pattern\", \"NON DÉFINI\")}')
-    print(f'   Nom: {regle.get(\"nom\", \"regex_search\")}')
-    print(f'   Flags: {regle.get(\"flags\", [])}')
-    if 'pattern' not in regle:
-        print('❌ ERREUR: Champ \"pattern\" requis manquant')
-        sys.exit(1)
-except json.JSONDecodeError as e:
-    print(f'❌ ERREUR: JSON invalide - {e}')
-    sys.exit(1)
-except Exception as e:
-    print(f'❌ ERREUR: Validation échouée - {e}')
-    sys.exit(1)
-"
-      
-      - name: "Préparation du contenu d'entrée"
-        id: prepare_content
-        run: |
-          # Si le contenu semble être un chemin de fichier, vérifier son existence
-          if [ -f "${{ inputs.contenu }}" ]; then
-            echo "📁 Fichier détecté : ${{ inputs.contenu }}"
-            echo "📊 Taille : $(stat -c%s "${{ inputs.contenu }}") octets"
-            echo "content_type=file" >> $GITHUB_OUTPUT
-          else
-            echo "📝 Contenu textuel direct ($(echo '${{ inputs.contenu }}' | wc -c) caractères)"
-            echo "content_type=text" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: "Exécution de l'applicateur regex"
+      - name: "Application regex"
         id: regex
         run: |
-          python .github/scripts/travailleur_regex_applicateur.py \
-            --contenu "${{ inputs.contenu }}" \
-            --regle-regex '${{ inputs.regle_regex }}' \
-            --sortie "${{ inputs.nom_artefact }}"
+          echo "Application des règles regex..."
           
-          # Extraction du nombre de correspondances pour les outputs
-          if [ -f "${{ inputs.nom_artefact }}" ]; then
-            count=$(python -c "import json; data=json.load(open('${{ inputs.nom_artefact }}')); print(data.get('total_correspondances', 0))")
-            echo "match_count=$count" >> $GITHUB_OUTPUT
-            echo "artifact_path=${{ inputs.nom_artefact }}" >> $GITHUB_OUTPUT
-            echo "🎯 $count correspondances trouvées"
+          if python .github/scripts/travailleur_regex_applicateur.py \
+            --contenu "${{ inputs.contenu }}" \
+            --regle '${{ inputs.regle_regex }}' \
+            --output "${{ inputs.nom_artefact }}"; then
+            
+            echo "Script exécuté avec succès"
+            
+            if [ -f "${{ inputs.nom_artefact }}" ]; then
+              match_count=$(jq -r '.matches | length' "${{ inputs.nom_artefact }}" 2>/dev/null || echo "0")
+              
+              echo "match_count=$match_count" >> $GITHUB_OUTPUT
+              echo "artifact_path=${{ inputs.nom_artefact }}" >> $GITHUB_OUTPUT
+              
+              echo "Regex appliquée - $match_count correspondances trouvées"
+            else
+              echo "ERREUR: Artefact non créé"
+              echo "match_count=0" >> $GITHUB_OUTPUT
+              exit 1
+            fi
           else
+            echo "ERREUR: Script regex a échoué"
             echo "match_count=0" >> $GITHUB_OUTPUT
-            echo "❌ ERREUR: Artefact de résultats non créé"
             exit 1
           fi
       
-      - name: "Upload de l'artefact résultats regex"
-        uses: actions/upload-artifact@v3
+      - name: "Upload artefact"
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.nom_artefact }}
           path: ${{ inputs.nom_artefact }}
           retention-days: 30
-      
-      - name: "Rapport d'analyse et validation"
-        run: |
-          if [ -f "${{ inputs.nom_artefact }}" ]; then
-            echo "📄 Artefact créé : ${{ inputs.nom_artefact }}"
-            echo "📊 Taille : $(stat -c%s "${{ inputs.nom_artefact }}") octets"
-            
-            # Affichage d'un résumé de l'analyse
-            echo "🔎 Résumé de l'analyse regex :"
-            python -c "
-import json
-with open('${{ inputs.nom_artefact }}', 'r') as f:
-    data = json.load(f)
-regle = data['regle']
-stats = data['contenu_stats']
-print(f'   • Pattern : {regle[\"pattern\"]}')
-print(f'   • Nom règle : {regle.get(\"nom\", \"N/A\")}')
-print(f'   • Flags : {regle.get(\"flags\", [])}')
-print(f'   • Contenu analysé : {stats[\"taille_caracteres\"]} caractères, {stats[\"lignes\"]} lignes')
-print(f'   • Total correspondances : {data[\"total_correspondances\"]}')
-if data['correspondances']:
-    print('   • Échantillon des correspondances :')
-    for i, match in enumerate(data['correspondances'][:3]):
-        print(f'     - Ligne {match[\"ligne\"]}: \"{match[\"match_complet\"][:40]}\"')
-    if len(data['correspondances']) > 3:
-        print(f'     ... et {len(data[\"correspondances\"]) - 3} autres')
-"
-          else
-            echo "❌ ERREUR: Fichier de résultats non trouvé"
-            exit 1
-          fi
-          
-          echo "✅ Application regex terminée avec succès"
-      
-      - name: "Debug - Validation structure JSON"
-        if: runner.debug == '1'
-        run: |
-          echo "🔍 Validation de la structure JSON des résultats :"
-          python -c "
-import json
-import sys
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    
-    required_keys = ['regle', 'timestamp', 'contenu_stats', 'total_correspondances', 'correspondances']
-    for key in required_keys:
-        if key not in data:
-            print(f'❌ Clé manquante : {key}')
-            sys.exit(1)
-        else:
-            print(f'✅ {key}: OK')
-    
-    print('✅ Structure JSON valide')
-except Exception as e:
-    print(f'❌ Erreur validation JSON : {e}')
-    sys.exit(1)
-"
