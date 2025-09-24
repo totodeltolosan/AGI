@@ -74,20 +74,21 @@ jobs:
           fi
           
           if [ ! -e "${{ inputs.chemin_fichier_ou_dossier }}" ]; then
-            echo "⚠️ AVERTISSEMENT: Chemin non trouvé : ${{ inputs.chemin_fichier_ou_dossier }}"
-            echo "   • Le fichier/dossier peut être nouveau ou supprimé"
-            echo "   • L'analyse continue avec l'historique Git"
-          else
-            echo "✅ Chemin validé : ${{ inputs.chemin_fichier_ou_dossier }}"
+            echo "❌ ERREUR: Chemin introuvable : ${{ inputs.chemin_fichier_ou_dossier }}"
+            echo "📁 Contenu du répertoire actuel :"
+            ls -la
+            exit 1
           fi
+          echo "✅ Chemin validé : ${{ inputs.chemin_fichier_ou_dossier }}"
           
-          # Validation du format
+          # Validation du format de sortie
           case "${{ inputs.format_sortie }}" in
             timestamp|iso|human)
-              echo "✅ Format de sortie validé : ${{ inputs.format_sortie }}"
+              echo "✅ Format sortie : ${{ inputs.format_sortie }}"
               ;;
             *)
-              echo "❌ ERREUR: Format invalide. Attendu: timestamp, iso, ou human"
+              echo "❌ ERREUR: Format sortie invalide : ${{ inputs.format_sortie }}"
+              echo "Valeurs acceptées: timestamp, iso, human"
               exit 1
               ;;
           esac
@@ -95,21 +96,30 @@ jobs:
           # Validation de l'opération
           case "${{ inputs.operation }}" in
             last_commit|first_commit|all_commits)
-              echo "✅ Opération validée : ${{ inputs.operation }}"
+              echo "✅ Opération : ${{ inputs.operation }}"
               ;;
             *)
-              echo "❌ ERREUR: Opération invalide. Attendu: last_commit, first_commit, ou all_commits"
+              echo "❌ ERREUR: Opération invalide : ${{ inputs.operation }}"
+              echo "Valeurs acceptées: last_commit, first_commit, all_commits"
               exit 1
               ;;
           esac
+      
+      - name: "Vérification de l'environnement Git"
+        run: |
+          echo "📊 État de l'environnement Git :"
+          echo "   • Version Git : $(git --version)"
+          echo "   • Repository : $(git rev-parse --show-toplevel 2>/dev/null || echo 'Non disponible')"
+          echo "   • Branche actuelle : $(git branch --show-current 2>/dev/null || echo 'Non disponible')"
+          echo "   • Dernier commit global : $(git log -1 --format='%h - %s' 2>/dev/null || echo 'Non disponible')"
           
-          # Vérification de l'historique Git spécifique
+          # Vérifier l'historique pour le chemin spécifique
           echo "🔍 Vérification de l'historique pour : ${{ inputs.chemin_fichier_ou_dossier }}"
           commit_count=$(git log --oneline -- "${{ inputs.chemin_fichier_ou_dossier }}" | wc -l)
           echo "   • Commits trouvés : $commit_count"
           
           if [ "$commit_count" -eq 0 ]; then
-            echo "⚠️ Aucun commit trouvé pour ce chemin"
+            echo "⚠️  Aucun commit trouvé pour ce chemin"
             echo "   • Le fichier/dossier peut être nouveau ou non suivi par Git"
             echo "   • Statut Git du chemin :"
             git status --porcelain "${{ inputs.chemin_fichier_ou_dossier }}" || echo "     Non dans le statut Git"
@@ -144,76 +154,106 @@ try:
             print(f'date_output={data[\"formatted_output\"]}')
             print(f'commit_hash={git_history[\"commit_hash\"][:8]}')
             print(f'commit_author={git_history[\"author\"]}')
-            print(f'total_commits={git_history[\"total_commits\"]}')
+            print(f'total_commits=1')
         elif git_history['type'] == 'all_commits':
-            if git_history['commits']:
-                latest = git_history['commits'][0]  # Le premier est le plus récent
-                print(f'date_output={latest[\"formatted_date\"]}')
-                print(f'commit_hash={latest[\"hash\"][:8]}')
-                print(f'commit_author={latest[\"author\"]}')
-            print(f'total_commits={len(git_history[\"commits\"])}')
+            print(f'date_output={data[\"formatted_output\"]}')
+            commits = git_history.get('commits', [])
+            if commits:
+                print(f'commit_hash={commits[0][\"commit_hash\"][:8]}')
+                print(f'commit_author={commits[0][\"author\"]}')
+            else:
+                print('commit_hash=')
+                print('commit_author=')
+            print(f'total_commits={git_history[\"total_commits\"]}')
     else:
         print('date_output=')
         print('commit_hash=')
         print('commit_author=')
         print('total_commits=0')
 except Exception as e:
-    print(f'date_output=ERROR:{e}', file=sys.stderr)
+    print(f'Erreur extraction outputs: {e}', file=sys.stderr)
+    print('date_output=')
     print('commit_hash=')
     print('commit_author=')
     print('total_commits=0')
 " >> $GITHUB_OUTPUT
-            
-            echo "📊 Analyse Git terminée avec succès"
           else
             echo "date_output=" >> $GITHUB_OUTPUT
             echo "commit_hash=" >> $GITHUB_OUTPUT
             echo "commit_author=" >> $GITHUB_OUTPUT
             echo "total_commits=0" >> $GITHUB_OUTPUT
-            echo "❌ ERREUR: Artefact de sortie non créé"
-            exit 1
+            echo "artefact_file=" >> $GITHUB_OUTPUT
+            echo "⚠️  Pas d'artefact généré"
           fi
       
       - name: "Upload de l'artefact historique Git"
-        if: ${{ inputs.generer_artefact == true }}
+        if: inputs.generer_artefact && steps.git_analyze.outputs.artefact_file
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.git_analyze.outputs.artefact_file }}
           path: ${{ steps.git_analyze.outputs.artefact_file }}
           retention-days: 30
       
-      - name: "Rapport d'historique et validation"
+      - name: "Rapport d'analyse Git et validation"
         run: |
-          if [ -f "${{ steps.git_analyze.outputs.artefact_file }}" ]; then
-            echo "📄 Artefact créé : ${{ steps.git_analyze.outputs.artefact_file }}"
-            echo "📊 Taille : $(stat -c%s "${{ steps.git_analyze.outputs.artefact_file }}") octets"
+          echo "📊 Résumé de l'analyse Git :"
+          echo "   • Chemin analysé : ${{ inputs.chemin_fichier_ou_dossier }}"
+          echo "   • Opération : ${{ inputs.operation }}"
+          echo "   • Format sortie : ${{ inputs.format_sortie }}"
+          
+          if [ -n "${{ steps.git_analyze.outputs.date_output }}" ]; then
+            echo "   • Date trouvée : ${{ steps.git_analyze.outputs.date_output }}"
+            echo "   • Commit : ${{ steps.git_analyze.outputs.commit_hash }}"
+            echo "   • Auteur : ${{ steps.git_analyze.outputs.commit_author }}"
+            echo "   • Total commits : ${{ steps.git_analyze.outputs.total_commits }}"
             
-            # Résumé dans le Job Summary
-            echo "## 🕰️ Analyse Historique Git" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Chemin analysé :** \`${{ inputs.chemin_fichier_ou_dossier }}\`" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Opération :** ${{ inputs.operation }}" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            
-            if [ -n "${{ steps.git_analyze.outputs.date_output }}" ]; then
-              echo "**✅ Résultats :**" >> $GITHUB_STEP_SUMMARY
-              echo "- Date : \`${{ steps.git_analyze.outputs.date_output }}\`" >> $GITHUB_STEP_SUMMARY
-              echo "- Commit : \`${{ steps.git_analyze.outputs.commit_hash }}\`" >> $GITHUB_STEP_SUMMARY
-              echo "- Auteur : ${{ steps.git_analyze.outputs.commit_author }}" >> $GITHUB_STEP_SUMMARY
-              echo "- Total commits : ${{ steps.git_analyze.outputs.total_commits }}" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "**⚠️ Résultat :** Aucun historique Git trouvé" >> $GITHUB_STEP_SUMMARY
-            fi
-            
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "**Format de sortie :** ${{ inputs.format_sortie }}" >> $GITHUB_STEP_SUMMARY
+            # Affichage détaillé selon l'opération
+            case "${{ inputs.operation }}" in
+              last_commit)
+                echo "✅ Dernier commit identifié avec succès"
+                ;;
+              first_commit)
+                echo "✅ Premier commit identifié avec succès"
+                ;;
+              all_commits)
+                echo "✅ Historique complet analysé (${{ steps.git_analyze.outputs.total_commits }} commits)"
+                ;;
+            esac
           else
-            echo "❌ ERREUR: Fichier de sortie non trouvé"
-            exit 1
+            echo "   • Résultat : Aucun historique Git trouvé"
+            echo "⚠️  Le chemin spécifié n'a pas d'historique Git ou n'est pas suivi"
           fi
           
-          echo "✅ Git Historien terminé avec succès"
+          # Validation de l'artefact si généré
+          if [ -n "${{ steps.git_analyze.outputs.artefact_file }}" ] && [ -f "${{ steps.git_analyze.outputs.artefact_file }}" ]; then
+            echo "📄 Artefact créé : ${{ steps.git_analyze.outputs.artefact_file }}"
+            echo "📊 Taille : $(stat -c%s "${{ steps.git_analyze.outputs.artefact_file }}") octets"
+          fi
+          
+          echo "✅ Analyse Git terminée"
+      
+      - name: "Affichage du résumé dans l'interface"
+        if: always()
+        run: |
+          echo "## 🕰️ Analyse Historique Git" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Chemin analysé :** \`${{ inputs.chemin_fichier_ou_dossier }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Opération :** ${{ inputs.operation }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -n "${{ steps.git_analyze.outputs.date_output }}" ]; then
+            echo "**✅ Résultats :**" >> $GITHUB_STEP_SUMMARY
+            echo "- Date : \`${{ steps.git_analyze.outputs.date_output }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- Commit : \`${{ steps.git_analyze.outputs.commit_hash }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- Auteur : ${{ steps.git_analyze.outputs.commit_author }}" >> $GITHUB_STEP_SUMMARY
+            echo "- Total commits : ${{ steps.git_analyze.outputs.total_commits }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**⚠️ Résultat :** Aucun historique Git trouvé" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Format de sortie :** ${{ inputs.format_sortie }}" >> $GITHUB_STEP_SUMMARY
       
       - name: "Debug - Historique détaillé"
         if: runner.debug == '1'
