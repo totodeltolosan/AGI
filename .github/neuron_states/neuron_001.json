@@ -1,0 +1,5 @@
+{
+  "V": -65.0,                  // Potentiel de membrane actuel
+  "refractory_countdown": 0,   // Temps restant en période réfractaire
+  "synaptic_weight": 0.5       // Poids synaptique (pour une entrée simple)
+}
