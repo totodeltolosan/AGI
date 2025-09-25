@@ -74,6 +74,8 @@ exports/
 # La ligne suivante est cruciale : elle annule l'ignorance pour le fichier de constitution
 !iaGOD.json
 
+!.github/neuron_states/neuron_001.json # Permet de suivre l'état du neurone 001
+
 # Fichiers de documentation (sauf les documents constitutionnels)
 *.md
 # Annuler l'ignorance pour les documents clés
