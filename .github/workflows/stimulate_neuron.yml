@@ -1,11 +1,10 @@
-# .github/workflows/stimulate_neuron.yml
 name: "Stimulateur de Neurone"
 
 on:
-  workflow_dispatch: # Permet de déclencher manuellement le workflow depuis l'interface GitHub
+  workflow_dispatch:
     inputs:
       neuron_target_id:
-        description: "ID du neurone à stimuler"
+        description: "ID unique de ce neurone (ex: '001')"
         required: true
         type: string
         default: "001"
@@ -20,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Appeler le neurone"
-        uses: ./.github/workflows/quasi_neuron.yml # Chemin vers votre workflow neurone
+        uses: ./.github/workflows/quasi_neuron.yml
         with:
           neuron_id: ${{ inputs.neuron_target_id }}
           stimulus_strength: ${{ inputs.stimulus }}
