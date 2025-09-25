@@ -1,0 +1,18 @@
+# .github/workflows/test_dispatch.yml
+name: "Test de Déclenchement Manuel"
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Un message de test"
+        required: true
+        type: string
+        default: "Bonjour le monde !"
+
+jobs:
+  hello_world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Afficher le message"
+        run: echo "Le message est : ${{ inputs.message }}"

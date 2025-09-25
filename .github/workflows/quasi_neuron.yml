@@ -1,0 +1,82 @@
+# .github/workflows/quasi_neuron.yml
+name: "Quasi-Neurone: Unité de Traitement"
+
+on:
+  workflow_call:
+    inputs:
+      neuron_id:
+        description: "ID unique de ce neurone (ex: '001')"
+        required: true
+        type: string
+      stimulus_strength:
+        description: "Force du stimulus d'entrée pour ce pas de temps (0.0 à 1.0)"
+        required: true
+        type: number
+    outputs:
+      neuron_fired:
+        description: "Indique si le neurone a tiré une impulsion (true/false)"
+        value: ${{ jobs.simulate_neuron.outputs.fired }}
+      current_potential:
+        description: "Potentiel de membrane actuel du neurone"
+        value: ${{ jobs.simulate_neuron.outputs.potential }}
+      new_synaptic_weight:
+        description: "Nouveau poids synaptique après l'apprentissage"
+        value: ${{ jobs.simulate_neuron.outputs.weight }}
+      refractory_countdown:
+        description: "Temps restant en période réfractaire"
+        value: ${{ jobs.simulate_neuron.outputs.refractory }}
+
+permissions:
+  contents: write
+
+jobs:
+  simulate_neuron:
+    name: "Simuler un pas de neurone"
+    runs-on: ubuntu-latest
+    outputs:
+      fired: ${{ steps.run_neuron_logic.outputs.neuron_fired }}
+      potential: ${{ steps.run_neuron_logic.outputs.current_potential }}
+      weight: ${{ steps.run_neuron_logic.outputs.new_synaptic_weight }}
+      refractory: ${{ steps.run_neuron_logic.outputs.refractory_countdown }}
+
+    steps:
+      - name: "Checkout du code"
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.NEURON_STATE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: "Configuration Python 3.x"
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: "Installation des dépendances Python"
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: "Exécuter la logique du neurone"
+        id: run_neuron_logic
+        run: |
+          python .github/scripts/quasi_neuron_logic.py \
+            --neuron-id "${{ inputs.neuron_id }}" \
+            --stimulus-strength "${{ inputs.stimulus_strength }}" >> $GITHUB_OUTPUT
+        env:
+          PYTHONUNBUFFERED: 1
+
+      - name: "Afficher l'état du neurone"
+        run: |
+          echo "--- État du Neurone ${{ inputs.neuron_id }} ---"
+          echo "Potentiel actuel : ${{ steps.run_neuron_logic.outputs.current_potential }}"
+          echo "A tiré une impulsion : ${{ steps.run_neuron_logic.outputs.neuron_fired }}"
+          echo "Nouveau poids synaptique : ${{ steps.run_neuron_logic.outputs.new_synaptic_weight }}"
+          echo "Temps réfractaire restant : ${{ steps.run_neuron_logic.outputs.refractory_countdown }}"
+
+      - name: "Commiter les changements d'état du neurone"
+        run: |
+          git config user.name "GitHub Actions Neuron"
+          git config user.email "actions@github.com"
+          git add ".github/neuron_states/neuron_${{ inputs.neuron_id }}.json"
+          git commit -m "Neurone ${{ inputs.neuron_id }}: Mise à jour de l'état (V=${{ steps.run_neuron_logic.outputs.current_potential }}, Fired=${{ steps.run_neuron_logic.outputs.neuron_fired }})" || echo "Pas de changement d'état à commiter."
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.NEURON_STATE_TOKEN || secrets.GITHUB_TOKEN }}
