@@ -1,34 +1,18 @@
-name: "Stimulateur de Neurone"
+# .github/workflows/stimulate_neuron.yml
+name: "Test Simple Neurone Dispatch" # Nouveau nom pour forcer l'indexation
 
 on:
   workflow_dispatch:
     inputs:
-      neuron_target_id:
-        description: "ID unique de ce neurone (ex: '001')"
+      message:
+        description: "Un message de test minimal"
         required: true
         type: string
-        default: "001"
-      stimulus:
-        description: "Force du stimulus (0.0 à 1.0)"
-        required: true
-        type: number
-        default: 0.6
+        default: "Test minimal réussi !"
 
 jobs:
-  send_stimulus:
+  simple_test:
     runs-on: ubuntu-latest
     steps:
-      - name: "Appeler le neurone"
-        uses: ./.github/workflows/quasi_neuron.yml
-        with:
-          neuron_id: ${{ inputs.neuron_target_id }}
-          stimulus_strength: ${{ inputs.stimulus }}
-        id: neuron_response
-
-      - name: "Afficher la réponse du neurone"
-        run: |
-          echo "Le neurone ${{ inputs.neuron_target_id }} a répondu :"
-          echo "  A tiré une impulsion : ${{ steps.neuron_response.outputs.neuron_fired }}"
-          echo "  Potentiel actuel : ${{ steps.neuron_response.outputs.current_potential }}"
-          echo "  Nouveau poids synaptique : ${{ steps.neuron_response.outputs.new_synaptic_weight }}"
-          echo "  Temps réfractaire restant : ${{ steps.neuron_response.outputs.refractory_countdown }}"
+      - name: "Afficher le message de test"
+        run: echo "Message reçu : ${{ inputs.message }}"
