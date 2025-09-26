@@ -1,0 +1,71 @@
+# TEMPLATE: Exemple d'orchestration moderne GitHub Actions
+# À utiliser pour remplacer les scripts "Contremaîtres" problématiques
+#
+# PRINCIPE: Utiliser 'uses:' et 'needs:' au lieu de 'gh workflow run'
+
+name: "TEMPLATE - Général Moderne"
+
+on:
+  workflow_call:
+    inputs:
+      dossiers_cibles:
+        required: true
+        type: string
+      limite_qualite:
+        required: false
+        type: number
+        default: 80
+
+jobs:
+  # ✅ CORRECT: Appel direct avec 'uses:'
+  scanner:
+    name: "Scanner les fichiers"
+    uses: ./.github/workflows/06-01_scanner-fichiers.yml
+    with:
+      dossiers_cibles: ${{ inputs.dossiers_cibles }}
+      extensions: '["*.py", "*.yml", "*.md"]'
+
+  # ✅ CORRECT: Séquence avec 'needs:'
+  analyser:
+    name: "Analyser les résultats"
+    needs: scanner
+    uses: ./.github/workflows/04-01-analyseur.yml
+    with:
+      liste_fichiers: ${{ needs.scanner.outputs.fichiers_trouves }}
+
+  # ✅ CORRECT: Validation séquentielle
+  valider:
+    name: "Valider l'analyse"
+    needs: analyser
+    uses: ./.github/workflows/05-01-validateur.yml
+    with:
+      resultats_analyse: ${{ needs.analyser.outputs.resultats }}
+
+  # ✅ CORRECT: Parallélisation avec dépendances
+  rapport:
+    name: "Générer le rapport"
+    needs: valider
+    uses: ./.github/workflows/04-02-rapporteur.yml
+    with:
+      donnees_validees: ${{ needs.analyser.outputs.resultats }}
+
+  formatage:
+    name: "Formater en Markdown"
+    needs: rapport
+    uses: ./.github/workflows/07-02-formateur-markdown.yml
+    with:
+      donnees_brutes: ${{ needs.rapport.outputs.rapport_json }}
+
+  statut:
+    name: "Poster le statut"
+    needs: [valider, formatage]
+    uses: ./.github/workflows/07-03-formateur-statut.yml
+    with:
+      succes: ${{ needs.valider.outputs.validation_ok }}
+      message_ok: "✅ Audit réussi"
+      message_ko: "❌ Audit échoué"
+
+# ❌ INCORRECT - NE JAMAIS FAIRE CELA:
+# - run: python script_qui_fait_gh_workflow_run.py
+# - run: gh workflow run autre-workflow.yml
+# - subprocess.run(["gh", "workflow", "run"])
