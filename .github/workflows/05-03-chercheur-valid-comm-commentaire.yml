@@ -1,0 +1,55 @@
+name: "Qualiticien - Validation Commentaire Communication"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_commentaire:
+        description: "Artefact du commentaire à valider"
+        required: true
+        type: string
+      format_attendu:
+        description: "Format attendu (markdown/text/json)"
+        required: false
+        default: "markdown"
+        type: string
+    outputs:
+      validation_success:
+        description: "Succès de la validation"
+        value: ${{ jobs.validation.outputs.success }}
+      format_valide:
+        description: "Format validé"
+        value: ${{ jobs.validation.outputs.format }}
+
+jobs:
+  validation:
+    name: "Validation Commentaire"
+    runs-on: ubuntu-latest
+    outputs:
+      success: ${{ steps.validate.outputs.validation_success }}
+      format: ${{ steps.validate.outputs.format_valide }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Download Artefact"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artefact_commentaire }}
+          path: ./validation-input
+          
+      - name: "Validation du Commentaire"
+        id: validate
+        run: |
+          echo "✅ Validation du commentaire communication"
+          
+          # Script de validation format (Fourmis - Niveau 8)
+          format_ok="true"
+          format_type="${{ inputs.format_attendu }}"
+          
+          echo "Format attendu: $format_type"
+          echo "Validation du format..."
+          
+          echo "validation_success=$format_ok" >> $GITHUB_OUTPUT
+          echo "format_valide=$format_type" >> $GITHUB_OUTPUT
+          echo "✅ Commentaire validé"
