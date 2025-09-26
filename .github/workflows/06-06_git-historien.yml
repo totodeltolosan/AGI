@@ -141,42 +141,7 @@ jobs:
             echo "artefact_file=$artefact_name" >> $GITHUB_OUTPUT
             
             # Parse des résultats JSON pour extraire les informations clés
-            python -c "
-import json
-import sys
-try:
-    with open('$artefact_name', 'r') as f:
-        data = json.load(f)
-    
-    git_history = data.get('git_history')
-    if git_history:
-        if git_history['type'] in ['last_commit', 'first_commit']:
-            print(f'date_output={data[\"formatted_output\"]}')
-            print(f'commit_hash={git_history[\"commit_hash\"][:8]}')
-            print(f'commit_author={git_history[\"author\"]}')
-            print(f'total_commits=1')
-        elif git_history['type'] == 'all_commits':
-            print(f'date_output={data[\"formatted_output\"]}')
-            commits = git_history.get('commits', [])
-            if commits:
-                print(f'commit_hash={commits[0][\"commit_hash\"][:8]}')
-                print(f'commit_author={commits[0][\"author\"]}')
-            else:
-                print('commit_hash=')
-                print('commit_author=')
-            print(f'total_commits={git_history[\"total_commits\"]}')
-    else:
-        print('date_output=')
-        print('commit_hash=')
-        print('commit_author=')
-        print('total_commits=0')
-except Exception as e:
-    print(f'Erreur extraction outputs: {e}', file=sys.stderr)
-    print('date_output=')
-    print('commit_hash=')
-    print('commit_author=')
-    print('total_commits=0')
-" >> $GITHUB_OUTPUT
+            python -c "import json; import sys; try:; with open('$artefact_name', 'r') as f:; data = json.load(f); ; git_history = data.get('git_history'); if git_history:; if git_history['type'] in ['last_commit', 'first_commit']:; print(f'date_output={data[\\"formatted_output\\"]}'); print(f'commit_hash={git_history[\\"commit_hash\\"][:8]}'); print(f'commit_author={git_history[\\"author\\"]}'); print(f'total_commits=1'); elif git_history['type'] == 'all_commits':; print(f'date_output={data[\\"formatted_output\\"]}'); commits = git_history.get('commits', []); if commits:; print(f'commit_hash={commits[0][\\"commit_hash\\"][:8]}'); print(f'commit_author={commits[0][\\"author\\"]}'); else:; print('commit_hash='); print('commit_author='); print(f'total_commits={git_history[\\"total_commits\\"]}'); else:; print('date_output='); print('commit_hash='); print('commit_author='); print('total_commits=0'); except Exception as e:; print(f'Erreur extraction outputs: {e}', file=sys.stderr); print('date_output='); print('commit_hash='); print('commit_author='); print('total_commits=0')" $GITHUB_OUTPUT
           else
             echo "date_output=" >> $GITHUB_OUTPUT
             echo "commit_hash=" >> $GITHUB_OUTPUT

@@ -87,37 +87,9 @@ jobs:
           echo "✅ Corps : OK ($(echo '${{ inputs.corps }}' | wc -c) caractères)"
           
           # Validation des labels JSON
-          python -c "
-import json
-import sys
-try:
-    labels = json.loads('${{ inputs.labels }}')
-    if not isinstance(labels, list):
-        raise ValueError('Labels doivent être une liste')
-    print(f'✅ Labels : OK ({len(labels)} labels)')
-    for label in labels:
-        print(f'   - {label}')
-except Exception as e:
-    print(f'❌ ERREUR Labels: {e}')
-    sys.exit(1)
-"
-          
+          python -c "import json; import sys; try:; labels = json.loads('${{ inputs.labels }}'); if not isinstance(labels, list):; raise ValueError('Labels doivent être une liste'); print(f'✅ Labels : OK ({len(labels)} labels)'); for label in labels:; print(f'   - {label}'); except Exception as e:; print(f'❌ ERREUR Labels: {e}'); sys.exit(1)"
           # Validation des assignés JSON
-          python -c "
-import json
-import sys
-try:
-    assignes = json.loads('${{ inputs.assignes }}')
-    if not isinstance(assignes, list):
-        raise ValueError('Assignés doivent être une liste')
-    print(f'✅ Assignés : OK ({len(assignes)} assignés)')
-    for assigne in assignes:
-        print(f'   - {assigne}')
-except Exception as e:
-    print(f'❌ ERREUR Assignés: {e}')
-    sys.exit(1)
-"
-      
+          python -c "import json; import sys; try:; assignes = json.loads('${{ inputs.assignes }}'); if not isinstance(assignes, list):; raise ValueError('Assignés doivent être une liste'); print(f'✅ Assignés : OK ({len(assignes)} assignés)'); for assigne in assignes:; print(f'   - {assigne}'); except Exception as e:; print(f'❌ ERREUR Assignés: {e}'); sys.exit(1)"
       - name: "Exécution du poster GitHub"
         id: poster
         run: |

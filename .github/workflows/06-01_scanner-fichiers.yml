@@ -97,21 +97,7 @@ jobs:
             
             # Affichage d'un résumé du scan
             echo "🔍 Résumé du scan :"
-            python -c "
-import json
-with open('${{ inputs.nom_artefact }}', 'r') as f:
-    data = json.load(f)
-print(f'   • Pattern : {data[\"pattern\"]}')
-print(f'   • Racine : {data[\"chemin_racine\"]}')
-print(f'   • Exclusions : {len(data[\"exclusions\"])} règles')
-print(f'   • Total fichiers : {data[\"total_fichiers\"]}')
-if data['fichiers']:
-    print('   • Échantillon :')
-    for f in data['fichiers'][:3]:
-        print(f'     - {f}')
-    if len(data['fichiers']) > 3:
-        print(f'     ... et {len(data[\"fichiers\"]) - 3} autres')
-"
+            python -c "import json; with open('${{ inputs.nom_artefact }}', 'r') as f:; data = json.load(f); print(f'   • Pattern : {data[\\"pattern\\"]}'); print(f'   • Racine : {data[\\"chemin_racine\\"]}'); print(f'   • Exclusions : {len(data[\\"exclusions\\"])} règles'); print(f'   • Total fichiers : {data[\\"total_fichiers\\"]}'); if data['fichiers']:; print('   • Échantillon :'); for f in data['fichiers'][:3]:; print(f'     - {f}'); if len(data['fichiers']) > 3:; print(f'     ... et {len(data[\\"fichiers\\"]) - 3} autres')"
           else
             echo "❌ ERREUR: Fichier de sortie non trouvé"
             exit 1

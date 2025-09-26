@@ -49,25 +49,7 @@ jobs:
       - name: "Validation de la règle regex"
         run: |
           echo "🔍 Validation de la configuration regex :"
-          python -c "
-import json
-import sys
-try:
-    regle = json.loads('${{ inputs.regle_regex }}')
-    print(f'✅ Pattern: {regle.get(\"pattern\", \"NON DÉFINI\")}')
-    print(f'   Nom: {regle.get(\"nom\", \"regex_search\")}')
-    print(f'   Flags: {regle.get(\"flags\", [])}')
-    if 'pattern' not in regle:
-        print('❌ ERREUR: Champ \"pattern\" requis manquant')
-        sys.exit(1)
-except json.JSONDecodeError as e:
-    print(f'❌ ERREUR: JSON invalide - {e}')
-    sys.exit(1)
-except Exception as e:
-    print(f'❌ ERREUR: Validation échouée - {e}')
-    sys.exit(1)
-"
-      
+          python -c "import json; import sys; try:; regle = json.loads('${{ inputs.regle_regex }}'); print(f'✅ Pattern: {regle.get(\\"pattern\\", \\"NON DÉFINI\\")}'); print(f'   Nom: {regle.get(\\"nom\\", \\"regex_search\\")}'); print(f'   Flags: {regle.get(\\"flags\\", [])}'); if 'pattern' not in regle:; print('❌ ERREUR: Champ \\"pattern\\" requis manquant'); sys.exit(1); except json.JSONDecodeError as e:; print(f'❌ ERREUR: JSON invalide - {e}'); sys.exit(1); except Exception as e:; print(f'❌ ERREUR: Validation échouée - {e}'); sys.exit(1)"
       - name: "Préparation du contenu d'entrée"
         id: prepare_content
         run: |
@@ -116,24 +98,7 @@ except Exception as e:
             
             # Affichage d'un résumé de l'analyse
             echo "🔎 Résumé de l'analyse regex :"
-            python -c "
-import json
-with open('${{ inputs.nom_artefact }}', 'r') as f:
-    data = json.load(f)
-regle = data['regle']
-stats = data['contenu_stats']
-print(f'   • Pattern : {regle[\"pattern\"]}')
-print(f'   • Nom règle : {regle.get(\"nom\", \"N/A\")}')
-print(f'   • Flags : {regle.get(\"flags\", [])}')
-print(f'   • Contenu analysé : {stats[\"taille_caracteres\"]} caractères, {stats[\"lignes\"]} lignes')
-print(f'   • Total correspondances : {data[\"total_correspondances\"]}')
-if data['correspondances']:
-    print('   • Échantillon des correspondances :')
-    for i, match in enumerate(data['correspondances'][:3]):
-        print(f'     - Ligne {match[\"ligne\"]}: \"{match[\"match_complet\"][:40]}\"')
-    if len(data['correspondances']) > 3:
-        print(f'     ... et {len(data[\"correspondances\"]) - 3} autres')
-"
+            python -c "import json; with open('${{ inputs.nom_artefact }}', 'r') as f:; data = json.load(f); regle = data['regle']; stats = data['contenu_stats']; print(f'   • Pattern : {regle[\\"pattern\\"]}'); print(f'   • Nom règle : {regle.get(\\"nom\\", \\"N/A\\")}'); print(f'   • Flags : {regle.get(\\"flags\\", [])}'); print(f'   • Contenu analysé : {stats[\\"taille_caracteres\\"]} caractères, {stats[\\"lignes\\"]} lignes'); print(f'   • Total correspondances : {data[\\"total_correspondances\\"]}'); if data['correspondances']:; print('   • Échantillon des correspondances :'); for i, match in enumerate(data['correspondances'][:3]):; print(f'     - Ligne {match[\\"ligne\\"]}: \\"{match[\\"match_complet\\"][:40]}\\"'); if len(data['correspondances']) > 3:; print(f'     ... et {len(data[\\"correspondances\\"]) - 3} autres')"
           else
             echo "❌ ERREUR: Fichier de résultats non trouvé"
             exit 1
@@ -145,23 +110,4 @@ if data['correspondances']:
         if: runner.debug == '1'
         run: |
           echo "🔍 Validation de la structure JSON des résultats :"
-          python -c "
-import json
-import sys
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    
-    required_keys = ['regle', 'timestamp', 'contenu_stats', 'total_correspondances', 'correspondances']
-    for key in required_keys:
-        if key not in data:
-            print(f'❌ Clé manquante : {key}')
-            sys.exit(1)
-        else:
-            print(f'✅ {key}: OK')
-    
-    print('✅ Structure JSON valide')
-except Exception as e:
-    print(f'❌ Erreur validation JSON : {e}')
-    sys.exit(1)
-"
+          python -c "import json; import sys; try:; with open('${{ inputs.nom_artefact }}', 'r') as f:; data = json.load(f); ; required_keys = ['regle', 'timestamp', 'contenu_stats', 'total_correspondances', 'correspondances']; for key in required_keys:; if key not in data:; print(f'❌ Clé manquante : {key}'); sys.exit(1); else:; print(f'✅ {key}: OK'); ; print('✅ Structure JSON valide'); except Exception as e:; print(f'❌ Erreur validation JSON : {e}'); sys.exit(1)"

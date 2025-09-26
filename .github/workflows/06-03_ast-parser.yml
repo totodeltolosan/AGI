@@ -77,27 +77,7 @@ jobs:
       - name: "Validation syntaxe Python préliminaire"
         run: |
           echo "🔍 Pré-validation de la syntaxe Python :"
-          python -c "
-import ast
-import sys
-try:
-    # Test rapide de parsing
-    contenu = '''${{ inputs.contenu_fichier_python }}'''
-    if '${{ steps.prepare_code.outputs.content_type }}' == 'file':
-        with open('${{ inputs.contenu_fichier_python }}', 'r') as f:
-            contenu = f.read()
-    
-    if contenu.strip():
-        ast.parse(contenu)
-        print('✅ Syntaxe Python valide')
-    else:
-        print('⚠️  Code vide - parsing possible mais aucun élément')
-except SyntaxError as e:
-    print(f'⚠️  Erreur syntaxe détectée (sera traitée par le parser): {e}')
-except Exception as e:
-    print(f'⚠️  Autre erreur (sera traitée par le parser): {e}')
-"
-      
+          python -c "import ast; import sys; try:; # Test rapide de parsing; contenu = '''${{ inputs.contenu_fichier_python }}'''; if '${{ steps.prepare_code.outputs.content_type }}' == 'file':; with open('${{ inputs.contenu_fichier_python }}', 'r') as f:; contenu = f.read(); ; if contenu.strip():; ast.parse(contenu); print('✅ Syntaxe Python valide'); else:; print('⚠️  Code vide - parsing possible mais aucun élément'); except SyntaxError as e:; print(f'⚠️  Erreur syntaxe détectée (sera traitée par le parser): {e}'); except Exception as e:; print(f'⚠️  Autre erreur (sera traitée par le parser): {e}')"
       - name: "Exécution du parser AST"
         id: ast
         run: |
@@ -109,30 +89,14 @@ except Exception as e:
           # Extraction des statistiques pour les outputs
           if [ -f "${{ inputs.nom_artefact }}" ]; then
             # Vérifier si le parsing a réussi
-            has_error=$(python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    print('true' if 'erreur' in data else 'false')
-except:
-    print('true')
-")
+            has_error=$(python -c "import json; try: f = open('${{ inputs.nom_artefact }}', 'r'); data = json.load(f); f.close(); print('true' if 'erreur' in data else 'false'); except: print('true')")
             
             if [ "$has_error" = "true" ]; then
               echo "success=false" >> $GITHUB_OUTPUT
               echo "element_count=0" >> $GITHUB_OUTPUT
               echo "⚠️  Parsing AST échoué (erreur de syntaxe)"
             else
-              count=$(python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    print(data.get('elements_ast', {}).get('total', 0))
-except:
-    print(0)
-")
+              count=$(python -c "import json; try: f = open('${{ inputs.nom_artefact }}', 'r'); data = json.load(f); f.close(); print(data.get('elements_ast', {}).get('total', 0)); except: print(0)")
               echo "success=true" >> $GITHUB_OUTPUT
               echo "element_count=$count" >> $GITHUB_OUTPUT
               echo "🎯 $count éléments AST détectés"
@@ -161,43 +125,7 @@ except:
             
             # Affichage d'un résumé de l'analyse AST
             echo "🐍 Résumé de l'analyse AST Python :"
-            python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    
-    if 'erreur' in data:
-        print(f'   ❌ Erreur: {data[\"erreur\"]}')
-        return
-    
-    stats = data['code_stats']
-    elements = data['elements_ast']
-    
-    print(f'   • Niveau détail : {data[\"niveau_detail\"]}')
-    print(f'   • Code analysé : {stats[\"taille_caracteres\"]} caractères, {stats[\"lignes\"]} lignes')
-    print(f'   • Lignes non vides : {stats[\"lignes_non_vides\"]}')
-    print(f'   • Total éléments AST : {elements[\"total\"]}')
-    
-    if elements['total'] > 0:
-        print('   • Répartition des éléments :')
-        for type_elem, count in elements.items():
-            if type_elem != 'total' and count > 0:
-                print(f'     - {type_elem}: {count}')
-    
-    structure = data['structure']
-    if structure and 'elements' in structure:
-        print(f'   • Éléments de premier niveau : {len(structure[\"elements\"])}')
-        if structure['elements']:
-            print('   • Échantillon :')
-            for elem in structure['elements'][:3]:
-                print(f'     - {elem[\"type\"]}: {elem.get(\"nom\", \"N/A\")} (ligne {elem.get(\"ligne\", \"N/A\")})')
-            if len(structure['elements']) > 3:
-                print(f'     ... et {len(structure[\"elements\"]) - 3} autres')
-                
-except Exception as e:
-    print(f'❌ Erreur lecture résultats AST : {e}')
-"
+            python -c "import json; try:; with open('${{ inputs.nom_artefact }}', 'r') as f:; data = json.load(f); ; if 'erreur' in data:; print(f'   ❌ Erreur: {data[\\"erreur\\"]}'); return; ; stats = data['code_stats']; elements = data['elements_ast']; ; print(f'   • Niveau détail : {data[\\"niveau_detail\\"]}'); print(f'   • Code analysé : {stats[\\"taille_caracteres\\"]} caractères, {stats[\\"lignes\\"]} lignes'); print(f'   • Lignes non vides : {stats[\\"lignes_non_vides\\"]}'); print(f'   • Total éléments AST : {elements[\\"total\\"]}'); ; if elements['total'] > 0:; print('   • Répartition des éléments :'); for type_elem, count in elements.items():; if type_elem != 'total' and count > 0:; print(f'     - {type_elem}: {count}'); ; structure = data['structure']; if structure and 'elements' in structure:; print(f'   • Éléments de premier niveau : {len(structure[\\"elements\\"])}'); if structure['elements']:; print('   • Échantillon :'); for elem in structure['elements'][:3]:; print(f'     - {elem[\\"type\\"]}: {elem.get(\\"nom\\", \\"N/A\\")} (ligne {elem.get(\\"ligne\\", \\"N/A\\")})'); if len(structure['elements']) > 3:; print(f'     ... et {len(structure[\\"elements\\"]) - 3} autres'); ; except Exception as e:; print(f'❌ Erreur lecture résultats AST : {e}')"
           else
             echo "❌ ERREUR: Fichier de résultats AST non trouvé"
             exit 1
@@ -213,12 +141,4 @@ except Exception as e:
         if: runner.debug == '1'
         run: |
           echo "🔍 Structure complète de l'AST :"
-          python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact }}', 'r') as f:
-        data = json.load(f)
-    print(json.dumps(data, indent=2, ensure_ascii=False))
-except Exception as e:
-    print(f'Erreur affichage debug : {e}')
-"
+          python -c "import json; try:; with open('${{ inputs.nom_artefact }}', 'r') as f:; data = json.load(f); print(json.dumps(data, indent=2, ensure_ascii=False)); except Exception as e:; print(f'Erreur affichage debug : {e}')"
