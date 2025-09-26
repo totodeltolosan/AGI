@@ -205,9 +205,8 @@ jobs:
       audit_id: ${{ env.AUDIT_ID }}
       urgency_level: ${{ github.event.inputs.urgency_level || 'medium' }}
       constitution_hash: ${{ needs.validate_constitution.outputs.constitution_hash }}
-      orchestrator_version: ${{ env.ORCHESTRATEUR_VERSION }}
-      skip_generals: ${{ github.event.inputs.skip_generals }}
-      # Pass matrix context to the reusable workflow
+
+  # Pass matrix context to the reusable workflow
       general_name: ${{ matrix.general.name }}
       law_key: ${{ matrix.general.law_key }}
       priority: ${{ matrix.general.priority }}
