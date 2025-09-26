@@ -1,0 +1,49 @@
+name: "Maître AGI - Niveau 0 - Contrôle Manuel"
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode_execution:
+        description: "Mode d'exécution du système AGI"
+        required: true
+        default: "complet"
+        type: choice
+        options:
+          - complet
+          - gouvernance
+          - securite
+          - documentation
+          - test
+      force_execution:
+        description: "Forcer l'exécution même sans changements"
+        required: false
+        default: false
+        type: boolean
+      debug_mode:
+        description: "Activer le mode debug"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  controle_manuel:
+    name: "Contrôle Manuel AGI"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Affichage des paramètres"
+        run: |
+          echo "🎮 CONTRÔLE MANUEL AGI ACTIVÉ"
+          echo "Mode: ${{ inputs.mode_execution }}"
+          echo "Force: ${{ inputs.force_execution }}"
+          echo "Debug: ${{ inputs.debug_mode }}"
+          
+      - name: "Appel de l'Orchestre (Niveau 1)"
+        uses: ./.github/workflows/01-orchestre.yml
+        with:
+          mode: ${{ inputs.mode_execution }}
+          force_audit: ${{ inputs.force_execution }}
+          debug: ${{ inputs.debug_mode }}
