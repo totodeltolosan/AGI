@@ -30,7 +30,9 @@ Thumbs.db
 dist/
 build/
 wheels/
-*.tar.gz
+# Attention: La ligne suivante est trop générique, elle pourrait ignorer des archives importantes.
+# Je la commente pour l'instant. Décommentez-la si vous générez beaucoup de .tar.gz.
+# *.tar.gz
 
 # Cache des outils de test
 .pytest_cache/
@@ -53,7 +55,7 @@ datasets/
 # Rapports, logs et exports générés
 logs/
 *.log
-#reports/
+reports/
 exports/
 *.html
 *.pdf
@@ -68,18 +70,25 @@ exports/
 **/vendor/
 
 # --- GESTION DES EXCEPTIONS (CE QUI DOIT ÊTRE SUIVI) ---
-# Fichiers de données et de configuration (sauf la constitution)
-*.csv
-*.json
-# La ligne suivante est cruciale : elle annule l'ignorance pour le fichier de constitution
-!iaGOD.json
+# Par défaut, nous suivons les fichiers importants.
+# Il n'est plus nécessaire d'ignorer tous les .md, .json, etc.
+# Nous ignorons les dossiers de rapport/logs ci-dessus, et c'est tout.
+# Les exceptions ci-dessous ne sont plus nécessaires si les règles générales sont supprimées.
 
-# Fichiers de documentation (sauf les documents constitutionnels)
-*.md
-# Annuler l'ignorance pour les documents clés
-!README.md
-!AGI.md
-!AGIFUTUR.md
-!AGIHELP.md
-*.sqlite
-*.sqlite
+# ANCIENNES RÈGLES SUPPRIMÉES :
+# *.md
+# *.json
+# *.txt
+# etc.
+
+# La ligne suivante n'est plus utile car nous ne bloquons plus tous les .json
+# !iaGOD.json
+
+# Les lignes suivantes ne sont plus utiles car nous ne bloquons plus tous les .md
+# !README.md
+# !AGI.md
+# !AGIFUTUR.md
+# !AGIHELP.md
+
+# Les lignes suivantes sont redondantes et potentiellement problématiques
+# *.sqlite
