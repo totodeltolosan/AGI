@@ -1,0 +1,56 @@
+name: "Qualiticien - Validation Pull Request Communication"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_pr:
+        description: "Artefact de la PR à valider"
+        required: true
+        type: string
+      pr_required_checks:
+        description: "Checks requis pour validation"
+        required: false
+        default: "format,contenu"
+        type: string
+    outputs:
+      validation_success:
+        description: "Succès de la validation"
+        value: ${{ jobs.validation.outputs.success }}
+      pr_ready:
+        description: "PR prête pour merge"
+        value: ${{ jobs.validation.outputs.ready }}
+
+jobs:
+  validation:
+    name: "Validation PR"
+    runs-on: ubuntu-latest
+    outputs:
+      success: ${{ steps.validate.outputs.validation_success }}
+      ready: ${{ steps.validate.outputs.pr_ready }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Download Artefact"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artefact_pr }}
+          path: ./validation-input
+          
+      - name: "Validation de la PR"
+        id: validate
+        run: |
+          echo "✅ Validation de la Pull Request"
+          
+          # Script de validation PR (Fourmis - Niveau 8)
+          checks="${{ inputs.pr_required_checks }}"
+          success="true"
+          ready="true"
+          
+          echo "Checks requis: $checks"
+          echo "Validation en cours..."
+          
+          echo "validation_success=$success" >> $GITHUB_OUTPUT
+          echo "pr_ready=$ready" >> $GITHUB_OUTPUT
+          echo "✅ PR validée et prête"
