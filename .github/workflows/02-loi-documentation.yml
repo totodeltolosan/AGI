@@ -1,0 +1,67 @@
+name: "Général Archiviste - Niveau 2 - Audit Documentation"
+
+on:
+  workflow_call:
+    inputs:
+      seuil_documentation:
+        description: "Pourcentage minimum de documentation requis"
+        required: false
+        default: 30
+        type: number
+      extensions_analysees:
+        description: "Extensions de fichiers à analyser"
+        required: false
+        default: "py"
+        type: string
+      repertoire_cible:
+        description: "Répertoire à analyser"
+        required: false
+        default: "."
+        type: string
+    outputs:
+      rapport_documentation:
+        description: "Rapport d'audit de la documentation"
+        value: ${{ jobs.audit_doc.outputs.rapport }}
+      taux_documentation:
+        description: "Taux global de documentation"
+        value: ${{ jobs.audit_doc.outputs.taux }}
+
+jobs:
+  audit_doc:
+    name: "Audit Documentation"
+    runs-on: ubuntu-latest
+    outputs:
+      rapport: ${{ steps.audit.outputs.rapport_path }}
+      taux: ${{ steps.audit.outputs.taux_global }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Exécution du Contremaître Documentation"
+        id: audit
+        run: |
+          echo "📚 Lancement de l'audit documentation"
+          echo "Seuil requis: ${{ inputs.seuil_documentation }}%"
+          echo "Extensions: ${{ inputs.extensions_analysees }}"
+          echo "Répertoire: ${{ inputs.repertoire_cible }}"
+          
+          # Appel du script contremaître (Niveau 3)
+          python3 .github/scripts/audit_documentation.py \
+            --seuil ${{ inputs.seuil_documentation }} \
+            --extensions "${{ inputs.extensions_analysees }}" \
+            --repertoire "${{ inputs.repertoire_cible }}" \
+            --output rapport_documentation.json
+          
+          echo "rapport_path=rapport_documentation.json" >> $GITHUB_OUTPUT
+          
+          # Extraction du taux pour output
+          taux=$(python3 -c "import json; data = json.load(open('rapport_documentation.json')); print(data.get('taux_global', 0))")
+          echo "taux_global=$taux" >> $GITHUB_OUTPUT
+          
+      - name: "Upload Rapport Documentation"
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-documentation-${{ github.run_id }}
+          path: rapport_documentation.json
+          retention-days: 7
