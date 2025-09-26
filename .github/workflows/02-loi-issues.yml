@@ -1,0 +1,75 @@
+name: "Général Greffier - Niveau 2 - Gestion Issues"
+
+on:
+  workflow_call:
+    inputs:
+      action_issue:
+        description: "Action à effectuer (creer/fermer/commenter)"
+        required: true
+        type: string
+      titre_issue:
+        description: "Titre de l'issue"
+        required: false
+        type: string
+      corps_issue:
+        description: "Corps/contenu de l'issue"
+        required: false
+        type: string
+      labels:
+        description: "Labels à appliquer (séparés par virgules)"
+        required: false
+        default: "audit,agi"
+        type: string
+      numero_issue:
+        description: "Numéro de l'issue (pour fermer/commenter)"
+        required: false
+        type: number
+    outputs:
+      issue_number:
+        description: "Numéro de l'issue créée/modifiée"
+        value: ${{ jobs.gestion_issue.outputs.numero }}
+      issue_url:
+        description: "URL de l'issue"
+        value: ${{ jobs.gestion_issue.outputs.url }}
+
+jobs:
+  gestion_issue:
+    name: "Gestion des Issues"
+    runs-on: ubuntu-latest
+    outputs:
+      numero: ${{ steps.issue_action.outputs.issue_number }}
+      url: ${{ steps.issue_action.outputs.issue_url }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Action sur Issue"
+        id: issue_action
+        run: |
+          echo "📝 Gestion des issues - Action: ${{ inputs.action_issue }}"
+          
+          # Appel du script contremaître (Niveau 3)
+          python3 .github/scripts/gestionnaire_issues.py \
+            --action "${{ inputs.action_issue }}" \
+            --titre "${{ inputs.titre_issue }}" \
+            --corps "${{ inputs.corps_issue }}" \
+            --labels "${{ inputs.labels }}" \
+            --numero "${{ inputs.numero_issue || 0 }}" \
+            --output issue_result.json
+          
+          # Extraction des résultats
+          if [ -f issue_result.json ]; then
+            numero=$(python3 -c "import json; print(json.load(open('issue_result.json')).get('number', 0))")
+            url=$(python3 -c "import json; print(json.load(open('issue_result.json')).get('html_url', ''))")
+            echo "issue_number=$numero" >> $GITHUB_OUTPUT
+            echo "issue_url=$url" >> $GITHUB_OUTPUT
+            echo "✅ Issue $numero traitée: $url"
+          fi
+          
+      - name: "Upload Résultat"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue-result-${{ github.run_id }}
+          path: issue_result.json
