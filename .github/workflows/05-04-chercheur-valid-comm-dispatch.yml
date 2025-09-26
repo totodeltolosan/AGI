@@ -1,0 +1,99 @@
+name: "Qualiticien - Validation Chercheur Dispatch"
+run-name: "Validation Dispatch - Vérification Événement Envoyé"
+
+on:
+  workflow_call:
+    inputs:
+      type_evenement:
+        description: 'Type de l événement à vérifier'
+        required: true
+        type: string
+      dispatch_id:
+        description: 'ID du dispatch à valider'
+        required: false
+        type: string
+      timeout_validation:
+        description: 'Timeout pour la validation en secondes'
+        required: false
+        type: number
+        default: 30
+
+    outputs:
+      validation_reussie:
+        description: "Résultat de la validation (true/false)"
+        value: ${{ jobs.validate_dispatch.outputs.validation_reussie }}
+      details_validation:
+        description: "Détails de la validation"
+        value: ${{ jobs.validate_dispatch.outputs.details_validation }}
+
+jobs:
+  validate_dispatch:
+    name: "Validation Repository Dispatch"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    outputs:
+      validation_reussie: ${{ steps.validate.outputs.validation_reussie }}
+      details_validation: ${{ steps.validate.outputs.details_validation }}
+
+    steps:
+    - name: "Checkout Repository"
+      uses: actions/checkout@v4
+
+    - name: "Setup Python Environment"
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: "Install Validation Dependencies"
+      run: |
+        pip install --upgrade pip
+        pip install requests PyGithub jsonschema
+
+    - name: "Download Dispatch Artifacts"
+      uses: actions/download-artifact@v4
+      with:
+        name: chercheur-dispatch-${{ github.run_id }}
+        path: ./dispatch-artifacts/
+
+    - name: "Validation Repository Dispatch"
+      id: validate
+      run: |
+        echo "Validation du dispatch pour événement: ${{ inputs.type_evenement }}"
+        python .github/scripts/qualiticien_validation_dispatch_envoye.py \
+          --type-evenement "${{ inputs.type_evenement }}" \
+          --dispatch-id "${{ inputs.dispatch_id }}" \
+          --timeout-validation "${{ inputs.timeout_validation }}" \
+          --artifacts-dir "./dispatch-artifacts/" \
+          --github-token "${{ secrets.GITHUB_TOKEN }}" \
+          --repository "${{ github.repository }}"
+
+    - name: "Rapport de Validation"
+      run: |
+        echo "RAPPORT DE VALIDATION DISPATCH"
+        echo "Type événement: ${{ inputs.type_evenement }}"
+        echo "Dispatch ID: ${{ inputs.dispatch_id }}"
+        echo "Validation: ${{ steps.validate.outputs.validation_reussie }}"
+        echo "Détails: ${{ steps.validate.outputs.details_validation }}"
+
+    - name: "Échec de Validation"
+      if: steps.validate.outputs.validation_reussie != 'true'
+      run: |
+        echo "::error::La validation du repository dispatch a échoué"
+        echo "::error::Détails: ${{ steps.validate.outputs.details_validation }}"
+        exit 1
+
+    - name: "Succès de Validation"
+      if: steps.validate.outputs.validation_reussie == 'true'
+      run: |
+        echo "Repository dispatch validé avec succès"
+        echo "L'événement ${{ inputs.type_evenement }} a bien été envoyé et traité"
+
+    - name: "Upload Validation Report"
+      uses: actions/upload-artifact@v4
+      with:
+        name: validation-dispatch-${{ github.run_id }}
+        path: |
+          validation-result.json
+          validation-report.md
+        retention-days: 7

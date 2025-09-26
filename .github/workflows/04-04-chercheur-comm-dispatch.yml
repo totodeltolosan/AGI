@@ -1,0 +1,83 @@
+name: "Ouvrier - Chercheur Communication Dispatch"
+run-name: "Chercheur Comm Dispatch - Déclenchement Événement Repository"
+
+on:
+  workflow_call:
+    inputs:
+      type_evenement:
+        description: 'Type de l événement repository_dispatch à déclencher'
+        required: true
+        type: string
+      payload:
+        description: 'Payload JSON pour l événement'
+        required: true
+        type: string
+      nom_operation:
+        description: 'Nom de l opération pour le reporting'
+        required: false
+        type: string
+        default: 'dispatch-chercheur'
+
+    outputs:
+      dispatch_id:
+        description: "Identifiant unique du dispatch envoyé"
+        value: ${{ jobs.dispatch_event.outputs.dispatch_id }}
+      dispatch_success:
+        description: "Indicateur de succès du dispatch"
+        value: ${{ jobs.dispatch_event.outputs.dispatch_success }}
+
+jobs:
+  dispatch_event:
+    name: "Déclenchement Repository Dispatch"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    outputs:
+      dispatch_id: ${{ steps.dispatch.outputs.dispatch_id }}
+      dispatch_success: ${{ steps.dispatch.outputs.dispatch_success }}
+
+    steps:
+    - name: "Checkout Repository"
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: "Setup Python Environment"
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: "Install Dependencies"
+      run: |
+        pip install --upgrade pip
+        pip install requests PyGithub
+
+    - name: "Déclencher Repository Dispatch"
+      id: dispatch
+      run: |
+        echo "Lancement du dispatch pour événement: ${{ inputs.type_evenement }}"
+        python .github/scripts/ouvrier_comm_dispatch.py \
+          --type-evenement "${{ inputs.type_evenement }}" \
+          --payload '${{ inputs.payload }}' \
+          --nom-operation "${{ inputs.nom_operation }}" \
+          --github-token "${{ secrets.GITHUB_TOKEN }}" \
+          --repository "${{ github.repository }}"
+
+    - name: "Validation Dispatch"
+      run: |
+        if [ "${{ steps.dispatch.outputs.dispatch_success }}" = "true" ]; then
+          echo "Repository dispatch envoyé avec succès"
+          echo "Dispatch ID: ${{ steps.dispatch.outputs.dispatch_id }}"
+        else
+          echo "Échec du repository dispatch"
+          exit 1
+        fi
+
+    - name: "Upload Artifacts"
+      uses: actions/upload-artifact@v4
+      with:
+        name: chercheur-dispatch-${{ github.run_id }}
+        path: |
+          dispatch-result.json
+          dispatch-metadata.json
+        retention-days: 7
