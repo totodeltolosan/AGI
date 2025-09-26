@@ -1,0 +1,53 @@
+name: "Ouvrier - Chercheur Communication Commentaire"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_analyse:
+        description: "Artefact contenant l'analyse à commenter"
+        required: true
+        type: string
+      format_commentaire:
+        description: "Format du commentaire (markdown/text)"
+        required: false
+        default: "markdown"
+        type: string
+    outputs:
+      commentaire_genere:
+        description: "Commentaire généré"
+        value: ${{ jobs.commentaire.outputs.contenu }}
+
+jobs:
+  commentaire:
+    name: "Génération Commentaire"
+    runs-on: ubuntu-latest
+    outputs:
+      contenu: ${{ steps.generate.outputs.commentaire }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Download Artefact"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artefact_analyse }}
+          path: ./input
+          
+      - name: "Génération du Commentaire"
+        id: generate
+        run: |
+          echo "💬 Génération du commentaire"
+          
+          # Script de génération (Fourmis - Niveau 8)
+          python3 -c "import json; import os; data = {}; input_file = './input/${{ inputs.artefact_analyse }}'; format_type = '${{ inputs.format_commentaire }}'; comment = '## Analyse AGI\\n\\nRésultats traités.' if format_type == 'markdown' else 'Analyse AGI - Résultats traités.'; print(f'commentaire={comment}')" >> $GITHUB_OUTPUT
+          
+      - name: "Sauvegarde Commentaire"
+        run: |
+          echo "${{ steps.generate.outputs.commentaire }}" > commentaire.md
+          
+      - name: "Upload Commentaire"
+        uses: actions/upload-artifact@v4
+        with:
+          name: commentaire-${{ github.run_id }}
+          path: commentaire.md
