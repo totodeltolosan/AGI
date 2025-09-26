@@ -1,0 +1,66 @@
+name: "Ouvrier - Chercheur Communication Pull Request"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_rapport:
+        description: "Artefact contenant le rapport pour la PR"
+        required: true
+        type: string
+      titre_pr:
+        description: "Titre de la Pull Request"
+        required: false
+        default: "AGI - Rapport d'analyse"
+        type: string
+      branche_cible:
+        description: "Branche cible pour la PR"
+        required: false
+        default: "main"
+        type: string
+    outputs:
+      pr_number:
+        description: "Numéro de la PR créée"
+        value: ${{ jobs.pr.outputs.numero }}
+      pr_url:
+        description: "URL de la PR"
+        value: ${{ jobs.pr.outputs.url }}
+
+jobs:
+  pr:
+    name: "Gestion Pull Request"
+    runs-on: ubuntu-latest
+    outputs:
+      numero: ${{ steps.create_pr.outputs.pr_number }}
+      url: ${{ steps.create_pr.outputs.pr_url }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Download Artefact"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artefact_rapport }}
+          path: ./input
+          
+      - name: "Préparation PR"
+        id: create_pr
+        run: |
+          echo "📝 Préparation de la Pull Request"
+          
+          # Script de préparation (Fourmis - Niveau 8)
+          pr_body="## Rapport AGI\n\nRapport généré automatiquement par le système AGI.\n\nArtefact: ${{ inputs.artefact_rapport }}"
+          
+          echo "pr_number=0" >> $GITHUB_OUTPUT
+          echo "pr_url=https://github.com/${{ github.repository }}/pull/0" >> $GITHUB_OUTPUT
+          echo "✅ PR préparée (mode simulation)"
+          
+      - name: "Upload PR Data"
+        run: |
+          echo "${{ inputs.titre_pr }}" > pr_data.txt
+          
+      - name: "Upload PR Info"
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-info-${{ github.run_id }}
+          path: pr_data.txt
