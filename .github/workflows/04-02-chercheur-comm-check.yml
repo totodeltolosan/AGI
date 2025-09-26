@@ -1,0 +1,47 @@
+name: "Ouvrier - Chercheur Communication Check"
+
+on:
+  workflow_call:
+    inputs:
+      artefact_recherche:
+        description: "Artefact contenant les résultats de recherche"
+        required: true
+        type: string
+      type_check:
+        description: "Type de vérification à effectuer"
+        required: false
+        default: "standard"
+        type: string
+    outputs:
+      check_status:
+        description: "Statut du check"
+        value: ${{ jobs.check.outputs.status }}
+      check_details:
+        description: "Détails du check"
+        value: ${{ jobs.check.outputs.details }}
+
+jobs:
+  check:
+    name: "Check Communication"
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.verify.outputs.check_status }}
+      details: ${{ steps.verify.outputs.check_details }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Download Artefact"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artefact_recherche }}
+          path: ./input
+          
+      - name: "Vérification Communication"
+        id: verify
+        run: |
+          echo "🔍 Vérification des communications"
+          
+          # Script simple de vérification (Fourmis - Niveau 8)
+          python3 -c "import json; import os; input_file = './input/${{ inputs.artefact_recherche }}'; status = 'success' if os.path.exists(input_file) else 'failure'; details = 'Fichier vérifié' if status == 'success' else 'Fichier non trouvé'; print(f'check_status={status}'); print(f'check_details={details}')" >> $GITHUB_OUTPUT
