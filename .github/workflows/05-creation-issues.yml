@@ -1,75 +1,102 @@
-name: "Général Greffier - Niveau 2 - Gestion Issues"
+name: "⚖️ NIVEAU 2 : Général Greffier - Création Issues"
+run-name: "⚖️ Création Issues - Collecte et Rédaction Automatisée"
 
 on:
   workflow_call:
     inputs:
-      action_issue:
-        description: "Action à effectuer (creer/fermer/commenter)"
+      source_violations:
+        description: "Source des violations à traiter"
         required: true
         type: string
-      titre_issue:
-        description: "Titre de l'issue"
+      labels_automatiques:
+        description: "Labels à appliquer automatiquement"
         required: false
+        default: "audit,violation,auto-generated"
         type: string
-      corps_issue:
-        description: "Corps/contenu de l'issue"
+      assignation_auto:
+        description: "Assigner automatiquement"
         required: false
-        type: string
-      labels:
-        description: "Labels à appliquer (séparés par virgules)"
-        required: false
-        default: "audit,agi"
-        type: string
-      numero_issue:
-        description: "Numéro de l'issue (pour fermer/commenter)"
-        required: false
-        type: number
+        default: true
+        type: boolean
+
     outputs:
-      issue_number:
-        description: "Numéro de l'issue créée/modifiée"
-        value: ${{ jobs.gestion_issue.outputs.numero }}
-      issue_url:
-        description: "URL de l'issue"
-        value: ${{ jobs.gestion_issue.outputs.url }}
+      issues_creees:
+        description: "Nombre d'issues créées"
+        value: ${{ jobs.poster_issues.outputs.issues_count }}
+      urls_issues:
+        description: "URLs des issues créées"
+        value: ${{ jobs.poster_issues.outputs.issues_urls }}
 
 jobs:
-  gestion_issue:
-    name: "Gestion des Issues"
+  # ÉTAPE 1: Collecter les violations (Niveau 4 - Ouvrier 1)
+  collecteur_violations:
+    name: "📥 Collecteur de Violations"
+    uses: ./.github/workflows/04-01-issues-collecteur.yml
+    with:
+      source_donnees: ${{ inputs.source_violations }}
+      filtre_severite: "medium,high,critical"
+      format_collection: "structured_json"
+      groupement_par_type: true
+
+  # ÉTAPE 2: Valider collection (Niveau 5 - Qualiticien 1)
+  valider_collecteur:
+    name: "✅ Valider Collection"
+    needs: collecteur_violations
+    uses: ./.github/workflows/05-01-issues-valid-collecteur.yml
+    with:
+      violations_collectees: ${{ needs.collecteur_violations.outputs.violations_structurees }}
+      schema_attendu: "violations-issues-v1"
+      verification_completude: true
+
+  # ÉTAPE 3: Rédiger issues (Niveau 4 - Ouvrier 2)
+  redacteur_issues:
+    name: "✍️ Rédacteur d'Issues"
+    needs: [collecteur_violations, valider_collecteur]
+    if: needs.valider_collecteur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-02-issues-redacteur.yml
+    with:
+      violations_validees: ${{ needs.collecteur_violations.outputs.violations_structurees }}
+      template_titre: "🚨 Violation détectée: {type} dans {fichier}"
+      template_corps: "issue-violation-detaillee"
+      inclure_contexte: true
+      inclure_solution_suggeree: true
+
+  # ÉTAPE 4: Valider rédaction (Niveau 5 - Qualiticien 2)
+  valider_redacteur:
+    name: "✅ Valider Rédaction"
+    needs: redacteur_issues
+    uses: ./.github/workflows/05-02-issues-valid-redacteur.yml
+    with:
+      issues_redigees: ${{ needs.redacteur_issues.outputs.issues_preparees }}
+      schema_attendu: "issues-redigees-v1"
+      verification_contenu: true
+
+  # ÉTAPE 5: Poster les issues (Niveau 6)
+  poster_issues:
+    name: "📤 Poster Issues GitHub"
+    needs: [redacteur_issues, valider_redacteur]
+    if: needs.valider_redacteur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/06-04_github-poster.yml
+    with:
+      issues_a_creer: ${{ needs.redacteur_issues.outputs.issues_preparees }}
+      labels_defaut: ${{ inputs.labels_automatiques }}
+      assignation_automatique: ${{ inputs.assignation_auto }}
+      mode_batch: true
+
+  # ÉTAPE 6: Rapport final
+  rapport_final:
+    name: "📊 Rapport de Création"
+    needs: [poster_issues]
     runs-on: ubuntu-latest
-    outputs:
-      numero: ${{ steps.issue_action.outputs.issue_number }}
-      url: ${{ steps.issue_action.outputs.issue_url }}
-    
+    if: always()
+
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        
-      - name: "Action sur Issue"
-        id: issue_action
-        run: |
-          echo "📝 Gestion des issues - Action: ${{ inputs.action_issue }}"
-          
-          # Appel du script contremaître (Niveau 3)
-          python3 .github/scripts/gestionnaire_issues.py \
-            --action "${{ inputs.action_issue }}" \
-            --titre "${{ inputs.titre_issue }}" \
-            --corps "${{ inputs.corps_issue }}" \
-            --labels "${{ inputs.labels }}" \
-            --numero "${{ inputs.numero_issue || 0 }}" \
-            --output issue_result.json
-          
-          # Extraction des résultats
-          if [ -f issue_result.json ]; then
-            numero=$(python3 -c "import json; print(json.load(open('issue_result.json')).get('number', 0))")
-            url=$(python3 -c "import json; print(json.load(open('issue_result.json')).get('html_url', ''))")
-            echo "issue_number=$numero" >> $GITHUB_OUTPUT
-            echo "issue_url=$url" >> $GITHUB_OUTPUT
-            echo "✅ Issue $numero traitée: $url"
-          fi
-          
-      - name: "Upload Résultat"
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: issue-result-${{ github.run_id }}
-          path: issue_result.json
+    - name: "📋 Synthèse Issues Créées"
+      run: |
+        echo "📊 RAPPORT DE CRÉATION D'ISSUES"
+        echo "==============================="
+        echo "Issues créées: ${{ needs.poster_issues.outputs.issues_count }}"
+        echo "Succès: ${{ needs.poster_issues.result == 'success' }}"
+        echo ""
+        echo "🔗 URLs des issues:"
+        echo "${{ needs.poster_issues.outputs.issues_urls }}" | sed 's/,/\n/g'

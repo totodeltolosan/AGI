@@ -1,4 +1,5 @@
-name: "Général Archiviste - Niveau 2 - Audit Documentation"
+name: "📚 NIVEAU 2 : Général Archiviste - Loi Documentation"
+run-name: "📚 Audit Documentation - Chaîne Complète Ouvriers/Qualiticiens"
 
 on:
   workflow_call:
@@ -18,50 +19,190 @@ on:
         required: false
         default: "."
         type: string
+      audit_id:
+        description: "Identifiant unique de l'audit"
+        required: false
+        type: string
+        default: "audit-doc"
+
     outputs:
       rapport_documentation:
-        description: "Rapport d'audit de la documentation"
-        value: ${{ jobs.audit_doc.outputs.rapport }}
+        description: "Chemin du rapport final de documentation"
+        value: ${{ jobs.formater_rapport.outputs.rapport_final }}
       taux_documentation:
-        description: "Taux global de documentation"
-        value: ${{ jobs.audit_doc.outputs.taux }}
+        description: "Taux global de documentation calculé"
+        value: ${{ jobs.calculer_metriques.outputs.taux_global }}
+      audit_reussi:
+        description: "Indicateur de réussite de l'audit"
+        value: ${{ jobs.valider_calculateur.outputs.validation_reussie }}
+
+env:
+  AUDIT_OPERATION: "loi-documentation"
+  TIMEOUT_DEFAULT: 10
 
 jobs:
-  audit_doc:
-    name: "Audit Documentation"
-    runs-on: ubuntu-latest
+  # ============================================
+  # ÉTAPE 1: SCANNER LES FICHIERS (NIVEAU 6)
+  # ============================================
+  scanner_fichiers:
+    name: "🔍 Scanner les Fichiers de Documentation"
+    uses: ./.github/workflows/06-01_scanner-fichiers.yml
+    with:
+      dossiers_cibles: ${{ inputs.repertoire_cible }}
+      extensions_cibles: ${{ inputs.extensions_analysees }}
+      patterns_exclusion: '["__pycache__", ".git", "node_modules", ".pytest_cache"]'
+      nom_operation: "scan-documentation-${{ inputs.audit_id }}"
+
+  # ============================================
+  # ÉTAPE 2: EXTRAIRE LA DOCUMENTATION (NIVEAU 4)
+  # ============================================
+  extraire_documentation:
+    name: "📖 Extraire la Documentation"
+    needs: scanner_fichiers
+    uses: ./.github/workflows/04-01-doc-extracteur.yml
+    with:
+      liste_fichiers: ${{ needs.scanner_fichiers.outputs.fichiers_trouves }}
+      types_documentation: '["docstring", "comments", "README"]'
+      analyse_ast: true
+      nom_operation: "extraction-doc-${{ inputs.audit_id }}"
+
+  # ============================================
+  # ÉTAPE 3: VALIDER L'EXTRACTION (NIVEAU 5)
+  # ============================================
+  valider_extraction:
+    name: "✅ Valider l'Extraction"
+    needs: extraire_documentation
+    uses: ./.github/workflows/05-01-doc-valid-extracteur.yml
+    with:
+      artefact_extraction: ${{ needs.extraire_documentation.outputs.donnees_extraites }}
+      schema_attendu: "documentation-extraction-v1"
+      validations_strictes: true
+      nom_operation: "validation-extraction-${{ inputs.audit_id }}"
+
+  # ============================================
+  # ÉTAPE 4: CALCULER LES MÉTRIQUES (NIVEAU 4)
+  # ============================================
+  calculer_metriques:
+    name: "📊 Calculer les Métriques de Documentation"
+    needs: [extraire_documentation, valider_extraction]
+    if: needs.valider_extraction.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-02-doc-calculateur.yml
+    with:
+      donnees_extraction: ${{ needs.extraire_documentation.outputs.donnees_extraites }}
+      seuil_global: ${{ inputs.seuil_documentation }}
+      seuils_par_type: '{"modules": 80, "classes": 70, "functions": 60}'
+      calculs_avances: true
+      nom_operation: "calcul-metriques-${{ inputs.audit_id }}"
+
     outputs:
-      rapport: ${{ steps.audit.outputs.rapport_path }}
-      taux: ${{ steps.audit.outputs.taux_global }}
-    
+      taux_global: ${{ steps.calcul.outputs.taux_global }}
+      metriques_detaillees: ${{ steps.calcul.outputs.metriques_json }}
+
+  # ============================================
+  # ÉTAPE 5: VALIDER LES MÉTRIQUES (NIVEAU 5)
+  # ============================================
+  valider_calculateur:
+    name: "✅ Valider les Métriques Calculées"
+    needs: calculer_metriques
+    uses: ./.github/workflows/05-02-doc-valid-calculateur.yml
+    with:
+      resultats_calcul: ${{ needs.calculer_metriques.outputs.metriques_detaillees }}
+      schema_attendu: "documentation-metriques-v1"
+      verification_coherence: true
+      nom_operation: "validation-metriques-${{ inputs.audit_id }}"
+
+    outputs:
+      validation_reussie: ${{ steps.validation.outputs.validation_reussie }}
+
+  # ============================================
+  # ÉTAPE 6: FORMATER LE RAPPORT FINAL (NIVEAU 7)
+  # ============================================
+  formater_rapport:
+    name: "📋 Formater le Rapport Final"
+    needs: [calculer_metriques, valider_calculateur]
+    if: needs.valider_calculateur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/07-02_formateur-markdown.yml
+    with:
+      artefact_entree_json: ${{ needs.calculer_metriques.outputs.metriques_detaillees }}
+      template_markdown: "rapport-documentation-complet"
+      variables_contexte: |
+        {
+          "seuil_requis": "${{ inputs.seuil_documentation }}",
+          "audit_id": "${{ inputs.audit_id }}",
+          "timestamp": "${{ github.run_id }}",
+          "extensions": "${{ inputs.extensions_analysees }}"
+        }
+      nom_operation: "rapport-doc-${{ inputs.audit_id }}"
+
+    outputs:
+      rapport_final: ${{ steps.formatage.outputs.fichier_rapport }}
+
+  # ============================================
+  # ÉTAPE 7: STATUT FINAL ET COMMUNICATION
+  # ============================================
+  poster_statut_final:
+    name: "📢 Poster le Statut Final"
+    needs: [valider_calculateur, formater_rapport, calculer_metriques]
+    if: always()
+    uses: ./.github/workflows/07-03_formateur-statut.yml
+    with:
+      resultat: ${{ needs.valider_calculateur.outputs.validation_reussie == 'true' && needs.valider_calculateur.result == 'success' }}
+      message_succes: "✅ Audit Documentation RÉUSSI - Taux: ${{ needs.calculer_metriques.outputs.taux_global }}% (seuil: ${{ inputs.seuil_documentation }}%)"
+      message_echec: "❌ Audit Documentation ÉCHOUÉ - Taux insuffisant ou erreur de validation"
+      nom_check: "Loi Documentation"
+      details_url: ${{ needs.formater_rapport.outputs.rapport_final }}
+
+  # ============================================
+  # ÉTAPE 8: RÉCAPITULATIF ET ARTEFACTS
+  # ============================================
+  synthese_finale:
+    name: "📈 Synthèse de l'Audit Documentation"
+    needs: [scanner_fichiers, extraire_documentation, calculer_metriques, valider_calculateur, formater_rapport]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        
-      - name: "Exécution du Contremaître Documentation"
-        id: audit
-        run: |
-          echo "📚 Lancement de l'audit documentation"
-          echo "Seuil requis: ${{ inputs.seuil_documentation }}%"
-          echo "Extensions: ${{ inputs.extensions_analysees }}"
-          echo "Répertoire: ${{ inputs.repertoire_cible }}"
-          
-          # Appel du script contremaître (Niveau 3)
-          python3 .github/scripts/audit_documentation.py \
-            --seuil ${{ inputs.seuil_documentation }} \
-            --extensions "${{ inputs.extensions_analysees }}" \
-            --repertoire "${{ inputs.repertoire_cible }}" \
-            --output rapport_documentation.json
-          
-          echo "rapport_path=rapport_documentation.json" >> $GITHUB_OUTPUT
-          
-          # Extraction du taux pour output
-          taux=$(python3 -c "import json; data = json.load(open('rapport_documentation.json')); print(data.get('taux_global', 0))")
-          echo "taux_global=$taux" >> $GITHUB_OUTPUT
-          
-      - name: "Upload Rapport Documentation"
-        uses: actions/upload-artifact@v4
-        with:
-          name: rapport-documentation-${{ github.run_id }}
-          path: rapport_documentation.json
-          retention-days: 7
+    - name: "📋 Récapitulatif de l'Audit"
+      run: |
+        echo "🏁 AUDIT DOCUMENTATION TERMINÉ"
+        echo "=============================="
+        echo "📁 Fichiers scannés: ${{ needs.scanner_fichiers.outputs.nombre_fichiers }}"
+        echo "📖 Extraction: ${{ needs.extraire_documentation.result }}"
+        echo "✅ Validation extraction: ${{ needs.valider_extraction.result }}"
+        echo "📊 Calcul métriques: ${{ needs.calculer_metriques.result }}"
+        echo "✅ Validation métriques: ${{ needs.valider_calculateur.result }}"
+        echo "📋 Formatage rapport: ${{ needs.formater_rapport.result }}"
+        echo ""
+        echo "🎯 RÉSULTAT FINAL:"
+        echo "Taux documentation: ${{ needs.calculer_metriques.outputs.taux_global }}%"
+        echo "Seuil requis: ${{ inputs.seuil_documentation }}%"
+        echo "Statut: $([ '${{ needs.valider_calculateur.outputs.validation_reussie }}' = 'true' ] && echo 'CONFORME ✅' || echo 'NON CONFORME ❌')"
+
+    - name: "💾 Upload Synthèse Complète"
+      uses: actions/upload-artifact@v4
+      with:
+        name: synthese-audit-documentation-${{ inputs.audit_id }}
+        path: |
+          ${{ needs.formater_rapport.outputs.rapport_final }}
+          ${{ needs.calculer_metriques.outputs.metriques_detaillees }}
+        retention-days: 30
+        compression-level: 6
+
+# ============================================
+# NOTES ARCHITECTURALES
+# ============================================
+# Cette version respecte strictement l'architecture définie dans:
+# - hierarchie.md: Chaîne séquentielle Ouvriers→Qualiticiens
+# - Systemeneuronal.md: Division Documentation avec 6 étapes
+# - iaGOD.json: Spécifications des seuils et règles
+#
+# SUPPRIME: Le script audit_documentation.py (Contremaître invalide)
+# REMPLACE PAR: Chaîne de jobs avec uses: et needs: (GitHub Actions natif)
+#
+# ARCHITECTURE RESPECTÉE:
+# 1. Niveau 6: Scanner (brique atomique)
+# 2. Niveau 4: Ouvriers (extraction + calcul)
+# 3. Niveau 5: Qualiticiens (validation à chaque étape)
+# 4. Niveau 7: Nettoyeurs (formatage final)
+# 5. Communication: Statut et artefacts

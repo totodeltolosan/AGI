@@ -1,77 +1,77 @@
-name: "🗄️ Général L'Archiviste en Chef - Sauvegarde Rapports"
+name: "🗃️ NIVEAU 2 : Général Archiviste Chef - Sauvegarde Rapports"
+run-name: "🗃️ Sauvegarde - Collection et Archivage des Rapports"
 
 on:
   workflow_call:
     inputs:
-      noms_artefacts:
-        description: "Liste des noms d'artefacts à sauvegarder (JSON string)"
-        required: true
+      pattern_artefacts:
+        description: "Pattern des artefacts à collecter"
+        required: false
+        default: "*rapport*,*audit*,*synthese*"
         type: string
       nom_archive:
-        description: "Nom de l'archive finale à créer"
-        required: true
+        description: "Nom de l'archive finale"
+        required: false
+        default: "rapports-audit-complets"
         type: string
+      retention_jours:
+        description: "Durée de rétention en jours"
+        required: false
+        default: 90
+        type: number
+
     outputs:
-      statut_sauvegarde:
-        description: "Statut de la sauvegarde (success/failure)"
-        value: ${{ jobs.sauvegarde-rapports.outputs.statut }}
-      archive_finale:
-        description: "Nom de l'archive créée"
-        value: ${{ inputs.nom_archive }}
+      archive_url:
+        description: "URL de l'archive créée"
+        value: ${{ jobs.archiver.outputs.archive_url }}
+      fichiers_archives:
+        description: "Liste des fichiers archivés"
+        value: ${{ jobs.archiver.outputs.fichiers_liste }}
 
 jobs:
-  sauvegarde-rapports:
-    name: "🗄️ Sauvegarde Complète Rapports"
+  # ÉTAPE 1: Collecter les rapports (Niveau 4 - Ouvrier)
+  collecteur_rapports:
+    name: "📥 Collecteur de Rapports"
+    uses: ./.github/workflows/04-01-sauvegarde-collecteur.yml
+    with:
+      patterns_recherche: ${{ inputs.pattern_artefacts }}
+      dossiers_cibles: "./rapports,./artifacts"
+      collecte_recursive: true
+      verification_integrite: true
+
+  # ÉTAPE 2: Valider collection (Niveau 5 - Qualiticien)
+  valider_collecteur:
+    name: "✅ Valider Collection"
+    needs: collecteur_rapports
+    uses: ./.github/workflows/05-01-sauvegarde-valid-collecteur.yml
+    with:
+      fichiers_collectes: ${{ needs.collecteur_rapports.outputs.fichiers_trouves }}
+      verification_completude: true
+      taille_minimale: "1KB"
+
+  # ÉTAPE 3: Archiver (Niveau 6)
+  archiver:
+    name: "🗜️ Créer Archive"
+    needs: [collecteur_rapports, valider_collecteur]
+    if: needs.valider_collecteur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/06-05_archiveur-zip.yml
+    with:
+      fichiers_a_zipper: ${{ needs.collecteur_rapports.outputs.fichiers_trouves }}
+      nom_archive: ${{ inputs.nom_archive }}-${{ github.run_id }}
+      compression_niveau: 9
+      inclure_metadata: true
+
+  # ÉTAPE 4: Upload final
+  upload_final:
+    name: "☁️ Upload Archive"
+    needs: archiver
     runs-on: ubuntu-latest
-    
-    outputs:
-      statut: ${{ steps.contremaître.outputs.statut }}
-    
+
     steps:
-      - name: "📁 Téléchargement du code source"
-        uses: actions/checkout@v4
-
-      - name: "🐍 Configuration Python 3.11"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: "🗄️ Exécution du Contremaître Sauvegarde"
-        id: contremaître
-        run: |
-          echo "🎯 === GÉNÉRAL L'ARCHIVISTE EN CHEF ==="
-          echo "Artefacts à sauvegarder: ${{ inputs.noms_artefacts }}"
-          echo "Archive finale: ${{ inputs.nom_archive }}"
-          echo ""
-          
-          # Exécution du script Contremaître
-          python .github/scripts/sauvegarde_rapports.py \
-            --artefacts '${{ inputs.noms_artefacts }}' \
-            --nom-archive "${{ inputs.nom_archive }}"
-          
-          # Capture du code de retour
-          exit_code=$?
-          
-          if [ $exit_code -eq 0 ]; then
-            echo "statut=success" >> $GITHUB_OUTPUT
-            echo "✅ Sauvegarde rapports terminée avec succès"
-          else
-            echo "statut=failure" >> $GITHUB_OUTPUT
-            echo "❌ Sauvegarde rapports échouée"
-          fi
-
-      - name: "📊 Publication du résumé de sauvegarde"
-        if: always()
-        run: |
-          echo "## 🗄️ Sauvegarde Rapports - Résultats" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Artefacts sauvegardés :** $(echo '${{ inputs.noms_artefacts }}' | jq '. | length') artefact(s)" >> $GITHUB_STEP_SUMMARY
-          echo "**Archive créée :** ${{ inputs.nom_archive }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Statut final :** ${{ steps.contremaître.outputs.statut }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ steps.contremaître.outputs.statut }}" = "success" ]; then
-            echo "✅ **Sauvegarde réussie** - Tous les rapports archivés" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ **Sauvegarde échouée** - Problème lors de l'archivage" >> $GITHUB_STEP_SUMMARY
-          fi
+    - name: "📤 Upload Archive Complète"
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.nom_archive }}-final
+        path: ${{ needs.archiver.outputs.archive_path }}
+        retention-days: ${{ inputs.retention_jours }}
+        compression-level: 9

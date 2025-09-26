@@ -1,80 +1,72 @@
-name: "📐 Général Le Cartographe - Contrôle PlantUML"
+name: "🗺️ NIVEAU 2 : Général Cartographe - Contrôle PlantUML"
+run-name: "🗺️ Contrôle PlantUML - Vérification Synchronisation"
 
 on:
   workflow_call:
     inputs:
       chemin_diagramme:
-        description: "Chemin vers le fichier diagramme PlantUML"
+        description: "Chemin vers le diagramme PlantUML"
         required: true
         type: string
       dossiers_critiques:
-        description: "Liste des dossiers critiques à surveiller (JSON string)"
+        description: "Dossiers critiques à surveiller"
         required: true
         type: string
+
     outputs:
-      statut_controle:
-        description: "Statut du contrôle PlantUML (success/warning)"
-        value: ${{ jobs.controle-planuml.outputs.statut }}
       mise_a_jour_requise:
-        description: "Indique si une mise à jour est requise"
-        value: ${{ jobs.controle-planuml.outputs.mise_a_jour }}
+        description: "Mise à jour du diagramme requise"
+        value: ${{ jobs.comparateur.outputs.mise_a_jour_requise }}
+      rapport_comparaison:
+        description: "Rapport de comparaison"
+        value: ${{ jobs.formater_statut.outputs.message_final }}
 
 jobs:
-  controle-planuml:
-    name: "📐 Contrôle Synchronisation PlantUML"
-    runs-on: ubuntu-latest
-    
-    outputs:
-      statut: ${{ steps.contremaître.outputs.statut }}
-      mise_a_jour: ${{ steps.contremaître.outputs.mise_a_jour }}
-    
-    steps:
-      - name: "📁 Téléchargement du code source"
-        uses: actions/checkout@v4
+  # ÉTAPE 1: Date du diagramme (Niveau 6)
+  date_diagramme:
+    name: "📅 Date Diagramme"
+    uses: ./.github/workflows/06-06_git-historien.yml
+    with:
+      chemin_fichier_ou_dossier: ${{ inputs.chemin_diagramme }}
+      format_timestamp: "ISO"
 
-      - name: "🐍 Configuration Python 3.11"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+  # ÉTAPE 2: Date du code (Niveau 6)
+  date_code:
+    name: "📅 Date Code"
+    uses: ./.github/workflows/06-06_git-historien.yml
+    with:
+      chemin_fichier_ou_dossier: ${{ inputs.dossiers_critiques }}
+      format_timestamp: "ISO"
+      mode_recursif: true
 
-      - name: "📐 Exécution du Contremaître Audit PlantUML"
-        id: contremaître
-        run: |
-          echo "🎯 === GÉNÉRAL LE CARTOGRAPHE ==="
-          echo "Diagramme: ${{ inputs.chemin_diagramme }}"
-          echo "Dossiers critiques: ${{ inputs.dossiers_critiques }}"
-          echo ""
-          
-          # Exécution du script Contremaître
-          python .github/scripts/audit_planuml.py \
-            --diagramme "${{ inputs.chemin_diagramme }}" \
-            --dossiers-critiques '${{ inputs.dossiers_critiques }}'
-          
-          # Capture du code de retour
-          exit_code=$?
-          
-          if [ $exit_code -eq 0 ]; then
-            echo "statut=success" >> $GITHUB_OUTPUT
-            echo "mise_a_jour=false" >> $GITHUB_OUTPUT
-            echo "✅ Contrôle PlantUML terminé avec succès"
-          else
-            echo "statut=warning" >> $GITHUB_OUTPUT
-            echo "mise_a_jour=true" >> $GITHUB_OUTPUT
-            echo "⚠️ Mise à jour du diagramme recommandée"
-          fi
+  # ÉTAPE 3: Comparer dates (Niveau 4 - Ouvrier)
+  comparateur:
+    name: "⚖️ Comparateur de Dates"
+    needs: [date_diagramme, date_code]
+    uses: ./.github/workflows/04-01-planuml-comparateur.yml
+    with:
+      date_diagramme: ${{ needs.date_diagramme.outputs.timestamp }}
+      date_code: ${{ needs.date_code.outputs.timestamp }}
+      tolerance_heures: 1
 
-      - name: "📊 Publication du résumé de contrôle"
-        if: always()
-        run: |
-          echo "## 📐 Contrôle PlantUML - Résultats" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Diagramme analysé :** ${{ inputs.chemin_diagramme }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Dossiers surveillés :** $(echo '${{ inputs.dossiers_critiques }}' | jq '. | length') dossier(s)" >> $GITHUB_STEP_SUMMARY
-          echo "**Statut final :** ${{ steps.contremaître.outputs.statut }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ steps.contremaître.outputs.statut }}" = "success" ]; then
-            echo "✅ **Diagramme synchronisé** - Aucune mise à jour requise" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "⚠️ **Mise à jour recommandée** - Le diagramme semble obsolète" >> $GITHUB_STEP_SUMMARY
-          fi
+  # ÉTAPE 4: Valider comparaison (Niveau 5 - Qualiticien)
+  valider_comparateur:
+    name: "✅ Valider Comparaison"
+    needs: comparateur
+    uses: ./.github/workflows/05-01-planuml-valid-comparateur.yml
+    with:
+      resultat_comparaison: ${{ needs.comparateur.outputs.resultat_json }}
+      schema_attendu: "comparaison-planuml-v1"
+
+  # ÉTAPE 5: Formater statut final (Niveau 7)
+  formater_statut:
+    name: "📢 Statut PlantUML"
+    needs: [comparateur, valider_comparateur]
+    if: needs.valider_comparateur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/07-03_formateur-statut.yml
+    with:
+      resultat: ${{ needs.comparateur.outputs.mise_a_jour_requise != 'true' }}
+      message_succes: "✅ Diagramme PlantUML synchronisé"
+      message_echec: "⚠️ Diagramme PlantUML nécessite une mise à jour"
+      nom_check: "Contrôle PlantUML"
+      details_url: ${{ inputs.chemin_diagramme }}

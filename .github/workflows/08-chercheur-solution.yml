@@ -1,57 +1,178 @@
-name: "Général Chercheur - Niveau 2"
+name: "🔬 NIVEAU 2 : Général Chercheur - Recherche de Solution"
+run-name: "🔬 Chercheur - Communication et Analyse de Solutions"
 
 on:
   workflow_call:
     inputs:
-      pattern_recherche:
-        description: "Pattern de recherche dans les fichiers"
+      probleme_description:
+        description: "Description du problème à résoudre"
         required: true
         type: string
-      extensions:
-        description: "Extensions de fichiers à analyser"
+      canaux_communication:
+        description: "Canaux de communication à utiliser"
         required: false
-        default: "py,yml,md"
+        default: "artefact,commentaire,check"
         type: string
-      repertoire:
-        description: "Répertoire de recherche"
+      niveau_analyse:
+        description: "Niveau d'analyse requis"
         required: false
-        default: "."
+        default: "standard"
         type: string
+
     outputs:
-      resultats_recherche:
-        description: "Artefact contenant les résultats de recherche"
-        value: ${{ jobs.chercheur.outputs.artefact }}
+      solution_proposee:
+        description: "Solution proposée"
+        value: ${{ jobs.synthese_finale.outputs.solution_json }}
+      communication_reussie:
+        description: "Communication réussie"
+        value: ${{ jobs.synthese_finale.outputs.communication_ok }}
 
 jobs:
-  chercheur:
-    name: "Recherche dans le code"
+  # ===== SOUS-ÉQUIPE COMMUNICATION (Parallèle) =====
+
+  # Communication 1: Artefact
+  comm_artefact:
+    name: "📄 Communication Artefact"
+    if: contains(inputs.canaux_communication, 'artefact')
+    uses: ./.github/workflows/04-01-chercheur-comm-artefact.yml
+    with:
+      nom_artefact_cible: "solution-${{ github.run_id }}"
+      contenu_solution: ${{ inputs.probleme_description }}
+
+  valider_comm_artefact:
+    name: "✅ Valider Comm Artefact"
+    needs: comm_artefact
+    if: needs.comm_artefact.result == 'success'
+    uses: ./.github/workflows/05-01-chercheur-valid-comm-artefact.yml
+    with:
+      nom_artefact_cible: "solution-${{ github.run_id }}"
+
+  # Communication 2: Check statut
+  comm_check:
+    name: "📊 Communication Check"
+    if: contains(inputs.canaux_communication, 'check')
+    uses: ./.github/workflows/04-02-chercheur-comm-check.yml
+    with:
+      nom_check: "Recherche de Solution"
+      conclusion: "en_cours"
+      details: "Analyse du problème en cours..."
+
+  valider_comm_check:
+    name: "✅ Valider Comm Check"
+    needs: comm_check
+    if: needs.comm_check.result == 'success'
+    uses: ./.github/workflows/05-02-chercheur-valid-comm-check.yml
+    with:
+      nom_check: "Recherche de Solution"
+
+  # Communication 3: Commentaire
+  comm_commentaire:
+    name: "💬 Communication Commentaire"
+    if: contains(inputs.canaux_communication, 'commentaire')
+    uses: ./.github/workflows/04-03-chercheur-comm-commentaire.yml
+    with:
+      numero_pr: ${{ github.event.number }}
+      corps_commentaire: "🔬 Analyse de solution en cours pour: ${{ inputs.probleme_description }}"
+
+  valider_comm_commentaire:
+    name: "✅ Valider Comm Commentaire"
+    needs: comm_commentaire
+    if: needs.comm_commentaire.result == 'success'
+    uses: ./.github/workflows/05-03-chercheur-valid-comm-commentaire.yml
+    with:
+      numero_pr: ${{ github.event.number }}
+
+  # ===== SOUS-ÉQUIPE ANALYSE (Séquentiel) =====
+
+  # Analyse 1: Logs
+  analyse_log:
+    name: "📊 Analyse des Logs"
+    uses: ./.github/workflows/04-06-chercheur-analyse-log.yml
+    with:
+      id_run: ${{ github.run_id }}
+      patterns_erreur: "error,exception,failed,timeout"
+
+  valider_analyse_log:
+    name: "✅ Valider Analyse Log"
+    needs: analyse_log
+    uses: ./.github/workflows/05-06-chercheur-valid-analyse-log.yml
+    with:
+      diagnostic_log: ${{ needs.analyse_log.outputs.diagnostic_json }}
+
+  # Analyse 2: Base de connaissance
+  analyse_kb:
+    name: "📚 Analyse Base Connaissance"
+    needs: [analyse_log, valider_analyse_log]
+    if: needs.valider_analyse_log.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-07-chercheur-analyse-kb.yml
+    with:
+      mots_cles_probleme: ${{ inputs.probleme_description }}
+      sources_kb: "docs/,README.md,TROUBLESHOOTING.md"
+
+  valider_analyse_kb:
+    name: "✅ Valider Analyse KB"
+    needs: analyse_kb
+    uses: ./.github/workflows/05-07-chercheur-valid-analyse-kb.yml
+    with:
+      solutions_potentielles: ${{ needs.analyse_kb.outputs.solutions_json }}
+
+  # Analyse 3: Simulation (si niveau avancé)
+  analyse_simulation:
+    name: "🧪 Analyse par Simulation"
+    needs: [analyse_kb, valider_analyse_kb]
+    if: needs.valider_analyse_kb.outputs.validation_reussie == 'true' && inputs.niveau_analyse == 'avance'
+    uses: ./.github/workflows/04-08-chercheur-analyse-simu.yml
+    with:
+      probleme_contexte: ${{ inputs.probleme_description }}
+      scenarios_test: "standard,edge_cases,stress"
+
+  valider_analyse_simulation:
+    name: "✅ Valider Simulation"
+    needs: analyse_simulation
+    if: needs.analyse_simulation.result == 'success'
+    uses: ./.github/workflows/05-08-chercheur-valid-analyse-simu.yml
+    with:
+      resultats_simulation: ${{ needs.analyse_simulation.outputs.resultats_json }}
+
+  # ===== SYNTHÈSE FINALE =====
+  synthese_finale:
+    name: "🎯 Synthèse Chercheur"
+    needs: [
+      valider_comm_artefact, valider_comm_check, valider_comm_commentaire,
+      valider_analyse_log, valider_analyse_kb, valider_analyse_simulation
+    ]
+    if: always()
     runs-on: ubuntu-latest
+
     outputs:
-      artefact: ${{ steps.search.outputs.artefact_name }}
-    
+      solution_json: ${{ steps.synthese.outputs.solution_finale }}
+      communication_ok: ${{ steps.synthese.outputs.comm_reussie }}
+
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        
-      - name: "Recherche via Contremaître"
-        id: search
-        run: |
-          echo "🔍 Lancement de la recherche"
-          echo "Pattern: ${{ inputs.pattern_recherche }}"
-          echo "Extensions: ${{ inputs.extensions }}"
-          echo "Répertoire: ${{ inputs.repertoire }}"
-          
-          # Appel du script contremaître (Niveau 3)
-          python3 .github/scripts/chercheur.py \
-            --pattern "${{ inputs.pattern_recherche }}" \
-            --extensions "${{ inputs.extensions }}" \
-            --repertoire "${{ inputs.repertoire }}" \
-            --output recherche_results.json
-          
-          echo "artefact_name=recherche_results.json" >> $GITHUB_OUTPUT
-          
-      - name: "Upload artefact"
-        uses: actions/upload-artifact@v4
-        with:
-          name: resultats-recherche-${{ github.run_id }}
-          path: recherche_results.json
+    - name: "📊 Synthèse des Résultats"
+      id: synthese
+      run: |
+        echo "🔬 SYNTHÈSE CHERCHEUR DE SOLUTION"
+        echo "================================"
+
+        # Compter les communications réussies
+        comm_count=0
+        [ "${{ needs.valider_comm_artefact.result }}" = "success" ] && ((comm_count++))
+        [ "${{ needs.valider_comm_check.result }}" = "success" ] && ((comm_count++))
+        [ "${{ needs.valider_comm_commentaire.result }}" = "success" ] && ((comm_count++))
+
+        # Compter les analyses réussies
+        analyse_count=0
+        [ "${{ needs.valider_analyse_log.result }}" = "success" ] && ((analyse_count++))
+        [ "${{ needs.valider_analyse_kb.result }}" = "success" ] && ((analyse_count++))
+        [ "${{ needs.valider_analyse_simulation.result }}" = "success" ] && ((analyse_count++))
+
+        echo "Communications réussies: $comm_count"
+        echo "Analyses réussies: $analyse_count"
+
+        # Déterminer le succès global
+        comm_ok=$([ $comm_count -gt 0 ] && echo "true" || echo "false")
+        analyse_ok=$([ $analyse_count -gt 0 ] && echo "true" || echo "false")
+
+        echo "comm_reussie=$comm_ok" >> $GITHUB_OUTPUT
+        echo "solution_finale={\"communication\":$comm_count,\"analyse\":$analyse_count,\"status\":\"complete\"}" >> $GITHUB_OUTPUT

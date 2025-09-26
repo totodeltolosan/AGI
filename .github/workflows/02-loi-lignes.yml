@@ -1,76 +1,167 @@
-name: "📏 Général Le Métreur - Loi Lignes"
+name: "📏 NIVEAU 2 : Général Métreur - Loi Lignes"
+run-name: "📏 Audit Lignes - Chaîne Complète 10 Workflows"
 
 on:
   workflow_call:
     inputs:
       limite_lignes:
-        description: "Limite maximale de lignes autorisée par fichier"
-        required: true
+        description: "Limite maximum de lignes par fichier"
+        required: false
+        default: 500
+        type: number
+      extensions_cibles:
+        description: "Extensions à analyser"
+        required: false
+        default: "py,js,yml"
         type: string
-      exclusions:
-        description: "Liste des patterns de fichiers à exclure (JSON string)"
-        required: true
+      repertoire_analyse:
+        description: "Répertoire à analyser"
+        required: false
+        default: "."
         type: string
+      audit_id:
+        description: "Identifiant unique de l'audit"
+        required: false
+        type: string
+        default: "audit-lignes"
+
     outputs:
-      statut_audit:
-        description: "Statut de l'audit lignes (success/failure)"
-        value: ${{ jobs.audit-lignes.outputs.statut }}
+      audit_reussi:
+        description: "Résultat final de l'audit lignes"
+        value: ${{ jobs.conseiller_final.outputs.audit_conforme }}
+      statistiques_finales:
+        description: "Statistiques complètes"
+        value: ${{ jobs.statisticien.outputs.statistiques_json }}
       rapport_final:
-        description: "Nom de l'artefact du rapport final"
-        value: "rapport-lignes-final"
+        description: "Rapport formaté"
+        value: ${{ jobs.formater_rapport.outputs.rapport_md }}
 
 jobs:
-  audit-lignes:
-    name: "📏 Audit Complet Loi Lignes"
-    runs-on: ubuntu-latest
-    
-    outputs:
-      statut: ${{ steps.contremaître.outputs.statut }}
-    
-    steps:
-      - name: "📁 Téléchargement du code source"
-        uses: actions/checkout@v4
+  # ÉTAPE 1: Scanner les fichiers (Niveau 6)
+  scanner_fichiers:
+    name: "🔍 Scanner Fichiers"
+    uses: ./.github/workflows/06-01_scanner-fichiers.yml
+    with:
+      dossiers_cibles: ${{ inputs.repertoire_analyse }}
+      extensions_cibles: ${{ inputs.extensions_cibles }}
+      patterns_exclusion: '["__pycache__", ".git", "node_modules"]'
 
-      - name: "🐍 Configuration Python 3.11"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+  # ÉTAPE 2: Compter les lignes (Niveau 4 - Ouvrier 1)
+  compteur:
+    name: "📊 Compteur de Lignes"
+    needs: scanner_fichiers
+    uses: ./.github/workflows/04-01-lignes-compteur.yml
+    with:
+      liste_fichiers: ${{ needs.scanner_fichiers.outputs.fichiers_trouves }}
+      options_comptage: '["code", "comments", "blank"]'
 
-      - name: "📏 Exécution du Contremaître Audit Lignes"
-        id: contremaître
-        run: |
-          echo "🎯 === GÉNÉRAL LE MÉTREUR ==="
-          echo "Limite de lignes: ${{ inputs.limite_lignes }}"
-          echo "Exclusions: ${{ inputs.exclusions }}"
-          echo ""
-          
-          # Exécution du script Contremaître
-          python .github/scripts/audit_lignes.py \
-            --limite-lignes "${{ inputs.limite_lignes }}" \
-            --exclusions '${{ inputs.exclusions }}'
-          
-          # Capture du code de retour
-          exit_code=$?
-          
-          if [ $exit_code -eq 0 ]; then
-            echo "statut=success" >> $GITHUB_OUTPUT
-            echo "✅ Audit lignes terminé avec succès"
-          else
-            echo "statut=failure" >> $GITHUB_OUTPUT
-            echo "❌ Audit lignes échoué"
-          fi
+  # ÉTAPE 3: Valider comptage (Niveau 5 - Qualiticien 1)
+  valider_compteur:
+    name: "✅ Valider Comptage"
+    needs: compteur
+    uses: ./.github/workflows/05-01-lignes-valid-compteur.yml
+    with:
+      resultats_comptage: ${{ needs.compteur.outputs.resultats_bruts }}
+      schema_attendu: "comptage-lignes-v1"
 
-      - name: "📊 Publication du résumé d'audit"
-        if: always()
-        run: |
-          echo "## 📏 Audit Loi Lignes - Résultats" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Limite configurée :** ${{ inputs.limite_lignes }} lignes" >> $GITHUB_STEP_SUMMARY
-          echo "**Statut final :** ${{ steps.contremaître.outputs.statut }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ steps.contremaître.outputs.statut }}" = "success" ]; then
-            echo "✅ **Audit réussi** - Tous les fichiers respectent la limite" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ **Audit échoué** - Des violations de limite détectées" >> $GITHUB_STEP_SUMMARY
-          fi
+  # ÉTAPE 4: Juger conformité (Niveau 4 - Ouvrier 2)
+  juge:
+    name: "⚖️ Juge de Conformité"
+    needs: [compteur, valider_compteur]
+    if: needs.valider_compteur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-02-lignes-juge.yml
+    with:
+      resultats_comptage: ${{ needs.compteur.outputs.resultats_bruts }}
+      limite_lignes: ${{ inputs.limite_lignes }}
+      severite_violations: "critique"
+
+  # ÉTAPE 5: Valider jugement (Niveau 5 - Qualiticien 2)
+  valider_juge:
+    name: "✅ Valider Jugement"
+    needs: juge
+    uses: ./.github/workflows/05-02-lignes-valid-juge.yml
+    with:
+      resultats_jugement: ${{ needs.juge.outputs.violations_detectees }}
+      schema_attendu: "jugement-lignes-v1"
+
+  # ÉTAPE 6: Calculer statistiques (Niveau 4 - Ouvrier 3)
+  statisticien:
+    name: "📈 Statisticien"
+    needs: [juge, valider_juge]
+    if: needs.valider_juge.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-03-lignes-statisticien.yml
+    with:
+      donnees_jugement: ${{ needs.juge.outputs.violations_detectees }}
+      calculs_avances: true
+      metriques_globales: true
+
+  # ÉTAPE 7: Valider statistiques (Niveau 5 - Qualiticien 3)
+  valider_statisticien:
+    name: "✅ Valider Statistiques"
+    needs: statisticien
+    uses: ./.github/workflows/05-03-lignes-valid-statisticien.yml
+    with:
+      statistiques: ${{ needs.statisticien.outputs.statistiques_json }}
+      schema_attendu: "statistiques-lignes-v1"
+
+  # ÉTAPE 8: Générer rapport (Niveau 4 - Ouvrier 4)
+  rapporteur:
+    name: "📋 Rapporteur"
+    needs: [statisticien, valider_statisticien]
+    if: needs.valider_statisticien.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-04-lignes-rapporteur.yml
+    with:
+      statistiques_validees: ${{ needs.statisticien.outputs.statistiques_json }}
+      template_rapport: "rapport-lignes-detaille"
+      format_sortie: "json"
+
+  # ÉTAPE 9: Valider rapport (Niveau 5 - Qualiticien 4)
+  valider_rapporteur:
+    name: "✅ Valider Rapport"
+    needs: rapporteur
+    uses: ./.github/workflows/05-04-lignes-valid-rapporteur.yml
+    with:
+      rapport_genere: ${{ needs.rapporteur.outputs.rapport_brut }}
+      schema_attendu: "rapport-lignes-v1"
+
+  # ÉTAPE 10: Conseil final (Niveau 4 - Ouvrier 5)
+  conseiller_final:
+    name: "🎯 Conseiller Final"
+    needs: [rapporteur, valider_rapporteur]
+    if: needs.valider_rapporteur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-05-lignes-conseiller.yml
+    with:
+      rapport_valide: ${{ needs.rapporteur.outputs.rapport_brut }}
+      seuil_conformite: ${{ inputs.limite_lignes }}
+      recommandations: true
+
+  # ÉTAPE 11: Valider conseil (Niveau 5 - Qualiticien 5)
+  valider_conseiller:
+    name: "✅ Valider Conseil"
+    needs: conseiller_final
+    uses: ./.github/workflows/05-05-lignes-valid-conseiller.yml
+    with:
+      conseil_final: ${{ needs.conseiller_final.outputs.conseil_json }}
+      schema_attendu: "conseil-lignes-v1"
+
+  # ÉTAPE 12: Formater rapport final (Niveau 7)
+  formater_rapport:
+    name: "📄 Formater Rapport"
+    needs: [conseiller_final, valider_conseiller]
+    if: needs.valider_conseiller.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/07-02_formateur-markdown.yml
+    with:
+      artefact_entree_json: ${{ needs.conseiller_final.outputs.conseil_json }}
+      template_markdown: "rapport-audit-lignes-complet"
+
+  # ÉTAPE 13: Statut final (Niveau 7)
+  statut_final:
+    name: "📢 Statut Final"
+    needs: [conseiller_final, valider_conseiller, formater_rapport]
+    if: always()
+    uses: ./.github/workflows/07-03_formateur-statut.yml
+    with:
+      resultat: ${{ needs.conseiller_final.outputs.audit_conforme == 'true' && needs.valider_conseiller.outputs.validation_reussie == 'true' }}
+      message_succes: "✅ Audit Lignes CONFORME - Limite: ${{ inputs.limite_lignes }}"
+      message_echec: "❌ Audit Lignes NON CONFORME - Violations détectées"
+      nom_check: "Loi Lignes"

@@ -1,73 +1,109 @@
-name: "Général Gardien - Niveau 2 - Audit Sécurité"
+name: "🛡️ NIVEAU 2 : Général Gardien - Loi Sécurité"
+run-name: "🛡️ Audit Sécurité - Recherche et Tri des Vulnérabilités"
 
 on:
   workflow_call:
     inputs:
-      regles_securite:
-        description: "Règles de sécurité JSON (patterns, descriptions, sévérités)"
+      niveau_severite:
+        description: "Niveau minimum de sévérité"
         required: false
-        default: '[{"pattern":"password\\s*=\\s*[\"'']\\w+[\"'']","description":"Mot de passe en dur","severite":"critique"}]'
+        default: "medium"
         type: string
-      extensions_scan:
-        description: "Extensions de fichiers à scanner"
+      patterns_securite:
+        description: "Patterns de sécurité à rechercher"
         required: false
-        default: "py,js,yml,yaml,json"
+        default: "passwords,tokens,secrets,api_keys"
         type: string
-      repertoire_scan:
-        description: "Répertoire à scanner"
+      audit_id:
+        description: "Identifiant unique de l'audit"
         required: false
-        default: "."
         type: string
+        default: "audit-securite"
+
     outputs:
       violations_critiques:
         description: "Nombre de violations critiques"
-        value: ${{ jobs.audit_securite.outputs.critiques }}
+        value: ${{ jobs.trieur.outputs.violations_critiques_count }}
       rapport_securite:
-        description: "Rapport complet de sécurité"
-        value: ${{ jobs.audit_securite.outputs.rapport }}
+        description: "Rapport final de sécurité"
+        value: ${{ jobs.formater_rapport.outputs.rapport_md }}
 
 jobs:
-  audit_securite:
-    name: "Audit Sécurité"
-    runs-on: ubuntu-latest
-    outputs:
-      critiques: ${{ steps.scan.outputs.violations_critiques }}
-      rapport: ${{ steps.scan.outputs.rapport_path }}
-    
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v4
-        
-      - name: "Exécution du Contremaître Sécurité"
-        id: scan
-        run: |
-          echo "🔒 Lancement de l'audit sécurité"
-          echo "Extensions: ${{ inputs.extensions_scan }}"
-          echo "Répertoire: ${{ inputs.repertoire_scan }}"
-          
-          # Création du fichier de règles
-          echo '${{ inputs.regles_securite }}' > regles_securite.json
-          
-          # Appel du script contremaître (Niveau 3)
-          python3 .github/scripts/audit_securite.py \
-            --regles regles_securite.json \
-            --extensions "${{ inputs.extensions_scan }}" \
-            --repertoire "${{ inputs.repertoire_scan }}" \
-            --output rapport_securite.json
-          
-          echo "rapport_path=rapport_securite.json" >> $GITHUB_OUTPUT
-          
-          # Extraction du nombre de violations critiques
-          critiques=$(python3 -c "import json; data = json.load(open('rapport_securite.json')); print(len(data.get('violations', {}).get('critique', [])))")
-          echo "violations_critiques=$critiques" >> $GITHUB_OUTPUT
-          
-          if [ "$critiques" -gt 0 ]; then
-            echo "⚠️ ALERTE: $critiques violation(s) critique(s) détectée(s)"
-          fi
-          
-      - name: "Upload Rapport Sécurité"
-        uses: actions/upload-artifact@v4
-        with:
-          name: rapport-securite-${{ github.run_id }}
-          path: rapport_securite.json
-          retention-days: 30
+  # ÉTAPE 1: Scanner les fichiers
+  scanner_fichiers:
+    name: "🔍 Scanner Fichiers Sécurité"
+    uses: ./.github/workflows/06-01_scanner-fichiers.yml
+    with:
+      dossiers_cibles: "."
+      extensions_cibles: "py,js,yml,yaml,json,env"
+      patterns_exclusion: '["node_modules", ".git", "__pycache__"]'
+
+  # ÉTAPE 2: Chercher vulnérabilités (Niveau 4 - Ouvrier 1)
+  chercheur_vulnerabilites:
+    name: "🔎 Chercheur de Vulnérabilités"
+    needs: scanner_fichiers
+    uses: ./.github/workflows/04-01-securite-chercheur.yml
+    with:
+      liste_fichiers: ${{ needs.scanner_fichiers.outputs.fichiers_trouves }}
+      patterns_recherche: ${{ inputs.patterns_securite }}
+      analyse_profonde: true
+      regles_personnalisees: '["hardcoded_secrets", "sql_injection", "xss_patterns"]'
+
+  # ÉTAPE 3: Valider recherche (Niveau 5 - Qualiticien 1)
+  valider_chercheur:
+    name: "✅ Valider Recherche"
+    needs: chercheur_vulnerabilites
+    uses: ./.github/workflows/05-01-securite-valid-chercheur.yml
+    with:
+      resultats_recherche: ${{ needs.chercheur_vulnerabilites.outputs.vulnerabilites_brutes }}
+      schema_attendu: "vulnerabilites-brutes-v1"
+      validation_stricte: true
+
+  # ÉTAPE 4: Trier par sévérité (Niveau 4 - Ouvrier 2)
+  trieur:
+    name: "📊 Trieur de Sévérité"
+    needs: [chercheur_vulnerabilites, valider_chercheur]
+    if: needs.valider_chercheur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-02-securite-trieur.yml
+    with:
+      vulnerabilites_brutes: ${{ needs.chercheur_vulnerabilites.outputs.vulnerabilites_brutes }}
+      niveau_minimum: ${{ inputs.niveau_severite }}
+      classification_cvss: true
+      regroupement_par_type: true
+
+  # ÉTAPE 5: Valider tri (Niveau 5 - Qualiticien 2)
+  valider_trieur:
+    name: "✅ Valider Tri"
+    needs: trieur
+    uses: ./.github/workflows/05-02-securite-valid-trieur.yml
+    with:
+      vulnerabilites_triees: ${{ needs.trieur.outputs.vulnerabilites_classees }}
+      schema_attendu: "vulnerabilites-triees-v1"
+      verification_coherence: true
+
+  # ÉTAPE 6: Formater rapport (Niveau 7)
+  formater_rapport:
+    name: "📋 Formater Rapport Sécurité"
+    needs: [trieur, valider_trieur]
+    if: needs.valider_trieur.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/07-02_formateur-markdown.yml
+    with:
+      artefact_entree_json: ${{ needs.trieur.outputs.vulnerabilites_classees }}
+      template_markdown: "rapport-securite-detaille"
+      variables_contexte: |
+        {
+          "niveau_severite": "${{ inputs.niveau_severite }}",
+          "audit_id": "${{ inputs.audit_id }}"
+        }
+
+  # ÉTAPE 7: Statut final
+  statut_final:
+    name: "📢 Statut Sécurité"
+    needs: [trieur, valider_trieur, formater_rapport]
+    if: always()
+    uses: ./.github/workflows/07-03_formateur-statut.yml
+    with:
+      resultat: ${{ needs.trieur.outputs.violations_critiques_count == '0' && needs.valider_trieur.outputs.validation_reussie == 'true' }}
+      message_succes: "✅ Audit Sécurité CONFORME - Aucune vulnérabilité critique"
+      message_echec: "❌ Audit Sécurité NON CONFORME - ${{ needs.trieur.outputs.violations_critiques_count }} vulnérabilités critiques"
+      nom_check: "Loi Sécurité"

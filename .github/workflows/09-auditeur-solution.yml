@@ -1,75 +1,150 @@
-name: "🔍 Général L'Auditeur de Solution - Audit Solution"
+name: "🔍 NIVEAU 2 : Général Auditeur - Audit de Solution"
+run-name: "🔍 Auditeur - Qualification Complète de Solution"
 
 on:
   workflow_call:
     inputs:
-      proposition_solution:
-        description: "Proposition de solution à auditer (JSON string)"
+      solution_a_auditer:
+        description: "Solution à auditer"
         required: true
         type: string
-      metriques_actuelles:
-        description: "Métriques actuelles du système (JSON string)"
-        required: true
-        type: string
+      niveau_confiance_requis:
+        description: "Niveau de confiance requis (0-100)"
+        required: false
+        default: 80
+        type: number
+
     outputs:
-      statut_audit:
-        description: "Statut de l'audit solution (success/failure)"
-        value: ${{ jobs.audit-solution.outputs.statut }}
+      audit_reussi:
+        description: "Audit réussi"
+        value: ${{ jobs.valider_plan.outputs.validation_reussie == 'true' }}
+      score_confiance:
+        description: "Score de confiance final"
+        value: ${{ jobs.plan_implementation.outputs.score_final }}
       plan_implementation:
-        description: "Nom de l'artefact du plan d'implémentation"
-        value: "plan-implementation"
+        description: "Plan d'implémentation"
+        value: ${{ jobs.plan_implementation.outputs.plan_json }}
 
 jobs:
-  audit-solution:
-    name: "🔍 Audit Complet Solution"
+  # ÉTAPE 1: Audit du schéma (Niveau 4 - Ouvrier 1)
+  audit_schema:
+    name: "📋 Audit Schéma"
+    uses: ./.github/workflows/04-01-auditeur-schema.yml
+    with:
+      solution_input: ${{ inputs.solution_a_auditer }}
+      schema_requis: "solution-standard-v1"
+      validation_stricte: true
+
+  # ÉTAPE 2: Valider schéma (Niveau 5 - Qualiticien 1)
+  valider_schema:
+    name: "✅ Valider Schéma"
+    needs: audit_schema
+    uses: ./.github/workflows/05-01-auditeur-valid-schema.yml
+    with:
+      rapport_schema: ${{ needs.audit_schema.outputs.rapport_validation }}
+      schema_attendu: "rapport-schema-v1"
+
+  # ÉTAPE 3: Audit sécurité (Niveau 4 - Ouvrier 2)
+  audit_securite_solution:
+    name: "🛡️ Audit Sécurité Solution"
+    needs: [audit_schema, valider_schema]
+    if: needs.valider_schema.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-02-auditeur-securite.yml
+    with:
+      solution_validee: ${{ needs.audit_schema.outputs.solution_normalisee }}
+      niveau_analyse: "approfondi"
+      tests_penetration: true
+
+  # ÉTAPE 4: Valider sécurité (Niveau 5 - Qualiticien 2)
+  valider_securite:
+    name: "✅ Valider Sécurité"
+    needs: audit_securite_solution
+    uses: ./.github/workflows/05-02-auditeur-valid-securite.yml
+    with:
+      rapport_securite: ${{ needs.audit_securite_solution.outputs.analyse_securite }}
+      schema_attendu: "rapport-securite-v1"
+
+  # ÉTAPE 5: Simulation (Niveau 4 - Ouvrier 3)
+  simulation_solution:
+    name: "🧪 Simulation Solution"
+    needs: [audit_securite_solution, valider_securite]
+    if: needs.valider_securite.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-03-auditeur-simulation.yml
+    with:
+      solution_securisee: ${{ needs.audit_securite_solution.outputs.solution_securisee }}
+      scenarios_test: "nominal,degraded,extreme"
+      duree_simulation: "300"
+
+  # ÉTAPE 6: Valider simulation (Niveau 5 - Qualiticien 3)
+  valider_simulation:
+    name: "✅ Valider Simulation"
+    needs: simulation_solution
+    uses: ./.github/workflows/05-03-auditeur-valid-simulation.yml
+    with:
+      resultats_simulation: ${{ needs.simulation_solution.outputs.resultats_complets }}
+      schema_attendu: "resultats-simulation-v1"
+
+  # ÉTAPE 7: Analyse coût (Niveau 4 - Ouvrier 4)
+  analyse_cout:
+    name: "💰 Analyse Coût"
+    needs: [simulation_solution, valider_simulation]
+    if: needs.valider_simulation.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-04-auditeur-cout.yml
+    with:
+      solution_simulee: ${{ needs.simulation_solution.outputs.solution_optimisee }}
+      parametres_cout: '{"ressources_cpu": true, "memoire": true, "stockage": true, "reseau": true}'
+      horizon_temporel: "12_mois"
+
+  # ÉTAPE 8: Valider coût (Niveau 5 - Qualiticien 4)
+  valider_cout:
+    name: "✅ Valider Coût"
+    needs: analyse_cout
+    uses: ./.github/workflows/05-04-auditeur-valid-cout.yml
+    with:
+      analyse_cout: ${{ needs.analyse_cout.outputs.estimation_detaillee }}
+      schema_attendu: "analyse-cout-v1"
+
+  # ÉTAPE 9: Plan d'implémentation (Niveau 4 - Ouvrier 5)
+  plan_implementation:
+    name: "📊 Plan d'Implémentation"
+    needs: [analyse_cout, valider_cout]
+    if: needs.valider_cout.outputs.validation_reussie == 'true'
+    uses: ./.github/workflows/04-05-auditeur-plan.yml
+    with:
+      solution_complete: ${{ needs.analyse_cout.outputs.solution_evaluee }}
+      niveau_confiance_cible: ${{ inputs.niveau_confiance_requis }}
+      inclure_risques: true
+      inclure_timeline: true
+
+  # ÉTAPE 10: Valider plan (Niveau 5 - Qualiticien 5)
+  valider_plan:
+    name: "✅ Valider Plan Final"
+    needs: plan_implementation
+    uses: ./.github/workflows/05-05-auditeur-valid-plan.yml
+    with:
+      plan_implementation: ${{ needs.plan_implementation.outputs.plan_json }}
+      schema_attendu: "plan-implementation-v1"
+      verification_coherence: true
+
+  # ÉTAPE 11: Rapport final
+  rapport_final_auditeur:
+    name: "📋 Rapport Final Auditeur"
+    needs: [plan_implementation, valider_plan]
+    if: needs.valider_plan.outputs.validation_reussie == 'true'
     runs-on: ubuntu-latest
-    
-    outputs:
-      statut: ${{ steps.contremaître.outputs.statut }}
-    
+
     steps:
-      - name: "📁 Téléchargement du code source"
-        uses: actions/checkout@v4
-
-      - name: "🐍 Configuration Python 3.11"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: "🔍 Exécution du Contremaître Auditeur Solution"
-        id: contremaître
-        run: |
-          echo "🎯 === GÉNÉRAL L'AUDITEUR DE SOLUTION ==="
-          echo "Solution à auditer: $(echo '${{ inputs.proposition_solution }}' | jq -r '.type // "Non spécifié"')"
-          echo ""
-          
-          # Exécution du script Contremaître
-          python .github/scripts/auditeur_solution.py \
-            --proposition '${{ inputs.proposition_solution }}' \
-            --metriques '${{ inputs.metriques_actuelles }}'
-          
-          # Capture du code de retour
-          exit_code=$?
-          
-          if [ $exit_code -eq 0 ]; then
-            echo "statut=success" >> $GITHUB_OUTPUT
-            echo "✅ Audit solution terminé avec succès"
-          else
-            echo "statut=failure" >> $GITHUB_OUTPUT
-            echo "❌ Audit solution échoué"
-          fi
-
-      - name: "📊 Publication du résumé d'audit"
-        if: always()
-        run: |
-          echo "## 🔍 Audit Solution - Résultats" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Type de solution :** $(echo '${{ inputs.proposition_solution }}' | jq -r '.type // "Non spécifié"')" >> $GITHUB_STEP_SUMMARY
-          echo "**Statut final :** ${{ steps.contremaître.outputs.statut }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ steps.contremaître.outputs.statut }}" = "success" ]; then
-            echo "✅ **Audit réussi** - Plan d'implémentation généré" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ **Audit échoué** - Solution non conforme aux critères" >> $GITHUB_STEP_SUMMARY
-          fi
+    - name: "📊 Synthèse Audit Solution"
+      run: |
+        echo "🔍 RAPPORT FINAL - AUDIT DE SOLUTION"
+        echo "===================================="
+        echo "Score de confiance: ${{ needs.plan_implementation.outputs.score_final }}%"
+        echo "Seuil requis: ${{ inputs.niveau_confiance_requis }}%"
+        echo "Statut: $([ '${{ needs.plan_implementation.outputs.score_final }}' -ge '${{ inputs.niveau_confiance_requis }}' ] && echo 'CONFORME ✅' || echo 'NON CONFORME ❌')"
+        echo ""
+        echo "Étapes validées:"
+        echo "- Schéma: ${{ needs.valider_schema.outputs.validation_reussie }}"
+        echo "- Sécurité: ${{ needs.valider_securite.outputs.validation_reussie }}"
+        echo "- Simulation: ${{ needs.valider_simulation.outputs.validation_reussie }}"
+        echo "- Coût: ${{ needs.valider_cout.outputs.validation_reussie }}"
+        echo "- Plan: ${{ needs.valider_plan.outputs.validation_reussie }}"

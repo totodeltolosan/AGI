@@ -1,0 +1,601 @@
+[
+  {
+    "face_numero": 1,
+    "face_nom": "L'Action (Le Présent)",
+    "principe": "Exécuter, Agir, Appliquer",
+    "description": "Les 71 Workflows d'Action (WA) constituent le système nerveux de l'AGI. Ils sont le 'corps' qui interagit avec le monde (le code, les API, GitHub). Ils sont déterministes et exécutifs.",
+    "total_workflows": 71,
+    "niveaux": [
+      {
+        "niveau_numero": "0",
+        "titre": "Contrôle Humain",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/00-maitre.yml",
+            "nom_logique": "Maître",
+            "role": "Fournit une interface manuelle pour approuver une Pull Request en urgence, en contournant la chaîne de validation.",
+            "inputs": [
+              {"nom": "pull_request_number", "type": "string"},
+              {"nom": "raison", "type": "string"},
+              {"nom": "loi_a_ignorer", "type": "choice"}
+            ],
+            "handler": "Utilise directement le GitHub CLI (gh). Pas de script Python.",
+            "outputs": "Une approbation et un commentaire sur la Pull Request ciblée."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "1",
+        "titre": "Orchestration Centrale",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/01-orchestre.yml",
+            "nom_logique": "Orchestre",
+            "role": "Point d'entrée unique du système. Lit iaGOD.json, valide sa structure, et déclenche les Généraux de Niveau 2.",
+            "inputs": "Aucun (déclenché par des événements Git).",
+            "handler": "/.github/scripts/orchestrateur.py",
+            "outputs": "Appels aux workflows de Niveau 2 ; un statut de 'check' final sur la Pull Request."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "2",
+        "titre": "Généraux de Division",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/02-loi-lignes.yml",
+            "nom_logique": "Le Métreur",
+            "role": "Reçoit l'ordre 'Auditer Lignes' et exécute le script Contremaître audit_lignes.py.",
+            "inputs": [
+              {"nom": "limite_lignes", "type": "number"},
+              {"nom": "exclusions", "type": "json_string"}
+            ],
+            "handler": "/.github/scripts/audit_lignes.py",
+            "outputs": "Un artefact de rapport final et un statut de succès/échec."
+          },
+          {
+            "chemin": "/.github/workflows/03-loi-securite.yml",
+            "nom_logique": "Le Gardien",
+            "role": "Reçoit l'ordre 'Auditer Sécurité' et exécute le script Contremaître audit_securite.py.",
+            "inputs": [{"nom": "regles_securite", "type": "json_string"}],
+            "handler": "/.github/scripts/audit_securite.py",
+            "outputs": "Un artefact de rapport final et un statut de succès/échec."
+          },
+          {
+            "chemin": "/.github/workflows/04-loi-documentation.yml",
+            "nom_logique": "L'Archiviste",
+            "role": "Reçoit l'ordre 'Auditer Documentation' et exécute le script Contremaître audit_documentation.py.",
+            "inputs": [{"nom": "seuils_documentation", "type": "json_string"}],
+            "handler": "/.github/scripts/audit_documentation.py",
+            "outputs": "Un artefact de rapport final et un statut de succès/échec."
+          },
+          {
+            "chemin": "/.github/workflows/05-creation-issues.yml",
+            "nom_logique": "Le Greffier",
+            "role": "Reçoit l'ordre 'Créer Issues' et exécute le script Contremaître creation_issues.py.",
+            "inputs": [{"nom": "noms_artefacts", "type": "json_string"}],
+            "handler": "/.github/scripts/creation_issues.py",
+            "outputs": "Création d'une ou plusieurs issues sur le dépôt."
+          },
+          {
+            "chemin": "/.github/workflows/06-sauvegarde-rapports.yml",
+            "nom_logique": "L'Archiviste en Chef",
+            "role": "Reçoit l'ordre 'Sauvegarder Rapports' et exécute le script Contremaître sauvegarde_rapports.py.",
+            "inputs": [
+              {"nom": "noms_artefacts", "type": "json_string"},
+              {"nom": "nom_archive", "type": "string"}
+            ],
+            "handler": "/.github/scripts/sauvegarde_rapports.py",
+            "outputs": "Un artefact .zip unique contenant tous les rapports."
+          },
+          {
+            "chemin": "/.github/workflows/07-controle-planuml.yml",
+            "nom_logique": "Le Cartographe",
+            "role": "Reçoit l'ordre 'Contrôler Diagramme' et exécute le script Contremaître audit_planuml.py.",
+            "inputs": [
+              {"nom": "chemin_diagramme", "type": "string"},
+              {"nom": "dossiers_critiques", "type": "json_string"}
+            ],
+            "handler": "/.github/scripts/audit_planuml.py",
+            "outputs": "Un statut de 'check' informatif (non bloquant) sur la Pull Request."
+          },
+          {
+            "chemin": "/.github/workflows/chercheur.yml",
+            "nom_logique": "Le Chercheur",
+            "role": "Reçoit un 'appel d'offres' (repository_dispatch) et orchestre la recherche d'une solution.",
+            "inputs": "Payload de l'événement repository_dispatch.",
+            "handler": "/.github/scripts/chercheur_solution.py",
+            "outputs": "Communication d'une proposition de solution via un ou plusieurs canaux."
+          },
+          {
+            "chemin": "/.github/workflows/auditeur-solution.yml",
+            "nom_logique": "L'Auditeur de Solution",
+            "role": "Reçoit une 'proposition de solution' et la qualifie entièrement.",
+            "inputs": "Artefact de la proposition de solution.",
+            "handler": "/.github/scripts/auditeur_solution.py",
+            "outputs": "Un artefact 'Plan d'Implémentation' avec un score de confiance."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "4 & 5",
+        "titre": "Ouvriers et Qualiticiens",
+        "divisions": [
+          {
+            "division_nom": "Loi Lignes",
+            "total_workflows": 10,
+            "workflows": [
+              {
+                "chemin": "/.github/workflows/04-01-lignes-compteur.yml", "type": "Ouvrier",
+                "role": "Compte les lignes des fichiers fournis.",
+                "inputs": "Artefact liste-fichiers.json.", "handler": "/.github/scripts/ouvrier_compteur.py",
+                "outputs": "Artefact resultats-bruts-compteur.json."
+              },
+              {
+                "chemin": "/.github/workflows/05-01-lignes-valid-compteur.yml", "type": "Qualiticien",
+                "role": "Valide le format de resultats-bruts-compteur.json.",
+                "inputs": "Artefact resultats-bruts-compteur.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                "outputs": "Statut de succès/échec."
+              },
+              {
+                "chemin": "/.github/workflows/04-02-lignes-juge.yml", "type": "Ouvrier",
+                "role": "Compare les comptes à la loi.",
+                "inputs": "Artefact resultats-bruts-compteur.json, limite_lignes (number).", "handler": "/.github/scripts/ouvrier_juge.py",
+                "outputs": "Artefact resultats-juges.json."
+              },
+              {
+                "chemin": "/.github/workflows/05-02-lignes-valid-juge.yml", "type": "Qualiticien",
+                "role": "Valide le format de resultats-juges.json.",
+                "inputs": "Artefact resultats-juges.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                "outputs": "Statut de succès/échec."
+              },
+              {
+                "chemin": "/.github/workflows/04-03-lignes-statisticien.yml", "type": "Ouvrier",
+                "role": "Calcule les métriques globales.",
+                "inputs": "Artefact resultats-juges.json.", "handler": "/.github/scripts/ouvrier_statisticien.py",
+                "outputs": "Artefact statistiques.json."
+              },
+              {
+                "chemin": "/.github/workflows/05-03-lignes-valid-statisticien.yml", "type": "Qualiticien",
+                "role": "Valide le format de statistiques.json.",
+                "inputs": "Artefact statistiques.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                "outputs": "Statut de succès/échec."
+              },
+              {
+                "chemin": "/.github/workflows/04-04-lignes-rapporteur.yml", "type": "Ouvrier",
+                "role": "Met en forme le rapport final.",
+                "inputs": "Artefact resultats-juges.json, statistiques.json.", "handler": "/.github/scripts/ouvrier_rapporteur.py",
+                "outputs": "Artefact rapport-lignes.csv."
+              },
+              {
+                "chemin": "/.github/workflows/05-04-lignes-valid-rapporteur.yml", "type": "Qualiticien",
+                "role": "Valide que le fichier rapport-lignes.csv a été créé et n'est pas vide.",
+                "inputs": "Artefact rapport-lignes.csv.", "handler": "/.github/scripts/qualiticien_validation_artefact.py",
+                "outputs": "Statut de succès/échec."
+              },
+              {
+                "chemin": "/.github/workflows/04-05-lignes-conseiller.yml", "type": "Ouvrier",
+                "role": "Émet des recommandations.",
+                "inputs": "Artefact statistiques.json.", "handler": "/.github/scripts/ouvrier_conseiller.py",
+                "outputs": "Artefact recommandations.md."
+              },
+              {
+                "chemin": "/.github/workflows/05-05-lignes-valid-conseiller.yml", "type": "Qualiticien",
+                "role": "Valide que le fichier recommandations.md a été créé.",
+                "inputs": "Artefact recommandations.md.", "handler": "/.github/scripts/qualiticien_validation_artefact.py",
+                "outputs": "Statut de succès/échec."
+              }
+            ]
+          },
+          {
+            "division_nom": "Loi Sécurité",
+            "total_workflows": 4,
+            "workflows": [
+              {
+                "chemin": "/.github/workflows/04-01-securite-chercheur.yml", "type": "Ouvrier",
+                "role": "Applique chaque règle de sécurité (regex) à chaque fichier pour trouver les correspondances.",
+                "inputs": "Artefact liste-fichiers.json, regles_securite (json_string).", "handler": "/.github/scripts/ouvrier_chercheur_securite.py",
+                "outputs": "Artefact violations-brutes.json."
+              },
+              {
+                "chemin": "/.github/workflows/05-01-securite-valid-chercheur.yml", "type": "Qualiticien",
+                "role": "Valide que la sortie du Chercheur est une liste d'objets violation bien formés.",
+                "inputs": "Artefact violations-brutes.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                "outputs": "Statut de succès/échec."
+              },
+              {
+                "chemin": "/.github/workflows/04-02-securite-trieur.yml", "type": "Ouvrier",
+                "role": "Organise et groupe les violations par niveau de sévérité.",
+                "inputs": "Artefact violations-brutes.json.", "handler": "/.github/scripts/ouvrier_trieur_securite.py",
+                "outputs": "Artefact violations-triees.json."
+              },
+              {
+                "chemin": "/.github/workflows/05-02-securite-valid-trieur.yml", "type": "Qualiticien",
+                "role": "Valide que la sortie du Trieur est un dictionnaire contenant les clés de sévérité attendues.",
+                "inputs": "Artefact violations-triees.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                "outputs": "Statut de succès/échec."
+              }
+            ]
+          },
+          {
+            "division_nom": "Loi Documentation",
+            "total_workflows": 4,
+            "workflows": [
+                {
+                    "chemin": "/.github/workflows/04-01-doc-extracteur.yml", "type": "Ouvrier",
+                    "role": "Analyse la structure de chaque fichier pour extraire les faits bruts sur la documentation.",
+                    "inputs": "Artefact liste-fichiers.json.", "handler": "/.github/scripts/ouvrier_extracteur_doc.py",
+                    "outputs": "Artefact faits-documentation.json."
+                },
+                {
+                    "chemin": "/.github/workflows/05-01-doc-valid-extracteur.yml", "type": "Qualiticien",
+                    "role": "Valide que la sortie de l'Extracteur est une liste d'objets bien formés.",
+                    "inputs": "Artefact faits-documentation.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                    "outputs": "Statut de succès/échec."
+                },
+                {
+                    "chemin": "/.github/workflows/04-02-doc-calculateur.yml", "type": "Ouvrier",
+                    "role": "Calcule les statistiques de couverture et les compare aux seuils.",
+                    "inputs": "Artefact faits-documentation.json, seuils_documentation (json_string).", "handler": "/.github/scripts/ouvrier_calculateur_doc.py",
+                    "outputs": "Artefact statistiques-documentation.json."
+                },
+                {
+                    "chemin": "/.github/workflows/05-02-doc-valid-calculateur.yml", "type": "Qualiticien",
+                    "role": "Valide que la sortie du Calculateur contient bien les statistiques attendues.",
+                    "inputs": "Artefact statistiques-documentation.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                    "outputs": "Statut de succès/échec."
+                }
+            ]
+          },
+          {
+            "division_nom": "Loi Issues",
+            "total_workflows": 4,
+            "workflows": [
+                {
+                    "chemin": "/.github/workflows/04-01-issues-collecteur.yml", "type": "Ouvrier",
+                    "role": "Télécharge les rapports et en extrait uniquement les violations 'critiques'.",
+                    "inputs": "noms_artefacts (json_string).", "handler": "/.github/scripts/ouvrier_collecteur_issues.py",
+                    "outputs": "Artefact violations-critiques.json."
+                },
+                {
+                    "chemin": "/.github/workflows/05-01-issues-valid-collecteur.yml", "type": "Qualiticien",
+                    "role": "Valide que la sortie du Collecteur est une liste contenant les informations nécessaires.",
+                    "inputs": "Artefact violations-critiques.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                    "outputs": "Statut de succès/échec."
+                },
+                {
+                    "chemin": "/.github/workflows/04-02-issues-redacteur.yml", "type": "Ouvrier",
+                    "role": "Synthétise les violations critiques pour rédiger un titre et un corps de message pour l'issue GitHub.",
+                    "inputs": "Artefact violations-critiques.json.", "handler": "/.github/scripts/ouvrier_redacteur_issues.py",
+                    "outputs": "Artefacts titre_issue.txt et corps_issue.md."
+                },
+                {
+                    "chemin": "/.github/workflows/05-02-issues-valid-redacteur.yml", "type": "Qualiticien",
+                    "role": "Valide que les fichiers titre_issue.txt et corps_issue.md ont bien été créés.",
+                    "inputs": "Artefacts titre_issue.txt, corps_issue.md.", "handler": "/.github/scripts/qualiticien_validation_artefact.py",
+                    "outputs": "Statut de succès/échec."
+                }
+            ]
+          },
+          {
+            "division_nom": "Loi Sauvegarde",
+            "total_workflows": 2,
+            "workflows": [
+                {
+                    "chemin": "/.github/workflows/04-01-sauvegarde-collecteur.yml", "type": "Ouvrier",
+                    "role": "Utilise l'action actions/download-artifact pour télécharger tous les rapports.",
+                    "inputs": "noms_artefacts (json_string).", "handler": "Actions GitHub directes.",
+                    "outputs": "Fichiers téléchargés sur le disque du runner."
+                },
+                {
+                    "chemin": "/.github/workflows/05-01-sauvegarde-valid-collecteur.yml", "type": "Qualiticien",
+                    "role": "Valide que tous les fichiers attendus ont bien été téléchargés.",
+                    "inputs": "noms_fichiers_attendus (json_string).", "handler": "/.github/scripts/qualiticien_validation_fichiers.py",
+                    "outputs": "Statut de succès/échec."
+                }
+            ]
+          },
+          {
+            "division_nom": "Loi PlantUML",
+            "total_workflows": 2,
+             "workflows": [
+                {
+                    "chemin": "/.github/workflows/04-01-planuml-comparateur.yml", "type": "Ouvrier",
+                    "role": "Compare les timestamps pour déterminer si le code a été modifié plus récemment que le diagramme.",
+                    "inputs": "date_diagramme (string), date_code (string).", "handler": "/.github/scripts/ouvrier_comparateur_planuml.py",
+                    "outputs": "Artefact resultat-comparaison.json."
+                },
+                {
+                    "chemin": "/.github/workflows/05-01-planuml-valid-comparateur.yml", "type": "Qualiticien",
+                    "role": "Valide que la sortie du Comparateur est un JSON contenant la clé booléenne requise.",
+                    "inputs": "Artefact resultat-comparaison.json.", "handler": "/.github/scripts/qualiticien_validation_schema.py",
+                    "outputs": "Statut de succès/échec."
+                }
+            ]
+          },
+          {
+            "division_nom": "Chercheur de Solution",
+            "total_workflows": 16,
+            "sous_divisions": [
+                {
+                    "sous_division_nom": "Communication",
+                    "total_workflows": 10,
+                    "workflows": [
+                        {"chemin": "/.github/workflows/04-01-chercheur-comm-artefact.yml", "type": "Ouvrier", "role": "Crée un 'Artefact de Proposition'."},
+                        {"chemin": "/.github/workflows/05-01-chercheur-valid-comm-artefact.yml", "type": "Qualiticien", "role": "Valide que l'artefact a bien été créé."},
+                        {"chemin": "/.github/workflows/04-02-chercheur-comm-check.yml", "type": "Ouvrier", "role": "Poste un 'check' de statut sur le commit Git."},
+                        {"chemin": "/.github/workflows/05-02-chercheur-valid-comm-check.yml", "type": "Qualiticien", "role": "Valide que le 'check' a été posté."},
+                        {"chemin": "/.github/workflows/04-03-chercheur-comm-commentaire.yml", "type": "Ouvrier", "role": "Poste un commentaire sur la Pull Request."},
+                        {"chemin": "/.github/workflows/05-03-chercheur-valid-comm-commentaire.yml", "type": "Qualiticien", "role": "Valide que le commentaire a été posté."},
+                        {"chemin": "/.github/workflows/04-04-chercheur-comm-dispatch.yml", "type": "Ouvrier", "role": "Déclenche un événement repository_dispatch."},
+                        {"chemin": "/.github/workflows/05-04-chercheur-valid-comm-dispatch.yml", "type": "Qualiticien", "role": "Valide que l'événement a été envoyé."},
+                        {"chemin": "/.github/workflows/04-05-chercheur-comm-pr.yml", "type": "Ouvrier", "role": "Crée une 'Pull Request de Solution' automatisée."},
+                        {"chemin": "/.github/workflows/05-05-chercheur-valid-comm-pr.yml", "type": "Qualiticien", "role": "Valide que la Pull Request a été créée."}
+                    ]
+                },
+                {
+                    "sous_division_nom": "Analyse",
+                    "total_workflows": 6,
+                    "workflows": [
+                        {"chemin": "/.github/workflows/04-06-chercheur-analyse-log.yml", "type": "Ouvrier", "role": "Analyse les logs d'un 'run' pour trouver la cause d'une erreur."},
+                        {"chemin": "/.github/workflows/05-06-chercheur-valid-analyse-log.yml", "type": "Qualiticien", "role": "Valide le format du diagnostic."},
+                        {"chemin": "/.github/workflows/04-07-chercheur-analyse-kb.yml", "type": "Ouvrier", "role": "Interroge une base de connaissance pour trouver des solutions."},
+                        {"chemin": "/.github/workflows/05-07-chercheur-valid-analyse-kb.yml", "type": "Qualiticien", "role": "Valide le format des solutions proposées."},
+                        {"chemin": "/.github/workflows/04-08-chercheur-analyse-simu.yml", "type": "Ouvrier", "role": "Simule l'application d'un patch pour voir s'il résout un problème."},
+                        {"chemin": "/.github/workflows/05-08-chercheur-valid-analyse-simu.yml", "type": "Qualiticien", "role": "Valide le format du résultat de la simulation."}
+                    ]
+                }
+            ]
+          },
+          {
+            "division_nom": "Auditeur de Solution",
+            "total_workflows": 10,
+            "workflows": [
+                {"chemin": "/.github/workflows/04-01-auditeur-schema.yml", "type": "Ouvrier", "role": "Valide qu'une proposition de solution est conforme à un schéma."},
+                {"chemin": "/.github/workflows/05-01-auditeur-valid-schema.yml", "type": "Qualiticien", "role": "Valide le rapport de validation de schéma."},
+                {"chemin": "/.github/workflows/04-02-auditeur-securite.yml", "type": "Ouvrier", "role": "Analyse une solution pour détecter des risques de sécurité."},
+                {"chemin": "/.github/workflows/05-02-auditeur-valid-securite.yml", "type": "Qualiticien", "role": "Valide le rapport de sécurité."},
+                {"chemin": "/.github/workflows/04-03-auditeur-simulation.yml", "type": "Ouvrier", "role": "Simule l'application de la solution dans un bac à sable."},
+                {"chemin": "/.github/workflows/05-03-auditeur-valid-simulation.yml", "type": "Qualiticien", "role": "Valide le rapport de simulation."},
+                {"chemin": "/.github/workflows/04-04-auditeur-cout.yml", "type": "Ouvrier", "role": "Analyse le coût/bénéfice de la solution."},
+                {"chemin": "/.github/workflows/05-04-auditeur-valid-cout.yml", "type": "Qualiticien", "role": "Valide le rapport coût/bénéfice."},
+                {"chemin": "/.github/workflows/04-05-auditeur-plan.yml", "type": "Ouvrier", "role": "Génère le plan d'implémentation final."},
+                {"chemin": "/.github/workflows/05-05-auditeur-valid-plan.yml", "type": "Qualiticien", "role": "Valide le plan d'implémentation."}
+            ]
+          }
+        ]
+      },
+      {
+        "niveau_numero": "6",
+        "titre": "Travailleurs",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/06-01-scanner-fichiers.yml",
+            "role": "Brique fondamentale pour trouver des fichiers correspondant à un pattern.",
+            "inputs": "pattern (string), chemin_racine (string), exclusions (json_string).", "handler": "/.github/scripts/travailleur_scan_fichiers.py",
+            "outputs": "Artefact liste-fichiers.json."
+          },
+          {
+            "chemin": "/.github/workflows/06-02-regex-applicateur.yml",
+            "role": "Brique spécialisée dans l'application d'expressions régulières à un contenu textuel.",
+            "inputs": "contenu (string), regle_regex (json_string).", "handler": "/.github/scripts/travailleur_regex_applicateur.py",
+            "outputs": "Artefact resultats-regex.json."
+          },
+          {
+            "chemin": "/.github/workflows/06-03-ast-parser.yml",
+            "role": "Brique d'analyse de code Python qui transforme un fichier en AST au format JSON.",
+            "inputs": "contenu_fichier_python (string).", "handler": "/.github/scripts/travailleur_ast_parser.py",
+            "outputs": "Artefact arbre-syntaxe.json."
+          },
+          {
+            "chemin": "/.github/workflows/06-04-github-poster.yml",
+            "role": "Brique d'interaction avec l'API GitHub pour créer une issue.",
+            "inputs": "titre (string), corps (string), labels (json_string), assignes (json_string).", "handler": "/.github/scripts/travailleur_github_poster.py",
+            "outputs": "L'URL de l'issue créée."
+          },
+          {
+            "chemin": "/.github/workflows/06-05-archiveur-zip.yml",
+            "role": "Brique d'archivage qui compresse une liste de fichiers dans une archive .zip.",
+            "inputs": "nom_archive (string), fichiers_a_zipper (json_string).", "handler": "/.github/scripts/travailleur_archiveur_zip.py",
+            "outputs": "Un artefact .zip."
+          },
+          {
+            "chemin": "/.github/workflows/06-06-git-historien.yml",
+            "role": "Brique d'interrogation de l'historique Git pour trouver la date du dernier commit.",
+            "inputs": "chemin_fichier_ou_dossier (string).", "handler": "/.github/scripts/travailleur_git_historien.py",
+            "outputs": "Un timestamp."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "7",
+        "titre": "Nettoyeurs",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/07-01-formateur-csv.yml",
+            "role": "Brique de formatage qui transforme des données JSON en un fichier CSV.",
+            "inputs": "artefact_entree_json (string), nom_fichier_sortie_csv (string), colonnes (json_string).", "handler": "/.github/scripts/nettoyeur_format_csv.py",
+            "outputs": "Un artefact .csv."
+          },
+          {
+            "chemin": "/.github/workflows/07-02-formateur-markdown.yml",
+            "role": "Brique de formatage qui transforme des données JSON en un rapport Markdown.",
+            "inputs": "artefact_entree_json (string), template_markdown (string).", "handler": "/.github/scripts/nettoyeur_format_markdown.py",
+            "outputs": "Un artefact .md."
+          },
+          {
+            "chemin": "/.github/workflows/07-03-formateur-statut.yml",
+            "role": "Brique de formatage qui poste un 'check' de statut sur un commit GitHub.",
+            "inputs": "resultat (boolean), message_succes (string), message_echec (string), nom_check (string).", "handler": "/.github/scripts/nettoyeur_format_statut.py",
+            "outputs": "Un 'check' de statut sur le commit."
+          },
+          {
+    "face_numero": 2,
+    "face_nom": "L'Introspection (Le Passé)",
+    "principe": "Observer, Analyser, Apprendre",
+    "description": "Les 71 Workflows Neuronaux (WN) constituent la mémoire et le cortex analytique de l'AGI. Ils s'activent après une action pour en analyser les résultats, les logs et les métriques afin d'extraire des connaissances.",
+    "total_workflows": 71,
+    "niveaux": [
+      {
+        "niveau_numero": "0",
+        "titre": "Conscience de l'Exception",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/N-00-maitre.yml",
+            "nom_logique": "Neurone de la Conscience de la Dérogation",
+            "miroir_de": "00-maitre.yml",
+            "role": "Analyse la raison fournie pour le contournement. Corréle l'action avec l'auteur, le projet, et la 'loi' ignorée.",
+            "impact_apprentissage": "Apprend quelles lois sont les plus susceptibles d'être contournées et dans quel contexte."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "1",
+        "titre": "Conscience de l'Orchestration",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/N-01-orchestre.yml",
+            "nom_logique": "Neurone Méta-Conscience",
+            "miroir_de": "01-orchestre.yml",
+            "role": "Observe la performance globale du système de gouvernance, analyse le temps d'exécution total et identifie les goulots d'étranglement.",
+            "impact_apprentissage": "Apprend la 'santé' globale du système et peut prédire des ralentissements futurs."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "2",
+        "titre": "Conscience des Divisions",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/N-02-loi-lignes.yml", "miroir_de": "02-loi-lignes.yml",
+            "role": "Analyse la performance de l'audit de lignes et apprend si cet audit devient plus lent avec le temps."
+          },
+          {
+            "chemin": "/.github/workflows/N-03-loi-securite.yml", "miroir_de": "03-loi-securite.yml",
+            "role": "Analyse la fréquence et la sévérité des audits de sécurité et apprend si de nouvelles règles introduisent des faux positifs."
+          },
+          {
+            "chemin": "/.github/workflows/N-04-loi-documentation.yml", "miroir_de": "04-loi-documentation.yml",
+            "role": "Analyse la tendance de la couverture de documentation et apprend si la 'dette de documentation' augmente ou diminue."
+          },
+          {
+            "chemin": "/.github/workflows/N-05-creation-issues.yml", "miroir_de": "05-creation-issues.yml",
+            "role": "Analyse le flux de création de tickets et apprend si le nombre de violations critiques augmente."
+          },
+          {
+            "chemin": "/.github/workflows/N-06-sauvegarde-rapports.yml", "miroir_de": "06-sauvegarde-rapports.yml",
+            "role": "Analyse la taille et la fréquence des archives pour apprendre le 'poids' de la gouvernance."
+          },
+          {
+            "chemin": "/.github/workflows/N-07-controle-planuml.yml", "miroir_de": "07-controle-planuml.yml",
+            "role": "Analyse la pertinence des alertes de désynchronisation en observant si les développeurs agissent après une alerte."
+          },
+          {
+            "chemin": "/.github/workflows/N-chercheur.yml", "miroir_de": "chercheur.yml",
+            "role": "Analyse l'efficacité de la recherche de solutions, apprenant quels types de problèmes sont résolus le plus rapidement."
+          },
+          {
+            "chemin": "/.github/workflows/N-auditeur-solution.yml", "miroir_de": "auditeur-solution.yml",
+            "role": "Analyse la fiabilité de l'audit de solutions en comparant les approbations au succès en production."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "4 & 5",
+        "titre": "Conscience de la Production et de la Qualité",
+        "divisions": [
+          {
+            "division_nom": "Loi Lignes",
+            "workflows": [
+              {"chemin": "/.github/workflows/N-04-01-lignes-compteur.yml", "role": "Apprend la vélocité de croissance du code."},
+              {"chemin": "/.github/workflows/N-05-01-lignes-valid-compteur.yml", "role": "Apprend la fiabilité du compteur ; les échecs signalent un bug interne."},
+              {"chemin": "/.github/workflows/N-04-02-lignes-juge.yml", "role": "Apprend quels fichiers/modules sont chroniquement en infraction."},
+              {"chemin": "/.github/workflows/N-05-02-lignes-valid-juge.yml", "role": "Apprend la fiabilité du juge."},
+              {"chemin": "/.github/workflows/N-04-03-lignes-statisticien.yml", "role": "Apprend la pertinence des métriques calculées."},
+              {"chemin": "/.github/workflows/N-05-03-lignes-valid-statisticien.yml", "role": "Apprend la fiabilité du statisticien."},
+              {"chemin": "/.github/workflows/N-04-04-lignes-rapporteur.yml", "role": "Apprend l'utilité des rapports générés."},
+              {"chemin": "/.github/workflows/N-05-04-lignes-valid-rapporteur.yml", "role": "Apprend la fiabilité du rapporteur."},
+              {"chemin": "/.github/workflows/N-04-05-lignes-conseiller.yml", "role": "Apprend si les recommandations sont suivies d'effets."},
+              {"chemin": "/.github/workflows/N-05-05-lignes-valid-conseiller.yml", "role": "Apprend la fiabilité du conseiller."}
+            ]
+          },
+          {
+            "division_nom": "Loi Sécurité",
+            "workflows": [
+              {"chemin": "/.github/workflows/N-04-01-securite-chercheur.yml", "role": "Apprend l'efficacité de chaque règle de sécurité (ratio scans/violations) pour proposer des optimisations."},
+              {"chemin": "/.github/workflows/N-05-01-securite-valid-chercheur.yml", "role": "Apprend la stabilité du format de sortie du chercheur."},
+              {"chemin": "/.github/workflows/N-04-02-securite-trieur.yml", "role": "Apprend la distribution des sévérités des violations ; une augmentation des 'critiques' est une alerte majeure."},
+              {"chemin": "/.github/workflows/N-05-02-securite-valid-trieur.yml", "role": "Apprend la fiabilité du trieur."}
+            ]
+          },
+          {
+            "division_nom": "Loi Documentation",
+            "workflows": [
+              {"chemin": "/.github/workflows/N-04-01-doc-extracteur.yml", "role": "Apprend à identifier les structures de code complexes qui font échouer l'extraction."},
+              {"chemin": "/.github/workflows/N-05-01-doc-valid-extracteur.yml", "role": "Apprend la fiabilité de l'extracteur."},
+              {"chemin": "/.github/workflows/N-04-02-doc-calculateur.yml", "role": "Apprend les zones du code avec la plus grande dette de documentation."},
+              {"chemin": "/.github/workflows/N-05-02-doc-valid-calculateur.yml", "role": "Apprend la fiabilité du calculateur."}
+            ]
+          },
+          {
+            "division_nom": "Loi Issues",
+            "workflows": [
+              {"chemin": "/.github/workflows/N-04-01-issues-collecteur.yml", "role": "Apprend quels types d'audits génèrent le plus de violations critiques."},
+              {"chemin": "/.github/workflows/N-05-01-issues-valid-collecteur.yml", "role": "Apprend la fiabilité du collecteur."},
+              {"chemin": "/.github/workflows/N-04-02-issues-redacteur.yml", "role": "Apprend à rédiger des titres d'issues plus efficaces via analyse NLP."},
+              {"chemin": "/.github/workflows/N-05-02-issues-valid-redacteur.yml", "role": "Apprend la fiabilité du rédacteur."}
+            ]
+          }
+        ]
+      },
+      {
+        "niveau_numero": "6",
+        "titre": "Conscience des Outils",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/N-06-01-scanner-fichiers.yml", "miroir_de": "06-01-scanner-fichiers.yml",
+            "role": "Apprend les patterns de recherche les plus coûteux en temps pour suggérer des optimisations."
+          },
+          {
+            "chemin": "/.github/workflows/N-06-02-regex-applicateur.yml", "miroir_de": "06-02-regex-applicateur.yml",
+            "role": "Apprend la performance de chaque regex individuellement pour identifier les regex 'catastrophiques'."
+          },
+          {
+            "chemin": "/.github/workflows/N-06-03-ast-parser.yml", "miroir_de": "06-03-ast-parser.yml",
+            "role": "Apprend quels fichiers ont une syntaxe qui pose problème au parseur."
+          },
+          {
+            "chemin": "/.github/workflows/N-06-04-github-poster.yml", "miroir_de": "06-04-github-poster.yml",
+            "role": "Apprend la fiabilité de l'API GitHub pour détecter des pannes ou des ralentissements externes."
+          },
+          {
+            "chemin": "/.github/workflows/N-06-05-archiveur-zip.yml", "miroir_de": "06-05-archiveur-zip.yml",
+            "role": "Apprend la performance de la compression pour ajuster les niveaux en fonction de l'urgence."
+          },
+          {
+            "chemin": "/.github/workflows/N-06-06-git-historien.yml", "miroir_de": "06-06-git-historien.yml",
+            "role": "Apprend la performance des requêtes git log sur des dépôts de différentes tailles."
+          }
+        ]
+      },
+      {
+        "niveau_numero": "7",
+        "titre": "Conscience de la Présentation",
+        "workflows": [
+          {
+            "chemin": "/.github/workflows/N-07-01-formateur-csv.yml", "miroir_de": "07-01-formateur-csv.yml",
+            "role": "Apprend quels rapports CSV sont les plus volumineux."
+          },
+          {
+            "chemin": "/.github/workflows/N-07-02-formateur-markdown.yml", "miroir_de": "07-02-formateur-markdown.yml",
+            "role": "Apprend quels templates de rapport sont les plus utilisés."
+          },
+          {
+            "chemin": "/.github/workflows/N-07-03-formateur-statut.yml", "miroir_de": "07-03-formateur-statut.yml",
+            "role": "Apprend la corrélation entre le statut posté et l'action finale sur la PR (fusionnée, fermée)."
+          }
+        ]
+      }
+    ]
+  }
+]
