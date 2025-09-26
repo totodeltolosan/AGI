@@ -73,22 +73,7 @@ jobs:
           
           # Aperçu de la liste
           echo "🔍 Aperçu de la liste :"
-          python -c "
-import json
-try:
-    with open('./input/${{ inputs.artefact_liste_fichiers }}', 'r') as f:
-        data = json.load(f)
-    print(f'Total fichiers dans la liste: {data.get(\"total_fichiers\", 0)}')
-    fichiers = data.get('fichiers', [])
-    print('Échantillon:')
-    for i, f in enumerate(fichiers[:5]):
-        print(f'  {i+1}. {f}')
-    if len(fichiers) > 5:
-        print(f'  ... et {len(fichiers) - 5} autres')
-except Exception as e:
-    print(f'Erreur lecture liste: {e}')
-    exit(1)
-"
+          python -c "import json; try:; with open('./input/${{ inputs.artefact_liste_fichiers }}', 'r') as f:; data = json.load(f); print(f'Total fichiers dans la liste: {data.get(\\"total_fichiers\\", 0)}'); fichiers = data.get('fichiers', []); print('Échantillon:'); for i, f in enumerate(fichiers[:5]):; print(f'  {i+1}. {f}'); if len(fichiers) > 5:; print(f'  ... et {len(fichiers) - 5} autres'); except Exception as e:; print(f'Erreur lecture liste: {e}'); exit(1)"
       
       - name: "Exécution du comptage de lignes"
         id: count
