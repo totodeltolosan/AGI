@@ -1,0 +1,57 @@
+name: "Général Chercheur - Niveau 2"
+
+on:
+  workflow_call:
+    inputs:
+      pattern_recherche:
+        description: "Pattern de recherche dans les fichiers"
+        required: true
+        type: string
+      extensions:
+        description: "Extensions de fichiers à analyser"
+        required: false
+        default: "py,yml,md"
+        type: string
+      repertoire:
+        description: "Répertoire de recherche"
+        required: false
+        default: "."
+        type: string
+    outputs:
+      resultats_recherche:
+        description: "Artefact contenant les résultats de recherche"
+        value: ${{ jobs.chercheur.outputs.artefact }}
+
+jobs:
+  chercheur:
+    name: "Recherche dans le code"
+    runs-on: ubuntu-latest
+    outputs:
+      artefact: ${{ steps.search.outputs.artefact_name }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Recherche via Contremaître"
+        id: search
+        run: |
+          echo "🔍 Lancement de la recherche"
+          echo "Pattern: ${{ inputs.pattern_recherche }}"
+          echo "Extensions: ${{ inputs.extensions }}"
+          echo "Répertoire: ${{ inputs.repertoire }}"
+          
+          # Appel du script contremaître (Niveau 3)
+          python3 .github/scripts/chercheur.py \
+            --pattern "${{ inputs.pattern_recherche }}" \
+            --extensions "${{ inputs.extensions }}" \
+            --repertoire "${{ inputs.repertoire }}" \
+            --output recherche_results.json
+          
+          echo "artefact_name=recherche_results.json" >> $GITHUB_OUTPUT
+          
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultats-recherche-${{ github.run_id }}
+          path: recherche_results.json
