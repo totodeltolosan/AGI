@@ -91,19 +91,7 @@ jobs:
             echo "artefact_name=${{ inputs.nom_artefact_sortie }}" >> $GITHUB_OUTPUT
             
             # Parse des résultats JSON
-            python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:
-        data = json.load(f)
-    stats = data.get('stats_globales', {})
-    print(f'fichiers_analyses={stats.get(\"fichiers_analyses\", 0)}')
-    print(f'lignes_totales={stats.get(\"total_lignes\", 0)}')
-except Exception as e:
-    print('fichiers_analyses=0')
-    print('lignes_totales=0')
-    print(f'Erreur extraction stats: {e}')
-" >> $GITHUB_OUTPUT
+            python -c "import json; try:; with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:; data = json.load(f); stats = data.get('stats_globales', {}); print(f'fichiers_analyses={stats.get(\\"fichiers_analyses\\", 0)}'); print(f'lignes_totales={stats.get(\\"total_lignes\\", 0)}'); except Exception as e:; print('fichiers_analyses=0'); print('lignes_totales=0'); print(f'Erreur extraction stats: {e}')" >> $GITHUB_OUTPUT
             
             echo "✅ Comptage terminé avec succès"
           else
@@ -122,37 +110,7 @@ except Exception as e:
         run: |
           if [ -f "${{ inputs.nom_artefact_sortie }}" ]; then
             echo "📊 Résumé du comptage de lignes :"
-            python -c "
-import json
-try:
-    with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:
-        data = json.load(f)
-    
-    stats = data.get('stats_globales', {})
-    params = data.get('parametres', {})
-    
-    print(f'   • Total fichiers : {stats.get(\"total_fichiers\", 0)}')
-    print(f'   • Fichiers analysés : {stats.get(\"fichiers_analyses\", 0)}')
-    print(f'   • Fichiers en erreur : {stats.get(\"fichiers_erreur\", 0)}')
-    print(f'   • Total lignes : {stats.get(\"total_lignes\", 0)}')
-    print(f'   • Lignes de code : {stats.get(\"total_lignes_code\", 0)}')
-    print(f'   • Lignes vides : {stats.get(\"total_lignes_vides\", 0)}')
-    print(f'   • Lignes commentaires : {stats.get(\"total_lignes_commentaires\", 0)}')
-    
-    if 'moyenne_lignes_par_fichier' in stats:
-        print(f'   • Moyenne par fichier : {stats[\"moyenne_lignes_par_fichier\"]}')
-    
-    print(f'   • Inclure vides : {params.get(\"inclure_vides\", True)}')
-    print(f'   • Inclure commentaires : {params.get(\"inclure_commentaires\", True)}')
-    
-    # Affichage des erreurs s'il y en a
-    erreurs = data.get('erreurs', [])
-    if erreurs:
-        print(f'   ⚠️ Erreurs rencontrées : {len([e for e in erreurs if e])}')
-
-except Exception as e:
-    print(f'Erreur affichage résumé: {e}')
-"
+            python -c "import json; try:; with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:; data = json.load(f); ; stats = data.get('stats_globales', {}); params = data.get('parametres', {}); ; print(f'   • Total fichiers : {stats.get(\\"total_fichiers\\", 0)}'); print(f'   • Fichiers analysés : {stats.get(\\"fichiers_analyses\\", 0)}'); print(f'   • Fichiers en erreur : {stats.get(\\"fichiers_erreur\\", 0)}'); print(f'   • Total lignes : {stats.get(\\"total_lignes\\", 0)}'); print(f'   • Lignes de code : {stats.get(\\"total_lignes_code\\", 0)}'); print(f'   • Lignes vides : {stats.get(\\"total_lignes_vides\\", 0)}'); print(f'   • Lignes commentaires : {stats.get(\\"total_lignes_commentaires\\", 0)}'); ; if 'moyenne_lignes_par_fichier' in stats:; print(f'   • Moyenne par fichier : {stats[\\"moyenne_lignes_par_fichier\\"]}'); ; print(f'   • Inclure vides : {params.get(\\"inclure_vides\\", True)}'); print(f'   • Inclure commentaires : {params.get(\\"inclure_commentaires\\", True)}'); ; # Affichage des erreurs s'il y en a; erreurs = data.get('erreurs', []); if erreurs:; print(f'   ⚠️ Erreurs rencontrées : {len([e for e in erreurs if e])}'); ; except Exception as e:; print(f'Erreur affichage résumé: {e}')"
           fi
 
   validation_resultats:
