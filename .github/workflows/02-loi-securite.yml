@@ -1,0 +1,73 @@
+name: "Général Gardien - Niveau 2 - Audit Sécurité"
+
+on:
+  workflow_call:
+    inputs:
+      regles_securite:
+        description: "Règles de sécurité JSON (patterns, descriptions, sévérités)"
+        required: false
+        default: '[{"pattern":"password\\s*=\\s*[\"'']\\w+[\"'']","description":"Mot de passe en dur","severite":"critique"}]'
+        type: string
+      extensions_scan:
+        description: "Extensions de fichiers à scanner"
+        required: false
+        default: "py,js,yml,yaml,json"
+        type: string
+      repertoire_scan:
+        description: "Répertoire à scanner"
+        required: false
+        default: "."
+        type: string
+    outputs:
+      violations_critiques:
+        description: "Nombre de violations critiques"
+        value: ${{ jobs.audit_securite.outputs.critiques }}
+      rapport_securite:
+        description: "Rapport complet de sécurité"
+        value: ${{ jobs.audit_securite.outputs.rapport }}
+
+jobs:
+  audit_securite:
+    name: "Audit Sécurité"
+    runs-on: ubuntu-latest
+    outputs:
+      critiques: ${{ steps.scan.outputs.violations_critiques }}
+      rapport: ${{ steps.scan.outputs.rapport_path }}
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+        
+      - name: "Exécution du Contremaître Sécurité"
+        id: scan
+        run: |
+          echo "🔒 Lancement de l'audit sécurité"
+          echo "Extensions: ${{ inputs.extensions_scan }}"
+          echo "Répertoire: ${{ inputs.repertoire_scan }}"
+          
+          # Création du fichier de règles
+          echo '${{ inputs.regles_securite }}' > regles_securite.json
+          
+          # Appel du script contremaître (Niveau 3)
+          python3 .github/scripts/audit_securite.py \
+            --regles regles_securite.json \
+            --extensions "${{ inputs.extensions_scan }}" \
+            --repertoire "${{ inputs.repertoire_scan }}" \
+            --output rapport_securite.json
+          
+          echo "rapport_path=rapport_securite.json" >> $GITHUB_OUTPUT
+          
+          # Extraction du nombre de violations critiques
+          critiques=$(python3 -c "import json; data = json.load(open('rapport_securite.json')); print(len(data.get('violations', {}).get('critique', [])))")
+          echo "violations_critiques=$critiques" >> $GITHUB_OUTPUT
+          
+          if [ "$critiques" -gt 0 ]; then
+            echo "⚠️ ALERTE: $critiques violation(s) critique(s) détectée(s)"
+          fi
+          
+      - name: "Upload Rapport Sécurité"
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-securite-${{ github.run_id }}
+          path: rapport_securite.json
+          retention-days: 30
