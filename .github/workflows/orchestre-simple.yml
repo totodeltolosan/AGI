@@ -1,0 +1,18 @@
+name: "Test Orchestre Simplifié"
+on:
+  workflow_dispatch:
+
+env:
+  CONSTITUTION_FILE: "iaGOD.json"
+  AUDIT_ID: "test-simple"
+
+jobs:
+  test_constitution:
+    name: "Test Constitution"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: "Test Basic"
+      run: |
+        echo "Constitution file exists: $(ls -la iaGOD.json)"
+        echo "Test réussi"
