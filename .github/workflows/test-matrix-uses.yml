@@ -1,0 +1,12 @@
+name: "Test Matrix + Uses"
+on:
+  workflow_dispatch:
+
+jobs:
+  test_matrix_uses:
+    strategy:
+      matrix:
+        workflow: ["04-loi-documentation.yml"]
+    uses: ./.github/workflows/${{ matrix.workflow }}
+    with:
+      audit_id: "test-matrix"
