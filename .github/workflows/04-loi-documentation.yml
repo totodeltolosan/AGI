@@ -3,43 +3,6 @@ run-name: "📚 Audit Documentation - Chaîne Complète Ouvriers/Qualiticiens"
 
 on:
   workflow_call:
-    inputs:
-      seuil_documentation:
-        description: "Pourcentage minimum de documentation requis"
-        required: false
-        default: 30
-        type: number
-      extensions_analysees:
-        description: "Extensions de fichiers à analyser"
-        required: false
-        default: "py"
-        type: string
-      repertoire_cible:
-        description: "Répertoire à analyser"
-        required: false
-        default: "."
-        type: string
-      audit_id:
-        description: "Identifiant unique de l'audit"
-        required: false
-        type: string
-        default: "audit-doc"
-
-    outputs:
-      rapport_documentation:
-        description: "Chemin du rapport final de documentation"
-        value: ${{ jobs.formater_rapport.outputs.rapport_final }}
-      taux_documentation:
-        description: "Taux global de documentation calculé"
-        value: ${{ jobs.calculer_metriques.outputs.taux_global }}
-      audit_reussi:
-        description: "Indicateur de réussite de l'audit"
-        value: ${{ jobs.valider_calculateur.outputs.validation_reussie }}
-
-env:
-  AUDIT_OPERATION: "loi-documentation"
-  TIMEOUT_DEFAULT: 10
-
 jobs:
   # ============================================
   # ÉTAPE 1: SCANNER LES FICHIERS (NIVEAU 6)
