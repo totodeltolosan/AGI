@@ -1,0 +1,55 @@
+name: "🎼 NIVEAU 1 : Orchestre - Maître de la Constitution (Fixed)"
+on:
+  workflow_dispatch:
+    inputs:
+      force_audit:
+        description: 'Forcer audit même sans changements significatifs'
+        required: false
+        type: boolean
+
+env:
+  CONSTITUTION_FILE: "iaGOD.json"
+  AUDIT_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+
+jobs:
+  validate_constitution:
+    name: "🏛 Validation Constitution"
+    runs-on: ubuntu-latest
+    outputs:
+      should_proceed: ${{ steps.validate.outputs.should_proceed }}
+      constitution_hash: ${{ steps.validate.outputs.constitution_hash }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - run: pip install jsonschema rich typer
+    - name: "Validation Constitution"
+      id: validate
+      run: |
+        python3 .github/scripts/orchestrateur.py validate-constitution \
+          --file "${{ env.CONSTITUTION_FILE }}" \
+          --audit-id "${{ env.AUDIT_ID }}" \
+          --verbose
+
+  # Jobs séparés pour chaque workflow au lieu de matrix + uses
+  audit_lignes:
+    needs: validate_constitution
+    if: needs.validate_constitution.outputs.should_proceed == 'true'
+    uses: ./.github/workflows/02-loi-lignes.yml
+    with:
+      audit_id: ${{ env.AUDIT_ID }}
+
+  audit_securite:
+    needs: validate_constitution
+    if: needs.validate_constitution.outputs.should_proceed == 'true'
+    uses: ./.github/workflows/03-loi-securite.yml
+    with:
+      audit_id: ${{ env.AUDIT_ID }}
+
+  audit_documentation:
+    needs: validate_constitution
+    if: needs.validate_constitution.outputs.should_proceed == 'true'
+    uses: ./.github/workflows/04-loi-documentation.yml
+    with:
+      audit_id: ${{ env.AUDIT_ID }}
