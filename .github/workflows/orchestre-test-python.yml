@@ -1,0 +1,24 @@
+name: "Test Orchestre + Python"
+on:
+  workflow_dispatch:
+
+env:
+  CONSTITUTION_FILE: "iaGOD.json"
+  AUDIT_ID: "test-python"
+
+jobs:
+  validate_constitution:
+    name: "Test Constitution Python"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - run: pip install jsonschema rich typer
+    - name: "Test Script Python"
+      run: |
+        python3 .github/scripts/orchestrateur.py validate-constitution \
+          --file "${{ env.CONSTITUTION_FILE }}" \
+          --audit-id "${{ env.AUDIT_ID }}" \
+          --verbose
