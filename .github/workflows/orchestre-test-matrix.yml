@@ -1,0 +1,16 @@
+name: "Test Matrix Strategy"
+on:
+  workflow_dispatch:
+
+jobs:
+  test_matrix:
+    strategy:
+      matrix:
+        general:
+          - name: "test1"
+            workflow: "04-loi-documentation.yml"
+          - name: "test2" 
+            workflow: "06-sauvegarde-rapports.yml"
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Matrix item: ${{ matrix.general.name }}"
