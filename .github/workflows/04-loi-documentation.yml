@@ -94,7 +94,6 @@ jobs:
       calculs_avances: true
       nom_operation: "calcul-metriques-${{ inputs.audit_id }}"
 
-    outputs:
       taux_global: ${{ steps.calcul.outputs.taux_global }}
       metriques_detaillees: ${{ steps.calcul.outputs.metriques_json }}
 
@@ -111,7 +110,6 @@ jobs:
       verification_coherence: true
       nom_operation: "validation-metriques-${{ inputs.audit_id }}"
 
-    outputs:
       validation_reussie: ${{ steps.validation.outputs.validation_reussie }}
 
   # ============================================
@@ -134,7 +132,6 @@ jobs:
         }
       nom_operation: "rapport-doc-${{ inputs.audit_id }}"
 
-    outputs:
       rapport_final: ${{ steps.formatage.outputs.fichier_rapport }}
 
   # ============================================
