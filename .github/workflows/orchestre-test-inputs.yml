@@ -1,0 +1,29 @@
+name: "Test Orchestre + Inputs"
+on:
+  workflow_dispatch:
+    inputs:
+      force_audit:
+        description: 'Forcer audit même sans changements significatifs'
+        required: false
+        type: boolean
+      skip_generals:
+        description: 'Généraux à ignorer'
+        required: false
+        default: ''
+        type: string
+      urgency_level:
+        description: 'Niveau urgence'
+        required: false
+        default: 'medium'
+        type: choice
+        options: [low, medium, high, critical]
+
+env:
+  CONSTITUTION_FILE: "iaGOD.json"
+  AUDIT_ID: "test-inputs"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Test inputs réussi"
