@@ -1,9 +1,32 @@
 name: "📚 NIVEAU 2 : Général Archiviste - Loi Documentation"
 run-name: "📚 Audit Documentation - Chaîne Complète Ouvriers/Qualiticiens"
 
+
 on:
   workflow_call:
-jobs:
+    inputs:
+      seuil_documentation:
+        description: "Pourcentage minimum de documentation requis"
+        required: false
+        default: 30
+        type: number
+      extensions_analysees:
+        description: "Extensions de fichiers à analyser"
+        required: false
+        default: "py"
+        type: string
+      repertoire_cible:
+        description: "Répertoire à analyser"
+        required: false
+        default: "."
+        type: string
+      audit_id:
+        description: "Identifiant unique de l'audit"
+        required: false
+        type: string
+        default: "audit-doc"
+
+
   # ============================================
   # ÉTAPE 1: SCANNER LES FICHIERS (NIVEAU 6)
   # ============================================
