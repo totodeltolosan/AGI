@@ -13,4 +13,4 @@ jobs:
             workflow: "06-sauvegarde-rapports.yml"
     runs-on: ubuntu-latest
     steps:
-    - run: echo "Matrix item: ${{ matrix.general.name }}"
+    - run: echo "Matrix item ${{ matrix.general.name }} -> ${{ matrix.general.workflow }}"
