@@ -1,0 +1,9 @@
+name: "Test Simple Uses"
+on:
+  workflow_dispatch:
+
+jobs:
+  test_uses:
+    uses: ./.github/workflows/04-loi-documentation.yml
+    with:
+      audit_id: "test-simple"
