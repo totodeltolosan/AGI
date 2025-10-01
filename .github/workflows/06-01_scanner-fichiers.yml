@@ -83,7 +83,7 @@ jobs:
           fi
       
       - name: "Upload de l'artefact liste de fichiers"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.nom_artefact }}
           path: ${{ inputs.nom_artefact }}

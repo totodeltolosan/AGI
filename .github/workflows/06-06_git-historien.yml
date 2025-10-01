@@ -153,7 +153,7 @@ jobs:
       
       - name: "Upload de l'artefact historique Git"
         if: inputs.generer_artefact && steps.git_analyze.outputs.artefact_file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.git_analyze.outputs.artefact_file }}
           path: ${{ steps.git_analyze.outputs.artefact_file }}

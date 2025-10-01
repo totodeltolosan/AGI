@@ -129,7 +129,7 @@ jobs:
       
       - name: "Upload rapport de validation"
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "rapport-validation-compteur.md"
           path: "rapport-validation-compteur.md"
