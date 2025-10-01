@@ -74,7 +74,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: "🐍 Setup Python Optimized"
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         cache: 'pip'
