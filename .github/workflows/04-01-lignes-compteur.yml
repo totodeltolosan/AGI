@@ -47,7 +47,7 @@ jobs:
     
     steps:
       - name: "Checkout du code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       - name: "Configuration Python 3.11"
         uses: actions/setup-python@v4
@@ -122,7 +122,7 @@ jobs:
     
     steps:
       - name: "Checkout du code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       
       - name: "Appel du Qualiticien de validation"
         id: validate

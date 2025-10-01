@@ -19,7 +19,7 @@ jobs:
     
     steps:
       - name: "📁 Téléchargement du code source"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: "📥 Téléchargement des artefacts"
         run: |

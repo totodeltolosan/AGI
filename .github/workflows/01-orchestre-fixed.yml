@@ -19,7 +19,7 @@ jobs:
       should_proceed: ${{ steps.validate.outputs.should_proceed }}
       constitution_hash: ${{ steps.validate.outputs.constitution_hash }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: actions/setup-python@v4
       with:
         python-version: '3.11'
