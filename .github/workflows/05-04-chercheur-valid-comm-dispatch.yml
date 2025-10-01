@@ -51,7 +51,7 @@ jobs:
         pip install requests PyGithub jsonschema
 
     - name: "Download Dispatch Artifacts"
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         name: chercheur-dispatch-${{ github.run_id }}
         path: ./dispatch-artifacts/

@@ -60,14 +60,14 @@ jobs:
         
         # Jugements
       - name: "Téléchargement jugements"
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.artefact_resultats_juges }}
           path: ./input/jugements/
       
         # Statistiques  
       - name: "Téléchargement statistiques"
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.artefact_statistiques }}
           path: ./input/stats/

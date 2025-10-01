@@ -38,7 +38,7 @@ jobs:
           python-version: '3.11'
       
       - name: "Téléchargement de l'artefact à valider"
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.artefact_statistiques }}
           path: ./validation-input/
