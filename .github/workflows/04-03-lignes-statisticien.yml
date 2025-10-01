@@ -69,7 +69,7 @@ jobs:
           python -c "import json; try:; with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:; data = json.load(f); conformite = data.get('statistiques_conformite', {}); base = data.get('statistiques_base', {}); print(f'taux_conformite={conformite.get(\\"taux_conformite\\", 0):.1f}'); print(f'moyenne_lignes={base.get(\\"moyenne_lignes\\", 0):.1f}'); except Exception as e:; print('taux_conformite=0'); print('moyenne_lignes=0')" >> $GITHUB_OUTPUT
       
       - name: "Upload artefact statistiques"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.nom_artefact_sortie }}
           path: ${{ inputs.nom_artefact_sortie }}

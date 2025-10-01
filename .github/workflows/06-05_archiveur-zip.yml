@@ -122,7 +122,7 @@ jobs:
           fi
       
       - name: "Upload de l'artefact archive ZIP"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.archiver.outputs.archive_path }}
           path: ${{ steps.archiver.outputs.archive_path }}

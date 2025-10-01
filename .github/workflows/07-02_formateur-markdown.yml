@@ -65,7 +65,7 @@ jobs:
           echo "✅ Formatage Markdown terminé avec succès"
       
       - name: "Upload de l'artefact Markdown"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.nom_fichier_sortie }}
           path: ${{ inputs.nom_fichier_sortie }}

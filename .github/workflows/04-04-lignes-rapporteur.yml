@@ -123,7 +123,7 @@ jobs:
           fi
       
       - name: "Upload artefact rapport CSV"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.nom_artefact_sortie }}
           path: ${{ inputs.nom_artefact_sortie }}

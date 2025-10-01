@@ -68,7 +68,7 @@ jobs:
           python -c "import json; with open('${{ inputs.nom_artefact_sortie }}', 'r') as f:; data = json.load(f); jugement = data.get('jugement_global', {}); print(f'taux_conformite={jugement.get(\\"taux_conformite\\", 0)}'); print(f'verdict={jugement.get(\\"verdict\\", \\"INCONNU\\")}')" >> $GITHUB_OUTPUT
       
       - name: "Upload artefact jugement"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.nom_artefact_sortie }}
           path: ${{ inputs.nom_artefact_sortie }}
