@@ -34,13 +34,13 @@ jobs:
           python-version: '3.11'
 
       - name: "📥 Téléchargement artefacts titre et corps"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.titre_issue }}
           path: ./temp
 
       - name: "📥 Téléchargement artefact corps_issue"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.corps_issue }}
           path: ./temp

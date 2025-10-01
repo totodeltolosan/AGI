@@ -39,25 +39,25 @@ jobs:
           python-version: '3.11'
 
       - name: "📥 Téléchargement de tous les rapports d'audit"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.validation-schema }}
           path: ./temp
 
       - name: "📥 Téléchargement rapport sécurité"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.rapport-securite-solution }}
           path: ./temp
 
       - name: "📥 Téléchargement résultat simulation"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.resultat-simulation-audit }}
           path: ./temp
 
       - name: "📥 Téléchargement analyse coût/bénéfice"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.analyse-cout-benefice }}
           path: ./temp

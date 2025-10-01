@@ -50,7 +50,7 @@ jobs:
           python-version: '3.11'
       
       - name: "Téléchargement des résultats du jugement"
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: ${{ inputs.artefact_resultats_juges }}
           path: ./input/
